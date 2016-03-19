@@ -19,21 +19,18 @@
   "coverageStartTime":"<%= page.date.toDate().toISOString() %>",
   "coverageEndTime":"<%= page.updated.toDate().toISOString() %>",
   "headline":"<%= page.title %>",
-  "description":"<%- page.excerpt %>",
+  "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"") %>",
   "image": "<%= page.cover || config.cover %>",
   "liveBlogUpdate":[
-    <% site.posts.slice(0, config.per_page).each(function(item) { %>
+    <% site.posts.slice(0, config.per_page).each(function(item, index) { %>
     {
       "@type":"BlogPosting",
       "headline":"<%= item.title %>",
       "url":"<%= item.permalink %>",
       "datePublished":"<%= item.date.toDate().toISOString() %>",
-      "articleBody":{
-        "@value":"<%- item.excerpt %>",
-        "@type": "rdf:HTML"
-      },
+      "articleBody": "<%- strip_html(item.excerpt).replace(/\"/g, "\\\"") %>",
       "image": "<%= item.cover || config.cover %>"
-    },
+    }<% if(index < config.per_page - 1) { %>,<% } %>
     <% }) %>
   ]
 }
