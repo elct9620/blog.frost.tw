@@ -1,6 +1,41 @@
+<script type="application/ld+json">
 <% if(is_home()) { %>
-
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "<%= config.title %>",
+    "url": "<%= config.url %>",
+    "image": "<%= config.cover %>",
+    "description": "<%= config.description %>",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
 <% } else if(is_post()) { %>
-
+{
+  "@context":"http://schema.org",
+  "@type":"LiveBlogPosting",
+  "url":"<%= page.permalink %>",
+  "coverageStartTime":"<%= page.date.toDate().toISOString() %>",
+  "coverageEndTime":"<%= page.updated.toDate().toISOString() %>",
+  "headline":"<%= page.title %>",
+  "description":"<%- page.excerpt %>",
+  "image": "<%= page.cover || config.cover %>",
+  "liveBlogUpdate":[
+    <% site.posts.slice(0, config.per_page).each(function(item) { %>
+    {
+      "@type":"BlogPosting",
+      "headline":"<%= item.title %>",
+      "url":"<%= item.permalink %>",
+      "datePublished":"<%= item.date.toDate().toISOString() %>",
+      "articleBody":{
+        "@value":"<%- item.excerpt %>",
+        "@type": "rdf:HTML"
+      },
+      "image": "<%= item.cover || config.cover %>"
+    },
+    <% }) %>
+  ]
+}
 <% } %>
-
+</script>
