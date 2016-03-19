@@ -27,14 +27,7 @@
   <% if (page.keywords){ %><meta name="keywords" content="<%= page.keywords %>"><% } %>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <% if (page.title){ %><meta property="og:title" content="<%= page.title %>"/><% } %>
-  <meta property="og:site_name" content="<%= config.title %>"/>
-
-  <% if(page.cover) { %>
-  <meta property="og:image" content="<%= page.cover %>" />
-  <% } else { %>
-  <meta property="og:image" content="<%= config.cover %>"/>
-  <% } %>
+  <%- partial('open_graph') %>
 
   <link href="<%- config.root %>icon-512.png" rel="icon">
   <link rel="alternate" href="<% if (theme.rss){ %><%- theme.rss %><% } else { %><%- config.root %>atom.xml<% } %>" title="<%= config.title %>" type="application/atom+xml">

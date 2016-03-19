@@ -53,6 +53,7 @@ disqus_shortname: revo-skill-frost
 
 # Open Graph
 cover: http://blog.frost.tw/icon-512.png
+app_id: 205000946197077
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
