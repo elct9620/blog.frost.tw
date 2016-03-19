@@ -28,6 +28,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <%- partial('open_graph') %>
+  <%- partial('json-ld') %>
 
   <link href="<%- config.root %>icon-512.png" rel="icon">
   <link rel="alternate" href="<% if (theme.rss){ %><%- theme.rss %><% } else { %><%- config.root %>atom.xml<% } %>" title="<%= config.title %>" type="application/atom+xml">
