@@ -14,7 +14,7 @@ timezone: Asia/Taipei
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://blog.frost.tw
 root: /
-permalink: :year/:month/:day/:title/
+permalink: posts/:year/:month/:day/:title/
 permalink_defaults:
 
 # Directory
@@ -41,7 +41,7 @@ highlight:
   enable: true
   line_number: true
   auto_detect: true
-  tab_replace: true
+  tab_replace: false
 
 # Category & Tag
 default_category: 文章
@@ -50,6 +50,9 @@ tag_map:
 
 # Disqus
 disqus_shortname: revo-skill-frost
+
+# Open Graph
+cover: http://blog.frost.tw/icon-512.png
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
