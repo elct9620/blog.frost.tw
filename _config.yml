@@ -71,4 +71,5 @@ theme: air
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repo: git@github.com:elct9620/blog.frost.tw.git
