@@ -1,0 +1,35 @@
+// Slogan Module
+
+@include block("slogan") {
+  font-size: 18px;
+  font-size: 1.125rem;
+
+  max-width: 40%;
+
+  margin-top: 25px;
+  margin-top: 1.5625rem;
+
+  line-height: 1.25em;
+
+  @include element("title") {
+    margin: 0.15em auto;
+
+    font-size: 14px;
+    font-size: 0.7777em;
+    font-size: 0.875rem;
+    font-weight: 300;
+
+    text-transform: uppercase;
+
+    color: $lightFontColor;
+  }
+
+  @include element("description") {
+    margin: 0.25em auto;
+
+    font-size: 14px;
+    font-size: 0.7777em;
+    font-size: 0.875rem;
+
+  }
+}

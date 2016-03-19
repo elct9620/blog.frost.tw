@@ -1,0 +1,122 @@
+.highlight {
+
+  $base03:    #002b36;
+  $base02:    #073642;
+  $base01:    #586e75;
+  $base00:    #657b83;
+  $base0:     #839496;
+  $base1:     #93a1a1;
+  $base2:     #eee8d5;
+  $base3:     #fdf6e3;
+  $yellow:    #b58900;
+  $orange:    #cb4b16;
+  $red:       #dc322f;
+  $magenta:   #d33682;
+  $violet:    #6c71c4;
+  $blue:      #268bd2;
+  $cyan:      #2aa198;
+  $green:     #859900;
+
+  display: block;
+  overflow-x: auto;
+  background: $base03;
+  color: $base0;
+
+  table {
+    margin-top: 0;
+    border-spacing: 0;
+  }
+
+  .gutter {
+    padding: 0 15px;
+    text-align: right;
+    background: $base02;
+    line-height: 20px;
+  }
+
+  .code {
+    padding-left: 20px;
+    line-height: 20px;
+  }
+
+  .line {
+    line-height: 20px;
+    font-family: "source-code-pro", monospace;
+    font-weight: normal;
+
+    &.marked {
+      background: $base02;
+    }
+  }
+
+  .comment,
+  .quote {
+    color: $base01;
+  }
+
+  /* Solarized Green */
+  .keyword,
+  .selector-tag,
+  .addition {
+    color: $green;
+  }
+
+  /* Solarized Cyan */
+  .number,
+  .string,
+  .meta .meta-string,
+  .literal,
+  .doctag,
+  .regexp {
+    color: $cyan;
+  }
+
+  /* Solarized Blue */
+  .title,
+  .section,
+  .name,
+  .selector-id,
+  .selector-class {
+    color: $blue;
+  }
+
+  /* Solarized Yellow */
+  .attribute,
+  .attr,
+  .variable,
+  .template-variable,
+  .class .title,
+  .type {
+    color: $yellow;
+  }
+
+  /* Solarized Orange */
+  .symbol,
+  .bullet,
+  .subst,
+  .meta,
+  .meta .keyword,
+  .selector-attr,
+  .selector-pseudo,
+  .link {
+    color: $orange;
+  }
+
+  /* Solarized Red */
+  .built_in,
+  .deletion {
+    color: $red;
+  }
+
+  .formula {
+    background: #073642;
+  }
+
+  .emphasis {
+    font-style: italic;
+  }
+
+  .strong {
+    font-weight: bold;
+  }
+}

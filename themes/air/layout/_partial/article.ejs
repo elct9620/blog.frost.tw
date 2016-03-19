@@ -1,0 +1,47 @@
+<%
+var isIndex = ""
+if (index) isIndex = "is-index"
+%>
+<article class="<%= item.layout %> article <%= isIndex %>">
+  <header class="article__header">
+    <time datetime="<%= item.date.toDate().toISOString() %>" class="article__time--header">
+      <%= item.date.format("MMM.DD") %>
+    </time>
+    <%- partial('post/title') %>
+  </header>
+  <div class="article__entry">
+    <% if (item.excerpt && index) { %>
+    <%- item.excerpt %>
+    <% } else { %>
+    <%- item.content %>
+    <% } %>
+    <footer class="article__footer">
+      <% if(index) { %>
+        <% if (item.excerpt) { %>
+        <div class="text-left">
+          <a href="<%- config.root %><%- item.path %>#more" class="article__more-link"><%= theme.excerpt_link %></a>
+        </div>
+        <% } %>
+      <% } else { %>
+
+      <% } %>
+    </footer>
+  </div>
+</article>
+
+<% if(!index) { %>
+  <div class="adv">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- 網誌_文末廣告 (Hexo) -->
+    <ins class="adsbygoogle"
+    style="display:block"
+    data-ad-client="ca-pub-2844969736316510"
+    data-ad-slot="5530952976"
+    data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+<% } %>
+
+<%- partial('comments') %>

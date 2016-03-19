@@ -1,0 +1,115 @@
+// Article Module
+
+@include block("article") {
+  position: relative;
+  z-index: 1;
+
+  max-width: 75%;
+
+  margin: 0 auto;
+  margin-top: 6em;
+
+  @include state("index") {
+
+    &:nth-child(2n+1):after {
+      content: "";
+
+      width: 150%;
+      height: 75%;
+
+      position: absolute;
+      display: block;
+      top: 75%;
+      left: -25%;
+
+      z-index: -1;
+
+      background: $darkFontColor;
+    }
+
+    &:nth-child(2n):before {
+      content: "";
+
+      width: 150%;
+      height: 75%;
+
+      position: absolute;
+      display: block;
+      left: -25%;
+
+      z-index: -1;
+
+      background: $darkFontColor;
+
+    }
+
+    // Title Patch
+    &:nth-child(2n) .article__title {
+      color: $articleTitleFontLight;
+      a { color: $articleTitleFontLight; }
+    }
+
+  }
+
+  @include element("header") {
+    text-align: center;
+  }
+
+  @include element("time") {
+
+    @include modifier("header") {
+      font-size: 36px;
+      font-size: 2.25em;
+      font-size: 2.25rem;
+
+      font-weight: 700;
+
+      color: $exLightFontColor;
+    }
+
+  }
+
+  @include element("title") {
+    margin: 0 auto 1.5em;
+
+    font-size: 24px;
+    font-size: 1.5em;
+    font-size: 1.5rem;
+
+    font-weight: 300;
+
+    color: $darkFontColor;
+
+    a {
+      text-decoration: none;
+      color: $darkFontColor;
+    }
+
+    // Vertical Bar
+    &:after {
+      content: "";
+
+      display: block;
+      width: 2px;
+      height: 2em;
+      margin: 0.5em auto 0;
+
+      background: lighten($exLightFontColor, 10%);
+    }
+  }
+
+  @include element("entry") {
+    padding: 1.5em 4em;
+
+    background-color: $lightBackgroundColor;
+  }
+
+  @include element("more-link") {
+    display: inline-block;
+    padding: 0.5em 1em;
+
+    background-color: $linkColor;
+    text-decoration: none;
+    color: $white;
+  }
+}

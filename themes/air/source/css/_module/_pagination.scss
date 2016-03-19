@@ -1,0 +1,20 @@
+// Pagination Module
+
+@include block("pagination") {
+  max-width: 75%;
+
+  margin: 0 auto;
+  margin-top: 1em;
+
+  overflow: hidden;
+  clear: both;
+  zoom: 1;
+
+  @include element("prev") {
+    float: left;
+  }
+
+  @include element("next") {
+    float: right;
+  }
+}
