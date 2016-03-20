@@ -29,19 +29,23 @@ if (index) isIndex = "is-index"
   </div>
 </article>
 
-<% if(!index) { %>
-  <div class="adv">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- 網誌_文末廣告 (Hexo) -->
-    <ins class="adsbygoogle"
-    style="display:block"
-    data-ad-client="ca-pub-2844969736316510"
-    data-ad-slot="5530952976"
-    data-ad-format="auto"></ins>
-    <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
+<% if(is_amp()) {%>
+
+<% } else { %>
+  <% if(!index) { %>
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  <% } %>
 <% } %>
 
 <%- partial('comments') %>

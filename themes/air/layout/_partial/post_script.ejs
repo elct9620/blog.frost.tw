@@ -1,31 +1,34 @@
-<% if (theme.typekit_id) { %>
-<!-- Typekit -->
-<script src="https://use.typekit.net/<%= theme.typekit_id %>.js"></script>
-<script>try{Typekit.load({ async: true });}catch(e){}</script></script>
-<% } %>
+<% if(!is_amp()) { // AMP mode don't enable javascript %>
 
-<% if (config.disqus_shortname){ %>
-<script type="text/javascript">
-var disqus_shortname = '<%= config.disqus_shortname %>';
+  <% if (theme.typekit_id) { %>
+  <!-- Typekit -->
+  <script src="https://use.typekit.net/<%= theme.typekit_id %>.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script></script>
+  <% } %>
 
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/<% if (page.comments){ %>embed.js<% } else { %>count.js<% } %>';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-</script>
-<% } %>
+  <% if (config.disqus_shortname){ %>
+  <script type="text/javascript">
+  var disqus_shortname = '<%= config.disqus_shortname %>';
 
-<% if(config.tag_manager) { %>
-<!-- Google Tag Manager -->
-<noscript><iframe src="//www.googletagmanager.com/ns.html?id=<%= config.tag_manager %>"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','<%= config.tag_manager %>');</script>
-<!-- End Google Tag Manager -->
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/<% if (page.comments){ %>embed.js<% } else { %>count.js<% } %>';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  <% } %>
+
+  <% if(config.tag_manager) { %>
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=<%= config.tag_manager %>"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','<%= config.tag_manager %>');</script>
+  <!-- End Google Tag Manager -->
+  <% } %>
 <% } %>
