@@ -1,7 +1,7 @@
 // Pagination Module
 
 @include block("pagination") {
-  max-width: 75%;
+  max-width: 100%;
 
   margin: 0 auto;
   margin-top: 1em;
@@ -9,6 +9,10 @@
   overflow: hidden;
   clear: both;
   zoom: 1;
+
+  @include breakpoint(md) {
+    max-width: 75%;
+  }
 
   @include element("prev") {
     float: left;
