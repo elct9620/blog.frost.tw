@@ -30,7 +30,12 @@ if (index) isIndex = "is-index"
 </article>
 
 <% if(is_amp()) {%>
-
+<amp-ad width=1200 height=90
+    class="adv"
+    type="adsense"
+    data-ad-client="ca-pub-2844969736316510"
+    data-ad-slot="5530952976">
+</amp-ad>
 <% } else { %>
   <% if(!index) { %>
     <div class="adv">
@@ -46,6 +51,7 @@ if (index) isIndex = "is-index"
       </script>
     </div>
   <% } %>
+
+  <%- partial('comments') %>
 <% } %>
 
-<%- partial('comments') %>
