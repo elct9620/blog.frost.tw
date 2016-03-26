@@ -18,9 +18,28 @@
   "url":"<%= page.permalink %>",
   "coverageStartTime":"<%= page.date.toDate().toISOString() %>",
   "coverageEndTime":"<%= page.updated.toDate().toISOString() %>",
+  "datePublished": "<%= page.date.toDate().toISOString() %>",
+  "dateModified": "<%= page.updated.toDate().toISOString() %>",
   "headline":"<%= page.title %>",
   "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"") %>",
-  "image": "<%= page.cover || config.cover %>",
+  "image": {
+    "@type": "ImageObject",
+    "url": "<%= thumbnail(page) || config.cover %>",
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "<%= config.author %>",
+    "logo:" {
+      "@type": "ImageObject",
+      "<%= config.logo_wide %>",
+      "width": 512,
+      "height": 144
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "<%= config.author %>"
+  }
   "liveBlogUpdate":[
     <% site.posts.slice(0, config.per_page).each(function(item, index) { %>
     {
@@ -29,7 +48,7 @@
       "url":"<%= item.permalink %>",
       "datePublished":"<%= item.date.toDate().toISOString() %>",
       "articleBody": "<%- strip_html(item.excerpt).replace(/\"/g, "\\\"") %>",
-      "image": "<%= item.cover || config.cover %>"
+      "image": "<%= thumbnail(item) || config.cover %>"
     }<% if(index < config.per_page - 1) { %>,<% } %>
     <% }) %>
   ]
