@@ -114,6 +114,33 @@ hr {
   text-align: center;
 }
 
+// Table Display
+
+table {
+  max-width: 100%;
+  min-width: 100%;
+}
+
+th, td {
+  padding: 0.25em;
+}
+
+th {
+  font-weight: 300;
+  color: $articleTitleFontLight;
+  background: lighten($darkFontColor, 10%);
+}
+
+tr {
+  &:nth-child(2n) {
+    background: $codeBackgroundColor;
+  }
+}
+
+td {
+  border-left: 1px solid $lightBackgroundColor;
+}
+
 // Syntax Highlight
 figure.highlight {
   margin: 1em -1.5em;

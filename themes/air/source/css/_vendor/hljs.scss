@@ -22,9 +22,18 @@
   background: $base03;
   color: $base0;
 
+  figcaption {
+    padding: 5px 15px;
+
+    color: $base3;
+    background: $base01;
+  }
+
   table {
     margin-top: 0;
     border-spacing: 0;
+
+    min-width: auto;
   }
 
   .gutter {
@@ -32,11 +41,14 @@
     text-align: right;
     background: $base02;
     line-height: 20px;
+    border: none;
   }
 
   .code {
+    padding: 0;
     padding-left: 20px;
     line-height: 20px;
+    border: none;
   }
 
   .line {
