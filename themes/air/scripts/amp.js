@@ -25,6 +25,15 @@ hexo.extend.generator.register('amp', function(locals) {
 
         post.__amp = true;
 
+        // TODO: Should get image size and set correct size
+        post.content = post.content.replace(/<img(.*?)>/ig, "<amp-img layout=\"responsive\" width=\"600\" height=\"300\"$1>")
+
+        // Youtube Video Support
+        post.content = post.content.replace(/\<iframe\s.*?\s?src\s*=\s*['|"]?[^\s'"]+(\/embed\/|watch\?v=)([a-zA-Z0-9_]+)['|"].*?\>.*?\<\/iframe\>/ig, "<amp-youtube width=\"1280\" height=\"720\" layout=\"responsive\" data-videoid=\"$2\"><\/amp-youtube>")
+
+        // Strip inline style
+        post.content = post.content.replace(/\<(.*?)style\s*=\s*['|"]?[^\s'"]+['|"]?(.*?)\>/ig, "<$1$2>")
+
         return {
             path: path,
             layout: layouts,
