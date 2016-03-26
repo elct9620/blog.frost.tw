@@ -87,6 +87,7 @@ sitemap:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: air
+tag_manager: GTM-5TQLRN
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
