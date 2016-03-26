@@ -1,5 +1,7 @@
 (function() {
 
+    var $html = document.getElementsByTagName('html')[0]
+
     var reloadDisqus = function() {
         if(typeof DISQUS === "undefined") {
             (function() {
@@ -22,7 +24,7 @@
 
     var onPageReload = function() {
         // Refresh Typekit
-        Typekit.load()
+        try { Typekit.load({async: true}) } catch(e) {}
 
         // Reload Disqus
         if(location.pathname != "/") {

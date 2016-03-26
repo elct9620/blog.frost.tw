@@ -1,0 +1,59 @@
+/**
+ * Web Font Loader
+ */
+
+@keyframes loading {
+  50% { opacity: 0.0; }
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+
+  background: $backgroundColor;
+  transition: 1s ease-out;
+}
+
+.wf-loading {
+  .loading {
+    z-index: 1000;
+    opacity: 1;
+
+    &::after {
+      content: "";
+      display: block;
+
+      position: fixed;
+      top: 50%;
+      left: 50%;
+
+      width: 128px;
+      height: 128px;
+
+      margin-left: -64px;
+      margin-top: -64px;
+
+      @include at2x("/img/logo", png, 128px, 128px);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url('/img/logo.svg');
+
+      opacity: 1;
+
+      animation: loading 5s linear infinite;
+    }
+  }
+}
+
+.wf-active {
+
+  .loading {
+    z-index: -1000;
+    opacity: 0;
+  }
+
+}
