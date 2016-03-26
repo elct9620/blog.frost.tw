@@ -2,6 +2,8 @@
  * Thumbnail Helper
  */
 
+var sizeOf = require('image-size')
+
 hexo.extend.helper.register('thumbnail', function(post) {
     var url = post.thumbnail || ''
 

@@ -1,5 +1,9 @@
 // AMP Generator
 
+var sizeOf = require('image-size')
+var http = require('http')
+var url = require('url')
+
 // TODO: Support all type page using AMP
 hexo.extend.generator.register('amp', function(locals) {
     var posts = locals.posts.sort('-date').toArray()
@@ -26,7 +30,20 @@ hexo.extend.generator.register('amp', function(locals) {
         post.__amp = true;
 
         // TODO: Should get image size and set correct size
-        post.content = post.content.replace(/<img(.*?)>/ig, "<amp-img layout=\"responsive\" width=\"600\" height=\"300\"$1>")
+        post.content = post.content.replace(/\<img\s.*?\s?src\s*=\s*['|"]?([^\s'"]+).*?\>/ig, function(origin, imgURL) {
+
+            var netImage = /http[s]?:\/\/.*/i
+            var width = 600
+            var height = 300
+
+            if(netImage.exec(imgURL) != null) {
+                // TODO: Do nothing for network image now
+            } else {
+                // TODO: Get local file size
+            }
+
+            return "<amp-img layout=\"responsive\" width=\"" + width + "\" height=\"" + height + "\" src=\"" + imgURL + "\">"
+        })
 
         // Youtube Video Support
         post.content = post.content.replace(/\<iframe\s.*?\s?src\s*=\s*['|"]?[^\s'"]+(\/embed\/|watch\?v=)([a-zA-Z0-9_]+)['|"].*?\>.*?\<\/iframe\>/ig, "<amp-youtube width=\"1280\" height=\"720\" layout=\"responsive\" data-videoid=\"$2\"><\/amp-youtube>")
