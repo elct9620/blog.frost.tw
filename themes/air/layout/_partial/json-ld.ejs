@@ -14,10 +14,9 @@
 <% } else if(is_post() || is_amp()) { %>
 {
   "@context":"http://schema.org",
-  "@type":"LiveBlogPosting",
+  "@type":"Article",
+  "mainEntityOfPage": "<%= page.permalink %>",
   "url":"<%= page.permalink %>",
-  "coverageStartTime":"<%= page.date.toDate().toISOString() %>",
-  "coverageEndTime":"<%= page.updated.toDate().toISOString() %>",
   "datePublished": "<%= page.date.toDate().toISOString() %>",
   "dateModified": "<%= page.updated.toDate().toISOString() %>",
   "headline":"<%= page.title %>",
@@ -35,19 +34,7 @@
   "author": {
     "@type": "Person",
     "name": "<%= config.author %>"
-  },
-  "liveBlogUpdate":[
-    <% site.posts.slice(0, config.per_page).each(function(item, index) { %>
-    {
-      "@type":"BlogPosting",
-      "headline":"<%= item.title %>",
-      "url":"<%= item.permalink %>",
-      "datePublished":"<%= item.date.toDate().toISOString() %>",
-      "articleBody": "<%- strip_html(item.excerpt).replace(/\"/g, "\\\"") %>",
-      "image": "<%= thumbnail(item) || config.cover %>"
-    }<% if(index < config.per_page - 1) { %>,<% } %>
-    <% }) %>
-  ]
+  }
 }
 <% } %>
 </script>
