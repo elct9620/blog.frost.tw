@@ -21,15 +21,11 @@
   "dateModified": "<%= page.updated.toDate().toISOString() %>",
   "headline":"<%= page.title %>",
   "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"") %>",
-  "image": {
-    "@type": "ImageObject",
-    "url": "<%= thumbnail(page) || config.cover %>",
-    "width": 512,
-    "height": 512
-  },
+  "image": false,
   "publisher": {
     "@type": "Person",
-    "name": "<%= config.author %>"
+    "name": "<%= config.author %>",
+    "logo": "<%= config.cover %>"
   },
   "author": {
     "@type": "Person",
