@@ -21,11 +21,21 @@
   "dateModified": "<%= page.updated.toDate().toISOString() %>",
   "headline":"<%= page.title %>",
   "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"") %>",
-  "image": false,
+  "image": {
+    "@type": "ImageObject",
+    "url": "<%= thumbnail(page) || config.cover %>",
+    "width": 700,
+    "height": 700
+  },
   "publisher": {
-    "@type": "Person",
+    "@type": "Organization",
     "name": "<%= config.author %>",
-    "logo": "<%= config.cover %>"
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
   },
   "author": {
     "@type": "Person",
