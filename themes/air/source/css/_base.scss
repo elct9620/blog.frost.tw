@@ -86,8 +86,7 @@ blockquote {
     margin-right: -4em;
   }
 
-  color: $articleTitleFontLight;
-  background: lighten($darkFontColor, 10%);
+  background: lighten($exLightFontColor, 20%);
 
   code {
     color: $darkFontColor;
