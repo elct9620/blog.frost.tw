@@ -74,8 +74,8 @@ pagination_dir: page
 
 # Feed
 feed:
-  type: atom
-  path: atom.xml
+  type: rss2
+  path: feed.xml
   limit: 20
   hub:
 
