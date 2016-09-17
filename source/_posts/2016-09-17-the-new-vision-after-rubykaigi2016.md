@@ -98,7 +98,7 @@ RubyKaigi 的第一天，其實前面幾天我大多兩三點（日本時間）�
 
 今天啟發我的是一個介紹 DSL 在 Ruby 裡面運用的議程（[How DSL works on Ruby](http://rubykaigi.org/2016/presentations/hsbt.html)）裡面介紹了不少應用方式，以及像是 Capistrano 是基於 Rake 所設計的。
 
-這也催生了我的新專案「([Magica](https://rubygems.org/gems/magica)」因為演講完之後我馬上開始新的 ADV Game Framework 的開發，但是寫 CMakes 寫到覺得崩潰，懷疑人生的意義。
+這也催生了我的新專案「[Magica](https://rubygems.org/gems/magica)」因為演講完之後我馬上開始新的 ADV Game Framework 的開發，但是寫 CMakes 寫到覺得崩潰，懷疑人生的意義。
 
 所以就只好做一個可以「很簡單設定好 Makefile」的工具，然後再來寫我的遊戲框架了。
 
