@@ -51,6 +51,10 @@
     border: none;
   }
 
+  .code pre {
+    overflow-y: hidden;
+  }
+
   .line {
     line-height: 20px;
     font-family: "source-code-pro", monospace;
