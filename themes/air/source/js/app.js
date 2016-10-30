@@ -24,7 +24,7 @@
 
     var onPageReload = function() {
         // Refresh Typekit
-        try { Typekit.load({async: true}) } catch(e) {}
+        // try { Typekit.load({async: true}) } catch(e) {}
 
         // Reload Disqus
         if(location.pathname != "/") {
