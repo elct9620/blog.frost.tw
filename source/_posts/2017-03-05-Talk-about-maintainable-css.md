@@ -26,7 +26,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 
 第二個章節在討論重用性，不過我自己其實沒有很注重這部分，反而沒有太多的經驗可以分享。不過裡面提到了 SCSS 的 `mixin` 機制，確實是在重用性上非常有利的輔助。不過這部分是減少原始碼的使用，而個人認為真正的重用是對一些常用屬性的拆分，像是下面這樣的例子。
 
-```
+```scss
 .centered {
   &.text {
    text-align: center;
@@ -38,7 +38,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 }
 ```
 
-```
+```html
 <div class="red centered text block is-fixed-size width-80">
   Important Message!
 </div>
@@ -46,7 +46,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 
 不過在 `mixin` 的應用技巧上，如果純熟使用的話也能減少不少多餘的步驟，像是下面這樣。
 
-```
+```scss
 @mixin button-skin($color) {
   @extend %button;
   background-color: $color;
@@ -60,7 +60,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 
 透過包裝 `mixin` 讓一些常用的樣式設定可以用很簡單的方式被套用。我自己最常用的是 Media Query 的情境，使用起來類似下面這樣。
 
-```
+```scss
 .article__quote {
   width: 100%;
 
@@ -80,7 +80,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 
 關於這部分，如果使用像是 SMACSS 或者 BEM 之類的，其實就很少會碰到需要用 ID 選擇器的情境。一般我都用在切割 Namespace 或者例外處理。
 
-```
+```html
 <section id="home" class="page">
   <aside class="profile">
     <div class="profile__avatar"></div>
@@ -98,7 +98,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 
 像是上述的情況，就可以利用下面的方式在 `#home` 的時候取消掉 `.profile__information` 的顯示，這部分用在套版上帶入通用的 Widget 時就很方便。
 
-```
+```scss
 #home {
   .profile__information {
     display: none;
@@ -132,7 +132,7 @@ Maintainable CSS 到最後才討論這個問題，不過 SMACSS 最初會先講�
 
 `application.scss` 其實只是集合 CSS 檔案的用途，裡面是不寫任何樣式的（同時也做排序安排正確的讀取順序）
 
-```
+```scss
 // application.css
 
 @import 'variables';
@@ -168,7 +168,7 @@ Maintainable CSS 分開討論，不過因為 BEM 的特性比較適合一起討�
 
 一個模組會由 `Block` `Element` `Modifier` 三個部分所結合而成，命名規則就是 `.block__element--modifier` 這樣的形式，不過大家應該也會注意到缺少了表示 `State` (狀態) 的規則，關於這部分對 BEM 來說大多數都是透過 Modifier 來表示的，不過我個人比較喜歡利用獨立的樣式來表示，類似下面的方式。
 
-```
+```scss
 .profile {
   // ...
 }
