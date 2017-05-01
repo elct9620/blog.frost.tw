@@ -30,7 +30,7 @@ tags: [Rails, Redux, GraphQL]
     * RESTFul API (3rd-party)
 
  大致上定位是基於 Gandi 給的 API 做自動化的管理，以及在一些服務上的部署可以有效率的處理（會整合 DevOps 之類的）
- 
+
 ---
 
 不過既然要買網址，所以就需要先了解 Gandi 上的收費以及可以購買的網址。
@@ -81,12 +81,12 @@ module Domain
         @currency = currency
         @grid = grid
     end
-    
+
     def query(query)
         query = {product: query.merge(type: :domain)}
         Gandi.api.catalog.list(query, @currency, @grid)
     end
-    
+
     def all
         query({})
     end
@@ -106,9 +106,9 @@ module Domain
             def to_domain
                 map { |item| build_domain(item) }
             end
-            
+
             private
-            
+
             def build_domain(item)
                 CatalogDomain.new(
                     description: item.product.description,
@@ -118,7 +118,7 @@ module Domain
                     grid: item.unit_price.first.grid
                 )
             end
-            
+
             def convert_to_price(item)
                 Money.from_amout(
                     item.unit_price.first.price,
@@ -126,7 +126,7 @@ module Domain
                 )
             end
         end
-        
+
         # 略
         def query(query)
             # ...
@@ -150,7 +150,7 @@ end
 
 所以如果再沒有對這些欄位增加限制的話，就會碰到匯入時重複的問題而發生錯誤。
 
-所以在寫 Migration 的時候要補上下面的索引來增加限制。 
+所以在寫 Migration 的時候要補上下面的索引來增加限制。
 
 ```ruby
 add_index [:description, :action, :phase, :currency, :grid],
@@ -158,7 +158,7 @@ add_index [:description, :action, :phase, :currency, :grid],
           unique: true
 ```
 
-要這樣做的理由，是因為 `activerecotd-import` 支援 `ON CONFLICT` 的 SQL 語法，在 PostgreSQL 上可以在碰到重複的資料改為對特定欄位更新，而不是插入一筆資料。
+要這樣做的理由，是因為 `activerecord-import` 支援 `ON CONFLICT` 的 SQL 語法，在 PostgreSQL 上可以在碰到重複的資料改為對特定欄位更新，而不是插入一筆資料。
 
 於是就可以撰寫一個 Rake Task 來處理定期同步價格的任務。
 
@@ -266,7 +266,7 @@ export const domainReducer = (state = initState, action) => {
     }
     case FINISHED_REQUEST: {
       return state.set('fetching', false)
-                  .set('data', fromJS(action.response.data));
+                  .set('data', fromJS(action.response.data.domains));
     }
     default: {
       return state;
