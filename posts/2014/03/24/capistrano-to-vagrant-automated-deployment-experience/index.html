@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Capistrano to Vagrant 自動部署心得 | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。 不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯">
+<meta name="keywords" content="心得,Rails,Ruby,Vagrant,筆記,Capistrano">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Capistrano to Vagrant 自動部署心得">
+<meta property="og:url" content="http://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。 不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capistrano to Vagrant 自動部署心得">
+<meta name="twitter:description" content="之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。 不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": "http://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/",
+  "url":"http://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/",
+  "datePublished": "2014-03-24T01:32:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "headline":"Capistrano to Vagrant 自動部署心得",
+  "description":"之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。
+不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://blog.frost.tw/icon-512.png",
+    "width": 700,
+    "height": 700
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  }
+}
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2014-03-24T01:32:00.000Z" class="article__time--header">
+      Mar.24
+    </time>
+    
+  
+    <h1 class="article__title">Capistrano to Vagrant 自動部署心得</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>之前寫過一篇關於 <a href="http://blog.frost.tw/posts/2013/11/03/Vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed">Vagrant + Capistrano + Gitlab</a> 的自動化部署介紹。</p>
+<p>不過當時因為一些問題，卡著沒有繼續完成測試。<br>最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯</p>
+<a id="more"></a>
+<p>關於安裝與建制的部分就不多做討論，讓我們直接「切入核心」來討論 <code>cap deploy</code> 失敗的主要原因吧！</p>
+<p>首先，來看看本次環境的設定（基本上跟上次差不多）</p>
+<ul>
+<li><strong>Ubuntu 13.10 (Server)</strong><ul>
+<li><strong>Gitlab</strong></li>
+<li><strong>Gitlab CI</strong></li>
+<li>VMs<pre><code>* **Gitlab CI Runner#1**
+* **Nightly Server**
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<p>那麼，主要會發生問題的部分其實大多是在 CI Runner 跟 Nightly Server 上。<br>首先，我們要確定兩個環境都有正確可運作的 Ruby 版本。<br>（這邊是用 RVM 進行處理）</p>
+<p>因為是跑 Rails 所以需要對應的 JS 套件，我選用的是 Node.JS （但是預設版本非常舊）所以採用第三方套件安裝較新的版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:chris-lea/node.js</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install nodejs</div></pre></td></tr></table></figure>
+<p>在安裝 JS 相關套件的時候，就不會發生錯誤。<br>假設使用的是 MySQL 的話，則要一並安裝對應的 Library 上去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install libmysqlclient-dev</div></pre></td></tr></table></figure>
+<p>至於使用的 Capistrano Gem 則有一些改變。<br><figure class="highlight ruby"><figcaption><span>Gemfile</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Capistrano Deploy</span></div><div class="line">gem <span class="string">'capistrano'</span></div><div class="line">gem <span class="string">'capistrano-Rails'</span></div><div class="line">gem <span class="string">'capistrano3-puma'</span></div><div class="line">gem <span class="string">'rvm1-capistrano3'</span>, <span class="symbol">require:</span> <span class="literal">false</span></div></pre></td></tr></table></figure></p>
+<p>關於官方的 <code>capistrano-bundler</code> 會選擇安裝在 <code>shared</code> 目錄，一直導致安裝失敗。<br>因此不使用（也會和 <code>rvm1-capistrano3</code> 衝突）</p>
+<p>這次使用 Puma 作為 Web Server 所以加入了 Puma 的部分（主要是自動啟動伺服器的關係）<br>而 <code>rvm1-capistrano3</code> 目前是 Host 在 rvm 的 Github 下，雖然 Capistrano 官方也有一套 rvm 用的外掛，但是就是不會切換 Ruby 版本，所以只好改為這套。</p>
+<p>註：Capfile 請記得更改去 require 對應的套件。</p>
+<p>到這邊，就剩下 Shell Script 的部分。<br>不過在這之前，我們得先做一下簡易的 Setup 讓 Nightly Server 正常運作。</p>
+<p>（以下操作是在 Gitlab-Runner 上）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">git clone git@example.com:my-repo</div><div class="line">cd my-repo</div><div class="line">git checkout develop</div><div class="line">bundle install</div><div class="line">cap nightly deploy:check # nightly 是我另外在 config/deploy 新增的 nightly.rb 檔案</div><div class="line">cap nightly puma:config</div></pre></td></tr></table></figure>
+<p>基本上，應該要 <code>deploy:check</code> 正常，以及 <code>puma:config</code> 上傳正確的檔案才能夠順利運作。<br>（<code>puma:config</code> 會自動在遠端產生 <code>shared/puma.rb</code> 設定檔，請確定跟預期的設定相同）</p>
+<p>然後強烈建議先跑過 <code>rvm1:install:gems</code> 這個指令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cap nightly rvm1:install:gems</div></pre></td></tr></table></figure>
+<p>然後把一些相依的 Gem 問題都解掉。</p>
+<p>註：雖然可以在 <code>config/deploy.rb</code> 裡面加入 <code>before :deploy, &quot;rvm1:install:gems&quot;</code> 但是似乎會召喚 <code>rspec</code> 出來跑，即使沒有安裝（反而會出錯）</p>
+<p><code>rvm1:install:Ruby</code> 也可以跑看看，確定程式預期的 Ruby 版本跟我們安裝的是相同的。<br>（一般來說用 <code>rvm install 2.0.0</code> 就可以裝到對應的版本）</p>
+<p>註：<code>rvm1:install:Ruby</code> 似乎因為 <code>rvm install .</code> 有問題，而無法自動安裝 Ruby</p>
+<p>到目前為止，就剩下一些設定了！<br>以下建議 Rails 使用者打開（但是要預先設定好檔案）</p>
+<figure class="highlight ruby"><figcaption><span>config/deploy.rb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Default value for :linked_files is []</span></div><div class="line">set <span class="symbol">:linked_files</span>, <span class="string">%w&#123;config/database.yml&#125;</span></div><div class="line"></div><div class="line"><span class="comment"># Default value for linked_dirs is []</span></div><div class="line">set <span class="symbol">:linked_dirs</span>, <span class="string">%w&#123;bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system&#125;</span></div></pre></td></tr></table></figure>
+<p>可以先編輯 <code>shared/config/database.yml</code> 設定好資料庫的連接。<br>（建議用 MySQL / Postgresql 因為 SQLte 每次都會重設⋯⋯）</p>
+<p>最後是撰寫 CI 的測試 Shell Script 了！<br>（這邊只是參考，因為目前系統還有部分沒有整併 Script 的版本，所以暫時將測試部分分離出來）</p>
+<p>Gitlab CI 中只要這樣設定即可：<code>./script/gitlab_ci</code></p>
+<p>然後我們產生一個名為 <code>gitlab_ci</code> 的檔案。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">touch script/gitlab_ci</div><div class="line">chmod +x script/gitlab_ci</div></pre></td></tr></table></figure>
+<p>要確定有給予執行全縣，不然在 Gitlab CI Runner 上會跑不起來。<br>（<code>script/</code> 目錄是 Rails 放置一些 Shell Script 或者直接執行的程式用的目錄）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 使用 RVM 切換到對應版本</span></div><div class="line"><span class="meta">#</span><span class="bash"> -- 因為我 Deploy 到 Heroku 有在 Gemfile 裡面指定版本</span></div><div class="line">rvm use .</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 安裝 Gems</span></div><div class="line"><span class="meta">#</span><span class="bash"> -- 沒有 without development 是因為 capistrano 在這個 group 裡面</span></div><div class="line">bundle install --without production</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 進行測試</span></div><div class="line">bundle exec rake db:create RAILS_ENV=test</div><div class="line">bundle exec rake db:migrate RAILS_ENV=test</div><div class="line">bundle exec rake spec RAILS_ENV=test</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 進行 Nightly 的 Deploy</span></div><div class="line"><span class="meta">#</span><span class="bash"> -- 我只希望對 <span class="string">"develop"</span> branch 實行，所以透過 Gitlab CI 的環境變數判斷</span></div><div class="line">if [ "$CI_BUILD_REF_NAME" == "develop" ]; then</div><div class="line">bundle exec cap nightly rvm1:install:gems # 預先安裝 Gems</div><div class="line">bundle exec cap nightly deploy # 發佈（同時也會 restart puma 不過 env 不會改變，要注意）</div><div class="line">fi</div><div class="line"></div><div class="line">exit 0</div></pre></td></tr></table></figure>
+<p>只後只要 <code>develop</code> branch 有變動，就可以自動地將最新版本的程式發佈到 Nightly Server 上面了！<br>（只是建議 Ruby 版本變更等情況，最好預先跑過 <code>rvm1:install:gems</code> 不然會吃到一次 Faild 的 Test 喔 XD）</p>
+<p>目前 Gitlab 還不支援 Success Script 所以只能先這樣土炮一下了 XD</p>
+<p>註： Puma 預設是 Unix Socket 建議搭配 Nginx 使用，還有 Port Forward 轉出來給 Host 主機處理。</p>
+
+    
+    <footer class="article__footer">
+      
+
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Laravel 初次嘗試 | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～ 一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。 總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三款，用起來也很不錯（蓋章）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 初次嘗試">
+<meta property="og:url" content="http://blog.frost.tw/posts/2012/07/14/the-laravel-first-try/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～ 一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。 總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三款，用起來也很不錯（蓋章）">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 初次嘗試">
+<meta name="twitter:description" content="今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～ 一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。 總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三款，用起來也很不錯（蓋章）">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": "http://blog.frost.tw/posts/2012/07/14/the-laravel-first-try/",
+  "url":"http://blog.frost.tw/posts/2012/07/14/the-laravel-first-try/",
+  "datePublished": "2012-07-14T11:49:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "headline":"Laravel 初次嘗試",
+  "description":"今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～
+一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。
+總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三款，用起來也很不錯（蓋章）",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://blog.frost.tw/icon-512.png",
+    "width": 700,
+    "height": 700
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  }
+}
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2012-07-14T11:49:00.000Z" class="article__time--header">
+      Jul.14
+    </time>
+    
+  
+    <h1 class="article__title">Laravel 初次嘗試</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～</p>
+<p>一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。</p>
+<p>總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三款，用起來也很不錯（蓋章）</p>
+<a id="more"></a>
+<h2 id="下載"><a href="#下載" class="headerlink" title="下載"></a>下載</h2><hr>
+<p>這步驟根本是湊字數的（被巴）</p>
+<p>我超貼心幫各位把<a href="http://laravel.com/" target="_blank">官網</a>都做好超連結了喔～～</p>
+<p>總之就是下載，解壓縮，然後放到可以跑 PHP 的地方，幫 storage 資料夾設定為可寫。<br><br>大家可能會不太習慣，不過他是以 public 資料夾為瀏覽的目錄喔～</p>
+<p>（所以用在 PagodaBox 這種可以設定根目錄的 PaaS 超爽的）</p>
+<h2 id="事前設定"><a href="#事前設定" class="headerlink" title="事前設定"></a>事前設定</h2><hr>
+<p>我跟你們說我超懶的，連 MySQL 都不想設定拉～</p>
+<p>所以請打開 application/config/database.PHP 把 ‘default’ =&gt; ‘mysql’ 改成 sqlite 吧～</p>
+<figure class="highlight php"><figcaption><span>application/config/database.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line">  <span class="comment">//略</span></div><div class="line">  <span class="comment">/*</span></div><div class="line">   |--------------------------------------------------------------------------</div><div class="line">   | Default Database Connection</div><div class="line">   |--------------------------------------------------------------------------</div><div class="line">   |</div><div class="line">   | The name of your default database connection. This connection will used</div><div class="line">   | as the default for all database operations unless a different name is</div><div class="line">   | given when performing said operation. This connection name should be</div><div class="line">   | listed in the array of connections below.</div><div class="line">   |</div><div class="line">   */</div><div class="line"></div><div class="line">   <span class="string">'default'</span> =&gt; <span class="string">'sqlite'</span>,</div><div class="line">   <span class="comment">//略</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>第 45 行左右，大概就是這樣喔～</p>
+<p>如果你想用 Rewrite 的話，就把 application/config/applicatoin.PHP 裡面的 ‘index’ =&gt; ‘index.PHP’, 改成 ‘index’ =&gt; ‘’, 就可以了（至於 .htaccess 檔則是一開始就幫你弄好，超貼心～）</p>
+<h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><hr>
+<p>接下來修改一下 applicatoin/routers.PHP 的設定</p>
+<p>一開始大概 35 行會看到這樣</p>
+<figure class="highlight php"><figcaption><span>applicatoin/routers.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">//略</span></div><div class="line"></div><div class="line">Route::get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">true<span class="keyword">return</span> View::make(<span class="string">'home.index'</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//略</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>然後我們只要有一個簡單的留言功能，所以直接丟給 Controller 就可以了～</p>
+<figure class="highlight php"><figcaption><span>application/routers.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">//略</span></div><div class="line"></div><div class="line">Route::controller(<span class="string">'home'</span>);</div><div class="line"></div><div class="line"><span class="comment">//略</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><hr>
+<p>我們會用到 Migrate 這個超方便的功能，不過要先用個指令～</p>
+<blockquote>
+<p>PHP artisan migrate:install</p>
+</blockquote>
+<p>這樣 Laravel 才會有 Migrate 紀錄的資料表，也才有辦法知道下次運行 Migrate 時是否要更動資料表</p>
+<p>接著創建一個 Migrate 來新增我們留言資料</p>
+<blockquote>
+<p>PHP artisan migrate:make create_comments_table</p>
+</blockquote>
+<p>之後編輯 application/migrations/日期戳記_create_comments_table.PHP 來撰寫資料表的結構。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Create_Comments_Table</span> </span>&#123;</div><div class="line"></div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Make changes to the database.</div><div class="line">true *</div><div class="line">true * <span class="doctag">@return</span> void</div><div class="line">true */</div><div class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">up</span><span class="params">()</span></span></div><div class="line">true&#123;</div><div class="line">    Schema::create(<span class="string">'comments'</span>, <span class="function"><span class="keyword">function</span><span class="params">($table)</span></span>&#123; <span class="comment">//建立資料表</span></div><div class="line">      $table-&gt;increments(<span class="string">'ID'</span>); <span class="comment">//設定 ID (遞增)</span></div><div class="line">      $table-&gt;string(<span class="string">'subject'</span>); <span class="comment">//留言主旨</span></div><div class="line">      $table-&gt;text(<span class="string">'content'</span>); <span class="comment">//留言內容</span></div><div class="line">      $table-&gt;timestamps(); <span class="comment">//時間戳記 created_at 跟 updated_at 兩個欄位</span></div><div class="line">    &#125;);</div><div class="line">true&#125;</div><div class="line"></div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Revert the changes to the database.</div><div class="line">true *</div><div class="line">true * <span class="doctag">@return</span> void</div><div class="line">true */</div><div class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">down</span><span class="params">()</span></span></div><div class="line">true&#123;</div><div class="line">      Schema::drop(<span class="string">'comments'</span>); <span class="comment">//刪除資料表</span></div><div class="line">true&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接著 Migrate 讓 Laravel 產生 SQL 語法並且寫入資料庫</p>
+<blockquote>
+<p>PHP artisan migrate</p>
+</blockquote>
+<p>繼續建立 Model 來存取，新增一個檔案 application/models/Comment.PHP</p>
+<figure class="highlight php"><figcaption><span>application/models/Comment.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"></div><div class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Comment</span> <span class="keyword">extends</span> <span class="title">Eloquent</span></span></div><div class="line">  &#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> $table = <span class="string">'comments'</span>; <span class="comment">// 指定對應的資料表</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> $per_page = <span class="number">5</span>; <span class="comment">//設定分頁時每頁筆數（預設 20 筆）</span></div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>這樣一來 Model 就建立好了，因為只需要簡易的讀寫，所以就沒有在深入去撰寫更細節的部分。</p>
+<h2 id="Controller-amp-View"><a href="#Controller-amp-View" class="headerlink" title="Controller &amp; View"></a>Controller &amp; View</h2><hr>
+<p>接下來處理一下 Controller 的部分，編輯 application/controller/home.PHP</p>
+<figure class="highlight php"><figcaption><span>applicatoin/controller/home.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Home_Controller</span> <span class="keyword">extends</span> <span class="title">Base_Controller</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">public</span> $restful = <span class="keyword">true</span>; <span class="comment">//使用 RESTFUL (get_ post_ 開頭的 method)</span></div><div class="line"></div><div class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_index</span><span class="params">()</span></span></div><div class="line">  &#123;</div><div class="line"></div><div class="line">    $comments = Comment::order_by(<span class="string">'created_at'</span>, <span class="string">'desc'</span>)-&gt;paginate(); <span class="comment">//依照 created_at 排序，並且分頁</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> View::make(<span class="string">'home.index'</span>)</div><div class="line">                 -&gt;with(<span class="string">'comments'</span>, $comments); <span class="comment">//Render home/index 這個 view 並且附帶 comments 這個變數</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">post_index</span><span class="params">()</span></span></div><div class="line">  &#123;</div><div class="line">    $inputs = Input::all(); <span class="comment">//取得所有 POST/GET 的變數</span></div><div class="line">    $rules = <span class="keyword">array</span>( <span class="comment">//設定驗證規則</span></div><div class="line">      <span class="string">'subject'</span> =&gt; <span class="string">'required'</span>, <span class="comment">//必填</span></div><div class="line">      <span class="string">'content'</span> =&gt; <span class="string">'required'</span> <span class="comment">//必填</span></div><div class="line">    );</div><div class="line"></div><div class="line">    $validation = Validator::make($input, $rules); <span class="comment">//進行驗證</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span>( $validation-&gt;fails() ) &#123; <span class="comment">//假設驗證失敗</span></div><div class="line">      <span class="keyword">return</span> Redirect::home()-&gt;with_errors($validation); <span class="comment">//回到首頁並且帶著錯誤資訊</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Comment::create(<span class="keyword">array</span>( <span class="comment">//插入資料</span></div><div class="line">      <span class="string">'subject'</span> =&gt; $inputs[<span class="string">'subject'</span>],</div><div class="line">      <span class="string">'content'</span> =&gt; $inputs[<span class="string">'content'</span>]</div><div class="line">    ));</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Redirect::home();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>基本上我們就不改動 Laravel 的 CSS 直接借用一下（因為是練習，所以實際使用請改正喔～）</p>
+<p>編輯 application/views/home/index.blade.PHP</p>
+<p>附註：blade 是 Laravel 的樣板引擎，要加在檔名才會運作～</p>
+<figure class="highlight html"><figcaption><span>application/views/home/index.blade.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">&#123;% raw %&#125;</div><div class="line"><span class="meta">&lt;!doctype html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh_TW"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">true<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></div><div class="line">true<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">true<span class="tag">&lt;<span class="name">title</span>&gt;</span>Simple Guestbook<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">true<span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width"</span>&gt;</span></div><div class="line">true&#123;&#123; HTML::style('laravel/CSS/style.css') &#125;&#125;</div><div class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></div><div class="line">    input,textarea &#123;</div><div class="line">      background: #FFF;</div><div class="line">      border: 1px solid #EFEFEF;</div><div class="line">      margin: 10px;</div><div class="line">      padding: 5px;</div><div class="line">    &#125;</div><div class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">true<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrapper"</span>&gt;</span></div><div class="line">truetrue<span class="tag">&lt;<span class="name">header</span>&gt;</span></div><div class="line">truetruetrue<span class="tag">&lt;<span class="name">h1</span>&gt;</span>Guestbook<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">truetruetrue<span class="tag">&lt;<span class="name">h2</span>&gt;</span>A simple guestbook<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></div><div class="line"></div><div class="line">truetruetrue<span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"intro-text"</span> <span class="attr">style</span>=<span class="string">"margin-top: 45px;"</span>&gt;</span></div><div class="line">truetruetrue<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">truetrue<span class="tag">&lt;/<span class="name">header</span>&gt;</span></div><div class="line">truetrue<span class="tag">&lt;<span class="name">div</span> <span class="attr">role</span>=<span class="string">"main"</span> <span class="attr">class</span>=<span class="string">"main"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"new"</span>&gt;</span></div><div class="line">      	<span class="php"><span class="meta">&lt;?PHP</span> $errorMessages = $errors-&gt;all(<span class="string">'&lt;pre&gt;:message&lt;/pre&gt;'</span>); <span class="meta">?&gt;</span></span></div><div class="line">        @foreach ($errorMessages as $message)</div><div class="line">          &#123; &#123; $message &#125;&#125;</div><div class="line">        @endforeach</div><div class="line">        &#123;&#123; Form::open() &#125;&#125;</div><div class="line"></div><div class="line">        &#123;&#123; Form::open() &#125;&#125;</div><div class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></div><div class="line">          &#123;&#123; Form::label('subject', 'Subject') &#125;&#125;</div><div class="line">          &#123;&#123; Form::text('subject') &#125;&#125;</div><div class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></div><div class="line">          &#123;&#123; Form::label('content', 'Content') &#125;&#125;</div><div class="line">          &#123;&#123; Form::textarea('content') &#125;&#125;</div><div class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span></div><div class="line">          &#123; &#123; Form::submit('Comment') &#125;&#125;</div><div class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">        &#123;&#123; Form::close() &#125;&#125;</div><div class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">hr</span> /&gt;</span></div><div class="line">truetruetrue<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"home"</span>&gt;</span></div><div class="line">        @forelse ($comments-&gt;results as $comment)</div><div class="line">          <span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123; e($comment-&gt;subject) &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">pre</span>&gt;</span>&#123;&#123; e($comment-&gt;content) &#125;&#125;<span class="tag">&lt;/<span class="name">pre</span>&gt;</span></div><div class="line">        @empty</div><div class="line">          <span class="tag">&lt;<span class="name">pre</span>&gt;</span> No comment be found! <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></div><div class="line">        @endforelse</div><div class="line">truetruetrue<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">truetrue<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">true<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div><div class="line">&#123;% endraw %&#125;</div></pre></td></tr></table></figure>
+<p><strong>不知道為什麼我用 { { }} 包起來就會消失，所以我在 { 跟 { 中間多加了空白</strong></p>
+<p>Form Class 是 Laravel 的表單物件，可以輔助產生表單。</p>
+<p>$errors 是 Laravel 有錯誤時會附加到 View 的變數（可以用 Session::get(‘errors’) 在 Controller 取得，這邊為了方便就直接在 View 設定）</p>
+<p>而 e() 是 Laravel 的脫跳，可以把 HTML 等有危險的資變成一般字串顯示。類似於 htmlspecialchars() 的功能。</p>
+
+至於 Crsf 的部分我並沒有寫進去，因為我還不清楚 Laravel 的 Controller 中使用 Filter 如何使用，不然可以加上 {{ Form::token() }} 以及幫 Controller 加入 brefore filter 並且設定 crsf 來避免跨域的攻擊。
+
+<p>好了，這篇文章就到這邊告一段落摟～</p>
+<p>至於 Laravel 本身內建分頁跟使用者認證，是很方便的部分。也支援數種資料庫跟記憶體快取的實踐，除了 Cli 沒辦法幫忙產生 Controller/Model/View 的基本檔案有點可惜，不然其實很接近 Rails 的方便了～</p>
+<p>（之前看到有人引用，說我的文章沒啥參考性但是可以不用看英文，超傷心，只好認真一點寫 XDD）</p>
+<p>如果噴錯誤，請檢查一下是不是 :: 少打一個，我常常這樣噴錯誤又看不到錯誤訊息 XDD</p>
+<p>Github Repo: <a href="https://github.com/elct9620/laravel-guestbook-example" target="_blank" rel="external">https://Github.com/elct9620/laravel-guestbook-example</a></p>
+
+    
+    <footer class="article__footer">
+      
+
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>paas | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="弦而時習之">
+<meta property="og:url" content="http://blog.frost.tw">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="弦而時習之">
+<meta name="twitter:description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2016-02-03T07:54:00.000Z" class="article__time--header">
+      Feb.03
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2016/02/03/how-deis-architecture-design-part-2/" title="Deis 架構分析（二）">Deis 架構分析（二）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>延續<a href="http://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1">上一篇</a>的內容，這篇文章要先來討論比較好懂的 <code>Router</code> 部分。</p>
+<p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 <code>Router</code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。</p>
+<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="external">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2016/02/03/how-deis-architecture-design-part-2/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2016-01-31T06:28:00.000Z" class="article__time--header">
+      Jan.31
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2016/01/31/how-deis-architecture-design-part-1/" title="Deis 架構分析（一）">Deis 架構分析（一）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 <a href="http://deis.io" target="_blank" rel="external">Deis</a> 就是其中一個。</p>
+<p>Deis 本身是受到 <a href="https://heroku.com" target="_blank" rel="external">Heroku</a> 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！</p>
+<p>關於 Deis 的架構，在官方的<a href="http://docs.deis.io/en/latest/understanding_deis/architecture/" target="_blank" rel="external">文件</a>已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。</p>
+<blockquote>
+<p>我本身是 Heroku 的重度使用者，因為透過 git 管理以及豐富的 Addon 在開發時其實是非常方便的。<br>不過有時候還是會受到一些限制，這時候 Deis 就提供了很大的幫助。不過這類 PaaS 工具其實還不能說非常成熟，使用上還是會有不少問題，透過了解底層的機制來建構一個自己的版本，在某些情境反而更加容易控制跟維護。</p>
+</blockquote>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2016/01/31/how-deis-architecture-design-part-1/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+
+<nav id="pagination" class="pagination">
+  
+  
+</nav>
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>
+��門指南（三）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>過年我就淡定放假不寫文了（被拖走<br>根據 Google Analytic 統計，週二的這篇文章會讓訪客增長 XD</p>
+<p>上一篇極其混亂的 <a href="http://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2">PaaS 入門指南（二）</a>已經簡易的向大家介紹相關工具的安裝（各種痛苦啊那個，感覺 AppFog 的對 Windows 比較友善⋯⋯）</p>
+<p>這篇我們先休息一下，因為我發現字太多我寫很累看的人好像也很累 XD<br>先來簡易介紹一下 AppFog / OpenShift 的快速安裝功能。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2014/02/04/getting-started-paas-3/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2014-01-25T22:35:00.000Z" class="article__time--header">
+      Jan.26
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/" title="Using Laravel and HHVM on Heroku">Using Laravel and HHVM on Heroku</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD<br>那時身為專業的阿宅，一定要馬上裝來玩一下。</p>
+<p>隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）<br>我又再次回想起這神奇的東西⋯⋯<br><del>現實是 Composer 跑太慢被 HHVM 斷開魂結</del></p>
+<p>當時我就想，既然我都搞了 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="external">Phalcon on Heroku</a> 這東西，不如再來搞一個 HHVM 版本吧！</p>
+<p>沒想到<a href="https://Github.com/hhvm/Heroku-buildpack-hhvm" target="_blank" rel="external">官方</a>竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XD</p>
+<blockquote>
+<p>PaaS 入門指南還沒斷，不過人生總是需要調味一下，就先讓我寫些別的吧 XD</p>
+</blockquote>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2014-01-20T19:14:00.000Z" class="article__time--header">
+      Jan.21
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2014/01/21/getting-started-paas-2/" title="PaaS 入門指南（二）">PaaS 入門指南（二）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>在第一篇文章 <a href="http://blog.frost.tw/posts/2014/01/15/getting-started-PaaS-1">PaaS 入門指南（一）</a>已經簡單介紹了 PaaS 的基本概念，還有一些常見的 PaaS 服務。</p>
+<p>這篇文章，則會介紹使用 PaaS 所需的基本技能以及軟體。雖然使用 PaaS 的方式大多在服務提供者的網站上會有簡易的介紹，但是如果想要體驗各式的 PaaS 最好還是能夠熟悉這些工具的基本操作。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2014/01/21/getting-started-paas-2/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2014-01-14T19:32:00.000Z" class="article__time--header">
+      Jan.15
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2014/01/15/getting-started-paas-1/" title="PaaS 入門指南（一）">PaaS 入門指南（一）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。</p>
+<p>內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。</p>
+<p>至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以及介紹的 PaaS 可能有付費也可能有免費，但是會讓大家在盡可能不花費的狀況下體驗與使用。</p>
+<p>那麼，正文開始。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2014/01/15/getting-started-paas-1/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+
+<nav id="pagination" class="pagination">
+  
+  
+</nav>
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

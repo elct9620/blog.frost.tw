@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>網站開發之路 - Vim(1) | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="作為起始，我決定先把 Vim 練好。 理由，很簡單。  相較於 IDE 來說，使用 VIM 可以盡量避免離開 Terminal 的操作。基於這點，我覺得可以改善我常常用 Ctrl + Tab 切換視窗來回操作的問題。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="網站開發之路 - Vim(1)">
+<meta property="og:url" content="http://blog.frost.tw/posts/2012/03/26/the-web-develope-way-vim-1/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="作為起始，我決定先把 Vim 練好。 理由，很簡單。  相較於 IDE 來說，使用 VIM 可以盡量避免離開 Terminal 的操作。基於這點，我覺得可以改善我常常用 Ctrl + Tab 切換視窗來回操作的問題。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="網站開發之路 - Vim(1)">
+<meta name="twitter:description" content="作為起始，我決定先把 Vim 練好。 理由，很簡單。  相較於 IDE 來說，使用 VIM 可以盡量避免離開 Terminal 的操作。基於這點，我覺得可以改善我常常用 Ctrl + Tab 切換視窗來回操作的問題。">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": "http://blog.frost.tw/posts/2012/03/26/the-web-develope-way-vim-1/",
+  "url":"http://blog.frost.tw/posts/2012/03/26/the-web-develope-way-vim-1/",
+  "datePublished": "2012-03-26T13:24:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "headline":"網站開發之路 - Vim(1)",
+  "description":"作為起始，我決定先把 Vim 練好。
+理由，很簡單。
+
+相較於 IDE 來說，使用 VIM 可以盡量避免離開 Terminal 的操作。基於這點，我覺得可以改善我常常用 Ctrl + Tab 切換視窗來回操作的問題。
+",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://i.imgur.com/KDluE.png",
+    "width": 700,
+    "height": 700
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  }
+}
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2012-03-26T13:24:00.000Z" class="article__time--header">
+      Mar.26
+    </time>
+    
+  
+    <h1 class="article__title">網站開發之路 - Vim(1)</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>作為起始，我決定先把 Vim 練好。</p>
+<p>理由，很簡單。</p>
+<blockquote>
+<p>相較於 IDE 來說，使用 VIM 可以盡量避免離開 Terminal 的操作。<br>基於這點，我覺得可以改善我常常用 Ctrl + Tab 切換視窗來回操作的問題。</p>
+</blockquote>
+<a id="more"></a>
+<p>作為起始，我先學習了一些基本操作。</p>
+<blockquote>
+<p>:q <strong>離開</strong></p>
+<p>:w <strong>儲存</strong></p>
+<p>:e 檔名 <strong>編輯</strong></p>
+<p>i 插入模式（目前字元）o 新行插入 a 目前字元後插入</p>
+</blockquote>
+<p>學會這些後，基本上的編輯就沒什麼問題了！<br>不過，這樣還是體現不出 Vim 的強大。</p>
+<p>於是，花了半天的時間開始安裝一些 Plugin 等等。所謂的 Vim 的強大，這時候才明顯的體現出來！</p>
+<p>過去我都不知道一個搭配好的 Vim 可以跟 IDE 一樣好用，而且還是內建的編輯器，許多問題都可以輕鬆的解決。</p>
+<p>雖然還不能熟悉使用各種 Vim 的指令、快速鍵。但是我還是盡可能的把一些記起來。</p>
+<blockquote>
+<p>:set <strong>設定</strong></p>
+<p>G <strong>跳到檔尾</strong></p>
+<p>gg <strong>跳到檔首</strong></p>
+<p>dd <strong>刪除整行</strong></p>
+<p>x <strong>刪除一個字</strong></p>
+<p>Ctrl + w &gt; h/j/k/l <strong>切換視窗</strong></p>
+<p>h/j/k/l <strong>左/下/上/右</strong></p>
+<p>:sp/:vsp <strong>分割新視窗</strong></p>
+<p>:tabnew <strong>新增Tab</strong></p>
+<p>v <strong>選取</strong></p>
+<p>“[a]y <strong>儲存選取到暫存區a</strong></p>
+<p>“[a]p <strong>貼上暫存區a到文件</strong></p>
+</blockquote>
+<p>實際上操作起來真的還有很多需要學習。</p>
+<p>經過一番折騰，大致上習慣了 Vim 操作與編輯文件，也稍微配置出了一套自己的常用 Plugin 跟設定檔。</p>
+<p><img src="http://i.imgur.com/KDluE.png" alt="http://i.imgur.com/KDluE.png"></p>
+<p>不過，在 Terminal 下的色調總是怪怪的。<br>怎麼配也是弄不好，在我努力尋找配色方案時，有高手分享他的 Vim 配置。</p>
+<p>早上就先照著 Github 上的說明安裝了，步驟也很簡單，就是 git clone 下來後運行 Shell Script 更新 Plugin (從 Github 上) 接著建立連結（.vim / .vimrc / .gvimrc）就完成了！</p>
+<p>不愧是高手的配置，用起來不但很順，而且還很合用。<br>不過因為我自己還有網頁跟寫 PHP 這套比較像是配給 Ruby/Rails 的設定還是不太夠我的需求，經過觀察發現 plugin 的加入方法後，就在加了像是 Zencoding 跟 Neoautocomplcache 的 plugin 進去。</p>
+<p>到目前為止，我的 Vim 配置已經告一段落。雖然熟悉使用 Vim 還有很長的一段路，但是至少已經有一套不錯的工具了！</p>
+<p><img src="http://i.imgur.com/DXOSK.png" alt="http://i.imgur.com/DXOSK.png"></p>
+<p>也順便給 Terminal 的配色修改了一下，感覺起來自己好像也變威了！<br>不過，雖然有 Autocomplete 的 Plugin 不過相較 IDE 其實也是遜色很多，希望能夠純熟使用 VIM 之外，也能將許多程式撰寫上該記起來的東西記起來。</p>
+<p>趁現在還有本錢，多累積一些實力！ </p>
+<hr>
+<p>我使用的是<strong>高見龍</strong>大大的 Vim 配置。<br>網址：<a href="https://github.com/kaochenlong/eddie-vim" target="_blank" rel="external">https://Github.com/kaochenlong/eddie-vim</a></p>
+
+    
+    <footer class="article__footer">
+      
+
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

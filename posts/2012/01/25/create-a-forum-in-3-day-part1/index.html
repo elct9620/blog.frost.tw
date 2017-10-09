@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>三天做一個論壇 - Part 1 | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="###前言上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。 不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三天做一個論壇 - Part 1">
+<meta property="og:url" content="http://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="###前言上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。 不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="三天做一個論壇 - Part 1">
+<meta name="twitter:description" content="###前言上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。 不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": "http://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/",
+  "url":"http://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/",
+  "datePublished": "2012-01-25T13:43:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "headline":"三天做一個論壇 - Part 1",
+  "description":"###前言上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。
+不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg",
+    "width": 700,
+    "height": 700
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  }
+}
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2012-01-25T13:43:00.000Z" class="article__time--header">
+      Jan.25
+    </time>
+    
+  
+    <h1 class="article__title">三天做一個論壇 - Part 1</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <h2 id="前言"><a href="#前言" class="headerlink" title="###前言"></a>###前言</h2><p>上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。</p>
+<p>不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。</p>
+<a id="more"></a>
+<h3 id="規劃結構"><a href="#規劃結構" class="headerlink" title="規劃結構"></a>規劃結構</h3><hr>
+<p>其實和上次大致上沒有什麼變化，不過架構稍微又更加的細分了一些。<br><br><a href="http://www.flickr.com/photos/elct9620/6760280007/" target="_blank" rel="external"><img src="http://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg" alt="螢幕快照 2012\-01\-25 下午10\.25\.44"></a></p>
+<h3 id="初始化系統"><a href="#初始化系統" class="headerlink" title="初始化系統"></a>初始化系統</h3><hr>
+<p>首先先建立 index.PHP 檔案在根目錄，而其他一些Library檔案就請各位自己複製摟（參考上次的 30 分鐘留言板）</p>
+<figure class="highlight php"><figcaption><span>index.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 3Day Fourum</div><div class="line"> * </div><div class="line"> * <span class="doctag">@package</span> 3day-fourm</div><div class="line"> * <span class="doctag">@author</span> Aotoki</div><div class="line"> * <span class="doctag">@version</span> 1.0</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">/* 載入設定檔 */</span></div><div class="line"> </div><div class="line"><span class="keyword">require_once</span>(<span class="string">'config.inc.PHP'</span>);</div><div class="line"> </div><div class="line"><span class="comment">/**</span></div><div class="line"> * 載入必要函式庫 </div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">//Slim Framework </span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'lib/Slim/Slim.PHP'</span>);</div><div class="line"> </div><div class="line"><span class="comment">//ActiveMongo</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'lib/ActiveMongo/ActiveMongo.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">//Facebook API</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'lib/Facebook/facebook.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">/* 載入起動器 */</span></div><div class="line"><span class="keyword">require_once</span>(<span class="string">'bootstrap.PHP'</span>);</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>這次的 index.PHP 我們只針對設定檔、函式庫載入，並且呼叫 bootstrap.PHP 這個檔案初始畫整個網站。</p>
+<p>接下來，我們來看看 bootstrap.PHP 檔案</p>
+<figure class="highlight php"><figcaption><span>bootstrap.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Bootstrap</div><div class="line"> * </div><div class="line"> * <span class="doctag">@package</span> 3day-forum</div><div class="line"> * <span class="doctag">@author</span> Aotoki</div><div class="line"> * <span class="doctag">@version</span> 1.0</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">/* 修正時區 */</span></div><div class="line">date_default_timezone_set(<span class="string">"Asia/Taipei"</span>);</div><div class="line"> </div><div class="line"><span class="comment">/* 初始化 Slim Framework */</span></div><div class="line">$app = <span class="keyword">new</span> Slim(<span class="keyword">array</span>(</div><div class="line">true<span class="string">'mode'</span> =&gt; <span class="string">'development'</span>,</div><div class="line">true<span class="string">'http.version'</span> =&gt; <span class="string">'1.1'</span>,</div><div class="line">true<span class="string">'debug'</span> =&gt; DEBUG,</div><div class="line">true<span class="string">'templates.path'</span> =&gt; ABSPATH . <span class="string">'vendor/themes'</span>,</div><div class="line">true<span class="string">'cookies.secret_key'</span> =&gt; COOKIE_SECRET_KEY,</div><div class="line">));</div><div class="line"></div><div class="line"><span class="comment">/* 初始化資料庫 */</span></div><div class="line"><span class="keyword">if</span>(DB_USER || DB_PASS)&#123;</div><div class="line">trueActiveMongo::connect(DB_NAME, DB_HOST, DB_USER, DB_PASS);</div><div class="line">&#125;<span class="keyword">else</span>&#123;</div><div class="line">trueActiveMongo::connect(DB_NAME, DB_HOST);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* 載入基本資訊 */</span></div><div class="line">$basePath = str_replace(<span class="string">'/index.PHP'</span>, <span class="string">''</span>, $app-&gt;request()-&gt;getRootUri()) . <span class="string">'/'</span>;</div><div class="line">$baseURL = <span class="string">"http://&#123;$_SERVER['HTTP_HOST']&#125;/&#123;$basePath&#125;"</span>;</div><div class="line"></div><div class="line">$app-&gt;view()-&gt;setData(<span class="string">'basePath'</span>, $basePath);</div><div class="line">$app-&gt;view()-&gt;setData(<span class="string">'baseURL'</span>, $baseURL);</div><div class="line">$app-&gt;view()-&gt;setData(<span class="string">'app'</span>, $app);</div><div class="line"></div><div class="line"><span class="comment">/* 讀取  App 邏輯 */</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/Template.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">/* 讀取 App 模型 */</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/models/Users.PHP'</span>);</div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/models/Forums.PHP'</span>);</div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/models/Thread.PHP'</span>);</div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/models/Posts.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">/* 讀取 App 介面 */</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/web/Post.PHP'</span>);</div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/web/User.PHP'</span>);</div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'app/web/Home.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">/* 運行 */</span></div><div class="line">$app-&gt;run();</div></pre></td></tr></table></figure>
+<p>首先，為了避免時間顯示不正確，先將時區設定為 亞洲/台北 （各位可以依照自己的需求設定時區）</p>
+<p>接下來，就是初始化 Slim Framework 以及 ActiveMongo 了！<br><br>基本上和上一次無異，不過在 Slim Framework 的 Mode 部分，因為弦也忘記定義一個常數，所以各位務必記得在 Deploy 的時候將其改為 production 以免錯誤訊息露出來了！</p>
+<blockquote>
+<p>在 Slim Framework 會統一處理錯誤訊息，所以會有統一錯誤頁面。而 DEBUG + Development 的狀況下，則可以看到詳細的錯誤訊息，但在 Production 下，則只會顯示 Error 以及一段訊息說明發生錯誤了！</p>
+</blockquote>
+<p>不過，在這之外，還是要注意「在非 Slim Framework 作用區外的錯誤還是會被顯示」</p>
+<p>接下來，我稍微設定了幾個常用的數值，並且以 $app-&gt;view()-&gt;setData() 的方式設定，往後所有使用 render() 方法的佈景都可以使用這些預置的變數。</p>
+<p>接著，我們依序載入 App, Model, Web App 的部份。</p>
+<blockquote>
+<p>APP 這邊是指原生屬於系統，而非之後以 Plugin 加入的部份。</p>
+</blockquote>
+<p>另外，我們要注意 app/web/Home.PHP 是最後一個，一開始可能不會發現有什麼問題，不過當我們製作 Profile 頁面讓使用者修改 暱稱 時，就會發現 Router 在處理網址時發生了判斷問題。</p>
+<h2 id="建立Model"><a href="#建立Model" class="headerlink" title="###建立Model"></a>###建立Model</h2><p>因為 MongoDB 不需要另外建立資料表，所以我們就安心的直接建立 Model 檔案。</p>
+<p>因為是論壇，所以會需要有記錄會員用的Model(Users.PHP)還有討論版（Forums.PHP）以及主題(Thread.php)跟文章(Posts.php)</p>
+<p>首先，我們先來看會員的 Model 長怎樣。</p>
+<figure class="highlight php"><figcaption><span>app/models/Users.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * User Model</div><div class="line"> * </div><div class="line"> * <span class="doctag">@package</span> 3day-forum</div><div class="line"> * <span class="doctag">@author</span> Aotoki</div><div class="line"> * <span class="doctag">@version</span> 1.0</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span> <span class="keyword">extends</span> <span class="title">ActiveMongo</span></span></div><div class="line">&#123;</div><div class="line">true<span class="comment">//資料表欄位</span></div><div class="line">true<span class="keyword">public</span> $userID; <span class="comment">//使用者編號(Facebook ID)</span></div><div class="line">true<span class="keyword">public</span> $Nickname; <span class="comment">//使用者膩稱</span></div><div class="line">true<span class="keyword">public</span> $Type; <span class="comment">//使用者類型（1 = Admin, 0 = User）</span></div><div class="line">true</div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Get User</div><div class="line">true * </div><div class="line">true * <span class="doctag">@author</span> Aotoki</div><div class="line">true * <span class="doctag">@return</span> object|bool 成功傳回 User 物件，失敗則傳回 FALSE</div><div class="line">true */</div><div class="line">true</div><div class="line">true<span class="keyword">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getUser</span><span class="params">( $fromUserID = NULL )</span></span></div><div class="line">true&#123;</div><div class="line">truetrue$userID = $fromUserID;</div><div class="line">truetrue<span class="keyword">if</span>(!$userID)&#123;</div><div class="line">truetruetrue$FB = <span class="keyword">new</span> Facebook(<span class="keyword">array</span>(</div><div class="line">truetruetruetrue<span class="string">'appId'</span> =&gt; FB_APP_ID,</div><div class="line">truetruetruetrue<span class="string">'secret'</span> =&gt; FB_SECRET,</div><div class="line">truetruetrue));</div><div class="line">truetruetrue</div><div class="line">truetruetrue$userID = $FB-&gt;getUser();</div><div class="line">truetrue&#125;</div><div class="line">truetrue</div><div class="line">truetrue<span class="keyword">if</span>(!$userID)&#123;</div><div class="line">truetruetrue$app = Slim::getInstance();</div><div class="line">truetruetrue$app-&gt;redirect($FB-&gt;getLoginUrl());</div><div class="line">truetrue&#125;<span class="keyword">else</span>&#123;</div><div class="line">truetruetrue$user = <span class="keyword">new</span> Users;</div><div class="line">truetruetrue$user-&gt;findOne(<span class="keyword">array</span>(<span class="string">'userID'</span> =&gt; $userID));</div><div class="line">truetruetrue<span class="keyword">if</span>(!$user-&gt;valid())&#123;</div><div class="line">truetruetruetrue$user-&gt;userID = $userID;</div><div class="line">truetruetruetrue$user-&gt;save();</div><div class="line">truetruetrue&#125;</div><div class="line">truetruetrue</div><div class="line">truetruetrue<span class="keyword">if</span>(!$fromUserID)&#123;</div><div class="line">truetruetruetrue$app = Slim::getInstance();</div><div class="line">truetruetruetrue$app-&gt;view()-&gt;setData(<span class="string">'user'</span>, $user);</div><div class="line">truetruetrue&#125;</div><div class="line">truetruetrue<span class="keyword">return</span> $user;</div><div class="line">truetrue&#125;	</div><div class="line">true&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>欄位很簡單，只有 會員編號、暱稱、類型 三個。而類型部分，因為並沒有安裝論壇的部份，需要手動操作資料庫去設定會員類型，該如何初始化，以及如何處理，就交給各位發揮創意摟！<del>某人超懶所以就變成這樣</del></p>
+<p>接下來，會看到一個 static 的方法叫做 getUser() 這是用於取得使用者的方法。</p>
+<blockquote>
+<p>為什麼要用 static 方法呢？因為弦也認為這些方法都是直接產生一個實例傳回，而非改動物件設定值後一併傳回，所以決定以 static 的方法來做處理。</p>
+</blockquote>
+<p>這個 getUser 的方法也非常簡單，如果有指定 userID 那麼就跳過 Facebook 登入並且繼續執行，反之則進行 Facebook 登入，取得 Facebook 的使用者編號，並且查詢系統內使用者，如果無使用者，則新建一個。</p>
+<p>最後，再將使用者物件傳回。</p>
+<p>接下來是 Forums.PHP 這個檔案，我想是全部 Model 中最為複雜的部份，也是整個論壇最複雜的檔案。</p>
+<figure class="highlight php"><figcaption><span>app/models/Forums.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Fourums</div><div class="line"> * </div><div class="line"> * <span class="doctag">@package</span> 3day-forum</div><div class="line"> * <span class="doctag">@author</span> Aotoki</div><div class="line"> * <span class="doctag">@version</span> 1.0</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Forums</span> <span class="keyword">extends</span> <span class="title">ActiveMongo</span></span></div><div class="line">&#123;</div><div class="line">true<span class="comment">//資料表欄位</span></div><div class="line">true<span class="keyword">public</span> $Name; <span class="comment">//論壇名稱</span></div><div class="line">true<span class="keyword">public</span> $Parent; <span class="comment">//父論壇</span></div><div class="line">true</div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Get Forum</div><div class="line">true * </div><div class="line">true * <span class="doctag">@author</span> Aotoki</div><div class="line">true * <span class="doctag">@param</span> string 論壇ID</div><div class="line">true * <span class="doctag">@return</span> object|bool</div><div class="line">true */</div><div class="line">true</div><div class="line">true<span class="keyword">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getForum</span><span class="params">( $ID, $forumArgs = array<span class="params">()</span> )</span></span></div><div class="line">true&#123;</div><div class="line">truetrue$forum = <span class="keyword">new</span> Forums;</div><div class="line">truetrue$forum-&gt;findOne(<span class="keyword">new</span> MongoId($ID));</div><div class="line">truetrue</div><div class="line">truetruearray_push($forumArgs, $forum);</div><div class="line">truetrue<span class="keyword">if</span>(<span class="keyword">isset</span>($forum-&gt;Parent))&#123;</div><div class="line">truetruetrue$forumArgs = <span class="keyword">self</span>::getForum($forum-&gt;Parent, $forumArgs);</div><div class="line">truetrue&#125;</div><div class="line">truetruesort($forumArgs, SORT_DESC);</div><div class="line">truetrue<span class="keyword">return</span> $forumArgs;</div><div class="line">true&#125;</div><div class="line">true</div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Get Forums</div><div class="line">true * </div><div class="line">true * <span class="doctag">@author</span> Aotoki</div><div class="line">true * <span class="doctag">@param</span> string 父論壇ID</div><div class="line">true * <span class="doctag">@return</span> object|bool 成功傳回 Forum 物件，失敗傳回 FALSE</div><div class="line">true */</div><div class="line">true</div><div class="line">true<span class="keyword">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getForums</span><span class="params">( $parentID = NULL)</span></span></div><div class="line">true&#123;</div><div class="line">truetrue$forums = <span class="keyword">new</span> Forums;</div><div class="line">truetrue$forums-&gt;find(<span class="keyword">array</span>(<span class="string">'Parent'</span> =&gt; $parentID));</div><div class="line">truetrue</div><div class="line">truetrue$result = <span class="keyword">array</span>();</div><div class="line">truetrue</div><div class="line">truetrue<span class="keyword">foreach</span> ($forums <span class="keyword">as</span> $ID =&gt; $forum) &#123;</div><div class="line">truetruetrue$lastPost = <span class="keyword">new</span> Thread;</div><div class="line">truetruetrue$lastPost-&gt;sort(<span class="string">'timestamp DESC'</span>);</div><div class="line">truetruetrue$lastPost-&gt;where(<span class="string">'forumID'</span>,(string) $forum-&gt;getID());</div><div class="line">truetruetrue$lastPost-&gt;limit(<span class="number">1</span>);</div><div class="line">truetruetrue</div><div class="line">truetruetrue<span class="keyword">if</span>(!$lastPost-&gt;valid())&#123;</div><div class="line">truetruetruetrue$lastPost = <span class="keyword">array</span>();</div><div class="line">truetruetrue&#125;<span class="keyword">else</span>&#123;</div><div class="line">truetruetruetrue$lastPost = $lastPost-&gt;getArray();</div><div class="line">truetruetrue&#125;</div><div class="line">truetruetrue</div><div class="line">truetruetrue$result[] = <span class="keyword">array</span>(</div><div class="line">truetruetruetrue<span class="string">'forum'</span> =&gt; $forum-&gt;getArray(),</div><div class="line">truetruetruetrue<span class="string">'lastPost'</span> =&gt; $lastPost,</div><div class="line">truetruetrue);</div><div class="line">truetruetrue</div><div class="line">truetruetrue<span class="keyword">unset</span>($lastPost);</div><div class="line">truetrue&#125;</div><div class="line">truetrue</div><div class="line">truetrue<span class="keyword">return</span> $result;</div><div class="line">true&#125;</div><div class="line">true</div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Create Forum</div><div class="line">true * </div><div class="line">true * <span class="doctag">@author</span> Aotoki</div><div class="line">true * <span class="doctag">@param</span> string 論壇名稱</div><div class="line">true */</div><div class="line">true</div><div class="line">true<span class="keyword">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">createForum</span><span class="params">($Name, $Parent = NULL)</span></span></div><div class="line">true&#123;</div><div class="line">truetrue$forum = <span class="keyword">new</span> Forums;</div><div class="line">truetrue$forum-&gt;Name = $Name;</div><div class="line">truetrue<span class="keyword">if</span>($Parent)&#123;</div><div class="line">truetruetrue$forum-&gt;Parent = $Parent;</div><div class="line">truetrue&#125;</div><div class="line">truetrue$forum-&gt;save();</div><div class="line">truetrue<span class="keyword">unset</span>($forum);</div><div class="line">true&#125;</div><div class="line">true</div><div class="line">true<span class="comment">/**</span></div><div class="line">true * Delete Forum</div><div class="line">true * </div><div class="line">true * <span class="doctag">@author</span> Aotoki</div><div class="line">true * <span class="doctag">@param</span> string 論壇ID</div><div class="line">true */</div><div class="line">true</div><div class="line">true<span class="keyword">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">deleteForum</span><span class="params">($forumID)</span></span></div><div class="line">true&#123;</div><div class="line">truetrue</div><div class="line">truetrue$parentID = <span class="keyword">NULL</span>;</div><div class="line">truetrue</div><div class="line">truetrue$forum = <span class="keyword">new</span> Forums;</div><div class="line">truetrue$forum-&gt;findOne(<span class="keyword">new</span> MongoId($forumID));</div><div class="line">truetrue<span class="keyword">if</span>(<span class="keyword">isset</span>($forum-&gt;Parent))&#123;</div><div class="line">truetruetrue$parentID = $forum-&gt;Parent;</div><div class="line">truetrue&#125;</div><div class="line">truetrue$forum-&gt;delete();</div><div class="line">truetrue</div><div class="line">truetrue$subForums = <span class="keyword">self</span>::getForums($forumID);</div><div class="line">truetrue<span class="keyword">foreach</span>($subForums <span class="keyword">as</span> $ID =&gt; $forum)&#123;</div><div class="line">truetruetrue<span class="keyword">self</span>::deleteForum($ID);</div><div class="line">truetrue&#125;</div><div class="line">truetrue</div><div class="line">truetrue$topics = <span class="keyword">new</span> Thread;</div><div class="line">truetrue$topics-&gt;find(<span class="keyword">array</span>(<span class="string">'forumID'</span> =&gt; $forumID));</div><div class="line">truetrue<span class="keyword">foreach</span>($topics <span class="keyword">as</span> $ID =&gt; $topic)&#123;</div><div class="line">truetruetrueThread::deleteTopic($ID);</div><div class="line">truetrue&#125;</div><div class="line">truetrue</div><div class="line">truetrue<span class="keyword">return</span> $parentID;</div><div class="line">true&#125;</div><div class="line">true</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>欄位非常簡單，就只有 Name 以及 Parent 兩個值。代表的意義就是 討論版 的名字，以及其父討論版的 ID (如果沒有父討論版則是 NULL)</p>
+<p>接下來，就是本次最複雜的部分，論壇的各個方法。選用 static 的理由已經說明了，因此先從 getForum() 開始介紹起。</p>
+<p>####getForum<br>從原始碼可以得知，這是一個遞迴函式，每當所在論壇層級越低，遞迴次數就會越多（不斷的追溯父論壇）</p>
+<p>首先，我們要先找出目前論壇，與 MySQL 這類關聯式資料庫不同，在 MongoDB 下沒有可以自動遞增的欄位屬性，所以我們只好借用每個物件都會存在的 _id 欄位，來當做識別標準。</p>
+<blockquote>
+<p>在 MongoDB 內儲存的是名為 ObjectId 物件的格式，無法直接以字串方式查詢，但是 ActiveMongo 也沒有自動轉換的方式，所以我們使用 Mongo 的 PHP Driver 內建的 MongoId 物件來轉換（不過直接輸出他，是會自動轉換回字串格式的）因為操作中有兩種查詢方式（字串跟物件）希望大家不會搞混。</p>
+</blockquote>
+<p>找到論壇後，則塞入 $forumArgs 變數，並且檢查是否有父論壇，如果有，那麼就繼續遞迴，反之則傳回整理好的 $forumArgs 函式。</p>
+<blockquote>
+<p>傳回前做 sort(排序) 處理的原因主要是因為 FIFO (First Input First Output) 會讓原本是最低層級的論壇出現在第一個，違反常理，應該是要 Parent &gt; Child 才會正確，所以才這樣處理。</p>
+</blockquote>
+<p>說實在的，把這個函式叫做 getForumTree() 搞不好會比較貼切。</p>
+<p>####getForums<br>接著，是 getForums 這個方法。邏輯上就比起前面的還簡單多了！</p>
+<p>假設沒有 Parent 的傳入，那麼就單純查詢論壇（無 Parent 的論壇，也就是最頂層的論壇）假設有，則查詢 Parent 與之相符的論壇。</p>
+<blockquote>
+<p>這邊的 Parent 因為在儲存時已經以 string(字串) 方式儲存，所以不需要用 MongoId 物件來轉換成 ObjectId</p>
+</blockquote>
+<p>實際上，其實只要這樣就足夠了！不過我們還希望得知這個討論版最後一次有新文章是什麼時候，所以決定對 Thread 查詢。</p>
+<blockquote>
+<p>後面會提到 Thread 這個 Model 我們用來儲存每篇主題與討論版的關聯性，以及這篇主題是什麼時候被建立的。</p>
+</blockquote>
+<p>因為不單純只有一個討論版，所以放入迴圈，依序取出每個討論版後，在做查詢。首先，我們先用 sort 這個方法指定依照時間排序，接著用 where 方法找出在該討論版的主題，最後用 limit 限制只傳回一筆資料。</p>
+<blockquote>
+<p>扣除 sort 方法，其實可以直接用 findOne() 方法，但是我們需要排序，所以改用這樣的方式查詢（也許我們可以用關聯式的查詢，不過弦也對這部份操作還不清楚，所以土法煉鋼一下～）</p>
+</blockquote>
+<p>接著，我們將其放入 $result 陣列中，傳回。</p>
+<blockquote>
+<p>$result[] = array() 是讓陣列自動產生 Key 和 array_psuh() 類似，而為什麼要對 $forum 進行 getArray() 指令產出陣列呢？這是因為弦也開發時發現如果直接傳入物件，取出時會變回空的 Forums 物件而非一個指定某個討論版的物件，為了保持資料，所以就這樣做處理。</p>
+</blockquote>
+<p>####createForum<br>這個方法相較之下，就筆其他簡單許多。</p>
+<p>僅是單純的建立一個 Forums 物件，並且將 Name 以及 Parent 存入而已。最後的 unset() 動作是釋放記憶體，雖然函式呼叫完應該也會自動釋放，不過還是手動釋放避免該擾吧！</p>
+<blockquote>
+<p>其實 getForums 的迴圈釋放 $lastPost 用意也一樣，但是這個動作可以確保下次迴圈運行時不會不小心用到上一筆資料。</p>
+</blockquote>
+<p>####deleteForum<br>終於，我們到了最後一個方法，這個方法可以視為 getForum 跟 getForums 混合後的修改版。</p>
+<p>首先找出應該刪除的討論版，並且加以刪除（順便記錄其父討論版）<br>接著找出子討論版，並且刪除（使用遞迴方式，確保子討論版下的子討論版也都會被刪除）</p>
+<p>接著刪除討論版下的所有主題（這邊使用 Thread 的 deleteTopic 方法，是為了一併刪除相關的文章）<br>最後傳回父論壇的 ID 以方便重新定向時可以轉跳到其父討論版，而不會跳回首頁。</p>
+<h2 id="總結"><a href="#總結" class="headerlink" title="###總結"></a>###總結</h2><p>我想一次吸收這麼多資訊應該很難消化，所以先在這邊做一個段落。<br><br>（不是因為我想偷懶喔，因為之後的 Thread Model 也有不少於 Forums Model 的方法要解釋）</p>
+<p>下一篇文章除了將剩下的 Model 解釋完之外，還會繼續解說其餘的 Web App 部分。</p>
+<ul>
+<li>Github 原始碼：<a href="https://github.com/elct9620/3Day-Forum/zipball/1.0" target="_blank" rel="external">https://Github.com/elct9620/3Day-Forum/zipball/1.0</a></li>
+<li>線上範例 ：<a href="http://the-3day-forum.herokuapp.com/" target="_blank" rel="external">http://the-3day-forum.Herokuapp.com/</a></li>
+</ul>
+
+    
+    <footer class="article__footer">
+      
+
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

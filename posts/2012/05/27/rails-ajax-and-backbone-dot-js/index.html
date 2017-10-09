@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Rails - Ajax and Backbone.JS | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="好像有一段時間沒寫網誌了！ 上週在 Code School 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。 經過一週的苦戰，總算是將十三個課程都全不上過一次。（不過只看投影片跟進行練習題，沒有看影片，因為有點花時間，所以只能之後慢慢補完） 既然經過如此密集的訓練，功力想必大增，於是今天就來小試身手嘗試了 Rails 的 Ajax 與 Ba">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rails - Ajax and Backbone.JS">
+<meta property="og:url" content="http://blog.frost.tw/posts/2012/05/27/rails-ajax-and-backbone-dot-js/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="好像有一段時間沒寫網誌了！ 上週在 Code School 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。 經過一週的苦戰，總算是將十三個課程都全不上過一次。（不過只看投影片跟進行練習題，沒有看影片，因為有點花時間，所以只能之後慢慢補完） 既然經過如此密集的訓練，功力想必大增，於是今天就來小試身手嘗試了 Rails 的 Ajax 與 Ba">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rails - Ajax and Backbone.JS">
+<meta name="twitter:description" content="好像有一段時間沒寫網誌了！ 上週在 Code School 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。 經過一週的苦戰，總算是將十三個課程都全不上過一次。（不過只看投影片跟進行練習題，沒有看影片，因為有點花時間，所以只能之後慢慢補完） 既然經過如此密集的訓練，功力想必大增，於是今天就來小試身手嘗試了 Rails 的 Ajax 與 Ba">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": "http://blog.frost.tw/posts/2012/05/27/rails-ajax-and-backbone-dot-js/",
+  "url":"http://blog.frost.tw/posts/2012/05/27/rails-ajax-and-backbone-dot-js/",
+  "datePublished": "2012-05-27T10:54:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "headline":"Rails - Ajax and Backbone.JS",
+  "description":"好像有一段時間沒寫網誌了！
+上週在 Code School 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。
+經過一週的苦戰，總算是將十三個課程都全不上過一次。（不過只看投影片跟進行練習題，沒有看影片，因為有點花時間，所以只能之後慢慢補完）
+既然經過如此密集的訓練，功力想必大增，於是今天就來小試身手嘗試了 Rails 的 Ajax 與 Backbone.JS 的搭配。",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://blog.frost.tw/icon-512.png",
+    "width": 700,
+    "height": 700
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  }
+}
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2012-05-27T10:54:00.000Z" class="article__time--header">
+      May.27
+    </time>
+    
+  
+    <h1 class="article__title">Rails - Ajax and Backbone.JS</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>好像有一段時間沒寫網誌了！</p>
+<p>上週在 <a href="http://codeschool.com" target="_blank" rel="external">Code School</a> 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。</p>
+<p>經過一週的苦戰，總算是將十三個課程都全不上過一次。<br>（不過只看投影片跟進行練習題，沒有看影片，因為有點花時間，所以只能之後慢慢補完）</p>
+<p>既然經過如此密集的訓練，功力想必大增，於是今天就來小試身手嘗試了 Rails 的 Ajax 與 Backbone.JS 的搭配。</p>
+<a id="more"></a>
+<blockquote>
+<p>下面目錄有錯誤之類的請見諒，因為正在練習靠印象打出來，真的有錯誤請通知一下會修正</p>
+</blockquote>
+<h3 id="Mission-Initialize"><a href="#Mission-Initialize" class="headerlink" title="Mission Initialize"></a>Mission Initialize</h3><hr>
+<p>首先，要先把專案環境配置出來。</p>
+<pre><code> cd ~/.pow </code></pre>
+我先切換到 MacOS 上超方便的 Pow 後，建立一個新專案。
+<pre><code> Rails new ajax-test </code></pre>
+接著建立一些基本的Model, Controller, View 等等……
+<pre><code>cd ajax-test
+rm public/index.html
+Rails g controller home
+Rails g controller items
+Rails g model item name:string description:text
+</code></pre>
+
+<p>接著設定好 config/router.rb<br><figure class="highlight ruby"><figcaption><span>config/router.rb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#略</span></div><div class="line">root <span class="symbol">:to</span> =&gt; <span class="string">"home#index"</span></div><div class="line">resources <span class="symbol">:items</span>, <span class="symbol">only:</span> [<span class="symbol">:index</span>]</div><div class="line"><span class="comment">#略</span></div></pre></td></tr></table></figure></p>
+<p>接著對 home, items controller 建立會用到的 method</p>
+<figure class="highlight ruby"><figcaption><span>app/controllers/home_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#略</span></div><div class="line">true<span class="function"><span class="keyword">def</span> <span class="title">index</span></span></div><div class="line"></div><div class="line">true<span class="keyword">end</span></div><div class="line"><span class="comment">#略</span></div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><figcaption><span>app/controllers/items_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#略</span></div><div class="line">true<span class="function"><span class="keyword">def</span> <span class="title">index</span></span></div><div class="line"></div><div class="line">true<span class="keyword">end</span></div><div class="line"><span class="comment">#略</span></div></pre></td></tr></table></figure>
+<p>到這邊基本上算是完成準備了！</p>
+<h3 id="Mission-01"><a href="#Mission-01" class="headerlink" title="Mission 01"></a>Mission 01</h3><hr>
+<p>首先，先來對 :remote 的 link 做測試（並沒有特別針對表單，不過原理大致相同）</p>
+<figure class="highlight ruby"><figcaption><span>app/views/home/index.html.erb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;%= link_to(<span class="string">"Items List"</span>, items_path, <span class="symbol">remote:</span> <span class="literal">true</span>) %&gt;</div></pre></td></tr></table></figure>
+<p>然後給 items#index 加個畫面。</p>
+<figure class="highlight ruby"><figcaption><span>app/views/items/index.html.erb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">There is items list.</div><div class="line"></div><div class="line"><span class="string">``</span><span class="string">` </span></div><div class="line"></div><div class="line"></div><div class="line">這樣一來就會有一個帶有 data-remote="true" 屬性的連結產生。</div><div class="line">（這方面還挺方便的，只要多加個 options 就轉職為 Ajax 了！）</div><div class="line"></div><div class="line">接著打開 http://ajax-test.dev/ 點了一下連結，啥都沒發生。</div><div class="line">於是打開 Chrome 的開發人員工具（Command + Alt + I）一探究竟。</div><div class="line"></div><div class="line">確實，有 Ajax 請求，但是傳回的是 HTML 頁面，好像不太對。回想了一下 Code School 課程裡面有要增加 *.js.erb 之類的檔案，先去修改一下 Controller 讓他可以傳回 js 格式的檔案。</div><div class="line"></div><div class="line">`<span class="string">``</span> Ruby app/controllers/items_controller.rb</div><div class="line"><span class="comment">#略</span></div><div class="line">respond_to <span class="symbol">:html</span>, <span class="symbol">:js</span></div><div class="line"></div><div class="line">true<span class="function"><span class="keyword">def</span> <span class="title">index</span></span></div><div class="line">truetrue@datas = Item.all</div><div class="line">truetruerespond_with(@datas)</div><div class="line">true<span class="keyword">end</span></div><div class="line"><span class="comment">#略</span></div></pre></td></tr></table></figure>
+<p>再次打開點選連結，會發現 Ajax 雖然一樣傳回網頁，但是卻從包含 layout 變成剩下網頁內容了！</p>
+<p>接著，補上 js 部分</p>
+<figure class="highlight ruby"><figcaption><span>app/views/items/index.js.erb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$(<span class="string">"body"</span>).text(<span class="string">"You already clicked item list."</span>);</div></pre></td></tr></table></figure>
+<p>這次點選連結後就會直接剩下 You already clicked item list. 這段文字。</p>
+<p>看起來不錯，不過如果希望Ajax傳輸是回傳 JSON 格式，要怎麼處理呢？</p>
+<h3 id="Mission-02"><a href="#Mission-02" class="headerlink" title="Mission 02"></a>Mission 02</h3><hr>
+<p>稍微修改一下 home#index 的 view 讓連結變成傳回 JSON</p>
+<figure class="highlight ruby"><figcaption><span>app/views/home/index.html.erb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;%= link_to(<span class="string">"Items List"</span>, items_path, <span class="symbol">remote:</span> <span class="literal">true</span>, <span class="string">"data-type"</span> =&gt; <span class="string">"json"</span>) %&gt;</div></pre></td></tr></table></figure>
+<p>再次點選連結，發現沒有被更改。<br>從開發人員面板看 Networks 的情況，有 Ajax 查詢發生，看一下回應： [ ] 類型是 JSON 看起來生效了，放點資料進去看看。</p>
+<pre><code>Rails c
+item = Item.new
+item.name = "Sword"
+item.description = "A weapon"
+item.save
+exit
+</code></pre>
+
+<p>再次觀看時就發現有出現，不過頁面仍沒有變化。</p>
+<blockquote>
+<p>這部分可以用 jQuery 去 bind 一些 UJS 的 Ajax 事件去做應對</p>
+</blockquote>
+<h3 id="Mission-03"><a href="#Mission-03" class="headerlink" title="Mission 03"></a>Mission 03</h3><hr>
+<p>接著再來把 Backbone.JS 放進去看看～</p>
+<pre><code> cd app/assets/JavaScript/
+mkdir lib
+mv ~/Downloads/backbone-min.js ./lib
+mv ~/Downloads/underscore-min.js ./lib
+cd ../../..
+</code></pre>
+
+<p>複製好檔案後來改 appication.js</p>
+<figure class="highlight"><figcaption><span>app/assets/javascript/application.js</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#略</div><div class="line">//=require jquery</div><div class="line">//=require jquery_ujs</div><div class="line">//=require lib/underscore-min</div><div class="line">//=require lib/backbone-min</div><div class="line">#略</div></pre></td></tr></table></figure>
+<p>這樣就不會先把 Backbone.JS 讀進來了～</p>
+<p>然後用 CoffeeScript 來寫 Backbone.JS 的 MVC</p>
+<blockquote>
+<p>這邊就很簡單的寫一下，沒有規劃，畢竟只是要測試看看會發生什麼事情 XDD</p>
+</blockquote>
+<figure class="highlight coffeescript"><figcaption><span>app/assets/JavaScript/home.js.coffee</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ -&gt;</div><div class="line">trueItemModel = Backbeon.Model.extend()</div><div class="line">trueItemCollection = Backbone.Collection.extend(&#123;</div><div class="line">truetrueurl: <span class="string">'/items'</span>,</div><div class="line">truetruemodel: ItemModel</div><div class="line">true&#125;)</div><div class="line">true</div><div class="line">trueItemView = Backbone.View.extend(&#123;</div><div class="line">truetruetagName: <span class="string">'li'</span>,</div><div class="line">truetruetemplate: _.template(<span class="string">"&lt;strong&gt;&lt;%= name %&gt;&lt;/strong&gt;, &lt;%= description %&gt;"</span>),</div><div class="line">truetruerender: <span class="function">-&gt;</span></div><div class="line">truetruetrue$(@.el).html(@.template(@.model.toJSON()))</div><div class="line">truetruetrue<span class="keyword">return</span> @</div><div class="line">true&#125;)</div><div class="line">true</div><div class="line">trueItemViewList = Backbone.View.extend(&#123;</div><div class="line">truetruetagName: <span class="string">'ul'</span>,</div><div class="line">truetrueinitialize: <span class="function">-&gt;</span></div><div class="line">truetruetrue@.collection.<span class="literal">on</span>(<span class="string">'reset'</span>, @.render, @)</div><div class="line">truetruerender: <span class="function">-&gt;</span></div><div class="line">truetruetrue@.collection.forEach(@.addOne, @)</div><div class="line">truetruetrue<span class="keyword">return</span> @</div><div class="line">truetrueaddOne: <span class="function"><span class="params">(model)</span>-&gt;</span></div><div class="line">truetruetrueitemView = <span class="keyword">new</span> ItemView(&#123;model: model&#125;)</div><div class="line">truetruetrue@.$el.append(itemView.render().el)</div><div class="line">true&#125;)</div><div class="line"></div><div class="line">trueitems = <span class="keyword">new</span> ItemCollection()</div><div class="line">trueitemList = <span class="keyword">new</span> ItemViewList(&#123;collection: items&#125;)</div><div class="line"></div><div class="line">trueitemList.render()</div><div class="line">true</div><div class="line">true$(<span class="string">"body"</span>).append(<span class="string">"Items List"</span>)</div><div class="line">true$(<span class="string">"body"</span>).append(itemList.el)</div><div class="line">true</div><div class="line">trueitems.fetch()</div></pre></td></tr></table></figure>
+<p>今天最長的程式碼（笑）</p>
+<p>接著打開網頁，就會發現 Items 被列出來了，看起來即使不另外設定也能夠自動讓 Rails 丟出 JSON 格式的資料。</p>
+<p>大致上就是這樣了！不過 View 部分需要另外寫一個 template 其實不怎麼方便，如果用 Mission 01 的方法因為還是 erb 可以讓 Server 去 render :partial =&gt; “itemList” 之類的，不過 Backbone.JS 似乎就不怎麼方便。這部分只能看情況取捨摟～</p>
+<p>做完 <a href="http://codeschool.com" target="_blank" rel="external">Code School</a> 的課程真的有覺得內力大增，至少學到很多優秀的技巧。</p>
+
+    
+    <footer class="article__footer">
+      
+
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

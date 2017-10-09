@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Travis CI 的 Deploy 功能 | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="description" content="蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="最近收到一個 Issue 是關於我製作的 Heroku Buildpacks 有問題，沒辦法使用 Travis CI 的 Deploy 功能。 因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。 這算是一個很方便的功能，尤其是網站">
+<meta name="keywords" content="筆記,PaaS,Heroku,Github,CI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Travis CI 的 Deploy 功能">
+<meta property="og:url" content="http://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="最近收到一個 Issue 是關於我製作的 Heroku Buildpacks 有問題，沒辦法使用 Travis CI 的 Deploy 功能。 因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。 這算是一個很方便的功能，尤其是網站">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Travis CI 的 Deploy 功能">
+<meta name="twitter:description" content="最近收到一個 Issue 是關於我製作的 Heroku Buildpacks 有問題，沒辦法使用 Travis CI 的 Deploy 功能。 因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。 這算是一個很方便的功能，尤其是網站">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="205000946197077">
+
+  <script type="application/ld+json">
+
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": "http://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/",
+  "url":"http://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/",
+  "datePublished": "2014-02-24T22:00:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "headline":"Travis CI 的 Deploy 功能",
+  "description":"最近收到一個 Issue 是關於我製作的 Heroku Buildpacks 有問題，沒辦法使用 Travis CI 的 Deploy 功能。
+因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。
+這算是一個很方便的功能，尤其是網站專案來說，如果在 Deploy 後馬上就發生問題，也是非常不方便。那麼，一般 Git 的專案來說，我們通常都是直接進行 Deploy 即使在本機事先做過一次測試，但是總是會有忘記的時候。
+此時，透過持續整合服務的自動 Deploy 功能來協助，就可以在確保所有測試都沒問題的狀況下才進行 Deploy 也比較能夠自動化。",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://blog.frost.tw/icon-512.png",
+    "width": 700,
+    "height": 700
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  }
+}
+
+</script>
+
+
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2014-02-24T22:00:00.000Z" class="article__time--header">
+      Feb.25
+    </time>
+    
+  
+    <h1 class="article__title">Travis CI 的 Deploy 功能</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>最近收到一個 Issue 是關於我製作的 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="external">Heroku Buildpacks</a> 有問題，沒辦法使用 Travis CI 的 Deploy 功能。</p>
+<p>因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。</p>
+<p>這算是一個很方便的功能，尤其是網站專案來說，如果在 Deploy 後馬上就發生問題，也是非常不方便。那麼，一般 Git 的專案來說，我們通常都是直接進行 Deploy 即使在本機事先做過一次測試，但是總是會有忘記的時候。</p>
+<p>此時，透過持續整合服務的自動 Deploy 功能來協助，就可以在確保所有測試都沒問題的狀況下才進行 Deploy 也比較能夠自動化。</p>
+<a id="more"></a>
+<p>那麼，我們該如何開始呢？</p>
+<p>如果已經在使用 Travis CI 可以直接打開 <code>.travis.yml</code> 檔案加入 <code>deploy</code> 的設定項。</p>
+<figure class="highlight yml"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  provider:</span> <span class="string">Heroku</span></div><div class="line"><span class="attr">  api_key:</span> <span class="string">xxx</span></div><div class="line"><span class="attr">  app:</span> <span class="string">my-auto-deploy-app</span></div></pre></td></tr></table></figure>
+<p>或者安裝 Travis CI 的 <a href="https://Github.com/travis-ci/travis" target="_blank" rel="external">Command Line Tools</a> 使用 <code>travis setup Heroku</code> 來自動生成。<br>不過這需要先有 <code>.travis.yml</code> 檔案存在，如果沒有的話可先使用 <code>travis init</code> 來進行初始化。</p>
+<p>不過，如果直接將 API Key 以明碼儲存在 Public 的 Repository 上其實有點不妥，因此可以使用 <code>travis encrypt</code> 先行加密。</p>
+<blockquote>
+<p>travis encrypt travis encrypt $(Heroku auth:token)</p>
+</blockquote>
+<p>我們就會得到一串加密的字串（大概是用 Travis CI 上面的 Public Key 加密的，因此不用擔心會被解開，擁有 Private Key 的只有 Travis CI 本身。）</p>
+<p>之後修改 <code>.travis.yml</code> 即可。</p>
+<figure class="highlight yml"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  provider:</span> <span class="string">Heroku</span></div><div class="line"><span class="attr">  api_key:</span></div><div class="line">  	<span class="attr">secure:</span> <span class="string">encrypted-api-key</span></div><div class="line"><span class="attr">  app:</span> <span class="string">my-auto-deploy-app</span></div></pre></td></tr></table></figure>
+<p>上面基本上就是最為基本的使用，不過要注意的是，假設測試的版本有多個（Ex. PHP 5.4, PHP 5.5）那麼這個動作也會被執行兩次（預設情況）</p>
+<p>後面就來談談<a href="http://docs.travis-ci.com/user/deployment/Heroku/" target="_blank" rel="external">官方文件</a>上所敘述的其他運用方式吧！<br>（這個 Deploy 功能也支援像是 OpenShift, AWS 等，可以依照情況使用。）</p>
+<h3 id="不同-Branch-Deploy-到不同-Heroku-APP"><a href="#不同-Branch-Deploy-到不同-Heroku-APP" class="headerlink" title="不同 Branch Deploy 到不同 Heroku APP"></a>不同 Branch Deploy 到不同 Heroku APP</h3><p>這個情況像是有 Production 之外，也許還會有 Staging 供內部測試時，就很方便。</p>
+<figure class="highlight yml"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  provider:</span> <span class="string">Heroku</span></div><div class="line"><span class="attr">  api_key:</span></div><div class="line">  	<span class="attr">secure:</span> <span class="string">encrypted-api-key</span></div><div class="line"><span class="attr">  app:</span> </div><div class="line">  	<span class="attr">production:</span> <span class="string">production-app</span></div><div class="line"><span class="attr">    staging:</span> <span class="string">staging-app</span></div></pre></td></tr></table></figure>
+<p>其實概念挺簡單好懂的，就是 <code>branch: app</code> 的格式。<br>（也支援 Deploy 到不同 Heroku 帳號，用法一樣只是改為寫在 <code>api_key</code> 項目下。）</p>
+<h3 id="僅有部分-Branch-需要-Deploy"><a href="#僅有部分-Branch-需要-Deploy" class="headerlink" title="僅有部分 Branch 需要 Deploy"></a>僅有部分 Branch 需要 Deploy</h3><p>一般來說我們的 Development 不會需要 Deploy 出去，但是每次跑 CI 的時候都會用 Development 去 Deploy 非常不方便，因此可以使用 <code>on</code> 來做設定。</p>
+<figure class="highlight yml"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  provider:</span> <span class="string">Heroku</span></div><div class="line"><span class="attr">  api_key:</span></div><div class="line">  	<span class="attr">secure:</span> <span class="string">encrypted-api-key</span></div><div class="line"><span class="attr">  app:</span> <span class="string">my-auto-deploy-app</span></div><div class="line"><span class="attr">  on:</span> <span class="string">production</span></div></pre></td></tr></table></figure>
+<p>使用 <code>travis setup Heroku</code> 的話，會發現預設是 <code>on</code> 一個 <code>repo</code> 不過文件上似乎沒有詳細敘述，不過這個選項是支援多選的。</p>
+<h3 id="Deploy-後運行某些-Command"><a href="#Deploy-後運行某些-Command" class="headerlink" title="Deploy 後運行某些 Command"></a>Deploy 後運行某些 Command</h3><p>像是 Rails / Laravel 這類 Framework 在產生 Migration 一段時間後進入 Deploy 程序，就很容易忘記下 <code>migrate</code> 這個指令，我自己就碰過因為忘記下而讓網站死掉的情況⋯⋯</p>
+<p>Travis CI 也很貼心地提供這個功能（甚至還有 <code>after_deploy</code> 可以做後續處理）</p>
+<figure class="highlight yml"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  provider:</span> <span class="string">Heroku</span></div><div class="line"><span class="attr">  api_key:</span></div><div class="line">  	<span class="attr">secure:</span> <span class="string">encrypted-api-key</span></div><div class="line"><span class="attr">  app:</span> <span class="string">my-auto-deploy-app</span></div><div class="line"> 	<span class="attr">run:</span></div><div class="line">  	<span class="bullet">-</span> <span class="string">"rake db:migrate"</span></div><div class="line"><span class="bullet">    -</span> <span class="string">"rake assets:precompile"</span></div></pre></td></tr></table></figure>
+<p>如果只需要 <code>rake db:migrate</code> 直接寫在 <code>run</code> 後面就可以了。</p>
+<p>整體來說很好理解，不過這個功能卻解決了網站在 Deploy 上的問題。<br>（像是需要使用 Capistrano 之類的來輔助才能完成之類的，如果是 PHP 專案也可以用 FTP 來上傳。）</p>
+
+    
+    <footer class="article__footer">
+      
+
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>
