@@ -8,8 +8,237 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
     
     <description>蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。</description>
-    <pubDate>Sun, 22 Oct 2017 15:16:53 GMT</pubDate>
+    <pubDate>Sun, 22 Oct 2017 16:43:54 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title></title>
+      <link>http://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</link>
+      <guid>http://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</guid>
+      <pubDate>Sun, 22 Oct 2017 16:00:00 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。&lt;/p&gt;
+&lt;p&gt;不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。&lt;/p&gt;
+      
+      </description>
+      
+      <content:encoded><![CDATA[<p>老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。</p>
+<p>不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。</p>
+<a id="more"></a>
+<p>建構一個樹狀結構，一般在資料庫中會這樣設計。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>parent_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Jimmy</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>John</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Alice</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Alex</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>在指查詢一代的情況下，可以直接使用 Rails 的 <code>belongs_to</code> 和 <code>has_many</code> 來解決。</p>
+<p>但是如果想知道 <code>Alex</code> 的父代有哪些，就必須先找到 <code>John</code> 再繼續往回找。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ancestors</span><span class="params">(user, path = [])</span></span></div><div class="line">  <span class="keyword">return</span> path <span class="keyword">if</span> user.parent.<span class="literal">nil</span>?</div><div class="line">  path &lt;&lt; user.parent</div><div class="line">  ancestors(user.parent, path)</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">ancestors(User.find_by(<span class="symbol">name:</span> <span class="string">'Alex'</span>))</div><div class="line"><span class="comment"># =&gt; [User&lt;<span class="doctag">@name</span>="John"&gt;, User&lt;<span class="doctag">@name</span>="Jimmy"&gt;]</span></div></pre></td></tr></table></figure>
+<p>很明顯的，這會執行 N 次的 SQL 查詢，稍微有經驗就會注意到這樣是非常沒有效率的。</p>
+<p>於是，就會出現幾種常見的解法。</p>
+<ul>
+<li>Adjacency List</li>
+<li>Path Enumeration</li>
+<li>Nested Sets</li>
+<li>Closure Table</li>
+</ul>
+<p>關於上述這幾種解法的說明，可以參考 Percona 這<a href="https://www.slideshare.net/billkarwin/models-for-hierarchical-data" target="_blank" rel="external">這份簡報</a>。</p>
+<h2 id="Closure-Table"><a href="#Closure-Table" class="headerlink" title="Closure Table"></a>Closure Table</h2><p>在 Rails 中，速度最快的是 Closure table 這個解法，可以使用 <code>closure_tree</code> gem 來實作，不過在文章一開始描述的情境，卻是一個噩夢。</p>
+<ul>
+<li>每個交易是一個節點</li>
+<li>回饋會往上追溯（但不往下）</li>
+<li>節點的世代增長會很快</li>
+<li>樹可以無限成長</li>
+</ul>
+<p>而 Closure table 是空間換時間的方法，所以假設當發展到 300,00 代的時候，因為 Closure Tree 會把每一個節點跟所有父代做一次關聯來加速查詢，所以在第 300,00 代基本上是需要插入 <code>300,00 - 1</code> 條紀錄的。</p>
+<p>所以，這個解法會在後期出現效能貧頸。</p>
+<h2 id="Path-Enumeration"><a href="#Path-Enumeration" class="headerlink" title="Path Enumeration"></a>Path Enumeration</h2><p>在 PostgreSQL 內，有一個叫做 <code>ltree</code> 的 Extension 可以使用。</p>
+<p>因為紅利回饋的往回追溯會有極限制，畢竟是基於交易的金額來計算可用的回饋，所以受到影響的父代是有限的。</p>
+<p>在 Path Enumeration 的特性中，是利用建立「路徑」來記錄的。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Jimmy</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>John</td>
+<td>Jimmy</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Alice</td>
+<td>Jimmy</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Alex</td>
+<td>Jimmy.John</td>
+</tr>
+</tbody>
+</table>
+<p>也就是說，當 <code>Alex</code> 想知道有多少父代只需要從 <code>path</code> 這個 <code>ltree</code> 類型的欄位下查詢就可以了！</p>
+<p>這個解法看起來一切完美，但是卻有一個問題。</p>
+<blockquote>
+<p>欄位的內容有上限，也就是說當發展到一定的世代到達極限後，就無法再繼續下去。</p>
+</blockquote>
+<p>這很適合用來儲存多層的文章分類，但是卻不適合無限成長的樹。</p>
+<h3 id="限制世代數"><a href="#限制世代數" class="headerlink" title="限制世代數"></a>限制世代數</h3><p>不論是 Closure Table 或者 Path Enumeration 的情況，其實只要限制紀錄的世代數就可以解決這個問題。</p>
+<blockquote>
+<p>畢竟追訴的世代有上限，只要存需要的部分就好了！</p>
+</blockquote>
+<p>這個方法聽起來不錯，不過對 Path Enumeration 來說，當 Path 不完整的時候，查詢就會失去準確度（無法用標準的 Path 查詢去問路徑）</p>
+<p>至於 Closure Table 看似這樣做是沒有問題的，但是一樣會失去關於深度的正確數值。</p>
+<p>在考慮一些細節之後，發現這並不是恰當的方法。</p>
+<h2 id="Adjacency-List"><a href="#Adjacency-List" class="headerlink" title="Adjacency List"></a>Adjacency List</h2><p>回到 Adjacency List 的方法上，在 Rails 中使用會產生類似下面的 SQL 查詢。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">4</span>;</div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">2</span>;</div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>一般來說我們應該用 <code>WHERE id IN(1, 2, 3)</code> 來查詢才對。</p>
+<p>在這邊 PostgreSQL 提供了叫做 Recursive Query 的功能，官網的範例長這樣。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">WITH RECURSIVE t(n) AS (</div><div class="line">    VALUES(1)</div><div class="line">  UNION ALL</div><div class="line">    <span class="keyword">SELECT</span> n+<span class="number">1</span> <span class="keyword">FROM</span> t</div><div class="line">    <span class="keyword">WHERE</span> n &lt; <span class="number">100</span></div><div class="line">)</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">sum</span>(n) <span class="keyword">FROM</span> t;</div></pre></td></tr></table></figure>
+<p>然後就可以做出 1 + 2 + … + 100 的效果。</p>
+<p>在 Ruby, PHP, JavaScript 等語言中，遞迴已經不容易理解，在 SQL 中實現這件事情，其實也並不容易。</p>
+<p>先來理解一下範例的意思。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">WITH RECURSIVE 遞迴結果表(回傳欄位) AS (</div><div class="line">    初始值</div><div class="line">  UNION ALL</div><div class="line">    遞迴查詢</div><div class="line">)</div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> 遞迴結果表;</div></pre></td></tr></table></figure>
+<p>也就是說，官網範例的 SQL 是給了初始值 <code>1</code> 並且不斷的 <code>SELECT n + 1</code> 後重新呼叫自己，直到 <code>n &lt; 100</code> 才停止。</p>
+<h3 id="建構-SQL-查詢"><a href="#建構-SQL-查詢" class="headerlink" title="建構 SQL 查詢"></a>建構 SQL 查詢</h3><p>接下來，以這張表來建構查詢。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>parent_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Jimmy</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>John</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Alice</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Alex</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>按照前面的原則，撰寫下面這張表。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">WITH RECURSIVE ancestors(id, parent_id, name) AS (</div><div class="line">    <span class="keyword">SELECT</span> users.id, users.parent_id, users.name</div><div class="line">    <span class="keyword">FROM</span> <span class="keyword">users</span></div><div class="line">    <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">4</span></div><div class="line">  <span class="keyword">UNION</span> ALL</div><div class="line">    <span class="keyword">SELECT</span> users.id, users.parent_id, users.name</div><div class="line">    <span class="keyword">FROM</span> <span class="keyword">users</span></div><div class="line">    <span class="keyword">JOIN</span> ancestors <span class="keyword">ON</span> ancestors.parent_id = users.id</div><div class="line">)</div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ancestors;</div></pre></td></tr></table></figure>
+<p>如此一來我們就會得到如下的結果</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>parent_id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>2</td>
+<td>Alex</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>John</td>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td>Jimmy</td>
+</tr>
+</tbody>
+</table>
+<p>首先，我們將 <code>id = 4</code> 的 Alex 選出來，作為第一筆資料。</p>
+<blockquote>
+<p>實務上，應該是將 John (<code>id = 2</code>) 直接帶入（父代預設不包含自己）</p>
+</blockquote>
+<p>接下來，我們的下一筆資料的 <code>users.id</code> 必須等於上一筆資料的 <code>users.parent_id</code> 才行。</p>
+<p>這邊簡單的使用 <code>JOIN</code> 將 <code>ancestors</code> 跟現有的 <code>users</code> 連接起來。</p>
+<blockquote>
+<p><code>JOIN ancestors ON ancestors.parent_id = users.id</code> 可能會讓你有點疑惑。<br>這邊的 <code>ancestors</code> 是指「上一個找到的父代」也就是說上面這句 <code>JOIN</code> 查詢，是找下一個父代的查詢，用上一個的父代 <code>id</code> 去比對是意思正確的。</p>
+</blockquote>
+<p>至於效能上，目前在 800,00 rows 狀態下，用 <code>JOIN</code> 還是單純 <code>FROM users, ancestors</code> 是差不多的耗時跟解析 SQL 之後可能還需要多觀察是否有改進空間。</p>
+<blockquote>
+<p>相對於 Closure Table 還是慢上不少。</p>
+</blockquote>
+<h3 id="轉換成-Model"><a href="#轉換成-Model" class="headerlink" title="轉換成 Model"></a>轉換成 Model</h3><p>既然是使用 Rails 的專案，那麼就需要封裝成 Model 的方法才行。</p>
+<p>在這之前，我們要先知道幾個前提。</p>
+<ul>
+<li><code>WITH RECURSIVE ancestors(...) AS (...)</code> 裡面給的欄位，是回傳的欄位。</li>
+<li><code>UNION</code> 所 <code>SELECT</code> 的欄位必須一至，不可使用 <code>*</code> 符號。</li>
+</ul>
+<p>因為有以上的限制，我們的 Model 會呈現這樣的狀態。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> &lt; ApplicationRecord</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">ancestors</span><span class="params">(<span class="symbol">max_depth:</span> <span class="number">10</span>)</span></span></div><div class="line">    return_columns = User.column_names.join(<span class="string">', '</span>)</div><div class="line">    select_columns = column_names_for_recursive_query.join(<span class="string">', '</span>)</div><div class="line">    table_name = User.table_name</div><div class="line">    </div><div class="line">    query = <span class="string">&lt;&lt;-SQL</span></div><div class="line">      WITH RECURSIVE ancestors(<span class="subst">#&#123;return_columns&#125;</span>, depth) AS (</div><div class="line">        SELECT <span class="subst">#&#123;select_columns&#125;</span>, 1</div><div class="line">        FROM <span class="subst">#&#123;table_name&#125;</span></div><div class="line">        WHERE <span class="subst">#&#123;table_name.id&#125;</span> = <span class="subst">#&#123;parent_id&#125;</span></div><div class="line">      UNION ALL</div><div class="line">        SELECT <span class="subst">#&#123;select_columns&#125;</span>, depth + 1</div><div class="line">        FROM <span class="subst">#&#123;table_name&#125;</span></div><div class="line">        JOIN ancestors ON ancestors.parent_id = <span class="subst">#&#123;table_name&#125;</span>.id</div><div class="line">        WHERE depth &lt; <span class="subst">#&#123;max_depth&#125;</span></div><div class="line">      )</div><div class="line">      SELECT * FROM ancestors ORDER BY depth</div><div class="line">    SQL</div><div class="line">    User.find_by_sql(query)</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  private</div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">column_names_for_recursive_query</span></span></div><div class="line">    @column_names <span class="params">||</span>= User.column_names.map <span class="params">|name|</span></div><div class="line">      [User.table_name, name].join(<span class="string">'.'</span>)</div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>如此一來，我們就可以用 <code>User.last.ancestors</code> 取得對應的 Model 物件回傳。</p>
+<p>不過，上面的查詢也還有不少限制，像是無法繼續加上 <code>order</code> <code>limit</code> 等其他透過 ORM 產生的 SQL 查詢。</p>
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>其實整體看下來，所謂樹狀的結構解法，是要看當時的情境。</p>
+<p>以文章一開始的案例來看，選用 Adjacency List by SQL 的方式最為適合，理由如下。</p>
+<ul>
+<li>產生節點要快</li>
+<li>世代只會不斷成長</li>
+<li>樹狀結構的追溯有上限<ul>
+<li>每個節點只會運行一次追溯</li>
+</ul>
+</li>
+</ul>
+<p>以這個案例來看，耗費在 <code>Recursive Query</code> 的成本每個節點只有一次，相比 Closure Table 會因為世代成長造成的消耗，或者 Path Enumeration 的儲存限制，這個成本是很低的。</p>
+<blockquote>
+<p>下一步是封裝成 Concern 方便取用，畢竟這類型的系統有時候很仰賴樹狀結構的查詢。</p>
+</blockquote>
+<p>另外，樹狀結構比較常拿去查詢子代，畢竟子代數量不確定的時候非常難以管理。</p>
+]]></content:encoded>
+      
+      <comments>http://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/#disqus_thread</comments>
+    </item>
     
     <item>
       <title>自由的 Ruby 類別（一）</title>
@@ -1747,87 +1976,6 @@
 ]]></content:encoded>
       
       <comments>http://blog.frost.tw/posts/2015/04/10/mruby-on-web/#disqus_thread</comments>
-    </item>
-    
-    <item>
-      <title>在 SITCON 2015 之後</title>
-      <link>http://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/</link>
-      <guid>http://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/</guid>
-      <pubDate>Sat, 07 Mar 2015 22:14:00 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;昨天（03/07）是 SITCON 2015 也是我在 SITCON 擔任工作人員的最後一年。&lt;br&gt;明年就要畢業了，算是終於退休了⋯⋯（大概會被自動升級成顧問）&lt;/p&gt;
-&lt;p&gt;這篇文章應該不會寫太長，我還要去填坑 XD&lt;/p&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>昨天（03/07）是 SITCON 2015 也是我在 SITCON 擔任工作人員的最後一年。<br>明年就要畢業了，算是終於退休了⋯⋯（大概會被自動升級成顧問）</p>
-<p>這篇文章應該不會寫太長，我還要去填坑 XD</p>
-<a id="more"></a>
-<p>今年我幾乎沒有聽到議程，大部份的時候都是在 R0 裡面陪著我的組員協助直播和現場的導播處理。<br>而這次我想很多的工作人員都算是得到了一個「特別」的經驗吧！</p>
-<p>實際上，我想只要是工作人員或者比較熟都會聽到不少八卦。<del>甚至認識了不少人的真面目</del><br>不過八卦跟雷其實都不是很重要，這次就來談談今年我們做得不錯跟做得很糟的部份吧！</p>
-<h3 id="直播"><a href="#直播" class="headerlink" title="直播"></a>直播</h3><p>今年 SITCON 做到的我想只有當初預期的 50% 左右，也許更少。</p>
-<blockquote>
-<p>光是文創組這邊，我們刪掉了 50% 的東西。另外還因為時程的問題指出了品質 70% 左右的東西。<br>所以可不能說什麼做得很好，因為少了很多東西也沒有把品質封頂。<br>註：品質 100% 是代表比去年更好（概念性的一單位提升）的意思</p>
-</blockquote>
-<p>不過直播能夠做出來真的不錯（印象中原本是要三間會議室都有同等配備的）能夠讓不在會場的人也能夠跟我們一起參與這個活動，我真的覺得很感動。</p>
-<blockquote>
-<p>另外因為直播的關係，大部份時候畫面出來都不用剪接跟後續處理就可以更新到 Youtube 這也是很棒的。</p>
-</blockquote>
-<h3 id="貼紙"><a href="#貼紙" class="headerlink" title="貼紙"></a>貼紙</h3><p>既然我這個組別被叫這麼久「文創」組，總該要有點東西是有「文創」過的吧！</p>
-<blockquote>
-<p>我覺得文創並不是把做出點古風的東西就叫文創，而是把「生活」這個事件去創造出來。</p>
-</blockquote>
-<p>因此今年我跟組員設計了一組貼紙，為什麼會是一組呢？<br>過去我拿到許多貼紙，但是都不太貼到筆電上（資訊人文化 - 貼筆電）主要就是因為貼紙的規格和外觀都不一定是我想要的。<br>而且還需要去配置跟調整，不然貼起來的狀況就會很糟糕。</p>
-<blockquote>
-<p>我原本想慢慢貼滿，但是在過程中就被同學嫌棄了 XD</p>
-</blockquote>
-<p>所以把人物、素材設計規劃，製作成「一組」貼紙，這樣會眾就能夠自由運用的去組合一個只屬於自己特色的筆電外殼。</p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/256853/DCJzcktCSLu0zllwnkr8_overview_wireless_hero_enhanced-2.png" alt="overview_wireless_hero_enhanced-2.png"></p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/256853/mQ7rJ1TkT6ejIUr3qUlu_overview_wireless_hero_enhanced.png" alt="overview_wireless_hero_enhanced.png"></p>
-<blockquote>
-<p>有趣的是我拿到<a href="http://5xRuby.tw" target="_blank" rel="external">五倍紅寶石</a>的貼紙，發現也可以搭配上去（真是不錯）</p>
-</blockquote>
-<p>因此今年我終於做到文創，還好在我退下來之前有做了一件文創相關的事情啊 XD</p>
-<h3 id="動態視覺"><a href="#動態視覺" class="headerlink" title="動態視覺"></a>動態視覺</h3><p>當他在 R0 開場被播出來的時候，除了感動就沒有其他感覺了！</p>
-<p>這要歸功於我強大的同學，還有雁子好友的支援，才能夠將視覺跟音效都做好。</p>
-<p>不過讓我很不滿意的，其實是動態視覺並沒有完全調到好就使用了⋯⋯<br>至於原因，其實就是當初沒有規劃好，整體製作時程只有一個多月（我以為只要少量的動態視覺，但是沒想到需求這麼多）<br>也因此，很多都是後來趕工出來的，品質只能說是讓我覺得傷心。</p>
-<blockquote>
-<p>等待畫面、開場、閉幕，我剛開始只知道有這三個動態視覺要做，所以這三個做得不錯</p>
-</blockquote>
-<p>另外是音樂，我們在準備的時間也太短了，還好雁子的朋友大力相挺在短短兩週內幫我們做了一首新曲子。</p>
-<blockquote>
-<p>音樂整天聽到爆炸就沒辦法了，沒能再生一首出來啊 XD （雖然我覺得聽一整天其實也沒問題）</p>
-</blockquote>
-<h3 id="議程-電子報"><a href="#議程-電子報" class="headerlink" title="議程/電子報"></a>議程/電子報</h3><p>議程組每年都在努力的讓「內容」變得更加適合大眾，我覺得這是很棒的。<br>也因為議程組的努力，我感覺到 SITCON 越來越像是一個面對學生（普通學生）的活動，而不是僅限於資訊圈學生的活動。</p>
-<p>至於電子報，我想這是行政組最辛苦的項目之一。<br>我也對於我沒辦法支援太多感到可惜，不過最後還是順利的將電子報調整到主流的 Gmail/Yahoo/Outlook 正常呈現，而手機版 Gmail 勉強可以閱讀。以及視覺上與今年主視覺接軌等等。</p>
-<p>雖然測試信自己已經收了幾百封，還是會想打開看一下行政組的文案。</p>
-<h3 id="對形象塑造的誤解"><a href="#對形象塑造的誤解" class="headerlink" title="對形象塑造的誤解"></a>對形象塑造的誤解</h3><p>要說這次的大雷，我認為就是一直把「形象」拿出來講，但是卻沒有搞清楚這件事情。</p>
-<blockquote>
-<p>另外我認為也是對我們文創組最不尊重專業的點，因為我們給的很多想法最後還是被打槍。<br>然後又說要做什麼什麼，其實都沒考慮過文創組的判斷跟想法⋯⋯</p>
-</blockquote>
-<p>首先，會議形象的問題並不是花錢做各種東西就有用的。<br>也不是說講講故事就可以建構起來的，雖然我在這方面不是專業的，至少我認為這些東西都不太正確。</p>
-<p>我認為，要塑造 SITCON 這一個形象最首要的目的是讓人們了解我們的精神。</p>
-<blockquote>
-<p>所以有了定期聚，不過目前的定期聚還是鬆散無目的的，需要再多探討「有計畫性」的聚會該怎麼做</p>
-</blockquote>
-<p>接著是識別，看到我們的 LOGO、視覺等等，就可以聯想到我們。</p>
-<blockquote>
-<p>這方面是我這邊還做得不夠好，畢竟官網一直沒能設計出來。<br>另外就是週邊，簡單說就是一個有系統的視覺跟週邊需要在非年會期間持續提供印象。</p>
-</blockquote>
-<p>然後是生活的態度，我們應該會有一個「共同」的價值觀，去展示 SITCON 人的生活。</p>
-<blockquote>
-<p>可以的話，我希望是一個與台灣每一個 Conference 都交集的生活，接觸社群、參與社群、貢獻社群是我所期待的。<br>第一次從 SITCON 接觸到社群，然後在 SITCON 學會參與社群，最後離開 SITCON 的時候學會到其他社群貢獻。</p>
-</blockquote>
-<p>所以，其實我們不需要有故事的便當，也不用高級的設備去呈現「專業」的研討會。<br>我們只需要分享在社群的喜悅、引導更多人了解社群，一切屆就足夠了⋯⋯</p>
-<p>當然，媒體曝光、研討會辦得更專業，都會是形象的一環，但是我覺得這不會是在「塑造形象」必要的一環。</p>
-<blockquote>
-<p>學習參與社群的時候，讓人們學會舉辦「頂級研討會」是一個重要的項目。<br>這對我們來說傳承很重要，而且我也認為 SITCON 團隊真的是很強的團隊。 <del>連爆肝技巧都比人厲害</del></p>
-</blockquote>
-<h3 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h3><p>今年太多雷了，我還以為我不愛 SITCON 了呢！<br>不過看起來應該不會，什麼時候幫我轉職顧問啊 XDDD<br><del>我還想再戰十年</del></p>
-]]></content:encoded>
-      
-      <comments>http://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/#disqus_thread</comments>
     </item>
     
   </channel>

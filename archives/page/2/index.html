@@ -61,6 +61,46 @@
   
 <article class="post article is-index">
   <header class="article__header">
+    <time datetime="2016-02-03T07:54:00.000Z" class="article__time--header">
+      Feb.03
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2016/02/03/how-deis-architecture-design-part-2/" title="Deis 架構分析（二）">Deis 架構分析（二）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>延續<a href="http://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1">上一篇</a>的內容，這篇文章要先來討論比較好懂的 <code>Router</code> 部分。</p>
+<p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 <code>Router</code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。</p>
+<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="external">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2016/02/03/how-deis-architecture-design-part-2/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
     <time datetime="2016-02-02T07:43:00.000Z" class="article__time--header">
       Feb.02
     </time>
@@ -439,45 +479,6 @@
         
         <div class="text-left">
           <a href="/posts/2015/04/10/mruby-on-web/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-      
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2015-03-07T22:14:00.000Z" class="article__time--header">
-      Mar.08
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2015/03/08/after-the-sitcon-2015/" title="在 SITCON 2015 之後">在 SITCON 2015 之後</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>昨天（03/07）是 SITCON 2015 也是我在 SITCON 擔任工作人員的最後一年。<br>明年就要畢業了，算是終於退休了⋯⋯（大概會被自動升級成顧問）</p>
-<p>這篇文章應該不會寫太長，我還要去填坑 XD</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2015/03/08/after-the-sitcon-2015/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
       
