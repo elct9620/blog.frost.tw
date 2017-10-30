@@ -8,8 +8,164 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
     
     <description>蒼時弦也的個人網誌，網站、遊戲開發與設計筆記。</description>
-    <pubDate>Sun, 22 Oct 2017 16:43:54 GMT</pubDate>
+    <pubDate>Mon, 30 Oct 2017 15:51:44 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Stripe 的 Idempotency Key 設計機制</title>
+      <link>http://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/</link>
+      <guid>http://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/</guid>
+      <pubDate>Mon, 30 Oct 2017 14:46:43 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;週末看到一篇 Stripe 工程師所寫的文章，是一篇關於 Idempotency Key （幂等鍵）的設計機制。因為是一篇非常棒的文章，而且裡面的概念除了可以應用在 API 設計之外，很多程式設計上需要解決的問題都可以透過這個概念來處理。&lt;/p&gt;
+&lt;p&gt;原文非常的長而且很詳細，這篇文章只會做簡單的重點整理。&lt;/p&gt;
+&lt;p&gt;有興趣的話可以打開&lt;a href=&quot;https://brandur.org/idempotency-keys&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原文&lt;/a&gt;來讀，是一篇很有用的文章。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;作者是很厲害的工程師，部落格上的文章都是非常精實的技術文。&lt;/p&gt;
+&lt;/blockquote&gt;
+      
+      </description>
+      
+      <content:encoded><![CDATA[<p>週末看到一篇 Stripe 工程師所寫的文章，是一篇關於 Idempotency Key （幂等鍵）的設計機制。因為是一篇非常棒的文章，而且裡面的概念除了可以應用在 API 設計之外，很多程式設計上需要解決的問題都可以透過這個概念來處理。</p>
+<p>原文非常的長而且很詳細，這篇文章只會做簡單的重點整理。</p>
+<p>有興趣的話可以打開<a href="https://brandur.org/idempotency-keys" target="_blank" rel="external">原文</a>來讀，是一篇很有用的文章。</p>
+<blockquote>
+<p>作者是很厲害的工程師，部落格上的文章都是非常精實的技術文。</p>
+</blockquote>
+<a id="more"></a>
+<p>在 API 的設計中，我們可能會遭遇到一些問題而讓操作失敗。像是<code>網路連線中斷</code>、<code>第三方服務異常</code>等等情況，此時就會需要客戶端進行重新嘗試的動作。</p>
+<p>不過，如果是類似於 Stripe 這類金流服務，我們就不得不重視「重新呼叫」的問題，也就是「如果重複扣款」該怎麼處理，這就是 Idempotency Key 機制的由來。</p>
+<blockquote>
+<p>目前中文對「Idempotency Key 」是叫做幂等鍵，而 Stripe 表示這是他們自己發明的詞，所以後面都以原文稱呼。</p>
+</blockquote>
+<h2 id="Idempotency-Key-是什麼？"><a href="#Idempotency-Key-是什麼？" class="headerlink" title="Idempotency Key  是什麼？"></a>Idempotency Key  是什麼？</h2><p>所以 Idempotency Key 到底是什麼？簡單來說就是一種類似於 ID 的機制，用來區分某個 API 請求是同一個。</p>
+<p>像是下面這個 API 請求，就會帶有 Idempotency Key 的 Header 來表示是哪個請求。</p>
+<blockquote>
+<p>POST /api/chargs<br>…<br>Idempotency-Key: 0ccb7813-e63d-4377-93c5-476cb93038f3<br>…<br>amount=100&amp;currency=TWD</p>
+</blockquote>
+<p>同時，也會透過驗證傳入的 <code>amount</code> 和 <code>currency</code> 等「參數」來確保同一個 API 請求的內容是完全相同的。</p>
+<h2 id="實際應用"><a href="#實際應用" class="headerlink" title="實際應用"></a>實際應用</h2><p><a href="https://brandur.org/idempotency-keys" target="_blank" rel="external">原文</a>中用「火箭背包版 Uber」的範例專案來實作，在 Stripe 的 Github 上面可以找到原始碼。</p>
+<p>這個 App 會在你發射火箭後向你收費，中間會有幾個步驟。</p>
+<ul>
+<li>產生駕駛紀錄</li>
+<li>向 Stripe 呼叫收費 API</li>
+<li>更新駕駛紀錄</li>
+<li>透過 Mailgun 發送收據</li>
+</ul>
+<p>加入 Idempotency Key 機制之後，則會轉變成這樣。</p>
+<ul>
+<li>產生 Idempotency Key</li>
+<li>產生駕駛紀錄</li>
+<li>產生「駕駛紀錄產生」的操作記錄</li>
+<li>向 Stripe 呼叫收費 API</li>
+<li>更新駕駛紀錄</li>
+<li>透過 Mailgun 發送收據</li>
+<li>更新 Idempotency Keys</li>
+</ul>
+<p>看起來多了一些東西，但是這些的影響是怎樣的呢？</p>
+<blockquote>
+<p>原文有繪製成圖片，對照的時候會比較方便。</p>
+</blockquote>
+<h3 id="Idempotency-Key"><a href="#Idempotency-Key" class="headerlink" title="Idempotency Key"></a>Idempotency Key</h3><p>首先，我們需要一個 Idempotency Keys 表來紀錄最近的 API 操作。</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>idempotency_key</strong></td>
+<td>TEXT (max length &lt;= 100)</td>
+</tr>
+<tr>
+<td><strong>locked_at</strong></td>
+<td>datetime</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+<tr>
+<td><strong>request_method</strong></td>
+<td>TEXT (max length &lt;= 100)</td>
+</tr>
+<tr>
+<td><strong>request_params</strong></td>
+<td>JSONB</td>
+</tr>
+<tr>
+<td><strong>request_path</strong></td>
+<td>TEXT (max length &lt;= 100)</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+<tr>
+<td><strong>response_code</strong></td>
+<td>INTEGER</td>
+</tr>
+<tr>
+<td><strong>response_body</strong></td>
+<td>JSONB</td>
+</tr>
+<tr>
+<td><strong>recovery_point</strong></td>
+<td>TEXT (max length &lt;= 100)</td>
+</tr>
+<tr>
+<td><strong>user_id</strong></td>
+<td>BIGINT</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>UNIQUE INDEX (idempotency_key, user_ud)</p>
+</blockquote>
+<p>PS. 上面只列了比較重要的欄位。</p>
+<p>首先，我們要確定我們有一組 Key 他可能是 UUID 或者其他形式，因為是跟 <code>user_id</code> 綁定在一起的，所以實際上交給 Client 生成似乎也不影響 API 的操作。</p>
+<p>接下來我們要儲存這次 API 操作的完整資訊，這是用來<strong>確認是相同 API 操作</strong>的保護機制。</p>
+<p>最後是在這個 API 操作完成後，不論成功失敗都紀錄操作的結果。如果再次收到相同的 API 查詢時，我們可以回復完全樣的結果給這個呼叫者，達到快取的效果。</p>
+<p>比較特別的是 <code>recovery_point</code> 這個欄位，為什麼會有這個欄位呢？</p>
+<p>因為在前面我們可能會在 Stripe 扣款或者 Mailgun 發信時發生錯誤，此時就可以讓 API 從這一個操作步驟重新開始，而不會影響到原本已經成功地操作。</p>
+<blockquote>
+<p>原文裡面有提到資料庫的原子性，而這個就是為了讓我們的 API 也擁有原子性。</p>
+</blockquote>
+<h3 id="其他資料表"><a href="#其他資料表" class="headerlink" title="其他資料表"></a>其他資料表</h3><p>主角  Idempotency Keys 介紹完之後，還有像是騎乘資料表、操作紀錄等等，就不另外介紹。</p>
+<p>只是需要注意的是，被操作的「騎乘紀錄」表中，會對應某一個  Idempotency Key 來提供查詢，畢竟不一定是每一次的 API 操作都是一次性成功的，此時就要透過這個  Idempotency Key 來找回正在操作的騎乘紀錄。</p>
+<blockquote>
+<p>反過來說，如果資料表上的  Idempotency Key 是有值得狀況下，就代表有其他人正在操作。也可以被視為一種「上鎖」的機制。</p>
+</blockquote>
+<h2 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h2><p>原作提供了一個方法的實作，來輔助每一個原子操作。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">atomic_phase</span><span class="params">(key, &amp;block)</span></span></div><div class="line">  error = <span class="literal">false</span></div><div class="line">  <span class="keyword">begin</span></div><div class="line">    DB.transaction(<span class="symbol">isolation:</span> <span class="symbol">:serializable</span>) <span class="keyword">do</span></div><div class="line">      ret = block.call</div><div class="line">      <span class="comment"># 根據 block 傳回值產生回應</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">rescue</span></div><div class="line">     error = <span class="literal">true</span></div><div class="line">    <span class="comment"># 處理各種錯誤</span></div><div class="line">  <span class="keyword">ensure</span></div><div class="line">      <span class="keyword">if</span> error &amp;&amp; key.present?</div><div class="line">        <span class="keyword">begin</span></div><div class="line">          key.update(<span class="symbol">locked_at:</span> <span class="literal">nil</span>)</div><div class="line">          <span class="comment"># 操作失敗，解鎖</span></div><div class="line">        <span class="keyword">rescue</span></div><div class="line">          <span class="comment"># 無法解鎖（記錄到 Log 中）</span></div><div class="line">        <span class="keyword">end</span> </div><div class="line">      <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>原文中定義了三種回應：</p>
+<ul>
+<li>NoOp - 不做事（初次產生）</li>
+<li>RecoveryPoint - 更新紀錄點（原子操作成功）</li>
+<li>Response - 回應（API 操作完全成功）</li>
+</ul>
+<h3 id="Idempotency-Key-初始化"><a href="#Idempotency-Key-初始化" class="headerlink" title="Idempotency Key 初始化"></a>Idempotency Key 初始化</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">key = <span class="literal">nil</span></div><div class="line">atomic_phase(key) <span class="keyword">do</span></div><div class="line">  key = IdempotencyKey.find_by(<span class="symbol">user_id:</span> current_user.id, <span class="symbol">idempotency_key:</span> params[<span class="symbol">:key</span>])</div><div class="line">  </div><div class="line">  <span class="keyword">if</span> key</div><div class="line">    <span class="comment"># 1. 檢查 params 是否一致</span></div><div class="line">    <span class="comment"># 2. 檢查上鎖時間是否超時（時間內回傳操作中錯誤）</span></div><div class="line">    <span class="comment"># 3. 操作如果未完成，更新上鎖時間</span></div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="comment"># 產生新的 Idempotency Key</span></div><div class="line">    <span class="comment"># `locked_at` 是現在時間（因為是馬上開始操作，所以立刻上鎖）</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>透過上述的程式碼，我們可以產生出一把需要使用的 key 供我們使用。並且在每次 API 呼叫時，確保上一次的 API 操作不會被影響，而運行過久的時候又可以透過從客戶端的 API 重新請求延續原本的操作直到完成。</p>
+<h3 id="後續操作"><a href="#後續操作" class="headerlink" title="後續操作"></a>後續操作</h3><p>有了初始的 Idempotency Key 之後，就可以繼續把後面的 API 行為完成。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">loop <span class="keyword">do</span></div><div class="line">  <span class="keyword">case</span> key.recovery_point</div><div class="line">  <span class="keyword">when</span> RECOVER_POINT_START</div><div class="line">    atomic_phase(key) <span class="keyword">do</span></div><div class="line">      <span class="comment"># ...</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">when</span> RECOVERY_POINT_RIDE_CREATED</div><div class="line">    atomic_phase(key) <span class="keyword">do</span></div><div class="line">      <span class="comment"># ...</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">when</span> RECOVERY_POINT_FINISHED</div><div class="line">    <span class="keyword">break</span></div><div class="line">  <span class="comment">#...</span></div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="comment"># 未知的 RecoveryPoint 丟出錯誤</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="comment"># 回傳結果</span></div></pre></td></tr></table></figure>
+<p>如此一來，我們就可以將每一個 API 的細部操作都切割成一個「原子」並且建構一個可恢復並且繼續運行的 API 了。</p>
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>這篇文章省略了不少細節，指把重點的部分拉出來討論，可以的話還是希望大家能去閱讀原文（雖然很長）</p>
+<p>簡單來說，這個機制讓我們可以得到：</p>
+<ul>
+<li>不怕重複呼叫的 API 服務</li>
+<li>呼叫失敗也可以恢復運作</li>
+<li>能夠有效的定位 API 運作問題發生的時機點</li>
+</ul>
+<p>除此之外，文章最後還有提到一些像是「完成器」的技巧。</p>
+<blockquote>
+<p>完成器是因為有些用戶端達到重試最大次數後，就會放棄運行。此時這些「即將完成」的操作就會變得無法完成，所以由伺服器定時拉出來重現 API 操作讓這個 API 操作得以完全完成。</p>
+</blockquote>
+<p>另一方面，這個機制可以應用在很多地方。像是表單送出的時候，用來檢查是不是重複表單的送出等等，雖然是以 API 設計的方式呈現，但是背後的概念卻非常值得思考，我們如何讓程式能夠更加的健壯。</p>
+]]></content:encoded>
+      
+      <comments>http://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/#disqus_thread</comments>
+    </item>
     
     <item>
       <title></title>
@@ -1893,89 +2049,6 @@
 ]]></content:encoded>
       
       <comments>http://blog.frost.tw/posts/2015/05/06/2015-yodex-impressions/#disqus_thread</comments>
-    </item>
-    
-    <item>
-      <title>mRuby on Web</title>
-      <link>http://blog.frost.tw/posts/2015/04/10/mruby-on-web/</link>
-      <guid>http://blog.frost.tw/posts/2015/04/10/mruby-on-web/</guid>
-      <pubDate>Fri, 10 Apr 2015 06:58:00 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。&lt;/p&gt;
-&lt;p&gt;最初是看到 &lt;a href=&quot;https://Github.com/xxuejie/webruby&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WebRuby&lt;/a&gt; 這個專案的應用 &lt;a href=&quot;http://joshnuss.github.io/mruby-web-irb/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Webirb&lt;/a&gt; 才決定要挑戰將 mruby 丟到 Web 上面跑。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。&lt;/p&gt;
-&lt;/blockquote&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。</p>
-<p>最初是看到 <a href="https://Github.com/xxuejie/webruby" target="_blank" rel="external">WebRuby</a> 這個專案的應用 <a href="http://joshnuss.github.io/mruby-web-irb/" target="_blank" rel="external">Webirb</a> 才決定要挑戰將 mruby 丟到 Web 上面跑。</p>
-<blockquote>
-<p>其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。</p>
-</blockquote>
-<a id="more"></a>
-<p>在兩年前（2013）的 JSDC 上，我首次得知了 <a href="http://asmjs.org" target="_blank" rel="external">ASM.js</a> 跟 <a href="http://emscripten.org" target="_blank" rel="external">Emscripten</a> 這兩個專案，當時只知道是一個可以把 C/C++ 的運行效能帶到 Web 上的專案，卻不得其門而入。</p>
-<p>不過最近再次回想起來，重新閱讀了一次 Emscripten 的文件後終於瞭解到入門的基礎用法。</p>
-<blockquote>
-<p>也許是兩年前的英文程度不好吧，或者當時因為沒有接觸太多 C/C++ 因此無法理解其深意。</p>
-</blockquote>
-<p>總而言之，在學會使用 Emscripten 的同時，我最想拉到網頁上的就是 mRuby 了（作為第一次跟 C/C++ 整合的語言，讓我很興奮，另外 Ruby 也是我目前最喜歡的語言 XD）</p>
-<h4 id="安裝-Emscripten"><a href="#安裝-Emscripten" class="headerlink" title="安裝 Emscripten"></a>安裝 Emscripten</h4><p>基本上依照官網的<a href="http://kripken.Github.io/emscripten-site/docs/getting_started/downloads.html" target="_blank" rel="external">安裝教學</a>應該就可以很順利的完成安裝。</p>
-<p>我自己是放在 <code>~/Workspace/Emscripten</code> 下面，要使用的時候就先跑一次 <code>source ./emSDK_env.sh</code> 來讓 <code>emcc</code> 等指令可以使用。</p>
-<blockquote>
-<p>SDK 的設計並不是很好，所以一定得在 SDK 目錄下跑 <code>source</code> 指令</p>
-</blockquote>
-<h4 id="目錄結構"><a href="#目錄結構" class="headerlink" title="目錄結構"></a>目錄結構</h4><p>單純是我習慣的配置，如果大家有自己的習慣可以修改。</p>
-<ul>
-<li>mRuby.js<ul>
-<li>mRuby/ - 原始碼</li>
-<li>build/ - 輸出檔案<ul>
-<li>src/ - mRuby 的 <code>.o</code> 檔案<ul>
-<li>gems/ Gem 的 <code>.o</code> 檔案</li>
-</ul>
-</li>
-<li>dest/ 輸出的 <code>.html</code> <code>.js</code> 檔案</li>
-</ul>
-</li>
-<li>mrbjs.c - 應用 mRuby 的 c 檔案（ main ）</li>
-<li>Makefile</li>
-</ul>
-</li>
-</ul>
-<h4 id="取得-mRuby"><a href="#取得-mRuby" class="headerlink" title="取得 mRuby"></a>取得 mRuby</h4><p>mRuby 是輕量的 ruby 套件，編譯完成的 <code>mruby.js</code> 加上一些預設的 gems （像是 <code>puts</code> 等支援）大約才 1.3 MB 左右，算是還在接受的範圍內。</p>
-<p>首先，先把 mRuby 的原始碼下載下來。</p>
-<blockquote>
-<p>git clone git@Github.com:mRuby/mruby.git</p>
-</blockquote>
-<p>獲得原始碼後，我們需要配置一下 <code>build_config.rb</code> 這個檔案，加入名為 <code>emscripten</code> 的編譯器 toolchain 來產生可供網頁使用的版本。</p>
-<figure class="highlight ruby"><figcaption><span>build_config.rb</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 略</span></div><div class="line"></div><div class="line"><span class="comment"># 以下配置是參考 WebRuby 的配置</span></div><div class="line">MRuby::Toolchain.new(<span class="symbol">:emscripten</span>) <span class="keyword">do</span> <span class="params">|conf|</span> <span class="comment"># 定義 Toolchain: emscripten</span></div><div class="line">  toolchain <span class="symbol">:clang</span> <span class="comment"># 從 clang 的 toolchain 繼承配置</span></div><div class="line"></div><div class="line">  conf.cc <span class="keyword">do</span> <span class="params">|cc|</span> <span class="comment"># 修改編譯設定</span></div><div class="line">    cc.command = <span class="string">"emcc"</span> <span class="comment"># 將原本的 cc 改為 emscripten 的 emcc</span></div><div class="line">    cc.flags.push(<span class="string">%w(-Wall -Werror-implicit-function-declaration -Wno-warn-absolute-paths -O0)</span>) <span class="comment"># 增加編譯的 flag</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">true<span class="comment"># 其他編譯選項的配置</span></div><div class="line">  conf.cxx.command = <span class="string">"emcc"</span></div><div class="line">  conf.linker.command = <span class="string">"emcc"</span></div><div class="line">  conf.archiver.command = <span class="string">"emar"</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">MRuby::CrossBuild.new(<span class="string">"emscripten"</span>) <span class="keyword">do</span> <span class="params">|conf|</span> <span class="comment"># 增加 MRuby 編譯任務（跨平台類型的編譯）</span></div><div class="line">  toolchain <span class="symbol">:emscripten</span> <span class="comment"># 使用 Emscripten 編譯</span></div><div class="line"></div><div class="line">  conf.build_dir = File.expand_path(<span class="string">'build/emscripten'</span>) <span class="comment"># 設定編譯完成後檔案輸出位置</span></div><div class="line">  conf.gembox <span class="string">'default'</span> <span class="comment"># 選擇要一同編譯的 gem （Default 會包括 Ruby 預設的基本 Class 和 Method 在裡面）</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>完成之後運行 <code>rake</code> 指令就會自動編譯完成，此時理論上要在 <code>build/emscripten</code> 目錄看到編譯完成的 static library 等檔案。</p>
-<blockquote>
-<p>這邊要注意的是 <code>cc.flags.push</code> 項目加入了 <code>-O0</code> 這個 flag 之後會說明為什麼會使用 <code>-O0</code></p>
-</blockquote>
-<h4 id="mrbjs-c"><a href="#mrbjs-c" class="headerlink" title="mrbjs.c"></a>mrbjs.c</h4><p>這邊寫一個簡單的 C 去呼叫 mRuby 執行一段 Ruby Code 後續的應用就交給大家想像了～</p>
-<figure class="highlight c"><figcaption><span>mrbjs.c</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __EMSCRIPTEN__</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;emscripten.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mRuby.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mRuby/compile.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mRuby/string.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">(mrb_state* mrb, <span class="keyword">const</span> <span class="keyword">char</span>* code)</span> </span>&#123;</div><div class="line"></div><div class="line">  mrb_value result = mrb_load_string(mrb, code);</div><div class="line"></div><div class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* return_str;</div><div class="line"></div><div class="line">  <span class="keyword">if</span>(mrb-&gt;exc) &#123;</div><div class="line">    return_str = mrb_string_value_ptr(mrb, mrb_obj_as_string(mrb, mrb_obj_value(mrb-&gt;exc)));</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, return_str);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</div><div class="line">  mrb_state* mrb = mrb_open();</div><div class="line">  webmrb_run(mrb, <span class="string">"puts \"Hello World\""</span>);</div><div class="line">  mrb_close(mrb);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h4><p>因為指令挺繁瑣的，所以就臨時抱佛腳看了一下 <a href="http://www.ruanyifeng.com/blog/2015/02/make.html" target="_blank" rel="external">Make 命令教程</a>這篇讓我印象深刻的教學（清楚簡單的說明用法，個人很喜歡）學了基本的 Makefile 撰寫方法。</p>
-<figure class="highlight makefile"><figcaption><span>Makefile</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">MRB_SRC=mRuby/build/emscripten</div><div class="line">MRB_O=<span class="variable">$(MRB_SRC)</span>/src/*.o</div><div class="line">MRBLIB_O=<span class="variable">$(MRB_SRC)</span>/mrblib/*.o</div><div class="line">GEMS=<span class="variable">$(MRB_SRC)</span>/mrbgems <span class="comment"># Gems 比較特別，另外就是我找不到好方法可以 Nested 的複製 .o 檔案（有人知道請告訴我）</span></div><div class="line"></div><div class="line"><span class="section">.PONHY: build mrbsrc clean gems init</span></div><div class="line"></div><div class="line"><span class="section">init:</span></div><div class="line">  mkdir build</div><div class="line">  mkdir build/src</div><div class="line">  mkdir build/dest</div><div class="line"></div><div class="line"><span class="section">build: init mrbsrc gems mrbjs.o</span></div><div class="line">trueemcc ./build/src/*.o ./build/src/gems/*.o ./build/src/gems/**/*.o ./build/src/gems/**/src/*.o -o build/dest/mrbjs.html -O2 --memory-init-file 0</div><div class="line"></div><div class="line"><span class="section">mrbjs.o: mrbjs.c</span></div><div class="line">  emcc mrbjs.c -I mRuby/<span class="keyword">include</span> -o ./build/src/mrbjs.o -O2  -Wall -Werror-implicit-function-declaration  -Wno-warn-absolute-paths</div><div class="line"></div><div class="line"><span class="section">mrbsrc:</span></div><div class="line">  cp <span class="variable">$(MRB_O)</span> build/src</div><div class="line">  cp <span class="variable">$(MRBLIB_O)</span> build/src</div><div class="line"></div><div class="line"><span class="section">gems:</span></div><div class="line">  cp -r <span class="variable">$(GEMS)</span> build/src/gems</div><div class="line"></div><div class="line"><span class="section">clean:</span></div><div class="line">  rm -rf build/*</div></pre></td></tr></table></figure>
-<p>之後運行 <code>make build</code> 就可以在 <code>build/dest</code> 目錄看到 <code>mrbjs.html</code> 這個檔案，開啟後如果正常運作就會看到出現 <code>Hello World</code> 的字樣在畫面上。</p>
-<blockquote>
-<p>我想大家可能會發現 <code>-O2</code> 這個 flag，跟前面的 <code>-O0</code> 又有什麼關係呢？後面的 FAQ 會解釋這個問題。</p>
-</blockquote>
-<h4 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h4><p><strong>Q: <code>-O0</code> 跟 <code>-O2</code> 到底是什麼？</strong></p>
-<p>這是 Emscripten 的 Optimize 設定項目，詳細可以參考 <a href="http://kripken.Github.io/emscripten-site/docs/optimizing/Optimizing-Code.html" target="_blank" rel="external">Emscripten - Optimizing Code</a> 這個頁面。</p>
-<p>前面在編譯 mRuby 的時候會使用 <code>-O0</code> （不優化）是因為 <code>nested structs</code> 的<a href="https://Github.com/kripken/emscripten/issues/2238" target="_blank" rel="external">展開問題</a>。不過我去追 Google 的 PNaCI 關於這個的討論串，似乎已經在去年年底解決了（Emscripten 專案何時支援還不確定）</p>
-<p>簡單說用了 <code>-O2</code> (release suggest) 的優化，在編譯的時候（產生 html/js）就會發生錯誤。</p>
-<blockquote>
-<p>個人認為這是 mRuby on Web 的效能貧頸，經過我自己簡單的 Benchmark ( <code>(1...10000).each { |i| i }</code> ) 在網頁上跑大概需要花 29ms ~ 33ms 但是一般的 Ruby 可以在 0.5ms 內完成，速度上差了快一百倍。<br>不過我也很樂見在 <code>-O2</code> 支援的同時這個問題理論上會被解決掉，因為能使用 <code>asm.js</code> 的加速，還有 Emscripten 的優化，照理說不應該慢到哪裡去（目前的問題應該在 libmRuby 太慢）</p>
-</blockquote>
-<p><strong>Q: <code>--memory-file-init</code> 是什麼？</strong></p>
-<p>個人推測是預先將一些靜態的結果先產生好，在執行時直接運行結果而非動態執行的設定，在這邊會設定為 0（關閉）是因為在 <code>WebRuby</code> 中有註解提及這會讓網站卡住，如果有興趣的話可以取消這個設定運行看看是否能正常運行。</p>
-<h4 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h4><p>我距離土炮 RPG Maker 又更進一步了，雖然試了很多方法果然還是在 Web 上覺得最舒適啊 XD<br>（Emscripten 已經做好 SDL 的 Port 可以說是一大福音啊～～）</p>
-]]></content:encoded>
-      
-      <comments>http://blog.frost.tw/posts/2015/04/10/mruby-on-web/#disqus_thread</comments>
     </item>
     
   </channel>
