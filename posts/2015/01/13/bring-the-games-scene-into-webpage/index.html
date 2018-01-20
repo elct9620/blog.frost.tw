@@ -116,9 +116,9 @@
   </header>
   <div class="article__entry">
     
-    <p>昨晚公開了畢業製作的官網「<a href="https://www.make.moe" target="_blank" rel="external">遠古神話 - The Lost Mythologies</a>」並且使用了「全景攝影技術」在網站上。</p>
+    <p>昨晚公開了畢業製作的官網「<a href="https://www.make.moe" target="_blank" rel="noopener">遠古神話 - The Lost Mythologies</a>」並且使用了「全景攝影技術」在網站上。</p>
 <blockquote>
-<p>喜歡我們的話請到<a href="https://www.facebook.com/Basaltic.Studio?fref=nf" target="_blank" rel="external">粉絲專頁</a>幫我們按個讚 XD</p>
+<p>喜歡我們的話請到<a href="https://www.facebook.com/Basaltic.Studio?fref=nf" target="_blank" rel="noopener">粉絲專頁</a>幫我們按個讚 XD</p>
 </blockquote>
 <p>沒想到反應還蠻熱烈的，雖然官網目前也只有全景預覽以及 LOGO 而已，不過似乎造成了一點點話題。</p>
 <p>那麼，這個效果到底是如何做出來的呢？這篇文章就會簡單的說明。</p>
@@ -129,10 +129,10 @@
 <li>全景圖片的製作</li>
 </ul>
 <a id="more"></a>
-<p>事實上，這個技術其實不是很新的技術。像是 Google 街景就是運用的範例之一，而實做的效果則是源自於 othree 大大的 <a href="https://Github.com/othree/360-panorama" target="_blank" rel="external">360-panorama</a> 這個範例（約兩年前的 Happy Designer Mini 活動分享）</p>
+<p>事實上，這個技術其實不是很新的技術。像是 Google 街景就是運用的範例之一，而實做的效果則是源自於 othree 大大的 <a href="https://Github.com/othree/360-panorama" target="_blank" rel="noopener">360-panorama</a> 這個範例（約兩年前的 Happy Designer Mini 活動分享）</p>
 <h3 id="全景圖製作"><a href="#全景圖製作" class="headerlink" title="全景圖製作"></a>全景圖製作</h3><p>要做出全景效果，我們必須先有全景圖才能夠開始。</p>
 <p>在遊戲中通常只有 Perspective / Orthographic 兩種攝影機可以使用，我們第一個目標就是要把它當作「相機」來進行操作。<br>跟一般相機比較接近的是 Perspective Camera 因此我們選擇利用這個 Camera 來做攝影的動作。</p>
-<p>那麼，該怎麼截圖才對呢？可以參考網路上非常多的「<a href="http://www.lazybox.com.tw/forum/fancystuff/photodiary/10335-87-lightroom--15-" target="_blank" rel="external">全景攝影教學</a>」的做法，利用拼接數張相片來達成這個效果。</p>
+<p>那麼，該怎麼截圖才對呢？可以參考網路上非常多的「<a href="http://www.lazybox.com.tw/forum/fancystuff/photodiary/10335-87-lightroom--15-" target="_blank" rel="noopener">全景攝影教學</a>」的做法，利用拼接數張相片來達成這個效果。</p>
 <blockquote>
 <p>在 Prespective Camera 中，可以設定 Field of View (FOV) 這個設定值，最大可以達到 170 ~ 180 左右，簡單說就是廣角鏡頭的效果，能夠讓視野變得非常大，但是同時也讓畫面變形到無法辨識，因此這種方式是不可行的。</p>
 </blockquote>
@@ -165,7 +165,7 @@
 <p>最後兩張是用來填補天空和地板的洞，而 Y = +/-45 也是類似，都是補足 FOV=90 視野不夠廣闊問題的輔助圖<br>突然發現地理課學的投影法在神秘的情況下竟然用到了，雖然用軟體完全沒差啊～～～</p>
 </blockquote>
 <p>注意：重點在於每張圖片都要跟其他圖片有「重複且可辨識」的部分</p>
-<h4 id="拼接全景圖"><a href="#拼接全景圖" class="headerlink" title="拼接全景圖"></a>拼接全景圖</h4><p>因為 Lightroom 有點大，所以就用了 OpenSource 的軟體 <a href="http://hugin.sourceforge.net" target="_blank" rel="external">Hugin</a> 來製作（其實非常好用）</p>
+<h4 id="拼接全景圖"><a href="#拼接全景圖" class="headerlink" title="拼接全景圖"></a>拼接全景圖</h4><p>因為 Lightroom 有點大，所以就用了 OpenSource 的軟體 <a href="http://hugin.sourceforge.net" target="_blank" rel="noopener">Hugin</a> 來製作（其實非常好用）</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/249663/MK3J09cTyeuF42BImv5y_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.01.22.png" alt="螢幕快照 2015-01-13 下午12.01.22.png"></p>
 <p>Mac 上打開會出現錯誤，按取消之後一樣可以正常使用（意義不明 XDD）</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/249663/lGA9IJjjTS9FMywSRslr_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.02.08.png" alt="螢幕快照 2015-01-13 下午12.02.08.png"></p>
@@ -200,7 +200,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

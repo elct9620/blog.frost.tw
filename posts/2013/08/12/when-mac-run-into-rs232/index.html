@@ -121,16 +121,16 @@
 <li>設備所需的相關數值設定</li>
 </ul>
 <p>轉接頭除了網路購物可以找到外，中壢地區應該電子材料行比較容易取得。</p>
-<p>接下來是驅動，就目前來看似乎主要以 <a href="http://www.prolific.com.tw/" target="_blank" rel="external">Prolific</a> 這家為主流，我所購買的轉接頭官網上提供的驅動也是這家的（包裝盒內有光碟，但是小光碟 MBP 無法讀取）</p>
+<p>接下來是驅動，就目前來看似乎主要以 <a href="http://www.prolific.com.tw/" target="_blank" rel="noopener">Prolific</a> 這家為主流，我所購買的轉接頭官網上提供的驅動也是這家的（包裝盒內有光碟，但是小光碟 MBP 無法讀取）</p>
 <p>不過，很不幸的即使使用廠商官網上的 v1.0.9 驅動還是官方的 v1.5.0 抑或其它第三方驅動，都無法順利找到裝置。</p>
 <p>此時，我在另一篇文章發現如何找到適當驅動的方法，我去確認一下正在連接的 USB 轉接頭到底是什麼晶片組。</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/84766/AB5mIrZSPeOTDYPWg8dn_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8810.47.59.png" alt="蒼時弦也的 USB 資訊"></p>
-<p>製造商是 FDTI(<a href="http://www.ftdichip.com/" target="_blank" rel="external">http://www.ftdichip.com/</a>) 這家公司，而非前面大家最常使用的 Prolific 這家廠商。</p>
+<p>製造商是 FDTI(<a href="http://www.ftdichip.com/" target="_blank" rel="noopener">http://www.ftdichip.com/</a>) 這家公司，而非前面大家最常使用的 Prolific 這家廠商。</p>
 <p>不過，很不幸的是 FDTI 官網雖然寫著 Drivers 下載，但是抓下來卻是 Library 和 Header 的 SDK⋯⋯</p>
-<p>不過，在經過努力的 Google 之後，發現了<a href="http://pbxbook.com/other/Mac-tty.html" target="_blank" rel="external">這個頁面</a></p>
+<p>不過，在經過努力的 Google 之後，發現了<a href="http://pbxbook.com/other/Mac-tty.html" target="_blank" rel="noopener">這個頁面</a></p>
 <p>裡面可以下載到正確的 FDTI 以及 Mac 可用於連接 Console 的適當軟體，如果有興趣也可以參考看看。</p>
 <p>安裝完成後，我在另一篇文章發現 Mac / Linux 其實可以使用一個大家可能很熟悉的指令 <code>screen</code> 來作為 Console 的模擬器。（在 Windows 上可以使用 Putty 我認為其實就是 Terminal 就對了！）</p>
-<p><a href="https://blogs.oracle.com/blogsagainbynight/entry/terminal_to_serial_usb_devices" target="_blank" rel="external">這篇文章</a>敘述了關於如何找到裝置，以及使用 <code>screen</code> 指令連接的資訊，另一方面還提供了當有需要傳入其他 Options 時，該如何輸入的方法（雖然不完整）</p>
+<p><a href="https://blogs.oracle.com/blogsagainbynight/entry/terminal_to_serial_usb_devices" target="_blank" rel="noopener">這篇文章</a>敘述了關於如何找到裝置，以及使用 <code>screen</code> 指令連接的資訊，另一方面還提供了當有需要傳入其他 Options 時，該如何輸入的方法（雖然不完整）</p>
 <p>當我確認好設備使用的是 115200 這個頻率後，我開始嘗試連接。</p>
 <p><code>ls /dev/tty.</code> &gt; <code>ls /dev/tty.usbserial-FTAJNHLA</code> 取得 USB 轉接頭的裝置名稱（在 Mac 應該還會看到藍牙的裝置）</p>
 <p><code>screen /dev/tty.usbserial-FTAJNHLA 115200</code> 輸入後就會發現畫面一片空白，如果最底下沒有訊息而且沒有被跳出，先嘗試輸入 Switch / UTM 這些設備的管理員賬號，運氣好就會有東西跑出來。</p>
@@ -143,7 +143,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

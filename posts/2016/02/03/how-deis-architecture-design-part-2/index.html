@@ -109,12 +109,12 @@ Deis 的原始碼都放在一起，其中 Router 部分是裡面的一個子目�
     
     <p>延續<a href="http://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1">上一篇</a>的內容，這篇文章要先來討論比較好懂的 <code>Router</code> 部分。</p>
 <p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 <code>Router</code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。</p>
-<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="external">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
+<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="noopener">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
 <a id="more"></a>
 <h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">FROM</span> alpine:<span class="number">3.2</span></div><div class="line"></div><div class="line"><span class="comment"># install common packages</span></div><div class="line"><span class="keyword">RUN</span><span class="bash"> apk add --update-cache \</span></div><div class="line">  bash \</div><div class="line">  curl \</div><div class="line">  geoip \</div><div class="line">  libssl1.0 \</div><div class="line">  openssl \</div><div class="line">  pcre \</div><div class="line">  sudo \</div><div class="line">  &amp;&amp; rm -rf /var/cache/apk/*</div><div class="line"></div><div class="line"><span class="comment"># install confd</span></div><div class="line"><span class="keyword">RUN</span><span class="bash"> curl -sSL -o /usr/<span class="built_in">local</span>/bin/confd https://s3-us-west-2.amazonaws.com/opdemand/confd-git-73f7489 \</span></div><div class="line">  &amp;&amp; chmod +x /usr/<span class="built_in">local</span>/bin/confd</div><div class="line"></div><div class="line"><span class="comment"># add nginx user</span></div><div class="line"><span class="keyword">RUN</span><span class="bash"> addgroup -S nginx &amp;&amp; \</span></div><div class="line">  adduser -S -G nginx -H -h /opt/nginx -s /sbin/nologin -D nginx</div><div class="line"></div><div class="line"><span class="keyword">COPY</span><span class="bash"> rootfs /</span></div><div class="line"></div><div class="line"><span class="comment"># compile nginx from source</span></div><div class="line"><span class="keyword">RUN</span><span class="bash"> build</span></div><div class="line"></div><div class="line"><span class="keyword">CMD</span><span class="bash"> [<span class="string">"boot"</span>]</span></div><div class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span> <span class="number">2222</span> <span class="number">9090</span></div><div class="line"></div><div class="line"><span class="keyword">ENV</span> DEIS_RELEASE <span class="number">1.13</span>.<span class="number">0</span>-dev</div></pre></td></tr></table></figure>
 <p>透過 Dockerfile 可以簡單了解到這個服務是怎麼啟動的，整體上來說非常簡單，除了安裝 confd 之外。就是把名為 <code>rootfs</code> 的目錄加進去，並且編譯客製化的 Nginx 接著啟動伺服器。</p>
 <blockquote>
-<p>這邊比較特別的地方是客製化編譯 Nginx 的部份，主要是因為 Deis 除了基本的 Nginx 功能外，也增加了防火牆模組（<a href="https://github.com/nbs-system/naxsi" target="_blank" rel="external">NAXSI</a>）跟一些模組在裡面，有興趣的可以自行閱讀 <code>rootfs/bin/build</code> 這個檔案的內容。</p>
+<p>這邊比較特別的地方是客製化編譯 Nginx 的部份，主要是因為 Deis 除了基本的 Nginx 功能外，也增加了防火牆模組（<a href="https://github.com/nbs-system/naxsi" target="_blank" rel="noopener">NAXSI</a>）跟一些模組在裡面，有興趣的可以自行閱讀 <code>rootfs/bin/build</code> 這個檔案的內容。</p>
 </blockquote>
 <h3 id="boot"><a href="#boot" class="headerlink" title="boot"></a>boot</h3><p>我想大家會覺得奇怪，為什麼不是直接執行 Nginx 而是執行一個名為 <code>boot</code> 的指令呢？<br>這是因為 Deis 除了啟動 Nginx 之外，還要將像是 confd 之類的服務也一併啟動。</p>
 <blockquote>
@@ -136,7 +136,7 @@ Deis 的原始碼都放在一起，其中 Router 部分是裡面的一個子目�
 <blockquote>
 <p>這邊接受的是常見的中斷訊號，一般就是 Ctrl + C 會送過去的訊號。</p>
 </blockquote>
-<p>另外，這邊透過 <a href="https://github.com/hpcloud/tail" target="_blank" rel="external">tail</a> 這個函式庫將 Nginx 的記錄檔讀取出來，並且格式化後輸出到 stdout 顯示。</p>
+<p>另外，這邊透過 <a href="https://github.com/hpcloud/tail" target="_blank" rel="noopener">tail</a> 這個函式庫將 Nginx 的記錄檔讀取出來，並且格式化後輸出到 stdout 顯示。</p>
 <blockquote>
 <p>使用 Docker 的好習慣就是要將當前運行的程式輸出一律導向 stdout / stderr 讓 Docker 來幫忙做記錄，否則所有的 Log 都會被存在 Container 裡面反而難以除錯。</p>
 </blockquote>
@@ -157,7 +157,11 @@ Deis 的原始碼都放在一起，其中 Router 部分是裡面的一個子目�
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

@@ -111,7 +111,7 @@
 <p>結果，當我發現內建的 Library 要做到我想做的事情很困難的時候，腦抽的我決定自己做一個！</p>
 <p>不過，這年頭不跨平台其實還蠻空虛的，所以就從能夠跨平台來做選擇，至於為何會選 Mono 和 C# 大概就是受到 Unity3D 跟 Unreal Engine 4 兩個目前都是非常有名的遊戲引擎影響吧！<br>（上述兩個引擎都有使用 Mono 來協助實踐跨平台的功能）</p>
 <a id="more"></a>
-<h3 id="Ruby-vs-MRuby"><a href="#Ruby-vs-MRuby" class="headerlink" title="Ruby vs MRuby"></a>Ruby vs MRuby</h3><p>一開始，我就從其他語言呼叫 Ruby 這方面開始著手，不過情況其實不樂觀。<br>找了不少資料只能找到 <a href="http://Ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html" target="_blank" rel="external">Programing Ruby</a> 的簡單介紹，以及名為 <a href="http://www.swig.org/" target="_blank" rel="external">SWIG</a> 這樣的工具。</p>
+<h3 id="Ruby-vs-MRuby"><a href="#Ruby-vs-MRuby" class="headerlink" title="Ruby vs MRuby"></a>Ruby vs MRuby</h3><p>一開始，我就從其他語言呼叫 Ruby 這方面開始著手，不過情況其實不樂觀。<br>找了不少資料只能找到 <a href="http://Ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html" target="_blank" rel="noopener">Programing Ruby</a> 的簡單介紹，以及名為 <a href="http://www.swig.org/" target="_blank" rel="noopener">SWIG</a> 這樣的工具。</p>
 <p>雖然有嘗試用過 Programing Ruby 的方式，但是似乎因為某些問題，我的 Herader 檔案是缺少的。<br>（雖然後面學到 Compile 後可能會增加這些檔案，不過到此我就放棄了 XD）</p>
 <p>之後就把目光轉移到適合用在嵌入式系統的 MRuby 了，後來也聽朋友說其實 MRuby 也相對 Ruby 比較容易嵌入。<br>雖然最近才 1.0.0 版，而且文件其實不多，不過經過後續的摸索，也算是順利能夠使用。</p>
 <h3 id="番外：C-與-C"><a href="#番外：C-與-C" class="headerlink" title="番外：C# 與 C"></a>番外：C# 與 C</h3><p>MRuby 與 Ruby 本身是用 C 語言所撰寫的，但是我用來開發的語言是 C# 就本身都是 C 系列的語言來說看似容易結合，不過現實是 C# 需要透過 P/Invoke 的功能來存取 C 語言的功能，也就是說我們必須先把 MRuby 做成一個 Shared Library （動態函式庫）再用 C# 存取即可。</p>
@@ -120,9 +120,9 @@
 <p>這很重要，所以大家先跟我念三次噢 XDDD</p>
 <hr>
 <p>原本這篇文章還想寫到定義 Class, Module 跟 Method 的，不過就情況來看，應該是講不到 XD<br>總之，我們要先來將產生字串的功能完成。</p>
-<h3 id="編譯-MRuby-與建構動態函式庫"><a href="#編譯-MRuby-與建構動態函式庫" class="headerlink" title="編譯 MRuby 與建構動態函式庫"></a>編譯 MRuby 與建構動態函式庫</h3><p>編譯 MRuby 除了基本的編譯工具外，大致上就是需要一個 Ruby 環境。<br>如果跟我一樣是 Mac 使用者，而且安裝的是 <a href="https://rvm.io" target="_blank" rel="external">RVM</a> 那應該是不用多作處理。</p>
+<h3 id="編譯-MRuby-與建構動態函式庫"><a href="#編譯-MRuby-與建構動態函式庫" class="headerlink" title="編譯 MRuby 與建構動態函式庫"></a>編譯 MRuby 與建構動態函式庫</h3><p>編譯 MRuby 除了基本的編譯工具外，大致上就是需要一個 Ruby 環境。<br>如果跟我一樣是 Mac 使用者，而且安裝的是 <a href="https://rvm.io" target="_blank" rel="noopener">RVM</a> 那應該是不用多作處理。</p>
 <blockquote>
-<p>git clone <a href="https://Github.com/mRuby/mruby.git" target="_blank" rel="external">https://Github.com/mRuby/mruby.git</a><br>cd mRuby<br>Ruby ./minirake</p>
+<p>git clone <a href="https://Github.com/mRuby/mruby.git" target="_blank" rel="noopener">https://Github.com/mRuby/mruby.git</a><br>cd mRuby<br>Ruby ./minirake</p>
 </blockquote>
 <p>編譯就這樣，簡單到你覺得根本不可能。</p>
 <p>不過因為 Mono 目前只能跑 32bit 的關係（好像是 Mac/Linux 上的限制！？）所以我們需要讓 <code>libmRuby.a</code> 這個靜態函式庫有 32bit 的版本。</p>
@@ -163,7 +163,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

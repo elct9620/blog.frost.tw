@@ -125,12 +125,12 @@
 </ul>
 <p>Runner 因為可能會跑 PHP / Ruby 等其他程式語言，避免污染 Host 主機的環境，所以改為開設 VM 運行。<br>（Host 主機使用 Ubuntu 13.04 Server 僅安裝 Nginx 和 Gitlab / Gitlab CI 與所需環境）</p>
 <p>以下所有 VM 都是設定 Private 並且以 <code>10.0.100.100/255.255.255.0</code> 的規則設定，起始 IP 為 100。</p>
-<h3 id="安裝-Gitlab"><a href="#安裝-Gitlab" class="headerlink" title="安裝 Gitlab"></a>安裝 Gitlab</h3><p><a href="https://Github.com/gitlabhq/gitlabhq/blob/master/doc/install/installation.md" target="_blank" rel="external">安裝教學</a></p>
-<h3 id="安裝-Gitlab-CI"><a href="#安裝-Gitlab-CI" class="headerlink" title="安裝 Gitlab CI"></a>安裝 Gitlab CI</h3><p><a href="https://Github.com/gitlabhq/gitlab-ci/blob/master/doc/installation.md" target="_blank" rel="external">安裝教學</a></p>
+<h3 id="安裝-Gitlab"><a href="#安裝-Gitlab" class="headerlink" title="安裝 Gitlab"></a>安裝 Gitlab</h3><p><a href="https://Github.com/gitlabhq/gitlabhq/blob/master/doc/install/installation.md" target="_blank" rel="noopener">安裝教學</a></p>
+<h3 id="安裝-Gitlab-CI"><a href="#安裝-Gitlab-CI" class="headerlink" title="安裝 Gitlab CI"></a>安裝 Gitlab CI</h3><p><a href="https://Github.com/gitlabhq/gitlab-ci/blob/master/doc/installation.md" target="_blank" rel="noopener">安裝教學</a></p>
 <p>上述這兩者安裝都非常簡單，按照官方的文件 Step by Step 即可。</p>
 <p>比較特別的部分是因為 Gitlab / Gitlab CI 都安裝在同一台主機，要另外修改一下 Nginx 設定檔。</p>
 <p>把 Gitlab CI 的 Niginx 設定檔中 <code>listen 80 default_server</code> 的 <code>default_server</code> 刪除，這樣才不會發生錯誤（那是設定預設開啟哪個網站的設定，只能有一個）</p>
-<h3 id="安裝-Gitlab-CI-Runner"><a href="#安裝-Gitlab-CI-Runner" class="headerlink" title="安裝 Gitlab CI Runner"></a>安裝 Gitlab CI Runner</h3><p><a href="https://Github.com/gitlabhq/gitlab-ci-runner#installation" target="_blank" rel="external">安裝教學</a></p>
+<h3 id="安裝-Gitlab-CI-Runner"><a href="#安裝-Gitlab-CI-Runner" class="headerlink" title="安裝 Gitlab CI Runner"></a>安裝 Gitlab CI Runner</h3><p><a href="https://Github.com/gitlabhq/gitlab-ci-runner#installation" target="_blank" rel="noopener">安裝教學</a></p>
 <p>基本上也是按照官方的教學處理即可，不過因為是在 VM 所以要先做以下步驟找出 Host 主機的 IP Address 來設定。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> Ubuntu 新版改用 ip addr show，而非 ifconfig 指令</span></div><div class="line">ip addr show</div></pre></td></tr></table></figure>
 <p>找到之後修改 <code>/etc/hosts</code> 來追加對應的 hostname 給 VM 辨識（測試過大部分 Vagrant 的 Plugin 都無法自動設定）</p>
@@ -164,7 +164,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

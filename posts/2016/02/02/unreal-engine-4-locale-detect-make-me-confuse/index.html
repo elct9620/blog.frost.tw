@@ -109,19 +109,19 @@
   </header>
   <div class="article__entry">
     
-    <p>最近因為我們團隊將<a href="http://make.moe" target="_blank" rel="external">遠古神話</a>上架到 Steam 上面的關係，收到不少歐美玩家表示需要英文語言的支援。<br>其實這方面也是當初考慮不周的問題，也剛好碰到了國軍的過年年假有比較多的時間可以處理。</p>
+    <p>最近因為我們團隊將<a href="http://make.moe" target="_blank" rel="noopener">遠古神話</a>上架到 Steam 上面的關係，收到不少歐美玩家表示需要英文語言的支援。<br>其實這方面也是當初考慮不周的問題，也剛好碰到了國軍的過年年假有比較多的時間可以處理。</p>
 <p>原本預期是一天之內就解決這個問題，不過現實上倒是花了不少額外的功夫去處理。<br>這也是我們使用 Unreal Engine 4 一直以來的問題，雖然承襲了 UDK 眾多強大的功能，但是卻還未完全的成熟。<br>從約兩到三個月就會改版一次，而且加入大量功能的情況來看，還有許多需要解決的問題。</p>
 <blockquote>
 <p>過去 Epic Games 自己使用也許沒什麼問題，但是當發布成一個工具的時候，就多了非常多細節要處理。</p>
 </blockquote>
 <a id="more"></a>
-<p>事實上，Unreal Engine 4 其實本身就有<a href="https://docs.unrealengine.com/latest/INT/Gameplay/Localization/index.html" target="_blank" rel="external">本地化</a>這樣的功能。<br>一般的文字做翻譯其實非常方便，雖然現在 Localization Dashboard 還是試用階段，但是國外開發者已經在使用而且似乎沒什麼問題，直接在引擎裡面編輯翻譯字串對開發多國語系有非常多的幫助。</p>
+<p>事實上，Unreal Engine 4 其實本身就有<a href="https://docs.unrealengine.com/latest/INT/Gameplay/Localization/index.html" target="_blank" rel="noopener">本地化</a>這樣的功能。<br>一般的文字做翻譯其實非常方便，雖然現在 Localization Dashboard 還是試用階段，但是國外開發者已經在使用而且似乎沒什麼問題，直接在引擎裡面編輯翻譯字串對開發多國語系有非常多的幫助。</p>
 <p>不過，首先是我們團隊的教學跟選單都是用圖片製作的。先不談選單，其實教學本身應該要可以用內嵌的字體檔去顯示指定的文字，不過為了讓操作明確，我們使用了 ICON 作為按鍵的提示，反而受限於文字顯示上。</p>
 <blockquote>
 <p>這個決定其實讓部分外國玩家能夠順利操作，另一方面國外開發者有嘗試解決這個問題，但是我們使用 UMG 建構的 UI 部分是不支援嵌入圖片的做法。目前其實有考慮使用 Slate 改寫，重新製作過原本的 UI 介面。</p>
 </blockquote>
 <p>那麼，該如何取得目前的系統語言呢？</p>
-<p>在 Unreal Engine 4 裡面有一個叫做 <a href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Internationalization/index.html" target="_blank" rel="external"><code>Internationalization</code></a> 的模組，這個模組包含了引擎中所有與本地化相關的程式碼。</p>
+<p>在 Unreal Engine 4 裡面有一個叫做 <a href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Internationalization/index.html" target="_blank" rel="noopener"><code>Internationalization</code></a> 的模組，這個模組包含了引擎中所有與本地化相關的程式碼。</p>
 <p>網路上一般的使用方式，是透過 <code>Internationalization</code> 模組，取得目前的 <code>Culture</code> 設定值，然後獲取對應的語言區域代碼（格式為 <code>zh-TW</code> <code>en-US</code>這種形式。）<br>不過很詭異的是，即使在完全新安裝的 Windows 下，還是會拿到 <code>en</code> 這個設定值。</p>
 <p>稍微追蹤一下 Unreal Engine 4 的原始碼，卻發現 <code>CurrentCulture</code> 這個物件似乎是沒有被初始化過的。<br>而設定目前語言的程式碼，卻是指向另一個物件的實作。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">//@return the current culture</span></div><div class="line"><span class="function">CORE_API FCultureRef <span class="title">GetCurrentCulture</span><span class="params">()</span> <span class="keyword">const</span></span></div><div class="line">&#123;</div><div class="line">true<span class="keyword">return</span> CurrentCulture.ToSharedRef();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -150,7 +150,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

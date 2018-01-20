@@ -109,7 +109,7 @@
 <p>不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。</p>
 <a id="more"></a>
 <h3 id="規劃結構"><a href="#規劃結構" class="headerlink" title="規劃結構"></a>規劃結構</h3><hr>
-<p>其實和上次大致上沒有什麼變化，不過架構稍微又更加的細分了一些。<br><br><a href="http://www.flickr.com/photos/elct9620/6760280007/" target="_blank" rel="external"><img src="http://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg" alt="螢幕快照 2012\-01\-25 下午10\.25\.44"></a></p>
+<p>其實和上次大致上沒有什麼變化，不過架構稍微又更加的細分了一些。<br><br><a href="http://www.flickr.com/photos/elct9620/6760280007/" target="_blank" rel="noopener"><img src="http://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg" alt="螢幕快照 2012\-01\-25 下午10\.25\.44"></a></p>
 <h3 id="初始化系統"><a href="#初始化系統" class="headerlink" title="初始化系統"></a>初始化系統</h3><hr>
 <p>首先先建立 index.PHP 檔案在根目錄，而其他一些Library檔案就請各位自己複製摟（參考上次的 30 分鐘留言板）</p>
 <figure class="highlight php"><figcaption><span>index.PHP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 3Day Fourum</div><div class="line"> * </div><div class="line"> * <span class="doctag">@package</span> 3day-fourm</div><div class="line"> * <span class="doctag">@author</span> Aotoki</div><div class="line"> * <span class="doctag">@version</span> 1.0</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">/* 載入設定檔 */</span></div><div class="line"> </div><div class="line"><span class="keyword">require_once</span>(<span class="string">'config.inc.PHP'</span>);</div><div class="line"> </div><div class="line"><span class="comment">/**</span></div><div class="line"> * 載入必要函式庫 </div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">//Slim Framework </span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'lib/Slim/Slim.PHP'</span>);</div><div class="line"> </div><div class="line"><span class="comment">//ActiveMongo</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'lib/ActiveMongo/ActiveMongo.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">//Facebook API</span></div><div class="line"><span class="keyword">require_once</span>(ABSPATH . <span class="string">'lib/Facebook/facebook.PHP'</span>);</div><div class="line"></div><div class="line"><span class="comment">/* 載入起動器 */</span></div><div class="line"><span class="keyword">require_once</span>(<span class="string">'bootstrap.PHP'</span>);</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
@@ -181,14 +181,18 @@
 <h2 id="總結"><a href="#總結" class="headerlink" title="###總結"></a>###總結</h2><p>我想一次吸收這麼多資訊應該很難消化，所以先在這邊做一個段落。<br><br>（不是因為我想偷懶喔，因為之後的 Thread Model 也有不少於 Forums Model 的方法要解釋）</p>
 <p>下一篇文章除了將剩下的 Model 解釋完之外，還會繼續解說其餘的 Web App 部分。</p>
 <ul>
-<li>Github 原始碼：<a href="https://github.com/elct9620/3Day-Forum/zipball/1.0" target="_blank" rel="external">https://Github.com/elct9620/3Day-Forum/zipball/1.0</a></li>
-<li>線上範例 ：<a href="http://the-3day-forum.herokuapp.com/" target="_blank" rel="external">http://the-3day-forum.Herokuapp.com/</a></li>
+<li>Github 原始碼：<a href="https://github.com/elct9620/3Day-Forum/zipball/1.0" target="_blank" rel="noopener">https://Github.com/elct9620/3Day-Forum/zipball/1.0</a></li>
+<li>線上範例 ：<a href="http://the-3day-forum.herokuapp.com/" target="_blank" rel="noopener">http://the-3day-forum.Herokuapp.com/</a></li>
 </ul>
 
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

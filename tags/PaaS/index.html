@@ -75,7 +75,7 @@
     
     <p>延續<a href="http://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1">上一篇</a>的內容，這篇文章要先來討論比較好懂的 <code>Router</code> 部分。</p>
 <p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 <code>Router</code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。</p>
-<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="external">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
+<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="noopener">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
     
     <footer class="article__footer">
       
@@ -84,7 +84,7 @@
           <a href="/posts/2016/02/03/how-deis-architecture-design-part-2/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
-      
+        
     </footer>
   </div>
 </article>
@@ -113,9 +113,9 @@
   </header>
   <div class="article__entry is-index">
     
-    <p>最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 <a href="http://deis.io" target="_blank" rel="external">Deis</a> 就是其中一個。</p>
-<p>Deis 本身是受到 <a href="https://heroku.com" target="_blank" rel="external">Heroku</a> 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！</p>
-<p>關於 Deis 的架構，在官方的<a href="http://docs.deis.io/en/latest/understanding_deis/architecture/" target="_blank" rel="external">文件</a>已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。</p>
+    <p>最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 <a href="http://deis.io" target="_blank" rel="noopener">Deis</a> 就是其中一個。</p>
+<p>Deis 本身是受到 <a href="https://heroku.com" target="_blank" rel="noopener">Heroku</a> 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！</p>
+<p>關於 Deis 的架構，在官方的<a href="http://docs.deis.io/en/latest/understanding_deis/architecture/" target="_blank" rel="noopener">文件</a>已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。</p>
 <blockquote>
 <p>我本身是 Heroku 的重度使用者，因為透過 git 管理以及豐富的 Addon 在開發時其實是非常方便的。<br>不過有時候還是會受到一些限制，這時候 Deis 就提供了很大的幫助。不過這類 PaaS 工具其實還不能說非常成熟，使用上還是會有不少問題，透過了解底層的機制來建構一個自己的版本，在某些情境反而更加容易控制跟維護。</p>
 </blockquote>
@@ -127,7 +127,7 @@
           <a href="/posts/2016/01/31/how-deis-architecture-design-part-1/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
-      
+        
     </footer>
   </div>
 </article>
@@ -189,7 +189,7 @@
     <div class="loading"></div>
   </body>
 </html>
-��門指南（三）</a></h3>
+ 入門指南（三）</a></h3>
   
 
 
@@ -207,7 +207,7 @@
           <a href="/posts/2014/02/04/getting-started-paas-3/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
-      
+        
     </footer>
   </div>
 </article>
@@ -238,8 +238,8 @@
     
     <p>會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD<br>那時身為專業的阿宅，一定要馬上裝來玩一下。</p>
 <p>隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）<br>我又再次回想起這神奇的東西⋯⋯<br><del>現實是 Composer 跑太慢被 HHVM 斷開魂結</del></p>
-<p>當時我就想，既然我都搞了 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="external">Phalcon on Heroku</a> 這東西，不如再來搞一個 HHVM 版本吧！</p>
-<p>沒想到<a href="https://Github.com/hhvm/Heroku-buildpack-hhvm" target="_blank" rel="external">官方</a>竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XD</p>
+<p>當時我就想，既然我都搞了 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="noopener">Phalcon on Heroku</a> 這東西，不如再來搞一個 HHVM 版本吧！</p>
+<p>沒想到<a href="https://Github.com/hhvm/Heroku-buildpack-hhvm" target="_blank" rel="noopener">官方</a>竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XD</p>
 <blockquote>
 <p>PaaS 入門指南還沒斷，不過人生總是需要調味一下，就先讓我寫些別的吧 XD</p>
 </blockquote>
@@ -251,7 +251,7 @@
           <a href="/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
-      
+        
     </footer>
   </div>
 </article>
@@ -290,7 +290,7 @@
           <a href="/posts/2014/01/21/getting-started-paas-2/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
-      
+        
     </footer>
   </div>
 </article>
@@ -331,7 +331,7 @@
           <a href="/posts/2014/01/15/getting-started-paas-1/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
-      
+        
     </footer>
   </div>
 </article>

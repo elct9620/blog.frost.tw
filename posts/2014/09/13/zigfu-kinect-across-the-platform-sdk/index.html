@@ -124,12 +124,12 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 </blockquote>
 <p>至於 Zigfu 大致上做了什麼呢？<br>將驅動程式包裝起來，協助使用者安裝（Windows 使用者需要自己安裝驅動）並且提供 ZDK (SDK) 讓開發者可以用統一的界面，存取 Kinect（官方）、OpenNI、OpenNI2 的 Middleware。</p>
 <blockquote>
-<p>關於 OpenNI / OpenNI 2 的介紹，可以參考<a href="http://viml.nchc.org.tw/blog/paper_info.PHP?CLASS_ID=1&amp;SUB_ID=1&amp;PAPER_ID=491" target="_blank" rel="external">這篇文章</a>。</p>
+<p>關於 OpenNI / OpenNI 2 的介紹，可以參考<a href="http://viml.nchc.org.tw/blog/paper_info.PHP?CLASS_ID=1&amp;SUB_ID=1&amp;PAPER_ID=491" target="_blank" rel="noopener">這篇文章</a>。</p>
 </blockquote>
 <a id="more"></a>
 <p>這篇文章會用 Unity3D 來解釋一些關於 Zigfu 的 ZDK 基本使用。<br>最基本的就是我們需要能透過 Zigfu 讀取到影像、深度、骨架等資料，才能夠繼續後續的開發與使用。</p>
-<h3 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h3><p>首先，我們到官方網站的 <a href="http://zigfu.com/en/downloads/browserplugin/" target="_blank" rel="external">Plugin 下載頁面</a> 去下載 Plugin。<br>（Windows 用戶應該是不需要，至於使用的 Kinect 是 For Windows 還是 For Xbox 要注意驅動是否正確。）</p>
-<p>完成之後，再到 <a href="http://zigfu.com/en/zdk/unity3d/" target="_blank" rel="external">Unity3D ZDK 下載頁面</a>下載適合 Unity3D 的 ZDK （是一個 Unitypackage 檔案，並且有含範例。）</p>
+<h3 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h3><p>首先，我們到官方網站的 <a href="http://zigfu.com/en/downloads/browserplugin/" target="_blank" rel="noopener">Plugin 下載頁面</a> 去下載 Plugin。<br>（Windows 用戶應該是不需要，至於使用的 Kinect 是 For Windows 還是 For Xbox 要注意驅動是否正確。）</p>
+<p>完成之後，再到 <a href="http://zigfu.com/en/zdk/unity3d/" target="_blank" rel="noopener">Unity3D ZDK 下載頁面</a>下載適合 Unity3D 的 ZDK （是一個 Unitypackage 檔案，並且有含範例。）</p>
 <p>之後在 Unity3D 開啟新專案，匯入 Custom Package 之後，就可以使用了。</p>
 <p><strong>注意：因為 ZDK 是用 DLL 包裝的，所以你必須使用 Unity3D Pro 才能夠正常使用</strong></p>
 <h3 id="了解-Zig-元件"><a href="#了解-Zig-元件" class="headerlink" title="了解 Zig 元件"></a>了解 Zig 元件</h3><p>如果有點開範例檔案，會發現每一個範例檔案都有一個叫做 <code>Zigfu</code> 的 GameObject 在場景上，而這個 <code>Zigfu</code> 物件，都附加了一個叫做 <code>Zig</code> 的 Script 在上面。</p>
@@ -144,11 +144,11 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 </blockquote>
 <p>最後，我們需要注意 <code>Awake</code> 方法的最後一行 <code>ZigInput.Instance.AddListener(gameObject)</code> 這一句程式碼。</p>
 <blockquote>
-<p>在程式開發慣例中 Instance 通常是指物件的實體（就 Zigfu 的設計上，應該是屬於<a href="http://zh.wikipedia.org/wiki/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F" target="_blank" rel="external">單例</a>的設計，簡單說就是只會存在一個。）</p>
+<p>在程式開發慣例中 Instance 通常是指物件的實體（就 Zigfu 的設計上，應該是屬於<a href="http://zh.wikipedia.org/wiki/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F" target="_blank" rel="noopener">單例</a>的設計，簡單說就是只會存在一個。）</p>
 </blockquote>
 <p><code>gameObject</code> 在 Unity3D 通常是指自己本身，而 <code>AddListener</code> 在這邊指的是「當更新時也一併更新這個物件」的意思。</p>
 <blockquote>
-<p>Listener 基本上設計類似于<a href="http://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F" target="_blank" rel="external">觀察者</a>這種慣例，在 Unity3D 就類似於 <code>Update</code> 的感覺，在 Zigfu 中選擇了自行實作，跟 Unity3D 分開處理。<br>某方面也算是比較恰當的做法，畢竟 Kinect 裡面有自己的硬體，跟 Unity3D 分離就可以不受玩家主機的硬體限制。</p>
+<p>Listener 基本上設計類似于<a href="http://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F" target="_blank" rel="noopener">觀察者</a>這種慣例，在 Unity3D 就類似於 <code>Update</code> 的感覺，在 Zigfu 中選擇了自行實作，跟 Unity3D 分開處理。<br>某方面也算是比較恰當的做法，畢竟 Kinect 裡面有自己的硬體，跟 Unity3D 分離就可以不受玩家主機的硬體限制。</p>
 </blockquote>
 <h3 id="從-Kinect-讀取影像"><a href="#從-Kinect-讀取影像" class="headerlink" title="從 Kinect 讀取影像"></a>從 Kinect 讀取影像</h3><p>首先我們要在深入了解 <code>ZigInput</code> 的作用，我們可以從範例的 <code>ZigImageView.cs</code> 這個檔案了解到一些蛛絲馬跡。</p>
 <figure class="highlight cs"><figcaption><span>ZigImageViewer.cs</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 略</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Zig_Update</span>(<span class="params">ZigInput input</span>)</span></div><div class="line">    &#123;</div><div class="line">        UpdateTexture(ZigInput.Image);</div><div class="line">    &#125;</div><div class="line"><span class="comment">// 略</span></div></pre></td></tr></table></figure>
@@ -205,7 +205,11 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

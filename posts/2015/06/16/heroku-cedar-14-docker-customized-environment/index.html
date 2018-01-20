@@ -112,7 +112,7 @@ Heroku Docker Plugin 的運作
   </header>
   <div class="article__entry">
     
-    <p>最近 Heroku 推出了 <a href="https://blog.Heroku.com/archives/2015/5/5/introducing_heroku_Docker_release_build_deploy_heroku_apps_with_docker" target="_blank" rel="external">Docker 支援</a>，也因此我馬上就去試玩了這個功能。</p>
+    <p>最近 Heroku 推出了 <a href="https://blog.Heroku.com/archives/2015/5/5/introducing_heroku_Docker_release_build_deploy_heroku_apps_with_docker" target="_blank" rel="noopener">Docker 支援</a>，也因此我馬上就去試玩了這個功能。</p>
 <p>這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。</p>
 <p>文章大致上會涵蓋這些內容：</p>
 <ul>
@@ -121,7 +121,7 @@ Heroku Docker Plugin 的運作
 <li>利用 Docker 製作 Buildpacks</li>
 </ul>
 <a id="more"></a>
-<h3 id="Docker-Plugin"><a href="#Docker-Plugin" class="headerlink" title="Docker Plugin"></a>Docker Plugin</h3><p>這是一個 Open Source 的專案，放在 Heroku 官方的 <a href="https://Github.com/Heroku/heroku-Docker" target="_blank" rel="external">Github</a> 上面，任何人都可以進行 Pull Request 對其新增語言支援。</p>
+<h3 id="Docker-Plugin"><a href="#Docker-Plugin" class="headerlink" title="Docker Plugin"></a>Docker Plugin</h3><p>這是一個 Open Source 的專案，放在 Heroku 官方的 <a href="https://Github.com/Heroku/heroku-Docker" target="_blank" rel="noopener">Github</a> 上面，任何人都可以進行 Pull Request 對其新增語言支援。</p>
 <p>目前支援的語言只有 Scala, Ruby, Node.js, Python 這幾種，細看 Dockerfile 的撰寫其實就可以推測出大多是不相依於 Apache/Nginx 的類型。</p>
 <blockquote>
 <p>因為我自己在維護 PHP 的 Phalcon Buildpacks 這篇文章正好是我支援 Docker 後才寫的，在撰寫 Dockerfile 時就碰到了「設定檔」問題</p>
@@ -220,7 +220,7 @@ Heroku Docker Plugin 的運作
 <blockquote>
 <p>不過目前還在想該怎麼解決 Image Tag 的問題（怕重複到）</p>
 </blockquote>
-<p>這個 Buildpacks 的原始碼在 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="external">Github</a> 上面，歡迎大家協助改進跟維護。</p>
+<p>這個 Buildpacks 的原始碼在 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="noopener">Github</a> 上面，歡迎大家協助改進跟維護。</p>
 <blockquote>
 <p>我有預裝好 Mongodb / Redis Extension 但是 Memcached 因為相依的 <code>libmemcached</code> 放在 Ubuntu 的版本管理系統上，卻很難判斷原始碼下載網址，因此我放棄了⋯⋯</p>
 </blockquote>
@@ -228,7 +228,11 @@ Heroku Docker Plugin 的運作
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

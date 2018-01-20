@@ -120,7 +120,7 @@
 <p>而目前 Ruby 大致上呈現 OAuth2 Client &gt; OAuth2 Server 的狀況，相對的之後打算開發輔助平台的 PHP 則呈現 OAuth2 Server &gt; OAuth2 Client 的狀態（此指的是實踐的容易程度）</p>
 <p>在眾多 Ruby Gems 裡面，唯獨 oauth-plugin 較為完整（平均 OAuth2 相關 Gem 大多 7 個月沒有更新，因此差異不大）</p>
 <h2 id="伺服器實作"><a href="#伺服器實作" class="headerlink" title="###伺服器實作"></a>###伺服器實作</h2><p>因為會員系統是基於 Devise 的，因此一開始就先考慮要搭配 Devise 實作。</p>
-<p>建置上基本上參考 <a href="http://unhandledexpression.com/2011/06/02/Rails-and-oauth-plugin-part-1-the-provider/" target="_blank" rel="external">Rails and OAuth-Plugin Part1</a> 這一篇文章</p>
+<p>建置上基本上參考 <a href="http://unhandledexpression.com/2011/06/02/Rails-and-oauth-plugin-part-1-the-provider/" target="_blank" rel="noopener">Rails and OAuth-Plugin Part1</a> 這一篇文章</p>
 <p>首先針對 Gemfile 追加 gems</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">gem <span class="string">'devise'</span></div><div class="line">gem <span class="string">'oauth-plugin'</span>, <span class="string">"&gt;= 0.4.1"</span> <span class="comment"># 使用最新的 0.4.1 版</span></div></pre></td></tr></table></figure>
 <p>接著執行 bundle install 進行安裝</p>
@@ -173,7 +173,7 @@
 </blockquote>
 <p>接著編輯 composer.json</p>
 <p>在 require 裡面加入 OAuth Client 的實作<br><figure class="highlight"><figcaption><span>composer.json</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">require: &#123;</div><div class="line">true"lncd/oauth2-client": "*" </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>註：這邊是為了測試方便而使用這一個 Client 實際開發時還是建議用 <a href="https://code.google.com/p/oauth2-PHP/" target="_blank" rel="external">OAuth2-PHP</a> 之類的 Library （以後有機會，會再寫一篇相關的文章討論 OAuth2 PHP Client 的使用心得）</p>
+<p>註：這邊是為了測試方便而使用這一個 Client 實際開發時還是建議用 <a href="https://code.google.com/p/oauth2-PHP/" target="_blank" rel="noopener">OAuth2-PHP</a> 之類的 Library （以後有機會，會再寫一篇相關的文章討論 OAuth2 PHP Client 的使用心得）</p>
 <p>完成後更新套件</p>
 <blockquote>
 <p>$ composer install</p>
@@ -193,7 +193,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

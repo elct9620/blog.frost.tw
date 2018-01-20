@@ -110,15 +110,15 @@ Deis 本身是受到 Heroku 所啟發的開源 PaaS 專案，透過 Deis 可以�
   </header>
   <div class="article__entry">
     
-    <p>最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 <a href="http://deis.io" target="_blank" rel="external">Deis</a> 就是其中一個。</p>
-<p>Deis 本身是受到 <a href="https://heroku.com" target="_blank" rel="external">Heroku</a> 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！</p>
-<p>關於 Deis 的架構，在官方的<a href="http://docs.deis.io/en/latest/understanding_deis/architecture/" target="_blank" rel="external">文件</a>已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。</p>
+    <p>最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 <a href="http://deis.io" target="_blank" rel="noopener">Deis</a> 就是其中一個。</p>
+<p>Deis 本身是受到 <a href="https://heroku.com" target="_blank" rel="noopener">Heroku</a> 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！</p>
+<p>關於 Deis 的架構，在官方的<a href="http://docs.deis.io/en/latest/understanding_deis/architecture/" target="_blank" rel="noopener">文件</a>已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。</p>
 <blockquote>
 <p>我本身是 Heroku 的重度使用者，因為透過 git 管理以及豐富的 Addon 在開發時其實是非常方便的。<br>不過有時候還是會受到一些限制，這時候 Deis 就提供了很大的幫助。不過這類 PaaS 工具其實還不能說非常成熟，使用上還是會有不少問題，透過了解底層的機制來建構一個自己的版本，在某些情境反而更加容易控制跟維護。</p>
 </blockquote>
 <a id="more"></a>
 <p>本篇文章會透過概觀的方式去介紹 Deis 所使用到的技術，以及實際上的應用層面。</p>
-<h3 id="CoreOS"><a href="#CoreOS" class="headerlink" title="CoreOS"></a>CoreOS</h3><p><a href="https://coreos.com/" target="_blank" rel="external">CoreOS</a> 是針對 Docker 設計的 Linux 作業系統，其中的特色就是內建了 Docker 以及容易的叢集（Cluster）管理功能。<br>透過 <code>etcd</code> 這個 Key-Value 的設定檔管理工具，CoreOS 可以利用 Discovery 服務登記每一個 Node 並且互相知道對方的存在。</p>
+<h3 id="CoreOS"><a href="#CoreOS" class="headerlink" title="CoreOS"></a>CoreOS</h3><p><a href="https://coreos.com/" target="_blank" rel="noopener">CoreOS</a> 是針對 Docker 設計的 Linux 作業系統，其中的特色就是內建了 Docker 以及容易的叢集（Cluster）管理功能。<br>透過 <code>etcd</code> 這個 Key-Value 的設定檔管理工具，CoreOS 可以利用 Discovery 服務登記每一個 Node 並且互相知道對方的存在。</p>
 <blockquote>
 <p>Discovery 是 etcd2 的新功能，主要是 CoreOS 官方提供的免費 etcd2 Server 供初次建立叢集時使用<br>這邊要注意的是 Discovery 使用完畢後最好切到自己的 etcd 伺服器，不然常常會有節點重開機後無法重新加入叢集的問題。</p>
 </blockquote>
@@ -145,7 +145,11 @@ Deis 本身是受到 Heroku 所啟發的開源 PaaS 專案，透過 Deis 可以�
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

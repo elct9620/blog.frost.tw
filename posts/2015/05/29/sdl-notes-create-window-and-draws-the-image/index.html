@@ -123,7 +123,7 @@
 <blockquote>
 <p>印象中 SDL 應該就是當時在書上看到的，不過書名實在想不起來。只知道是一本綠色封面的書，日本人寫的。</p>
 </blockquote>
-<p>關於入門的學習 <a href="http://www.willusher.io/pages/sdl2/" target="_blank" rel="external">Willusher</a> 這個網站的 SDL 入門教學來開始學習，畢竟 SDL2 的文字教學（個人不是很喜歡看影片）似乎不好找，又充斥著 SDL(SDL1) 的教學有時候還挺混亂的！</p>
+<p>關於入門的學習 <a href="http://www.willusher.io/pages/sdl2/" target="_blank" rel="noopener">Willusher</a> 這個網站的 SDL 入門教學來開始學習，畢竟 SDL2 的文字教學（個人不是很喜歡看影片）似乎不好找，又充斥著 SDL(SDL1) 的教學有時候還挺混亂的！</p>
 <a id="more"></a>
 <h2 id="環境配置"><a href="#環境配置" class="headerlink" title="環境配置"></a>環境配置</h2><p>因為我使用的是 Mac 所以就很直覺的執行 Homebrew 安裝（不過官方似乎也有提供 dmg 檔可以下載）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">brew install sdl2</div></pre></td></tr></table></figure>
@@ -175,8 +175,8 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</div><div class="line">  <span class="comment">// x 是 lvalue</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// y 是 lvalue</span></div><div class="line"><span class="keyword">int</span> y = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="comment">// *p 是 lvalue</span></div><div class="line"><span class="keyword">int</span> *p = &amp;y;</div></pre></td></tr></table></figure>
 <p>那麼 <code>rvalue</code> 是什麼呢？是指「還在運算的數值」也就是放在暫存記憶體的數值。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</div><div class="line">  <span class="comment">// x, y 是 lvalue</span></div><div class="line">  <span class="comment">// x + y 是 rvalue （還在運算）</span></div><div class="line">  <span class="keyword">return</span> x + y; </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// res 是 lvalue</span></div><div class="line"><span class="comment">// 1 + 2 跟 3 都是 rvalue</span></div><div class="line"><span class="keyword">int</span> res = func(<span class="number">1</span> + <span class="number">2</span>, <span class="number">3</span>);</div></pre></td></tr></table></figure>
-<p>聽起來蠻抽象的，不過多看幾次定義跟例子就可以理解這個問題。<br>個人認為解釋不錯的是 <a href="https://msdn.microsoft.com/zh-tw/library/f90831hc.aspx" target="_blank" rel="external">MSDN: Lvalue &amp; Rvalue</a> 這篇文章。</p>
-<p>至於 <code>forward</code> 則是 <code>ravlue</code> 操作上的一個輔助函示，用來展開 <code>rvalue</code> 這部分一樣可以參考 <a href="https://msdn.microsoft.com/zh-tw/library/dd293668.aspx" target="_blank" rel="external">MSDN: Rvalue</a> 這篇文章的介紹，做了一些測試雖然有點頭緒但是還不是很了解這個的使用方式，沒辦法給太多解釋。</p>
+<p>聽起來蠻抽象的，不過多看幾次定義跟例子就可以理解這個問題。<br>個人認為解釋不錯的是 <a href="https://msdn.microsoft.com/zh-tw/library/f90831hc.aspx" target="_blank" rel="noopener">MSDN: Lvalue &amp; Rvalue</a> 這篇文章。</p>
+<p>至於 <code>forward</code> 則是 <code>ravlue</code> 操作上的一個輔助函示，用來展開 <code>rvalue</code> 這部分一樣可以參考 <a href="https://msdn.microsoft.com/zh-tw/library/dd293668.aspx" target="_blank" rel="noopener">MSDN: Rvalue</a> 這篇文章的介紹，做了一些測試雖然有點頭緒但是還不是很了解這個的使用方式，沒辦法給太多解釋。</p>
 <blockquote>
 <p>在教學中的 template 運用上，主要是強制把收入的參數（typename Args）轉為 rvalue 確保在收取數值的時候不會有多餘的複製，之後 forward 則會轉換回原本的（Ex. SDL_Window<em> 傳入會變成 SDL_Window</em> &amp;&amp; 再被 forward 轉回 SDL_Window* 去使用）</p>
 <p>不過奇怪的地方是沒有實作 rvalue 狀況下的處理，不過也許是目前還不夠熟悉 rvalue 的應用才不能理解吧。</p>
@@ -187,7 +187,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

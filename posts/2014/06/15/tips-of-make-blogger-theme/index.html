@@ -117,7 +117,7 @@
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/206151/WvbhbDOR4eJ87uWvW0fQ_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-06-15%20%E4%B8%8B%E5%8D%883.45.22.png" alt="螢幕快照 2014-06-15 下午3.45.22.png"></p>
 <p>其實整體來說還算不錯，有不少地方需要透過一些 CSS 小技巧來把原本的設計元素置換掉⋯⋯<br>（Blogger 很多元件的生成會讓你想哭啊 XDD）</p>
 <h3 id="Step1-選擇適合的佈景"><a href="#Step1-選擇適合的佈景" class="headerlink" title="Step1. 選擇適合的佈景"></a>Step1. 選擇適合的佈景</h3><p>如果設計力滿點其實就不用，不然我會各種建議到佈景網站選一個看起來不錯的佈景當參考⋯⋯</p>
-<p>因為十點左右還在跟同學用 Skype 開會，所以我先請朋友到 <a href="http://themeforest.net/" target="_blank" rel="external">ThemeForest</a> 挑選一個適合的布景。最後選定的是名為 <a href="http://themeforest.net/item/agazine-premium-retina-magazine-wordpress-theme/7664423?WT.ac=category_thumb&amp;WT.z_author=BloomPixel" target="_blank" rel="external">Agazine</a> 的佈景。</p>
+<p>因為十點左右還在跟同學用 Skype 開會，所以我先請朋友到 <a href="http://themeforest.net/" target="_blank" rel="noopener">ThemeForest</a> 挑選一個適合的布景。最後選定的是名為 <a href="http://themeforest.net/item/agazine-premium-retina-magazine-wordpress-theme/7664423?WT.ac=category_thumb&amp;WT.z_author=BloomPixel" target="_blank" rel="noopener">Agazine</a> 的佈景。</p>
 <blockquote>
 <p>據說朋友原本想用窄版的設計，但是被我坑了變成 Full-Width 因為他跟我說老師希望有 jQuery 效果，那我就想說套 Slider 用 Full-Width 比較潮啊，結果沒有（淚</p>
 </blockquote>
@@ -140,12 +140,12 @@
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/206151/TcXnPUA9QCW802OOkTjR_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-06-19%20%E4%B8%8A%E5%8D%8810.12.04.png" alt="螢幕快照 2014-06-19 上午10.12.04.png"></p>
 <p>錯誤提示大致上如上（裡面有一個 <code>template-skin</code> 的 XML 區段，是可以刪掉的，估計跟前面提到的版面配置有關。）</p>
 <p>另外要注意的是有些 HTML/XML 可能會在原始碼底部，有些可能會是 Widget (小工具) 的定義，總之有一部分會是不合原有 HTML 結構的邏輯，是需要注意的。</p>
-<p>在修改與整理的時候，建議參照 Blogger 的<a href="https://support.google.com/blogger/answer/46995?hl=zh-Hant" target="_blank" rel="external">說明</a>會比較好。</p>
+<p>在修改與整理的時候，建議參照 Blogger 的<a href="https://support.google.com/blogger/answer/46995?hl=zh-Hant" target="_blank" rel="noopener">說明</a>會比較好。</p>
 <p>註：其實挺費力的，大概要花上一兩個小時才能整理出來，不輸手動設計網站的工作量，但是規劃好會有助於後續 CSS 的撰寫。</p>
 <h3 id="Step3-撰寫-CSS-的技巧"><a href="#Step3-撰寫-CSS-的技巧" class="headerlink" title="Step3. 撰寫 CSS 的技巧"></a>Step3. 撰寫 CSS 的技巧</h3><p>大致清理完 HTML 調整成自己需要的結構後，大概會看到類似這樣的畫面。</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/206151/rOFRRSMJTwGLfRTSsaZJ_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-06-20%20%E4%B8%8B%E5%8D%889.24.43.png" alt="螢幕快照 2014-06-20 下午9.24.43.png"></p>
 <p>因為 Google 預設會加上一些樣式，的設定所以並不是完全的無樣式狀態。<br>不過這也是還沒有做過 CSS Reset 的狀態，所以最好在 HTML 中透過一些 CDN 服務提供的 CSS Reset 來做一次基本的重設。</p>
-<p>註：我習慣用 CDNJS 的 <a href="http://cdnjs.com/libraries/normalize" target="_blank" rel="external">Normalize.CSS</a> 來做 CSS Reset</p>
+<p>註：我習慣用 CDNJS 的 <a href="http://cdnjs.com/libraries/normalize" target="_blank" rel="noopener">Normalize.CSS</a> 來做 CSS Reset</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/206151/QkXjDj9R9COqCYKgov1A_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-06-20%20%E4%B8%8B%E5%8D%889.31.16.png" alt="螢幕快照 2014-06-20 下午9.31.16.png"></p>
 <p>如果想要更乾淨，可以考慮把 <code>&lt;b:skin&gt;</code> 到 <code>&lt;/b:skin&gt;</code> 裡面的 CSS 一並清除，就可以獲得如上圖的呈現（可以看到還有一些內距設定是預設就存在的）</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/206151/7LHOCt6VTzS3Rq0FVJRK_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-06-20%20%E4%B8%8B%E5%8D%889.33.40.png" alt="螢幕快照 2014-06-20 下午9.33.40.png"></p>
@@ -170,7 +170,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

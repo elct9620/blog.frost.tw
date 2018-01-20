@@ -112,7 +112,7 @@
     
     <p>週末看到一篇 Stripe 工程師所寫的文章，是一篇關於 Idempotency Key （幂等鍵）的設計機制。因為是一篇非常棒的文章，而且裡面的概念除了可以應用在 API 設計之外，很多程式設計上需要解決的問題都可以透過這個概念來處理。</p>
 <p>原文非常的長而且很詳細，這篇文章只會做簡單的重點整理。</p>
-<p>有興趣的話可以打開<a href="https://brandur.org/idempotency-keys" target="_blank" rel="external">原文</a>來讀，是一篇很有用的文章。</p>
+<p>有興趣的話可以打開<a href="https://brandur.org/idempotency-keys" target="_blank" rel="noopener">原文</a>來讀，是一篇很有用的文章。</p>
 <blockquote>
 <p>作者是很厲害的工程師，部落格上的文章都是非常精實的技術文。</p>
 </blockquote>
@@ -128,7 +128,7 @@
 <p>POST /api/chargs<br>…<br>Idempotency-Key: 0ccb7813-e63d-4377-93c5-476cb93038f3<br>…<br>amount=100&amp;currency=TWD</p>
 </blockquote>
 <p>同時，也會透過驗證傳入的 <code>amount</code> 和 <code>currency</code> 等「參數」來確保同一個 API 請求的內容是完全相同的。</p>
-<h2 id="實際應用"><a href="#實際應用" class="headerlink" title="實際應用"></a>實際應用</h2><p><a href="https://brandur.org/idempotency-keys" target="_blank" rel="external">原文</a>中用「火箭背包版 Uber」的範例專案來實作，在 Stripe 的 Github 上面可以找到原始碼。</p>
+<h2 id="實際應用"><a href="#實際應用" class="headerlink" title="實際應用"></a>實際應用</h2><p><a href="https://brandur.org/idempotency-keys" target="_blank" rel="noopener">原文</a>中用「火箭背包版 Uber」的範例專案來實作，在 Stripe 的 Github 上面可以找到原始碼。</p>
 <p>這個 App 會在你發射火箭後向你收費，中間會有幾個步驟。</p>
 <ul>
 <li>產生駕駛紀錄</li>
@@ -249,7 +249,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

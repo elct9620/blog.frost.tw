@@ -113,7 +113,7 @@
 <p>不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與數值上是以正確的數值做計算。</p>
 <p>那麼，就來談談 Unreal Engien 4 的自動化測試工具 <code>Automation Tools</code> 吧！</p>
 <a id="more"></a>
-<p>根據<a href="https://docs.unrealengine.com/latest/INT/Programming/Automation/index.html" target="_blank" rel="external">官方文件</a>的介紹，一共有五種功能包含在這個工具內。</p>
+<p>根據<a href="https://docs.unrealengine.com/latest/INT/Programming/Automation/index.html" target="_blank" rel="noopener">官方文件</a>的介紹，一共有五種功能包含在這個工具內。</p>
 <ul>
 <li>Unit Test - 單元測試</li>
 <li>Feature Test - 功能測試</li>
@@ -136,7 +136,7 @@
 <figure class="highlight cpp"><figcaption><span>Private/Tests/NPCTalkTest.cpp</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"NPCTalk.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AutomationTest.h"</span></span></div><div class="line"></div><div class="line">IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNPCTalkTest, <span class="string">"NPC.Talk.Speak"</span>, EAutomationTestFlags::ATF_SmokeTest);</div><div class="line"></div><div class="line"><span class="keyword">bool</span> FNPCTalkTest::RunTest(<span class="keyword">const</span> FString &amp;Parameters)</div><div class="line">&#123;</div><div class="line">trueTestEqual(TEXT(<span class="string">"NPC should says: Hello World!"</span>), NPCTalk::speak(), TEXT(<span class="string">"Hello World!"</span>));</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>如此一來，當我們執行測試的時候，就可以檢查傳回的字串是否跟預期的一項是否為 <code>Hello World!</code> 了！</p>
 <p><code>IMPLEMENT_SIMPLE_AUTOMATION_TEST</code> 是預先寫好的巨集，用來幫助我們產生測試用的 Class 參數依序為：名稱、識別名稱（會在 Frontend 上顯示）、測試類型。</p>
-<p>測試類型基本上分為：遊戲、編輯器、命令列三種，詳細的請參考 <a href="https://Github.com/EpicGames/UnrealEngine/blob/8a80b5541f69a79abf5855668f39e1d643717600/Engine/Source/Runtime/Core/Public/Misc/AutomationTest.h" target="_blank" rel="external">AutomationTest.h</a> 這個檔案。</p>
+<p>測試類型基本上分為：遊戲、編輯器、命令列三種，詳細的請參考 <a href="https://Github.com/EpicGames/UnrealEngine/blob/8a80b5541f69a79abf5855668f39e1d643717600/Engine/Source/Runtime/Core/Public/Misc/AutomationTest.h" target="_blank" rel="noopener">AutomationTest.h</a> 這個檔案。</p>
 <p>這邊強烈建議用有自動補全的編輯器，因為官方文件基本上完全都沒有解釋使用的方式。</p>
 <h3 id="對-Actor-做測試"><a href="#對-Actor-做測試" class="headerlink" title="對 Actor 做測試"></a>對 Actor 做測試</h3><p>這部分就比較接近功能測試，用來檢測某些物件是否正常。不過缺點就是要做這些測試通常只有兩個選項，直接在遊戲地圖測試，或者製作專用的測試地圖。</p>
 <blockquote>
@@ -152,7 +152,7 @@
 <blockquote>
 <p>就理論上來說，也許能夠做到像是自動操作玩家打怪這類型的測試。<br>AI 可控制的並不限定是一般的怪，玩家也屬於 Pawn 是可被 AI 控制而非玩家的輸入設備（鍵盤、搖桿等）</p>
 </blockquote>
-<p>上述程式碼的寫法是參考 Unreal 論壇的<a href="https://forums.unrealengine.com/showthread.PHP?56106-Need-Help-with-Automation-Testing-in-4-6" target="_blank" rel="external">這篇文章</a>去實作的，也是我唯一看到比較完整關於 Automation Tools 的使用範例。</p>
+<p>上述程式碼的寫法是參考 Unreal 論壇的<a href="https://forums.unrealengine.com/showthread.PHP?56106-Need-Help-with-Automation-Testing-in-4-6" target="_blank" rel="noopener">這篇文章</a>去實作的，也是我唯一看到比較完整關於 Automation Tools 的使用範例。</p>
 <blockquote>
 <p>直接用 TObjectIterator<tclass> 就可以拿到場景物件蠻神奇的，不過大概就跟一般遊戲執行時呼叫一樣吧 XD</tclass></p>
 </blockquote>
@@ -182,7 +182,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

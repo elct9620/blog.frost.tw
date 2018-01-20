@@ -125,12 +125,12 @@
 <script async class="speakerdeck-embed" data-id="7d5ca8400f9b01319db11e8df61cf546" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
 
 <p>這兩份投影片很清楚的說明 PHP 網站最基本會有的漏洞，我想這些都處理好基本上就不會被 ?-s 病患者之類的騷擾了吧 XDD</p>
-<h3 id="實戰-Phalcon-Kernel"><a href="#實戰-Phalcon-Kernel" class="headerlink" title="實戰 Phalcon Kernel"></a>實戰 Phalcon Kernel</h3><p>其實說真的，最近幾年寫 PHP 的人的確感覺越來越少了⋯⋯<br>因此今年的主題都落在如何讓 PHP 逆襲這件事情，前哨戰就由阿土伯介紹的 <a href="http://zephir-lang.com/" target="_blank" rel="external">Zephir</a> 這套神兵來解決了！</p>
+<h3 id="實戰-Phalcon-Kernel"><a href="#實戰-Phalcon-Kernel" class="headerlink" title="實戰 Phalcon Kernel"></a>實戰 Phalcon Kernel</h3><p>其實說真的，最近幾年寫 PHP 的人的確感覺越來越少了⋯⋯<br>因此今年的主題都落在如何讓 PHP 逆襲這件事情，前哨戰就由阿土伯介紹的 <a href="http://zephir-lang.com/" target="_blank" rel="noopener">Zephir</a> 這套神兵來解決了！</p>
 <p>Zephir 是什麼？簡單說就是用 Very (Super) like PHP syntax to write a PHP Extension.<br>用非常類似於 PHP 的語法方式去寫一套 PHP Extension (原本需要用 C 但是現在你不用了！)</p>
 <p>結束後實際嘗試了一下，只能說 It is magic! 之後會寫一篇文章來分享這個東西⋯⋯</p>
 <h3 id="SiteTag-系統窮人調校法經驗談"><a href="#SiteTag-系統窮人調校法經驗談" class="headerlink" title="SiteTag 系統窮人調校法經驗談"></a>SiteTag 系統窮人調校法經驗談</h3><p>這場真的是非常扎實的調校和各種「窮人」的解決方案分享。<br>不過我似乎開始放空（前有 Zephir 不玩一下怎行呢 XDD）</p>
 <p>不過裡面也提到了很多特別的使用技巧，這真的是要靠創意和靈感才能發現的。<br>像是把 CDN 當 NoSQL 的方式來使用（透過把網址當 Key 產生檔案，就能做出不會死還很穩定的 API）雖然僅限於非完全即時的 API 就是了～</p>
-<p>講者 <a href="http://blog.longwin.com.tw/" target="_blank" rel="external">Tsung</a> 也是大家查資料經常會找到的高手，今年也終於有機會看到本人了！</p>
+<p>講者 <a href="http://blog.longwin.com.tw/" target="_blank" rel="noopener">Tsung</a> 也是大家查資料經常會找到的高手，今年也終於有機會看到本人了！</p>
 <h3 id="進擊的快取-以-Drupal-的快取核心為例"><a href="#進擊的快取-以-Drupal-的快取核心為例" class="headerlink" title="進擊的快取 - 以 Drupal 的快取核心為例"></a>進擊的快取 - 以 Drupal 的快取核心為例</h3><p>今年只有這場跑到 R2 聽，畢竟我挺好奇 Drupal 這麼複雜的系統到底怎麼做快取的。<br>沒想到 Drupal 幾乎把全部的東西都快取，不過也許真的是被迫於效能瓶頸，必須這樣做才能取得平衡吧！</p>
 <p>大概是午飯剛吃飽的關係，放空很多。不過大致上就是⋯⋯ Drupal 什麼都能快取得感覺（被拖走</p>
 <h3 id="5-Easy-Ways-To-Speed-Up-Your-Web-Application"><a href="#5-Easy-Ways-To-Speed-Up-Your-Web-Application" class="headerlink" title="5 Easy Ways To Speed Up Your Web Application"></a>5 Easy Ways To Speed Up Your Web Application</h3><p>英文演講，所以大家都跑光了吧（笑）<br>剩下的除了有興趣就是想練習英文聽力的朋友，雖然我根本不在意聽不聽懂就是了⋯⋯<br>（因為外國人來演講比考試的聽力講得還好懂 Orz）</p>
@@ -141,7 +141,7 @@
 <p>不過 Onion 確實是個神奇的專案，大家可以裝看看（雖然 README 的安裝方法不能用，但是可以直接 clone 下來）<br>就我目前觀察到的 AssetToolkit, 後面 LT 的 PHPBrew 都是用 Onion 包的，神推薦要做 CLI 用這套（誤</p>
 <h3 id="PHP-也是可以很-event-用-PHP-打造一個-Realtime-Web"><a href="#PHP-也是可以很-event-用-PHP-打造一個-Realtime-Web" class="headerlink" title="PHP 也是可以很 event - 用 PHP 打造一個 Realtime Web"></a>PHP 也是可以很 event - 用 PHP 打造一個 Realtime Web</h3><p>開始的時候 PHP 逆襲一次，結束的時候再來一次！</p>
 <p>「不管怎樣，用 C(4) 就可以解決！」 裡面介紹 PHP 的 Event (libevent) 套件，可以讓 PHP 得到不科學的效能。<br>不過 PHP 確實也是個很妙的語言，平常就是個表現普普的語言，但是有了神裝（PHP Extension） 戰鬥力馬上破錶 XDD</p>
-<p>之後還有示範 <a href="https://Github.com/RickySu/PHPsocket.io" target="_blank" rel="external">PHPSocketIO</a> 這個套件，用 PHP 實作 Socket.io 的功能。</p>
+<p>之後還有示範 <a href="https://Github.com/RickySu/PHPsocket.io" target="_blank" rel="noopener">PHPSocketIO</a> 這個套件，用 PHP 實作 Socket.io 的功能。</p>
 <p>所以我得出一個結論「只要有 C，人人都可以成為大神（誤」<br>PHP Extension 還是一塊未被發掘的新大陸，現在有了新工具，我想 PHP 也會開始有所改變吧！</p>
 <h3 id="Lighting-Talk"><a href="#Lighting-Talk" class="headerlink" title="Lighting Talk"></a>Lighting Talk</h3><p>PHPBrew - 不解釋，神裝。還沒裝的馬上安裝就對了⋯⋯<br>向 PHP Framework 邁進 - 沒有 Slider 的演講，不過確實給大家一個往 PHP Framework 的道路給了一個方向<br>寫好前端，不要搞瘋你的 PHP 後端工程師 - 很有趣的演講，其實不管前端後端，只要一邊沒弄好就是搞瘋大家 XDD<br>當 Nexmo 遇上 PHP - 聽風太緊張了拉 XDD 不過語音的部分沒成功有點可惜，但是能說中文是爆點好像忘記提醒一下了 XDD<br>我的密碼沒加密，你的呢？ - 糟糕，我有幾組舊密碼在得獎名單上啊 Orz</p>
 <hr>
@@ -155,7 +155,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>

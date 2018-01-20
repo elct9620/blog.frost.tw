@@ -107,13 +107,13 @@
   </header>
   <div class="article__entry">
     
-    <p>這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 <a href="http://maintainablecss.com/" target="_blank" rel="external">Maintainable CSS</a> 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。</p>
+    <p>這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 <a href="http://maintainablecss.com/" target="_blank" rel="noopener">Maintainable CSS</a> 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。</p>
 <p>幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS 逐漸複雜。所以開始有像是 OOCSS、SMACSS、BEM 等等理論出現，綜合來看這些技巧對於維護網站的樣式上都是很有幫助的。</p>
 <p>會寫這篇文章是因為 Maintainable CSS 在很多地方上跟我自己使用的方式類似，而我目前採用的則是 SMACSS 跟 BEM 的混合版本，所以就打算來分享一下自己的經驗和技巧。</p>
 <a id="more"></a>
 <h2 id="語意化"><a href="#語意化" class="headerlink" title="語意化"></a>語意化</h2><p>Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就是該怎麼對元素的樣式做命名這件事情。</p>
 <p>像是 <code>.col-md-12</code> 被分類在非語意化的類型，而 <code>.product</code> 則屬於語意化。就我自己的習慣，其實是偏向於語意化的，雖然說 <code>.col-md-12</code> 必須改寫成 <code>.column-medium-12</code> 或者 <code>.column-pad-12</code> 之類的形式，會要多打不少字，但是從結果上來看，原始碼的可讀性就會增加非常多。</p>
-<p>關於「語意化」的應用實例，可以參考 <a href="http://semantic-ui.com/" target="_blank" rel="external">Semantic UI</a> 的應用，這套 CSS Framework 就是以語意化為前提所設計，可以從中學習到非常多語意化的範例。</p>
+<p>關於「語意化」的應用實例，可以參考 <a href="http://semantic-ui.com/" target="_blank" rel="noopener">Semantic UI</a> 的應用，這套 CSS Framework 就是以語意化為前提所設計，可以從中學習到非常多語意化的範例。</p>
 <p>至於是否要堅持完全的語意化，我個人是認為不需要的。畢竟很多情境都不是絕對的，如果太過於堅持這些地方的話，反而會變成干擾排版的障礙，在可容許的範圍內有一些例外狀況是沒有關係的。</p>
 <h2 id="重用性"><a href="#重用性" class="headerlink" title="重用性"></a>重用性</h2><p>第二個章節在討論重用性，不過我自己其實沒有很注重這部分，反而沒有太多的經驗可以分享。不過裡面提到了 SCSS 的 <code>mixin</code> 機制，確實是在重用性上非常有利的輔助。不過這部分是減少原始碼的使用，而個人認為真正的重用是對一些常用屬性的拆分，像是下面這樣的例子。</p>
 <figure class="highlight scss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.centered</span> &#123;</div><div class="line">  &amp;<span class="selector-class">.text</span> &#123;</div><div class="line">   <span class="attribute">text-align</span>: center;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  &amp;<span class="selector-class">.block</span> &#123;</div><div class="line">    <span class="attribute">margin</span>: <span class="number">0</span> auto;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -123,7 +123,7 @@
 <p>透過包裝 <code>mixin</code> 讓一些常用的樣式設定可以用很簡單的方式被套用。我自己最常用的是 Media Query 的情境，使用起來類似下面這樣。</p>
 <figure class="highlight scss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.article__quote</span> &#123;</div><div class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</div><div class="line"></div><div class="line">  @<span class="keyword">include</span> at-screen(<span class="variable">$pad</span>) &#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">75%</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  @<span class="keyword">include</span> at-screen(<span class="variable">$pc</span>) &#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">50%</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
-<p>順帶一提，上面這種切 Breakpoint 的做法不一定是最好的，推薦閱讀 <a href="https://medium.freecodecamp.com/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862?gi=2f6c0c5f72ef" target="_blank" rel="external">The 100% correct way to do CSS breakpoints</a> 這篇文章，看看怎樣切割 Breakpoint 會更恰當。</p>
+<p>順帶一提，上面這種切 Breakpoint 的做法不一定是最好的，推薦閱讀 <a href="https://medium.freecodecamp.com/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862?gi=2f6c0c5f72ef" target="_blank" rel="noopener">The 100% correct way to do CSS breakpoints</a> 這篇文章，看看怎樣切割 Breakpoint 會更恰當。</p>
 </blockquote>
 <h2 id="ID-的使用"><a href="#ID-的使用" class="headerlink" title="ID 的使用"></a>ID 的使用</h2><p>關於這部分，如果使用像是 SMACSS 或者 BEM 之類的，其實就很少會碰到需要用 ID 選擇器的情境。一般我都用在切割 Namespace 或者例外處理。</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">id</span>=<span class="string">"home"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">aside</span> <span class="attr">class</span>=<span class="string">"profile"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"profile__avatar"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"profile__information"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">section</span> <span class="attr">id</span>=<span class="string">"about"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">aside</span> <span class="attr">class</span>=<span class="string">"profile"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"profile__avatar"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"profile__information"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">section</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -199,7 +199,11 @@
     
     <footer class="article__footer">
       
-
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
       
     </footer>
   </div>
