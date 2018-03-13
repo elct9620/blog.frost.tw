@@ -32,34 +32,29 @@
 {
   "@context":"http://schema.org",
   "@type":"Article",
-  "mainEntityOfPage": "http://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/",
-  "url":"http://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/"
+  },
+  "headline":"用 Vagrant 整合 Gitlab 與 Capistrano 做 Staging 環境自動部署",
+  "image": [
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
   "datePublished": "2013-11-02T17:38:00.000Z",
   "dateModified": "2017-07-02T17:07:07.000Z",
-  "headline":"用 Vagrant 整合 Gitlab 與 Capistrano 做 Staging 環境自動部署",
-  "description":"這標題超級長的說（崩潰
-最近因為有實習生要來，所以把老爸公司設定好 Gitlab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。不過原本規劃的 Staging 環境也是在這檯主機上（當初就很淡定把記憶體和處理器加高，因為我會狂開 VM XD）但是會有 SSH 權限上的問題，原本想利用 Git 的 Hook 之類的來處理，但是感覺似乎不太好。
-剛好這次看到 Gitlab / Gitlab-CI 的介紹文，我又再次嘗試安裝，過程上順利、簡單很多。不過上次不順利肯定是我把整個環境裝在 NAS 裡面的關係 XDD
-從我建好 Gitlab / Gitlab-CI 到設定 Capistrano 到自動部署，其實花費不少時間，而且有很多「差點忘記」的部分，因此決定來寫一篇文章做筆記！",
-  "image": {
-    "@type": "ImageObject",
-    "url": "http://blog.frost.tw/icon-512.png",
-    "width": 700,
-    "height": 700
+  "description":"這標題超級長的說（崩潰最近因為有實習生要來，所以把老爸公司設定好 Gitlab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。不過原本規劃的 Staging 環境也是在這檯主機上（當初就很淡定把記憶體和處理器加高，因為我會狂開 VM XD）但是會有 SSH 權限上的問題，原本想利用 Git 的 Hook 之類的來處理，但是感覺似乎不太好。剛好這次看到 Gitlab / Gitlab-CI 的介紹文，我又再次嘗試安裝，過程上順利、簡單很多。不過上次不順利肯定是我把整個環境裝在 NAS 裡面的關係 XDD從我建好 Gitlab / Gitlab-CI 到設定 Capistrano 到自動部署，其實花費不少時間，而且有很多「差點忘記」的部分，因此決定來寫一篇文章做筆記！",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
   },
   "publisher": {
     "@type": "Organization",
     "name": "蒼時弦也",
     "logo": {
       "@type": "ImageObject",
-      "url": "http://blog.forst.tw/logo-wide.png",
-      "width": 600,
-      "height": 60
+      "url": "http://blog.forst.tw/logo-wide.png"
     }
-  },
-  "author": {
-    "@type": "Person",
-    "name": "蒼時弦也"
   }
 }
 
