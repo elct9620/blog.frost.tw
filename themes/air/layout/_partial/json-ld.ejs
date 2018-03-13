@@ -15,31 +15,31 @@
 {
   "@context":"http://schema.org",
   "@type":"Article",
-  "mainEntityOfPage": "<%= page.permalink %>",
-  "url":"<%= page.permalink %>",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "<%= page.permalink %>"
+  },
+  "headline":"<%= page.title %>",
+  "image": [
+    <% if(thumbnail(page)){ %>
+    "<%= thumbnail(page) %>",
+    <% } %>
+    "<%= config.cover %>"
+  ],
   "datePublished": "<%= page.date.toDate().toISOString() %>",
   "dateModified": "<%= page.updated.toDate().toISOString() %>",
-  "headline":"<%= page.title %>",
-  "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"") %>",
-  "image": {
-    "@type": "ImageObject",
-    "url": "<%= thumbnail(page) || config.cover %>",
-    "width": 700,
-    "height": 700
+  "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"").replace(/\n/g, "") %>",
+  "author": {
+    "@type": "Person",
+    "name": "<%= config.author %>"
   },
   "publisher": {
     "@type": "Organization",
     "name": "<%= config.author %>",
     "logo": {
       "@type": "ImageObject",
-      "url": "http://blog.forst.tw/logo-wide.png",
-      "width": 600,
-      "height": 60
+      "url": "http://blog.forst.tw/logo-wide.png"
     }
-  },
-  "author": {
-    "@type": "Person",
-    "name": "<%= config.author %>"
   }
 }
 <% } %>
