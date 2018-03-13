@@ -2,13 +2,15 @@
 <% if(is_home()) { %>
 {
     "@context": "http://schema.org",
-    "@type": "Blog",
-    "name": "<%= config.title %>",
+    "@type": "Person",
+    "name": "<%= config.author %>",
     "url": "<%= config.url %>",
-    "image": "<%= config.cover %>",
-    "description": "<%= config.description %>",
     "sameAs": [
-      "https://www.facebook.com/frost.tw/"
+      "https://www.facebook.com/frost.tw/",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
     ]
 }
 <% } else if(is_post() || is_amp()) { %>
