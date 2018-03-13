@@ -31,6 +31,10 @@
             // Prevent homepage reload Disqus
             reloadDisqus()
         }
+
+        if (typeof FB !== "undefined" && FB !== null) { // Instance of FacebookSDK
+          FB.XFBML.parse();
+        }
     }
 
     var initTurbolinks = function() {
@@ -42,4 +46,3 @@
     })
 
 }())
-
