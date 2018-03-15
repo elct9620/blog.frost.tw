@@ -63,6 +63,48 @@
   
 <article class="post article is-index">
   <header class="article__header">
+    <time datetime="2018-01-09T09:28:13.000Z" class="article__time--header">
+      Jan.09
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2018/01/09/How-ruby-raise-an-error/" title="Ruby 中該如何 Raise 一個錯誤">Ruby 中該如何 Raise 一個錯誤</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>前幾天的晚上朋友在 Facebook 上問了一個問題。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">raise HTTPError, <span class="string">'Not Found'</span></div></pre></td></tr></table></figure>
+<p>和</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">raise HTTPError.new(<span class="string">'Not Found'</span>)</div></pre></td></tr></table></figure>
+<p>哪個比較快？也因為這樣，我們意外的發現 Ruby 對上面兩段程式碼的定義上其實是不太一樣的。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2018/01/09/How-ruby-raise-an-error/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
     <time datetime="2016-02-03T07:54:00.000Z" class="article__time--header">
       Feb.03
     </time>
@@ -434,50 +476,6 @@
         
         <div class="text-left">
           <a href="/posts/2015/02/18/open-frameworks-and-mruby/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2014-10-04T22:40:00.000Z" class="article__time--header">
-      Oct.05
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2014/10/05/unreal-engine-4-using-cpp-customize-pawn-object/" title="Unreal Engine 4 - 用 C++ 自訂 Pawn 物件">Unreal Engine 4 - 用 C++ 自訂 Pawn 物件</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>雖然 MRuby in C# 系列暫時沒辦法繼續撰寫，但是 Unreal Engine 4 系列大概會在畢業製作完成之前，陸陸續續地以筆記的形式更新出來。</p>
-<p>實際上，用 Unreal Engine 4 開發遊戲是不太需要用 C++ 來處理的，內建的 Blueprints 功能就具備非常優質的設計，也算是整個引擎中不論美術、程式都會經常接觸的功能。其特色就是人人都能懂，美術可以用來控制動畫、程式可以用來設計 AI 跟遊戲，上手的難度也非常低。</p>
-<p>那麼，會遭遇使用 C++ 來處理的情況是什麼呢？</p>
-<p>基本上可以分成兩種，第一種就是效能問題，目前還沒有碰過，不過以 C++ 撰寫的程式碼肯定會比較順暢（雖然我很懷疑 Blueprints 所編譯的成品就能產生接近 C++ 等級的效能）</p>
-<p>第二種則是 Unreal Engine 初期沒有考慮到，或者還未支援的的部分。像是在 4.5 的 UMG (Unreal Motion Graphics) 功能推出之前，需要用到 Slate UI 來輔助建構遊戲界面，就勢必得用 C++ 才能解決。</p>
-<p>總而言之，這篇文章在討論的就是第二種情況，我們需要的功能還未在 Unreal Engine 4 上面「好好的」運作。</p>
-<p>註：程式結構太複雜這點，原本想算進去。不過因為 Blueprints 不論註解還是開 Functions 都能做到，很難用這點來說是一種缺點⋯⋯</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2014/10/05/unreal-engine-4-using-cpp-customize-pawn-object/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         
