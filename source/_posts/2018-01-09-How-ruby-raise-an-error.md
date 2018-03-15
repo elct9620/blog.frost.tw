@@ -1,7 +1,7 @@
 ---
 title: Ruby 中該如何 Raise 一個錯誤
 date: 2018-01-09 17:28:13
-tags: Ruby, 筆記
+tags: [Ruby, 筆記]
 ---
 
 前幾天的晚上朋友在 Facebook 上問了一個問題。

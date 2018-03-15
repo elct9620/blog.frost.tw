@@ -139,4 +139,26 @@
     text-decoration: none;
     color: $white;
   }
+
+  @include element("tag-list") {
+    padding: 0;
+
+    list-style: none;
+
+    text-align: center;
+  }
+
+  @include element('tag-list-item') {
+    display: inline-block;
+
+    margin: 0 .5em;
+    padding: .25em .5em;
+
+    background-color: $linkColor;
+
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+  }
 }
