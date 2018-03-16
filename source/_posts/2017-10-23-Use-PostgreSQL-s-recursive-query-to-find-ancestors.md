@@ -1,3 +1,9 @@
+---
+title: 在 PostgreSQL 中使用遞迴查詢來找尋父節點
+date: 2017-10-23 18:00:00
+tags: [PostgreSQL, 筆記, 資料庫]
+---
+
 老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。
 
 不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。
@@ -196,7 +202,7 @@ class User < ApplicationRecord
     return_columns = User.column_names.join(', ')
     select_columns = column_names_for_recursive_query.join(', ')
     table_name = User.table_name
-    
+
     query = <<-SQL
       WITH RECURSIVE ancestors(#{return_columns}, depth) AS (
         SELECT #{select_columns}, 1
@@ -214,7 +220,7 @@ class User < ApplicationRecord
   end
 
   private
-  
+
   def column_names_for_recursive_query
     @column_names ||= User.column_names.map |name|
       [User.table_name, name].join('.')
@@ -237,7 +243,7 @@ end
 * 世代只會不斷成長
 * 樹狀結構的追溯有上限
   * 每個節點只會運行一次追溯
-  
+
 以這個案例來看，耗費在 `Recursive Query` 的成本每個節點只有一次，相比 Closure Table 會因為世代成長造成的消耗，或者 Path Enumeration 的儲存限制，這個成本是很低的。
 
 > 下一步是封裝成 Concern 方便取用，畢竟這類型的系統有時候很仰賴樹狀結構的查詢。
