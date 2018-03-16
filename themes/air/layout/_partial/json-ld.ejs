@@ -1,5 +1,4 @@
 <script type="application/ld+json">
-<% if(is_home()) { %>
 {
     "@context": "http://schema.org",
     "@type": "Person",
@@ -13,7 +12,9 @@
       "https://www.linkedin.com/in/elct9620"
     ]
 }
-<% } else if(is_post() || is_amp()) { %>
+</script>
+<script type="application/ld+json">
+<% if(is_post() || is_amp()) { %>
 {
   "@context":"http://schema.org",
   "@type":"Article",
