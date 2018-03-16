@@ -652,6 +652,18 @@ figure.highlight {
     background-color: #1c9cd2;
     text-decoration: none;
     color: white; }
+  .article__tag-list {
+    padding: 0;
+    list-style: none;
+    text-align: center; }
+  .article__tag-list-item {
+    display: inline-block;
+    margin: 0 .5em;
+    padding: .25em .5em;
+    background-color: #1c9cd2; }
+    .article__tag-list-item a {
+      color: white;
+      text-decoration: none; }
 
 .pagination {
   max-width: 100%;
