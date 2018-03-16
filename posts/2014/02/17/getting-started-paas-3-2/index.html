@@ -25,7 +25,7 @@
 <meta name="twitter:description" content="據說PaaS 入門指南（三）網址設錯，我要開始寫才發現 XD 這篇文章會來示範如何用 OpenShift 架設 WordPress 網誌，在此之前要先告知大家。最近 AppFog 決定改變方針，已經註冊的用戶免費方案降為 512MB 而之後不開放免費方案申請（假設經驗是對的，過幾年 AppFog 的免費用戶大概就會被停了吧 XD 上次是取消網址⋯⋯） 也因此，之後的文章講完基本運用後，就不會另外提">
 <meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
-<meta property="fb:app_id" content="205000946197077">
+<meta property="fb:app_id" content="178355449110">
 
   <script type="application/ld+json">
 {
@@ -156,7 +156,7 @@
 <p>管理界面右邊有一個「Source Code」的項目，記得複製下來，馬上就會用到。<br>（前面的文章有教過安裝 Git 了，這次是真的要實際使用摟～）</p>
 <p>輸入指令</p>
 <blockquote>
-<p>git clone ssh://5301ff004382ec91a100019e@wp-aotoki.rhcloud.com/~/git/wp.git/</p>
+<p>git clone ssh:<a href="mailto://5301ff004382ec91a100019e@wp-aotoki.rhcloud.com" target="_blank" rel="noopener">//5301ff004382ec91a100019e@wp-aotoki.rhcloud.com</a>/~/git/wp.git/</p>
 </blockquote>
 <p>後面的 <code>ssh://5301ff004382ec91a100019e@wp-aotoki.rhcloud.com/~/git/wp.git/</code> 可別照著我打，要貼上剛剛複製的那段喔！</p>
 <p>註：之前的文章沒有寫 OpenShift 的安裝，這邊其實會出錯。<br>如果你有安裝好 Ruby 環境，可以先用 <code>gem install rhc</code> 然後 <code>rhc setup</code> 來讓 OpenShift 專用客戶端幫你設定好喔！<br>（Windows 用戶，我就不能保證如此順利了⋯⋯）</p>

@@ -25,7 +25,7 @@
 <meta name="twitter:description" content="沒有想到最後還是走上了遊戲開發這條路，同學給我的影響真的很大，而且大家都有一個共同的目標和夢想的感覺很不錯。雖然讓我下定決心的是因為和同學在合作上太過於順利，讓我們不禁懷疑「正常的團隊運作是這樣嗎？」才讓我決定要跟他們一起做遊戲。 雖然現在有 Unity3D 跟我們團隊使用的 Unreal Engine 4 但是程式自學，又是受設計教育的我在技術上總是會差人一截，最好的方法莫過於從一些基礎的東西去">
 <meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
-<meta property="fb:app_id" content="205000946197077">
+<meta property="fb:app_id" content="178355449110">
 
   <script type="application/ld+json">
 {
@@ -198,6 +198,8 @@
 <p>至於 <code>forward</code> 則是 <code>ravlue</code> 操作上的一個輔助函示，用來展開 <code>rvalue</code> 這部分一樣可以參考 <a href="https://msdn.microsoft.com/zh-tw/library/dd293668.aspx" target="_blank" rel="noopener">MSDN: Rvalue</a> 這篇文章的介紹，做了一些測試雖然有點頭緒但是還不是很了解這個的使用方式，沒辦法給太多解釋。</p>
 <blockquote>
 <p>在教學中的 template 運用上，主要是強制把收入的參數（typename Args）轉為 rvalue 確保在收取數值的時候不會有多餘的複製，之後 forward 則會轉換回原本的（Ex. SDL_Window<em> 傳入會變成 SDL_Window</em> &amp;&amp; 再被 forward 轉回 SDL_Window* 去使用）</p>
+</blockquote>
+<blockquote>
 <p>不過奇怪的地方是沒有實作 rvalue 狀況下的處理，不過也許是目前還不夠熟悉 rvalue 的應用才不能理解吧。</p>
 </blockquote>
 <p><del>程式會動就好，指標這種東西還是要靠機運才會懂得⋯⋯</del></p>

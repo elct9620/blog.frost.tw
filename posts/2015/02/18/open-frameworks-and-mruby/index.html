@@ -25,7 +25,7 @@
 <meta name="twitter:description" content="自從畢製開始與同學開發遊戲後，我就開始喜歡嘗試運用一些工具如 HTML5、Mono、Processing 等來製作一些屬於自己的「遊戲框架」 自從上次嘗試使用 Mono 與 MRuby 結合後，這次在與朋友的閒聊中回想起了 Open Frameworks 這套工具。Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來說比 Processing 改進不少，">
 <meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
-<meta property="fb:app_id" content="205000946197077">
+<meta property="fb:app_id" content="178355449110">
 
   <script type="application/ld+json">
 {
@@ -158,6 +158,8 @@
 <p>在 Build Settings 的 Tab 裡面找到「Header Search Path」並且加入即可。</p>
 <blockquote>
 <p>也許會找不到，可以把左上角的「Basic」換成「All」就能看到了！</p>
+</blockquote>
+<blockquote>
 <p>裡面的路徑我寫了 $(HEADER_MRUBY) 是因為 Open Frameworks 有一個 xcconfig 的設定檔，基於實驗精神我做了測試，這邊可以直接寫上路徑（相對、絕對路徑都可以）</p>
 </blockquote>
 <p>這樣基本上就配置好了開發環境，不過我想是有更乾淨的配置方式。<br>不過基於我使用 XCode 也不過幾個月，這也是第一次用 XCode 引用外部的函式庫，就先這樣解決吧！</p>
