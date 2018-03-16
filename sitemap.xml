@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</loc>
+    
+    <lastmod>2018-03-16T01:29:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2018/01/09/How-ruby-raise-an-error/</loc>
     
     <lastmod>2018-03-15T03:00:35.000Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/</loc>
     
     <lastmod>2017-10-30T15:51:44.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</loc>
-    
-    <lastmod>2017-10-22T16:43:54.000Z</lastmod>
     
   </url>
   

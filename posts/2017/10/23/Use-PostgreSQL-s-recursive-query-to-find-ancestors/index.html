@@ -3,7 +3,7 @@
   <head>
   <meta charset="utf-8">
   
-  <title>弦而時習之</title>
+  <title>在 PostgreSQL 中使用遞迴查詢來找尋父節點 | 弦而時習之</title>
   <meta name="theme-color" content="#EFEFEF">
 
   <meta name="author" content="蒼時弦也">
@@ -11,16 +11,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。 不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。">
+<meta name="keywords" content="筆記,PostgreSQL,資料庫">
 <meta property="og:type" content="article">
-<meta property="og:title" content="弦而時習之">
+<meta property="og:title" content="在 PostgreSQL 中使用遞迴查詢來找尋父節點">
 <meta property="og:url" content="https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/">
 <meta property="og:site_name" content="弦而時習之">
 <meta property="og:description" content="老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。 不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://blog.frost.tw/icon-512.png">
-<meta property="og:updated_time" content="2017-10-22T16:43:54.000Z">
+<meta property="og:updated_time" content="2018-03-16T01:29:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="弦而時習之">
+<meta name="twitter:title" content="在 PostgreSQL 中使用遞迴查詢來找尋父節點">
 <meta name="twitter:description" content="老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。 不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。">
 <meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
@@ -35,13 +36,13 @@
     "@type": "WebPage",
     "@id": "https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/"
   },
-  "headline":"",
+  "headline":"在 PostgreSQL 中使用遞迴查詢來找尋父節點",
   "image": [
     
     "http://blog.frost.tw/icon-512.png"
   ],
-  "datePublished": "2017-10-22T16:00:00.000Z",
-  "dateModified": "2017-10-22T16:43:54.000Z",
+  "datePublished": "2017-10-23T10:00:00.000Z",
+  "dateModified": "2018-03-16T01:29:15.000Z",
   "description":"老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。",
   "author": {
     "@type": "Person",
@@ -92,12 +93,12 @@
       
 <article class="post article">
   <header class="article__header">
-    <time datetime="2017-10-22T16:00:00.000Z" class="article__time--header">
+    <time datetime="2017-10-23T10:00:00.000Z" class="article__time--header">
       Oct.23
     </time>
     
   
-    <h1 class="article__title"></h1>
+    <h1 class="article__title">在 PostgreSQL 中使用遞迴查詢來找尋父節點</h1>
   
 
 
@@ -298,7 +299,7 @@
 <li><code>UNION</code> 所 <code>SELECT</code> 的欄位必須一至，不可使用 <code>*</code> 符號。</li>
 </ul>
 <p>因為有以上的限制，我們的 Model 會呈現這樣的狀態。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> &lt; ApplicationRecord</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">ancestors</span><span class="params">(<span class="symbol">max_depth:</span> <span class="number">10</span>)</span></span></div><div class="line">    return_columns = User.column_names.join(<span class="string">', '</span>)</div><div class="line">    select_columns = column_names_for_recursive_query.join(<span class="string">', '</span>)</div><div class="line">    table_name = User.table_name</div><div class="line">    </div><div class="line">    query = <span class="string">&lt;&lt;-SQL</span></div><div class="line">      WITH RECURSIVE ancestors(<span class="subst">#&#123;return_columns&#125;</span>, depth) AS (</div><div class="line">        SELECT <span class="subst">#&#123;select_columns&#125;</span>, 1</div><div class="line">        FROM <span class="subst">#&#123;table_name&#125;</span></div><div class="line">        WHERE <span class="subst">#&#123;table_name.id&#125;</span> = <span class="subst">#&#123;parent_id&#125;</span></div><div class="line">      UNION ALL</div><div class="line">        SELECT <span class="subst">#&#123;select_columns&#125;</span>, depth + 1</div><div class="line">        FROM <span class="subst">#&#123;table_name&#125;</span></div><div class="line">        JOIN ancestors ON ancestors.parent_id = <span class="subst">#&#123;table_name&#125;</span>.id</div><div class="line">        WHERE depth &lt; <span class="subst">#&#123;max_depth&#125;</span></div><div class="line">      )</div><div class="line">      SELECT * FROM ancestors ORDER BY depth</div><div class="line">    SQL</div><div class="line">    User.find_by_sql(query)</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  private</div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">column_names_for_recursive_query</span></span></div><div class="line">    @column_names <span class="params">||</span>= User.column_names.map <span class="params">|name|</span></div><div class="line">      [User.table_name, name].join(<span class="string">'.'</span>)</div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> &lt; ApplicationRecord</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">ancestors</span><span class="params">(<span class="symbol">max_depth:</span> <span class="number">10</span>)</span></span></div><div class="line">    return_columns = User.column_names.join(<span class="string">', '</span>)</div><div class="line">    select_columns = column_names_for_recursive_query.join(<span class="string">', '</span>)</div><div class="line">    table_name = User.table_name</div><div class="line"></div><div class="line">    query = <span class="string">&lt;&lt;-SQL</span></div><div class="line">      WITH RECURSIVE ancestors(<span class="subst">#&#123;return_columns&#125;</span>, depth) AS (</div><div class="line">        SELECT <span class="subst">#&#123;select_columns&#125;</span>, 1</div><div class="line">        FROM <span class="subst">#&#123;table_name&#125;</span></div><div class="line">        WHERE <span class="subst">#&#123;table_name.id&#125;</span> = <span class="subst">#&#123;parent_id&#125;</span></div><div class="line">      UNION ALL</div><div class="line">        SELECT <span class="subst">#&#123;select_columns&#125;</span>, depth + 1</div><div class="line">        FROM <span class="subst">#&#123;table_name&#125;</span></div><div class="line">        JOIN ancestors ON ancestors.parent_id = <span class="subst">#&#123;table_name&#125;</span>.id</div><div class="line">        WHERE depth &lt; <span class="subst">#&#123;max_depth&#125;</span></div><div class="line">      )</div><div class="line">      SELECT * FROM ancestors ORDER BY depth</div><div class="line">    SQL</div><div class="line">    User.find_by_sql(query)</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  private</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">column_names_for_recursive_query</span></span></div><div class="line">    @column_names <span class="params">||</span>= User.column_names.map <span class="params">|name|</span></div><div class="line">      [User.table_name, name].join(<span class="string">'.'</span>)</div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>如此一來，我們就可以用 <code>User.last.ancestors</code> 取得對應的 Model 物件回傳。</p>
 <p>不過，上面的查詢也還有不少限制，像是無法繼續加上 <code>order</code> <code>limit</code> 等其他透過 ORM 產生的 SQL 查詢。</p>
 <h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>其實整體看下來，所謂樹狀的結構解法，是要看當時的情境。</p>
@@ -331,6 +332,8 @@
             <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
           </a>
         </p>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/筆記/">筆記</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/資料庫/">資料庫</a></li></ul>
         
       
     </footer>
