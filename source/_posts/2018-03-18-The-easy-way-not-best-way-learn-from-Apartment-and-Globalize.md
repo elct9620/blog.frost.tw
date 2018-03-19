@@ -20,7 +20,7 @@ Apartment 是一個 Multi-Tenancy (多租戶) 的套件，可以協助我們利�
 
 透過 `SET SEARCH_PATH = 'site1, public'` 的設定後，當我們嘗試 `SELECT * FROM users` 的時候，就會先去找 `site1.users` 再去找 `public.users` （預設）的資料表，這對開發多用戶類型的系統有相當大的優勢。
 
-> 不過這在大規模的網站（像是 Shopify 之類服務）在 Ruby on Rails 上就不會是個好選擇，會有效能和記憶體上的貧頸。所以在設計上要考量應用的情境和規模。
+> 不過這在大規模的網站（像是 Shopify 之類服務）在 Ruby on Rails 上就不會是個好選擇，會有效能和記憶體上的瓶頸。所以在設計上要考量應用的情境和規模。
 
 ## Globalize
 
