@@ -19,7 +19,7 @@
 <meta property="og:description" content="手邊有一個專案剛好是需要滿足「多網站」並且每個網站都能夠「多語言切換」這兩個條件，在這兩個解決方案中最好處理的就是 Apartment 和 Globalize 這兩個 Ruby Gem 了。 不過，在某些情況卻變成了問題。幸好運氣不錯的是還在開發階段，還有辦法將這個問題透過替換 Gem 進行修正。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://blog.frost.tw/icon-512.png">
-<meta property="og:updated_time" content="2018-03-18T16:48:15.000Z">
+<meta property="og:updated_time" content="2018-03-19T10:19:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apartment 與 Globalize 隱藏在方便背後的陷阱">
 <meta name="twitter:description" content="手邊有一個專案剛好是需要滿足「多網站」並且每個網站都能夠「多語言切換」這兩個條件，在這兩個解決方案中最好處理的就是 Apartment 和 Globalize 這兩個 Ruby Gem 了。 不過，在某些情況卻變成了問題。幸好運氣不錯的是還在開發階段，還有辦法將這個問題透過替換 Gem 進行修正。">
@@ -71,7 +71,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2018-03-18T15:59:56.000Z",
-  "dateModified": "2018-03-18T16:48:15.000Z",
+  "dateModified": "2018-03-19T10:19:25.000Z",
   "description":"手邊有一個專案剛好是需要滿足「多網站」並且每個網站都能夠「多語言切換」這兩個條件，在這兩個解決方案中最好處理的就是 Apartment 和 Globalize 這兩個 Ruby Gem 了。不過，在某些情況卻變成了問題。幸好運氣不錯的是還在開發階段，還有辦法將這個問題透過替換 Gem 進行修正。",
   "author": {
     "@type": "Person",
@@ -142,7 +142,7 @@
 <p>另外，在 PostgreSQL 中則有 <a href="https://www.postgresql.org/docs/9.5/static/ddl-schemas.html" target="_blank" rel="noopener">Schema</a> 這個機制，可以讓我們在同一個資料庫做出類似 Namespace （命名空間）的效果。</p>
 <p>透過 <code>SET SEARCH_PATH = &#39;site1, public&#39;</code> 的設定後，當我們嘗試 <code>SELECT * FROM users</code> 的時候，就會先去找 <code>site1.users</code> 再去找 <code>public.users</code> （預設）的資料表，這對開發多用戶類型的系統有相當大的優勢。</p>
 <blockquote>
-<p>不過這在大規模的網站（像是 Shopify 之類服務）在 Ruby on Rails 上就不會是個好選擇，會有效能和記憶體上的貧頸。所以在設計上要考量應用的情境和規模。</p>
+<p>不過這在大規模的網站（像是 Shopify 之類服務）在 Ruby on Rails 上就不會是個好選擇，會有效能和記憶體上的瓶頸。所以在設計上要考量應用的情境和規模。</p>
 </blockquote>
 <h2 id="Globalize"><a href="#Globalize" class="headerlink" title="Globalize"></a>Globalize</h2><p>Globalize 可以幫助我們對 Model 設定，讓特定幾個欄位的值能夠依照當下 <code>I18n.locale</code> 設定的數值來自動反映出不同語言的呈現。原理上來說其實也相當簡單，他會產生一個 <code>post_translations</code> 資料表，並且記錄語言和需要翻譯的欄位。</p>
 <p>使用方法如下：</p>

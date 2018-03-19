@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/</loc>
+    
+    <lastmod>2018-03-19T10:20:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2018/03/18/The-easy-way-not-best-way-learn-from-Apartment-and-Globalize/</loc>
     
-    <lastmod>2018-03-18T16:48:15.000Z</lastmod>
+    <lastmod>2018-03-19T10:19:25.000Z</lastmod>
     
   </url>
   
@@ -33,13 +40,6 @@
     <loc>https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/</loc>
     
     <lastmod>2017-10-30T15:51:44.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/</loc>
-    
-    <lastmod>2017-10-22T15:16:53.000Z</lastmod>
     
   </url>
   
