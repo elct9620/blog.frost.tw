@@ -26,6 +26,23 @@
     ]
 }
 </script>
+<% if(is_home()) { %>
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"ItemList",
+  "itemListElement":[
+  <% page.posts.each(function(item, index) { %>
+    {
+      "@type":"ListItem",
+      "position": <%- index + 1 %>,
+      "url":"<%- config.url %><%- item.path %>"
+    }<%- (config.per_page == index + 1) ? '' : ',' %>
+  <% }) %>
+  ]
+}
+</script>
+<% } %>
 <% if(is_post() || is_amp()) { %>
 <script type="application/ld+json">
 {
