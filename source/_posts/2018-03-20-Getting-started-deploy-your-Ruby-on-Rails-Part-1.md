@@ -55,13 +55,13 @@ ssh-keygen -t rsa
 
 設定上來說參考這張截圖即可。
 
-![DigitalOcean - Create Droplets.png](/images/getting-started-deploy-your-ruby-on-rails-part-1/new_droplet.png)
+![DigitalOcean - Create Droplets.png](https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-1/new_droplet.png)
 
 這次我們要用的是 CentOS 這套作業系統，算是我最早接觸架設伺服器的時候所使用的作業系統。原型是 RedHat 這套商用作業系統，可以視為開源版本。
 
 唯一要注意的是 SSH Key 的部分有確實的被新增進去，現在的伺服器為了安全會盡可能的使用 SSH Keys 來登入，而不是使用密碼。密碼有可能會被猜出來，但是 SSH Key 保存在你的電腦，也不容易直接推算出來，所以相對的安全不少。
 
-> 圖上的機房位置是選錯的，要記得選成 Singapore（新加坡）操作起來才會比較順暢。 
+> 圖上的機房位置是選錯的，要記得選成 Singapore（新加坡）操作起來才會比較順暢。
 
 ## 進入伺服器
 
@@ -125,4 +125,4 @@ chmod 600 ~/.ssh/authorized_keys
 到此為止，我們僅是能夠簡單的連上伺服器，並且以正確的使用者來進行操作。距離安裝伺服器還有一段距離，這系列的文章會盡可能的針對操作「詳細」的解釋。如果大家有注意到的話，會發現 Linux 的指令其實是把對應動作的單字重組，透過這樣的方式我們就可以「稍微容易」的記起常用的幾個操作。
 
 下一篇文章我們會稍微對伺服器做一些簡單的設定，並且熟悉基本操作。
- 
+

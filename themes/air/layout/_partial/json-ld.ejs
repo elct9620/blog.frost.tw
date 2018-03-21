@@ -76,4 +76,27 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "<%= config.url %>",
+      "name": "<%= config.title %> ",
+      "image": "<%= config.cover %>"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "<%= page.permalink %>",
+      "name": "<%= page.title %>",
+      <% if(thumbnail(page)) { %>"image": "<%= thumbnail(page) %>"<% } else { %>"image": "<%= config.cover %>"<% } %>
+    }
+  }]
+}
+</script>
 <% } %>
