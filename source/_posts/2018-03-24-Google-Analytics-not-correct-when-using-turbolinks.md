@@ -63,6 +63,6 @@ document.addEventListener('turbolinks:load', function() {
 
 另外現在回去看目前這個使用 Turbolinks 的網站版本，在換上去後轉換率有明顯的往下降，可能就是這個關係。
 
-![Google Analytics 分析資料](images/google-analytics-not-correct-when-using-turbolinks/ratio.png)
+![Google Analytics 分析資料](https://blog.frost.tw/images/google-analytics-not-correct-when-using-turbolinks/ratio.png)
 
 最近會在關注一下轉換率有沒有提高，或者跳出率下降之類的。雖然跳出率如果沒有下降，還蠻傷心的 XD
