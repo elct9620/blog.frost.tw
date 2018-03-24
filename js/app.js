@@ -39,7 +39,7 @@
         if (typeof dataLayer !== "undefined" && dataLayer !== null) {
           dataLayer.push({
             'event':'turbolinks:load',
-            'virtualUrl': event.data. url
+            'virtualUrl': event.data.url
           });
         }
       }
