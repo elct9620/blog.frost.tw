@@ -64,7 +64,7 @@ visudo
 參考 [rbenv/ruby-build](https://github.com/rbenv/ruby-build/wiki) 上面的說明，我們可以透過下面的指令簡單地將編譯 Ruby 所需套件找出來。
 
 ```bash
-yum install -y gcc-6 bzip2 openssl-devel libyaml-devel libffi-devel readline-devel zlib-devel gdbm-devel ncurses-devel
+yum install -y gcc bzip2 openssl-devel libyaml-devel libffi-devel readline-devel zlib-devel gdbm-devel ncurses-devel
 ```
 
 上述安裝的 `gcc` 套件是用來編譯的，而 `-devel` 結尾的套件是讓程式「編譯」的時候能夠找到原始碼資訊的對應資訊。
