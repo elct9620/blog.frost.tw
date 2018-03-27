@@ -65,4 +65,4 @@ document.addEventListener('turbolinks:load', function() {
 
 ![Google Analytics 分析資料](https://blog.frost.tw/images/google-analytics-not-correct-when-using-turbolinks/ratio.png)
 
-最近會再關注一下轉換率有沒有提高，或者跳出率下降之類的。如果跳出率如果下降，還是會蠻傷心的 XD
+最近會再關注一下轉換率有沒有提高，或者跳出率下降之類的。如果跳出率是下降，還是會蠻傷心的 XD
