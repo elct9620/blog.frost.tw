@@ -146,7 +146,7 @@ sudo vi /etc/profile.d/ruby.sh
 export PATH=/usr/local/ruby-2.4.3/bin:$PATH
 ```
 
-在按下 `:wq` 進行存檔，如此一下下次預設就會採用 Ruby 2.4.3 做為預設的 Ruby 執行了。
+再按下 `:wq` 進行存檔，如此一下下次預設就會採用 Ruby 2.4.3 做為預設的 Ruby 執行了。
 
 > 在 `/etc` 目錄下面的變更是對整個伺服器的修改，以後不管是誰打開都會預設使用 Ruby 2.4.3 這點需要注意。
 
