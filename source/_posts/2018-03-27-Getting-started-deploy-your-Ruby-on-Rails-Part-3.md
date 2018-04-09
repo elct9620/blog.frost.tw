@@ -29,7 +29,7 @@ thumbnail: https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rail
 
 這次的範例會編譯 Ruby 2.4 版本，我們要先到 Ruby 官方網站的[下載頁面](https://www.ruby-lang.org/zh_tw/downloads/)來取得原始碼的壓縮檔。
 
-![螢幕快照 2018-03-26 下午10.17.13.png](quiver-image-url/486433672F090C92A5ED41A33B535964.png =1920x1080)
+![螢幕快照 2018-03-26 下午10.17.13.png](https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-3/screenshot.jpg)
 
 如圖上顯示的一樣，目前最新的 Ruby 2.4.3 是我們想安裝的版本，所以對他點選右鍵後選擇「複製連結網址」就可以取得像是下面的下載位址。
 
