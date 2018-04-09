@@ -19,7 +19,7 @@
 <meta property="og:description" content="經過第一篇和第二篇的說明，我想大家現在應該都有辦法順利的透過 SSH 進入自己的伺服器。 在第二篇的最後，我們針對 Ruby 環境預先做了準備，接下來就是安裝 Ruby 環境的時候了！">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-3/thumbnail.png">
-<meta property="og:updated_time" content="2018-03-28T16:45:18.000Z">
+<meta property="og:updated_time" content="2018-04-09T15:57:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部署你的第一個 Ruby on Rails 網站（三）">
 <meta name="twitter:description" content="經過第一篇和第二篇的說明，我想大家現在應該都有辦法順利的透過 SSH 進入自己的伺服器。 在第二篇的最後，我們針對 Ruby 環境預先做了準備，接下來就是安裝 Ruby 環境的時候了！">
@@ -74,7 +74,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2018-03-27T13:30:15.000Z",
-  "dateModified": "2018-03-28T16:45:18.000Z",
+  "dateModified": "2018-04-09T15:57:44.000Z",
   "description":"經過第一篇和第二篇的說明，我想大家現在應該都有辦法順利的透過 SSH 進入自己的伺服器。在第二篇的最後，我們針對 Ruby 環境預先做了準備，接下來就是安裝 Ruby 環境的時候了！",
   "author": {
     "@type": "Person",
@@ -174,7 +174,7 @@
 <p>不論是寫程式或設定伺服器，用容易理解的命名都是一個好習慣。</p>
 </blockquote>
 <p>這次的範例會編譯 Ruby 2.4 版本，我們要先到 Ruby 官方網站的<a href="https://www.ruby-lang.org/zh_tw/downloads/" target="_blank" rel="noopener">下載頁面</a>來取得原始碼的壓縮檔。</p>
-<p><img src="quiver-image-url/486433672F090C92A5ED41A33B535964.png =1920x1080" alt="螢幕快照 2018-03-26 下午10.17.13.png"></p>
+<p><img src="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-3/screenshot.jpg" alt="螢幕快照 2018-03-26 下午10.17.13.png"></p>
 <p>如圖上顯示的一樣，目前最新的 Ruby 2.4.3 是我們想安裝的版本，所以對他點選右鍵後選擇「複製連結網址」就可以取得像是下面的下載位址。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.3.tar.gz</div></pre></td></tr></table></figure>
 <p>接下來我們到伺服器上用 <code>wget</code>（WWW Get）指令來下載檔案，除了 <code>curl</code> 這個之後會介紹的指令外，是在 Linux 上很常用來下載檔案的指令。</p>
