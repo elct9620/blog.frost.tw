@@ -18,12 +18,12 @@
 <meta property="og:site_name" content="弦而時習之">
 <meta property="og:description" content="上週同事突然在公司的聊天群組中討論起區塊鏈到底是不是屬於分散式系統（Distributed System）因為去年年底爆紅的關係，我也稍微了解了一下區塊鏈的運作，就被同事說會不會晚上就有文章出來了。 雖然不是當天晚上就在寫，不過了解區塊鏈的運作倒是很有幫助我們冷靜下來對應這個新名詞。">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/flow.png">
-<meta property="og:updated_time" content="2018-04-02T03:10:49.000Z">
+<meta property="og:image" content="https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/thumbnail.jpg">
+<meta property="og:updated_time" content="2018-04-10T09:14:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 2018 年我所知道的區塊鏈">
 <meta name="twitter:description" content="上週同事突然在公司的聊天群組中討論起區塊鏈到底是不是屬於分散式系統（Distributed System）因為去年年底爆紅的關係，我也稍微了解了一下區塊鏈的運作，就被同事說會不會晚上就有文章出來了。 雖然不是當天晚上就在寫，不過了解區塊鏈的運作倒是很有幫助我們冷靜下來對應這個新名詞。">
-<meta name="twitter:image" content="https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/flow.png">
+<meta name="twitter:image" content="https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/thumbnail.jpg">
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
 <meta property="fb:app_id" content="178355449110">
 
@@ -69,12 +69,12 @@
   "headline":"在 2018 年我所知道的區塊鏈",
   "image": [
     
-    "https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/flow.png",
+    "https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/thumbnail.jpg",
     
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2018-04-02T03:08:28.000Z",
-  "dateModified": "2018-04-02T03:10:49.000Z",
+  "dateModified": "2018-04-10T09:14:03.000Z",
   "description":"上週同事突然在公司的聊天群組中討論起區塊鏈到底是不是屬於分散式系統（Distributed System）因為去年年底爆紅的關係，我也稍微了解了一下區塊鏈的運作，就被同事說會不會晚上就有文章出來了。雖然不是當天晚上就在寫，不過了解區塊鏈的運作倒是很有幫助我們冷靜下來對應這個新名詞。",
   "author": {
     "@type": "Person",
@@ -108,7 +108,7 @@
     "item": {
       "@id": "https://blog.frost.tw/posts/2018/04/02/The-blockchain-I-know-about-in-2018/",
       "name": "在 2018 年我所知道的區塊鏈",
-      "image": "https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/flow.png"
+      "image": "https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/thumbnail.jpg"
     }
   }]
 }
@@ -170,7 +170,7 @@
 <h2 id="區塊跟鍊"><a href="#區塊跟鍊" class="headerlink" title="區塊跟鍊"></a>區塊跟鍊</h2><p>從工程師的角度去看區塊鏈這個東西，大概會先連結到 Linked List 這種結構。實際上很明顯的，所謂的區塊鏈就是一種 Linked List 的資料結構，將一個接著一個的 Block（區塊）來練接起來。</p>
 <p>所以，實際上一個區塊鏈很難實作嗎？其實不算困難。</p>
 <p>要製作出簡單的區塊連結構，大概會像這樣。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Ruby</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Block</span></span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(prev, data)</span></span></div><div class="line">    @prev = prev</div><div class="line">    @data = data</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chain</span></span></div><div class="line">  GENESIS = Block.new(<span class="literal">nil</span>, <span class="string">''</span>)</div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">initialize</span></span></div><div class="line">    @blocks = [GENESIS]</div><div class="line">  <span class="keyword">end</span></div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(data)</span></span></div><div class="line">    @blocks.push(Block.new(@blocks.last, data))</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">chain = Chain.new</div><div class="line">chain.add(<span class="string">'Hello World'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Ruby</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Block</span></span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(prev, data)</span></span></div><div class="line">    @prev = prev</div><div class="line">    @data = data</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chain</span></span></div><div class="line">  GENESIS = Block.new(<span class="literal">nil</span>, <span class="string">''</span>)</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">initialize</span></span></div><div class="line">    @blocks = [GENESIS]</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(data)</span></span></div><div class="line">    @blocks.push(Block.new(@blocks.last, data))</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">chain = Chain.new</div><div class="line">chain.add(<span class="string">'Hello World'</span>)</div></pre></td></tr></table></figure>
 <p>不過，光靠這些事不足以構成完善的區塊鏈本身。</p>
 <h2 id="產生區塊"><a href="#產生區塊" class="headerlink" title="產生區塊"></a>產生區塊</h2><p>如果光是像前面所述的去生成新的區塊，很明顯的是沒有被驗證的。那就代表說任何人都可以隨意的去產生新的區塊，而且這並不是我們所期望的結果。</p>
 <p>所以要放入 PoW（Proof of Work）這樣的機制在裡面，用來檢驗產生區塊是否合理。</p>
