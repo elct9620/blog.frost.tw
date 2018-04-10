@@ -2,6 +2,7 @@
 title: 在 2018 年我所知道的區塊鏈
 date: 2018-04-02 11:08:28
 tags: [區塊鏈,心得]
+thumbnail: https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/thumbnail.jpg
 ---
 
 上週同事突然在公司的聊天群組中討論起區塊鏈到底是不是屬於分散式系統（Distributed System）因為去年年底爆紅的關係，我也稍微了解了一下區塊鏈的運作，就被同事說會不會晚上就有文章出來了。
@@ -42,11 +43,11 @@ end
 
 class Chain
   GENESIS = Block.new(nil, '')
-  
+
   def initialize
     @blocks = [GENESIS]
   end
-  
+
   def add(data)
     @blocks.push(Block.new(@blocks.last, data))
   end
