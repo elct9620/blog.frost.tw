@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>部署你的第一個 Ruby on Rails 網站（四） | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="從第一篇到第二篇的說明，加上第三篇我想大家已經對編譯自己的環境稍為熟悉。 為了要可以用 Passenger 作為網站伺服器，我們需要自行編譯 Nginx 讓他可以使用 Passenger 模組。">
+<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（四）">
+<meta property="og:url" content="https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="從第一篇到第二篇的說明，加上第三篇我想大家已經對編譯自己的環境稍為熟悉。 為了要可以用 Passenger 作為網站伺服器，我們需要自行編譯 Nginx 讓他可以使用 Passenger 模組。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-4/screenshot1.jpg">
+<meta property="og:updated_time" content="2018-04-10T08:58:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="部署你的第一個 Ruby on Rails 網站（四）">
+<meta name="twitter:description" content="從第一篇到第二篇的說明，加上第三篇我想大家已經對編譯自己的環境稍為熟悉。 為了要可以用 Passenger 作為網站伺服器，我們需要自行編譯 Nginx 讓他可以使用 Passenger 模組。">
+<meta name="twitter:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-4/screenshot1.jpg">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/"
+  },
+  "headline":"部署你的第一個 Ruby on Rails 網站（四）",
+  "image": [
+    
+    "https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-4/screenshot1.jpg",
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2018-04-10T08:54:22.000Z",
+  "dateModified": "2018-04-10T08:58:37.000Z",
+  "description":"從第一篇到第二篇的說明，加上第三篇我想大家已經對編譯自己的環境稍為熟悉。為了要可以用 Passenger 作為網站伺服器，我們需要自行編譯 Nginx 讓他可以使用 Passenger 模組。",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/",
+      "name": "部署你的第一個 Ruby on Rails 網站（四）",
+      "image": "https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-4/screenshot1.jpg"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2018-04-10T08:54:22.000Z" class="article__time--header">
+      Apr.10
+    </time>
+    
+  
+    <h1 class="article__title">部署你的第一個 Ruby on Rails 網站（四）</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>從<a href="https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/">第一篇</a>到<a href="https://blog.frost.tw/posts/2018/03/23/Getting-started-deploy-your-Ruby-on-Rails-Part-2/">第二篇</a>的說明，加上<a href="https://blog.frost.tw/posts/2018/03/23/Getting-started-deploy-your-Ruby-on-Rails-Part-3/">第三篇</a>我想大家已經對編譯自己的環境稍為熟悉。</p>
+<p>為了要可以用 Passenger 作為網站伺服器，我們需要自行編譯 Nginx 讓他可以使用 Passenger 模組。</p>
+<a id="more"></a>
+<p>不過因為 Passenger 已經針對這方面做好對應的處置，所以我們只需要按照 Passenger 提供的解決方案一步一步的進行編譯即可。</p>
+<blockquote>
+<p>Passenger 提供了從原始碼安裝跟透過 Ruby Gem 安裝兩種，為了好維護跟升級，這篇文章會採取從原始碼安裝的方式。</p>
+</blockquote>
+<h2 id="取得原始碼"><a href="#取得原始碼" class="headerlink" title="取得原始碼"></a>取得原始碼</h2><p>Passenger 除了開放原始碼的版本，也有企業版。從<a href="https://www.phusionpassenger.com/" target="_blank" rel="noopener">官網</a>可以找到開放原始碼版本的下載點，而且貼心的提供了像下面截圖的安裝指南。</p>
+<p><img src="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-4/screenshot1.jpg" alt="螢幕快照 2018-04-10 上午12.13.04.png"></p>
+<p>因為要從原始碼安裝，所以要先選擇其他作業系統。</p>
+<p><img src="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-4/screenshot2.jpg" alt="螢幕快照 2018-04-10 上午12.13.30.png"></p>
+<p>因為要和 Nginx 搭配，要記得將 <code>Standalone</code> 改為 <code>Nginx</code> 才能得到正確的安裝指南。</p>
+<blockquote>
+<p>不過 Standalone 模式似乎也會變編譯一個 Nginx 來運行，只是不會顯示給使用者。</p>
+</blockquote>
+<p>對頁面上的「Download tarball」按鈕點選右鍵複製連結，會得到類似下面的連結。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://www.phusionpassenger.com/latest_stable_tarball</div></pre></td></tr></table></figure>
+<p>因為 Passenger 不像 Ruby 安裝完畢後會複製到某個指定的資料夾，所以我們可以參考 Homebrew 的方式，在 <code>/usr/local/passenger</code> 裡面放置檔案。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir /usr/<span class="built_in">local</span>/passenger</div><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/passenger</div><div class="line">wget https://www.phusionpassenger.com/latest_stable_tarball</div></pre></td></tr></table></figure>
+<blockquote>
+<p>這邊建議用 <code>root</code> 來進行這個動作，因為 Passenger 安裝過程會需要 <code>root</code> 權限之外，<code>/usr/local</code> 目錄要新增資料夾也是需要有 <code>root</code> 權限的。</p>
+</blockquote>
+<h2 id="安裝-Passenger"><a href="#安裝-Passenger" class="headerlink" title="安裝 Passenger"></a>安裝 Passenger</h2><p>首先把我們下載回來的 Passenger 解壓縮。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -zxvf latest_stable_tarball</div></pre></td></tr></table></figure>
+<blockquote>
+<p>用 <code>wget</code> 不知道原因並沒有自動轉成檔名，不過能夠解壓縮就就不需要太在意細節。</p>
+</blockquote>
+<p>解壓縮後應該會得到一個最新版的 Passenger 目錄（本文撰寫時是 5.2.3 版）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@deploy-example passenger]<span class="comment"># ls</span></div><div class="line">latest_stable_tarball  passenger-5.2.3</div></pre></td></tr></table></figure>
+<p>接著進入 <code>passenger-5.2.3</code> 這個目錄，執行 Passenger 的安裝程式。因為 Passenger 是有使用 Ruby 的，如果上一篇文章介紹的設定沒有正確的話，可能會無法執行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/passenger/passenger-5.2.3/bin:<span class="variable">$PATH</span></div><div class="line">passenger-install-nginx-module</div></pre></td></tr></table></figure>
+<p>依照文件，我們跟上次設定 Ruby 的時候一樣先暫時讓 Passenger 的執行檔都可以執行。安裝中途也會嘗試呼叫這個目錄的其他執行檔，所以在安裝階段先這樣設定會讓後續流暢不少。</p>
+<blockquote>
+<p>執行 <code>passenger-install-nginx-module</code> 會中斷好幾次，主要是 Passenger 會建議我們把一些設定改善後再繼續。</p>
+</blockquote>
+<p>開始後，會先出現類似下面的詢問訊息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">[root@deploy-example passenger-5.2.3]<span class="comment"># passenger-install-nginx-module</span></div><div class="line">Welcome to the Phusion Passenger Nginx module installer, v5.2.3.</div><div class="line"></div><div class="line">This installer will guide you through the entire installation process. It</div><div class="line">shouldn<span class="string">'t take more than 5 minutes in total.</span></div><div class="line"></div><div class="line">Here's what you can expect from the installation process:</div><div class="line"></div><div class="line"> 1. This installer will compile and install Nginx with Passenger support.</div><div class="line"> 2. You<span class="string">'ll learn how to configure Passenger in Nginx.</span></div><div class="line"> 3. You'll learn how to deploy a Ruby on Rails application.</div><div class="line"></div><div class="line">Don<span class="string">'t worry if anything goes wrong. This installer will advise you on how to</span></div><div class="line">solve any problems.</div><div class="line"></div><div class="line">Press Enter to continue, or Ctrl-C to abort.</div></pre></td></tr></table></figure>
+<p>因為有好幾次詢問，所以如果後面沒有特別提醒的話，請自己按 Enter 繼續執行即可。</p>
+<p>開始後會先詢問要支援哪些語言，因為 Passenger 後來陸續增加了 Python 和 Node.js 的支援，如果需要的話，也可以用方向鍵和空白鍵選取起來。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Which languages are you interested <span class="keyword">in</span>?</div><div class="line"></div><div class="line">Use &lt;space&gt; to select.</div><div class="line">If the menu doesn<span class="string">'t display correctly, press '</span>!<span class="string">'</span></div><div class="line"></div><div class="line"> ‣ ⬢  Ruby</div><div class="line">   ⬡  Python</div><div class="line">   ⬡  Node.js</div><div class="line">   ⬡  Meteor</div></pre></td></tr></table></figure>
+<p>下一步會檢查相依性，如果出現類似下面的訊息，就表示有缺少一些程式。按下 Enter 之後 Passenger 會給出安裝指令，我們再複製來使用即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Checking <span class="keyword">for</span> required software...</div><div class="line"></div><div class="line"> * Checking <span class="keyword">for</span> C compiler...</div><div class="line">      Found: yes</div><div class="line">      Location: /usr/bin/cc</div><div class="line"> * Checking <span class="keyword">for</span> C++ compiler...</div><div class="line">      Found: no</div><div class="line"> * Checking <span class="keyword">for</span> A download tool like <span class="string">'wget'</span> or <span class="string">'curl'</span>...</div><div class="line">      Found: yes</div><div class="line">      Location: /usr/bin/wget</div><div class="line"> * Checking <span class="keyword">for</span> Curl development headers with SSL support...</div><div class="line">      Found: no</div><div class="line">      Error: Cannot find the `curl-config` <span class="built_in">command</span>.</div><div class="line"> * Checking <span class="keyword">for</span> OpenSSL development headers...</div><div class="line">      Found: yes</div><div class="line">      Location: /usr/include/openssl/ssl.h</div><div class="line"> * Checking <span class="keyword">for</span> Zlib development headers...</div><div class="line">      Found: yes</div><div class="line">      Location: /usr/include/zlib.h</div><div class="line"> * Checking <span class="keyword">for</span> Rake (associated with /usr/<span class="built_in">local</span>/ruby-2.4.3/bin/ruby)...</div><div class="line">      Found: yes</div><div class="line">      Location: /usr/<span class="built_in">local</span>/ruby-2.4.3/bin/ruby /usr/<span class="built_in">local</span>/ruby-2.4.3/bin/rake</div><div class="line"> * Checking <span class="keyword">for</span> OpenSSL support <span class="keyword">for</span> Ruby...</div><div class="line">      Found: yes</div><div class="line"> * Checking <span class="keyword">for</span> RubyGems...</div><div class="line">      Found: yes</div><div class="line"> * Checking <span class="keyword">for</span> Ruby development headers...</div><div class="line">      Found: yes</div><div class="line">      Location: /usr/<span class="built_in">local</span>/ruby-2.4.3/include/ruby-2.4.0/ruby.h</div><div class="line"> * Checking <span class="keyword">for</span> rack...</div><div class="line">      Found: no</div><div class="line"></div><div class="line">Some required software is not installed.</div><div class="line">But don<span class="string">'t worry, this installer will tell you how to install them.</span></div><div class="line">Press Enter to continue, or Ctrl-C to abort.</div></pre></td></tr></table></figure>
+<p>提示的安裝指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">--------------------------------------------</div><div class="line"></div><div class="line">Installation instructions <span class="keyword">for</span> required software</div><div class="line"></div><div class="line"> * To install C++ compiler:</div><div class="line">   Please install it with yum install gcc-c++</div><div class="line"></div><div class="line"> * To install Curl development headers with SSL support:</div><div class="line">   Please install it with yum install libcurl-devel</div><div class="line"></div><div class="line"> * To install rack:</div><div class="line">   Please make sure RubyGems is installed, <span class="keyword">then</span> run /usr/<span class="built_in">local</span>/ruby-2.4.3/bin/ruby /usr/<span class="built_in">local</span>/ruby-2.4.3/bin/gem install rack</div><div class="line"></div><div class="line">If the aforementioned instructions didn<span class="string">'t solve your problem, then please take</span></div><div class="line">a look at our documentation for troubleshooting tips:</div><div class="line"></div><div class="line">  https://www.phusionpassenger.com/library/install/nginx/</div><div class="line">  https://www.phusionpassenger.com/library/admin/nginx/troubleshooting/</div></pre></td></tr></table></figure>
+<p>既然缺少了，那們我們就先執行對應的指令將缺少的套件安裝完成。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install gcc-c++ libcurl-devel</div><div class="line">gem install rack</div></pre></td></tr></table></figure>
+<p>完成之後，我們重新執行 <code>passenger-install-nginx-module</code> 指令，前面的檢查選項就可以通過。這時候就會詢問我們要自己將 Passenger 加入 Nginx 編譯，還是讓 Passenger 幫我們自動編譯 Nginx。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">Automatically download and install Nginx?</div><div class="line"></div><div class="line">Nginx doesn<span class="string">'t support loadable modules such as some other web servers do,</span></div><div class="line">so in order to install Nginx with Passenger support, it must be recompiled.</div><div class="line"></div><div class="line">Do you want this installer to download, compile and install Nginx for you?</div><div class="line"></div><div class="line"> 1. Yes: download, compile and install Nginx for me. (recommended)</div><div class="line">    The easiest way to get started. A stock Nginx 1.12.2 with Passenger</div><div class="line">    support, but with no other additional third party modules, will be</div><div class="line">    installed for you to a directory of your choice.</div><div class="line"></div><div class="line"> 2. No: I want to customize my Nginx installation. (for advanced users)</div><div class="line">    Choose this if you want to compile Nginx with more third party modules</div><div class="line">    besides Passenger, or if you need to pass additional options to Nginx's</div><div class="line">    <span class="string">'configure'</span> script. This installer will  1) ask you <span class="keyword">for</span> the location of</div><div class="line">    the Nginx <span class="built_in">source</span> code,  2) run the <span class="string">'configure'</span> script according to your</div><div class="line">    instructions, and  3) run <span class="string">'make install'</span>.</div><div class="line"></div><div class="line">Whichever you choose, <span class="keyword">if</span> you already have an existing Nginx configuration file,</div><div class="line"><span class="keyword">then</span> it will be preserved.</div><div class="line"></div><div class="line">Enter your choice (1 or 2) or press Ctrl-C to abort: 1</div></pre></td></tr></table></figure>
+<p>輸入 1 之後按下 Enter 就會開始把 Nginx 下載並且安裝摟！如果被詢問安裝目錄，基本上保持預設值就好，只是會跟透過 yum 安裝的位置不太一樣，所以要稍微記一下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Where <span class="keyword">do</span> you want to install Nginx to?</div><div class="line"></div><div class="line">Please specify a prefix directory [/opt/nginx]:</div></pre></td></tr></table></figure>
+<blockquote>
+<p>要注意的是如果選用的主機規格太小 Passenger 會建議換大一點的主機，至少要有 1G 以上的記憶體比較適合。</p>
+</blockquote>
+<p>如果中間都沒有出錯的話，我們會看到像下面這樣的訊息，也就表示安裝成功了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Nginx with Passenger support was successfully installed.</div><div class="line"></div><div class="line">The Nginx configuration file (/opt/nginx/conf/nginx.conf)</div><div class="line">must contain the correct configuration options <span class="keyword">in</span> order <span class="keyword">for</span> Phusion Passenger</div><div class="line">to <span class="keyword">function</span> correctly.</div><div class="line"></div><div class="line">This installer has already modified the configuration file <span class="keyword">for</span> you! The</div><div class="line">following configuration snippet was inserted:</div><div class="line"></div><div class="line">  http &#123;</div><div class="line">      ...</div><div class="line">      passenger_root /usr/<span class="built_in">local</span>/passenger/passenger-5.2.3;</div><div class="line">      passenger_ruby /usr/<span class="built_in">local</span>/ruby-2.4.3/bin/ruby;</div><div class="line">      ...</div><div class="line">  &#125;</div><div class="line"></div><div class="line">After you start Nginx, you are ready to deploy any number of Ruby on Rails</div><div class="line">applications on Nginx.</div><div class="line"></div><div class="line">Press ENTER to <span class="built_in">continue</span>.</div></pre></td></tr></table></figure>
+<h2 id="開啟-Nginx"><a href="#開啟-Nginx" class="headerlink" title="開啟 Nginx"></a>開啟 Nginx</h2><p>不過到目前為止，我們其實只是把 Passenger 和 Nginx 編譯完成，但是並沒有把 Nginx 打開。也因此，其他人是無法連上這台伺服器上的網站。</p>
+<p>為了方便管理，我們可以使用 <code>systemd</code> 功能，透過撰寫設定檔，來使用 <code>systemctl</code> 指令觀看狀態，或者重新啟動。</p>
+<p>在 Nginx 官網有提供一份<a href="https://www.nginx.com/resources/wiki/start/topics/examples/systemd/" target="_blank" rel="noopener">範例</a>，基本上只要修改範例上的路徑到正確的位置，我們就可以使用 <code>systemctl</code> 來控制 Nginx 的開啟跟關閉。</p>
+<p>透過 <code>vi</code> 編輯 <code>/lib/systemd/system/nginx.service</code> 這個檔案。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /lib/systemd/system/nginx.service</div></pre></td></tr></table></figure>
+<p>然後把下面的內容貼上，如果有修改 Nginx 的安裝路徑，要把 <code>/opt/nginx</code> 替換掉。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="section">[Unit]</span></div><div class="line"><span class="attr">Description</span>=The NGINX HTTP and reverse proxy server</div><div class="line"><span class="attr">After</span>=syslog.target network.target remote-fs.target nss-lookup.target</div><div class="line"><span class="section"></span></div><div class="line">[Service]</div><div class="line"><span class="attr">Type</span>=forking</div><div class="line"><span class="attr">PIDFile</span>=/opt/nginx/logs/nginx.pid</div><div class="line"><span class="attr">ExecStartPre</span>=/opt/nginx/sbin/nginx -t</div><div class="line"><span class="attr">ExecStart</span>=/opt/nginx/sbin/nginx</div><div class="line"><span class="attr">ExecReload</span>=/bin/kill -s HUP <span class="variable">$MAINPID</span></div><div class="line"><span class="attr">ExecStop</span>=/bin/kill -s QUIT <span class="variable">$MAINPID</span></div><div class="line"><span class="attr">PrivateTmp</span>=<span class="literal">true</span></div><div class="line"><span class="section"></span></div><div class="line">[Install]</div><div class="line"><span class="attr">WantedBy</span>=multi-user.target</div></pre></td></tr></table></figure>
+<blockquote>
+<p>還記得怎麼編輯嗎？按下 <code>i</code> 進入插入模式，貼上後用 <code>Esc</code> 退出，然後用 <code>:wq</code> 指令存檔離開。</p>
+</blockquote>
+<p>完成之後，我們就可以用 <code>systemctl</code> 指令來開啟或者關閉 Nginx 了，不過在這之前我們會希望在意外當機後重開機時，能夠自動地把 Nginx 啟動。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl <span class="built_in">enable</span> nginx</div></pre></td></tr></table></figure>
+<p>利用 <code>enable</code> 功能，把 Nginx 設定為開機自動啟動的項目。</p>
+<p>接下來用 <code>start</code> 指令把 Nginx 打開，並且用 <code>status</code> 指令看看是不是變成 <code>running</code> 的運行狀態。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">systemctl start nginx</div><div class="line">systemctl status nginx</div></pre></td></tr></table></figure>
+<p>如果想檢查看看能不能連上，可以利用 <code>curl</code> 指令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl localhost</div></pre></td></tr></table></figure>
+<p>如果有 HTML 語法出現，基本上就是安裝成功了！</p>
+<blockquote>
+<p>如果找不到 <code>curl</code> 指令可以執行，嘗試看看自己用 <code>yum</code> 安裝吧！</p>
+</blockquote>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>其實文章到這邊，安裝伺服器的部分就告一段落。下一階段會介紹怎麼設定 Ruby on Rails 專案，用 Capistrano 這個 Gem 幫助你把網站部署到這台伺服器。</p>
+<p>不過，伺服器的設定其實還沒有完成，只是這些小問題會讓你在維護上不太方便。在後面的教學中，會陸續介紹跟提供解決的方案。</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/DevOps/">DevOps</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Ruby-on-Rails/">Ruby on Rails</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/教學/">教學</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>
