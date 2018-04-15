@@ -2,6 +2,7 @@
 title: 部署你的第一個 Ruby on Rails 網站（五）
 date: 2018-04-15 22:04:14
 tags: [DevOps, 教學, Ruby on Rails]
+thumbnail: https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-5/thumbnail.png
 ---
 
 到[第四篇](https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/)為止，我們已經有了可以運行 Ruby on Rails 的環境，不過到底該怎麼在伺服器上跑起來呢？
@@ -21,29 +22,29 @@ tags: [DevOps, 教學, Ruby on Rails]
 ## 安裝 Capistrano
 
 首先，先在我們的 `Gemfile` 加上
- 
+
 ```ruby
 group :development do
   gem 'capistrano', '~> 3.10', require: false
 end
 ```
- 
+
 因為 Capistrano 可能會因為版本升級而改變一些設定，所以大多會限制版本。另外就是這是一個擴充的指令，所以可以設定為 `require: false` 來避免在運行 Ruby on Rails 的時候將它讀取進來。
- 
+
 接下來，我們要執行 `install` 指令，將 Capistrano 所需的設定檔生成。
- 
+
 ```bash
 bundle exec cap install
 ```
- 
+
 當我們看到多出了 `Capfile` 和一些檔案後，就算是將 Capistrano 安裝完畢了！
- 
+
 ## 設定 Capistrano
- 
+
 雖然安裝好了 Capistrano 但是我們還沒有針對 Capistrano 設定該如何取得原始碼、上傳到哪台伺服器上面。
- 
+
 首先，因為是 Ruby on Rails 專案，所以我們先在 `Capfile` 裡面做一些修改，讓 Capistrano 能夠自動幫我們針對一些 Ruby on Rails 特有的行為做處理。
- 
+
 下面這些是浴設備助解掉的選項，我們在部署的時候會需要用到，所以都將他取消註解。
 
 ```ruby
@@ -52,9 +53,9 @@ require "capistrano/rails/assets"
 require "capistrano/rails/migrations"
 require "capistrano/passenger"
 ```
- 
+
 然後我們需要設定要部署的伺服器，預設 Capistrano 會區分 Production（正式）和 Staging（測試）環境，所以我們需要對這兩個環境個別設定。
- 
+
 > 不過現實上我們可能還是很小的專案，只有一台伺服器。也是可以設定在同一台上的，這篇文章也會示範部署在同一台的方式。
 
 首先，我們先針對 Staging 環境做設定，打開 `config/deploy/staging.rb` 這個檔案，修改成下面這樣。
