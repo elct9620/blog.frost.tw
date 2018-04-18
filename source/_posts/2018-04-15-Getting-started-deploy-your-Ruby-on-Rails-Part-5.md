@@ -45,7 +45,7 @@ bundle exec cap install
 
 首先，因為是 Ruby on Rails 專案，所以我們先在 `Capfile` 裡面做一些修改，讓 Capistrano 能夠自動幫我們針對一些 Ruby on Rails 特有的行為做處理。
 
-下面這些是浴設備助解掉的選項，我們在部署的時候會需要用到，所以都將他取消註解。
+下面這些是預設被註解掉的選項，我們在部署的時候會需要用到，所以都將他取消註解。
 
 ```ruby
 require "capistrano/bundler"
