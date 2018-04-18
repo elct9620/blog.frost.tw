@@ -19,7 +19,7 @@
 <meta property="og:description" content="到第四篇為止，我們已經有了可以運行 Ruby on Rails 的環境，不過到底該怎麼在伺服器上跑起來呢？ 絕對不是把程式碼複製到伺服器這種簡單的做法，或者說這樣的做法在更新上是很沒有效率的！">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-5/thumbnail.png">
-<meta property="og:updated_time" content="2018-04-15T14:10:13.000Z">
+<meta property="og:updated_time" content="2018-04-18T15:03:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部署你的第一個 Ruby on Rails 網站（五）">
 <meta name="twitter:description" content="到第四篇為止，我們已經有了可以運行 Ruby on Rails 的環境，不過到底該怎麼在伺服器上跑起來呢？ 絕對不是把程式碼複製到伺服器這種簡單的做法，或者說這樣的做法在更新上是很沒有效率的！">
@@ -74,7 +74,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2018-04-15T14:04:14.000Z",
-  "dateModified": "2018-04-15T14:10:13.000Z",
+  "dateModified": "2018-04-18T15:03:25.000Z",
   "description":"到第四篇為止，我們已經有了可以運行 Ruby on Rails 的環境，不過到底該怎麼在伺服器上跑起來呢？絕對不是把程式碼複製到伺服器這種簡單的做法，或者說這樣的做法在更新上是很沒有效率的！",
   "author": {
     "@type": "Person",
@@ -177,7 +177,7 @@
 <p>當我們看到多出了 <code>Capfile</code> 和一些檔案後，就算是將 Capistrano 安裝完畢了！</p>
 <h2 id="設定-Capistrano"><a href="#設定-Capistrano" class="headerlink" title="設定 Capistrano"></a>設定 Capistrano</h2><p>雖然安裝好了 Capistrano 但是我們還沒有針對 Capistrano 設定該如何取得原始碼、上傳到哪台伺服器上面。</p>
 <p>首先，因為是 Ruby on Rails 專案，所以我們先在 <code>Capfile</code> 裡面做一些修改，讓 Capistrano 能夠自動幫我們針對一些 Ruby on Rails 特有的行為做處理。</p>
-<p>下面這些是浴設備助解掉的選項，我們在部署的時候會需要用到，所以都將他取消註解。</p>
+<p>下面這些是預設被註解掉的選項，我們在部署的時候會需要用到，所以都將他取消註解。</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">require</span> <span class="string">"capistrano/bundler"</span></div><div class="line"><span class="keyword">require</span> <span class="string">"capistrano/rails/assets"</span></div><div class="line"><span class="keyword">require</span> <span class="string">"capistrano/rails/migrations"</span></div><div class="line"><span class="keyword">require</span> <span class="string">"capistrano/passenger"</span></div></pre></td></tr></table></figure>
 <p>然後我們需要設定要部署的伺服器，預設 Capistrano 會區分 Production（正式）和 Staging（測試）環境，所以我們需要對這兩個環境個別設定。</p>
 <blockquote>
