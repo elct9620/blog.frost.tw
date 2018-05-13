@@ -64,61 +64,61 @@
     {
       "@type":"ListItem",
       "position": 1,
-      "url":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/"
+      "url":"https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/"
     },
   
     {
       "@type":"ListItem",
       "position": 2,
-      "url":"https://blog.frost.tw/posts/2016/10/30/Afte-PHPConf-2016/"
+      "url":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/"
     },
   
     {
       "@type":"ListItem",
       "position": 3,
-      "url":"https://blog.frost.tw/posts/2016/09/17/the-new-vision-after-rubykaigi2016/"
+      "url":"https://blog.frost.tw/posts/2016/10/30/Afte-PHPConf-2016/"
     },
   
     {
       "@type":"ListItem",
       "position": 4,
-      "url":"https://blog.frost.tw/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/"
+      "url":"https://blog.frost.tw/posts/2016/09/17/the-new-vision-after-rubykaigi2016/"
     },
   
     {
       "@type":"ListItem",
       "position": 5,
-      "url":"https://blog.frost.tw/posts/2016/04/12/the-book-i-read-from-my-military-service/"
+      "url":"https://blog.frost.tw/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/"
     },
   
     {
       "@type":"ListItem",
       "position": 6,
-      "url":"https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/"
+      "url":"https://blog.frost.tw/posts/2016/04/12/the-book-i-read-from-my-military-service/"
     },
   
     {
       "@type":"ListItem",
       "position": 7,
-      "url":"https://blog.frost.tw/posts/2016/02/02/unreal-engine-4-locale-detect-make-me-confuse/"
+      "url":"https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/"
     },
   
     {
       "@type":"ListItem",
       "position": 8,
-      "url":"https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/"
+      "url":"https://blog.frost.tw/posts/2016/02/02/unreal-engine-4-locale-detect-make-me-confuse/"
     },
   
     {
       "@type":"ListItem",
       "position": 9,
-      "url":"https://blog.frost.tw/posts/2016/01/30/the-plan-after-tpgs-2016/"
+      "url":"https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/"
     },
   
     {
       "@type":"ListItem",
       "position": 10,
-      "url":"https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/"
+      "url":"https://blog.frost.tw/posts/2016/01/30/the-plan-after-tpgs-2016/"
     }
   
   ]
@@ -158,6 +158,44 @@
     </header>
     <div id="wrapper">
       
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2017-03-06T15:09:31.000Z" class="article__time--header">
+      Mar.06
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2017/03/06/The-Rails-auto-reload-trap/" title="Rails 的 Auto Reload 機制所產生的錯誤">Rails 的 Auto Reload 機制所產生的錯誤</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>最近公司的專案使用到了 <a href="https://github.com/makandra/active_type" target="_blank" rel="noopener">ActiveType</a> 這套 Gem 用來輔助在專案逐漸複雜下 Model 會出現的問題。這是由 <a href="https://leanpub.com/growing-rails" target="_blank" rel="noopener">Growing Rails Application in Practice</a> 這本書的作者在書中介紹中的技巧，不過卻意外的讓我們遇到了關於 Auto Reload 機制所產生的問題。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2017/03/06/The-Rails-auto-reload-trap/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
   
 <article class="post article is-index">
   <header class="article__header">
@@ -517,51 +555,6 @@
         
         <div class="text-left">
           <a href="/posts/2016/01/30/the-plan-after-tpgs-2016/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2015-06-15T22:12:00.000Z" class="article__time--header">
-      Jun.16
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/" title="Heroku Cedar 14 - 用 Docker 客製化環境">Heroku Cedar 14 - 用 Docker 客製化環境</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>最近 Heroku 推出了 <a href="https://blog.Heroku.com/archives/2015/5/5/introducing_heroku_Docker_release_build_deploy_heroku_apps_with_docker" target="_blank" rel="noopener">Docker 支援</a>，也因此我馬上就去試玩了這個功能。</p>
-<p>這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。</p>
-<p>文章大致上會涵蓋這些內容：</p>
-<ul>
-<li>Heroku Docker Plugin 的運作</li>
-<li>建構客製化環境的 Dockerfile</li>
-<li>利用 Docker 製作 Buildpacks</li>
-</ul>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         
