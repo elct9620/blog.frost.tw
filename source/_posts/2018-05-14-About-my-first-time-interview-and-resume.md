@@ -54,7 +54,7 @@ thumbnail: https://blog.frost.tw/images/about-my-first-time-interview-and-resume
 
 Ruby on Rails
 * 做過五個以上正式上線的專案
-* 參與過日本手游伺服器專案升級
+* 參與過日本手遊伺服器專案升級
 * 擔任三次以上 Rails Girls Taiwan 教練
 
 然後就把有辦法列一到兩個實績的技能列出來，至少大家可以快速分辨出會什麼。
