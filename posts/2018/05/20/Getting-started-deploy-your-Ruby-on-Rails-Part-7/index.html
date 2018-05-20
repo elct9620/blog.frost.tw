@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>部署你的第一個 Ruby on Rails 網站（七） | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。">
+<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（七）">
+<meta property="og:url" content="https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-7/figure.png">
+<meta property="og:updated_time" content="2018-05-20T14:41:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="部署你的第一個 Ruby on Rails 網站（七）">
+<meta name="twitter:description" content="現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。">
+<meta name="twitter:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-7/figure.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/"
+  },
+  "headline":"部署你的第一個 Ruby on Rails 網站（七）",
+  "image": [
+    
+    "https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-7/figure.png",
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2018-05-20T14:39:15.000Z",
+  "dateModified": "2018-05-20T14:41:41.000Z",
+  "description":"現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/",
+      "name": "部署你的第一個 Ruby on Rails 網站（七）",
+      "image": "https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-7/figure.png"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2018-05-20T14:39:15.000Z" class="article__time--header">
+      May.20
+    </time>
+    
+  
+    <h1 class="article__title">部署你的第一個 Ruby on Rails 網站（七）</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。</p>
+<a id="more"></a>
+<h2 id="Deploy-Key"><a href="#Deploy-Key" class="headerlink" title="Deploy Key"></a>Deploy Key</h2><p>要讓 Capistrano 自動在伺服器上下載原始碼，我們必須先讓 GitHub 或者 Gitlab 這類服務允許這台伺服器下載，所以我們要先對 <code>deploy</code> 這個部署用的使用者，產生一組下載原始碼的 SSH Key 也就是所謂的 Deploy Key。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo su - deploy</div><div class="line">ssh-keygen -t rsa</div></pre></td></tr></table></figure>
+<p>利用 <code>ssh-keygen</code> 指令，我們可以生成一組 Private Key 和一組 Public Key 給 <code>deploy</code> 這個使用者使用，跟我們用來 SSH 到伺服器的是一樣的概念，只不過現在是要讓他當作「驗證權限」的證明，讓 GitHub 接受伺服器下載原始碼。</p>
+<p>將生成的 <code>~/.ssh/id_rsa.pub</code> 內容，複製後貼到 GitHub 專案中 Settings &gt; Deploy Keys 裡面，用來允許這台伺服器下載。</p>
+<p><img src="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-7/figure.png" alt="螢幕快照 2018-05-20 下午10.08.30.png"></p>
+<blockquote>
+<p>GitHub 只允許同一把 Deploy Key 存在一次，所以如果想要讓多台伺服器共用的話，可以先在一台產生，其他伺服器共用。但是盡量避免使用自己電腦中的，因為 Deploy Key 只能讀取會安全許多。</p>
+</blockquote>
+<p>如此一來，在設定正確的狀況下，我們就可以順利的讓伺服器下載到原始碼。</p>
+<h2 id="檢查"><a href="#檢查" class="headerlink" title="檢查"></a>檢查</h2><p>一般在部署之前，我們都會用 <code>cap staging deploy:check</code> 確認基本的操作都是正常的，也就是產生這次部署的版本、下載原始碼跟設定檔已經正確生成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cap deploy:check</div></pre></td></tr></table></figure>
+<p>如果伺服器正確的話，應該是不會有錯誤訊息。不過我們嘗試透過 git 來下載原始碼，伺服器上可能是沒有 git 環境的，所以先透過 yum 安裝套件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install git</div></pre></td></tr></table></figure>
+<p>如此一來，<code>cap staging deploy:check</code> 就會回報已經可以正確地產生新的資料夾，以及下載原始碼。</p>
+<h2 id="JavaScript-Runtime"><a href="#JavaScript-Runtime" class="headerlink" title="JavaScript Runtime"></a>JavaScript Runtime</h2><p>伺服器環境預設是沒有 JavaScript 的執行環境，不然在我們執行 <code>cap staging deploy</code> 的時候，就可以順利的部署完成。</p>
+<p>不過，因為 Assets Precompile 的關係，我們至少需要有 Node.js 的環境才行。</p>
+<p>我們可以利用 Node.js 官方提供的<a href="https://nodejs.org/en/download/package-manager/#enterprise-linux-and-fedora" target="_blank" rel="noopener">設定程式</a>，讓 CentOS 可以支援較新版本的 Node.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># Node 8 是寫這篇文章的穩定版</div><div class="line">curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -</div></pre></td></tr></table></figure>
+<p>當這段設定程式執行完畢後，我們就可以利用 yum 指令更新或者安裝。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y nodejs</div></pre></td></tr></table></figure>
+<blockquote>
+<p>實際上 Node.js 的環境影響並不大，即使是舊版的 Node.js 環境也是可以正常的完成 Assets Precompile</p>
+</blockquote>
+<p>假設有使用 Webpack 的話，對於 Webpacker 這個 Gem 還會需要使用 Yarn 來安裝 Node.js 套件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo</div><div class="line">sudo yum install yarn</div></pre></td></tr></table></figure>
+<p>安裝的方法跟 Node.js 基本上是沒有太大的差異，一樣是透過官方的設定程式將 yum 可以安裝的來源增加，就可以透過 yum 安裝或者升級。</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>現在我們只需要透過 <code>cap staging deploy</code> 就可以把 Ruby on Rails 專案傳到伺服器，並且將一切都安裝完畢。</p>
+<blockquote>
+<p>如果有出現錯誤，可能就是使用的 Gem 使用了一些 C 語言編寫的套件，需要額外的安裝一些套件才可以解決，這就考驗大家的應變能力了！</p>
+</blockquote>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>到這篇文章為止，我們只剩下一個步驟——設定 Nginx 伺服器。雖然我們安裝好了伺服器，但是並沒有設定這個專案要怎麼被 Passenger 啟動。</p>
+<p>下一篇是最後一篇，會講解怎麼設定 Nginx 伺服器以及套用 Let’s Encrypt 來設定 SSL 加密。</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/DevOps/">DevOps</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Ruby-on-Rails/">Ruby on Rails</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/教學/">教學</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

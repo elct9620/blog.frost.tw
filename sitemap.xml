@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/</loc>
+    
+    <lastmod>2018-05-20T14:41:41.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2018/05/14/About-my-first-time-interview-and-resume/</loc>
     
-    <lastmod>2018-05-14T03:26:29.000Z</lastmod>
+    <lastmod>2018-05-15T15:43:14.000Z</lastmod>
     
   </url>
   
@@ -135,7 +142,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/09/22/another-way-using-processing/</loc>
+    <loc>https://blog.frost.tw/posts/2012/10/30/kbtalking-pro-open-box/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -143,13 +150,6 @@
   
   <url>
     <loc>https://blog.frost.tw/posts/2012/09/04/canon-powershot-s100-and-ibuddy-ap-open-box/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2012/10/30/kbtalking-pro-open-box/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -177,6 +177,13 @@
   </url>
   
   <url>
+    <loc>https://blog.frost.tw/posts/2013/01/27/firefox-os-app-days-2013/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2013/01/14/webconf-2013/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
@@ -191,14 +198,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/01/27/firefox-os-app-days-2013/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2013/05/17/student-in-taiwan-3d-game-developments-challenge/</loc>
+    <loc>https://blog.frost.tw/posts/2013/03/21/sitcon-2013/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -212,7 +212,21 @@
   </url>
   
   <url>
+    <loc>https://blog.frost.tw/posts/2013/05/17/student-in-taiwan-3d-game-developments-challenge/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2013/05/17/yodex-2013/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2013/08/05/coscup-2-13-lighting-talk-additional/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -227,13 +241,6 @@
   
   <url>
     <loc>https://blog.frost.tw/posts/2013/08/12/when-mac-run-into-rs232/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2013/08/05/coscup-2-13-lighting-talk-additional/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -275,7 +282,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/10/05/phpconf-2013-experience/</loc>
+    <loc>https://blog.frost.tw/posts/2013/10/13/hackgen-2013-nccu/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -289,7 +296,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/10/21/hackgen-2013-ttu/</loc>
+    <loc>https://blog.frost.tw/posts/2013/10/05/phpconf-2013-experience/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -297,6 +304,13 @@
   
   <url>
     <loc>https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2013/10/21/hackgen-2013-ttu/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -345,13 +359,6 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/02/04/getting-started-paas-3/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.frost.tw/posts/2014/02/13/overview-of-responsive-web-design/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
@@ -359,7 +366,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/10/13/hackgen-2013-nccu/</loc>
+    <loc>https://blog.frost.tw/posts/2014/02/04/getting-started-paas-3/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -380,20 +387,6 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/03/17/sitcon2014/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.frost.tw/posts/2014/04/02/getting-started-paas-4/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
@@ -401,7 +394,21 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2011/12/13/let-wordpress-on-phpfog/</loc>
+    <loc>https://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2014/03/17/sitcon2014/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-mintues-part-1/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -443,6 +450,13 @@
   </url>
   
   <url>
+    <loc>https://blog.frost.tw/posts/2014/08/31/rails-girls-4-event-impressions/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2014/07/20/coscup-after-2014-experience/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
@@ -458,13 +472,6 @@
   
   <url>
     <loc>https://blog.frost.tw/posts/2014/09/13/use-the-zigfu-skeleton-features/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2014/08/31/rails-girls-4-event-impressions/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -499,7 +506,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/10/19/after-phpconf-2014-experience/</loc>
+    <loc>https://blog.frost.tw/posts/2014/12/07/tgdf-2014-i-want-to-make-a-game-again/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -513,7 +520,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/03/21/sitcon-2013/</loc>
+    <loc>https://blog.frost.tw/posts/2014/10/19/after-phpconf-2014-experience/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -527,21 +534,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/12/07/tgdf-2014-i-want-to-make-a-game-again/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.frost.tw/posts/2015/02/18/open-frameworks-and-mruby/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2015/04/10/mruby-on-web/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -555,14 +548,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2015/05/06/2015-yodex-impressions/</loc>
+    <loc>https://blog.frost.tw/posts/2015/04/10/mruby-on-web/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -583,7 +569,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2015/06/12/unreal-engine-4-automation-testing/</loc>
+    <loc>https://blog.frost.tw/posts/2016/01/30/the-plan-after-tpgs-2016/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -591,13 +577,6 @@
   
   <url>
     <loc>https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2016/01/30/the-plan-after-tpgs-2016/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -646,6 +625,20 @@
   </url>
   
   <url>
+    <loc>https://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2016/09/17/the-new-vision-after-rubykaigi2016/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
@@ -674,14 +667,14 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/</loc>
+    <loc>https://blog.frost.tw/posts/2015/05/06/2015-yodex-impressions/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-mintues-part-1/</loc>
+    <loc>https://blog.frost.tw/posts/2011/12/13/let-wordpress-on-phpfog/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -695,7 +688,21 @@
   </url>
   
   <url>
+    <loc>https://blog.frost.tw/posts/2015/06/12/unreal-engine-4-automation-testing/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2012/01/08/my-first-backbonejs-the-todo-list-without-store/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2012/03/18/create-a-hubot-plurk-adapter/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -710,13 +717,6 @@
   
   <url>
     <loc>https://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/</loc>
-    
-    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2012/03/18/create-a-hubot-plurk-adapter/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -765,6 +765,13 @@
   </url>
   
   <url>
+    <loc>https://blog.frost.tw/posts/2012/07/03/form-the-summer-vacation-start/</loc>
+    
+    <lastmod>2017-07-02T17:07:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2012/05/27/rails-ajax-and-backbone-dot-js/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
@@ -779,7 +786,7 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/07/03/form-the-summer-vacation-start/</loc>
+    <loc>https://blog.frost.tw/posts/2012/08/19/change-start-now-the-coscup-2012/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
@@ -793,14 +800,14 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/08/19/change-start-now-the-coscup-2012/</loc>
+    <loc>https://blog.frost.tw/posts/2012/09/22/another-way-using-processing/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/</loc>
+    <loc>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</loc>
     
     <lastmod>2017-07-02T17:07:07.000Z</lastmod>
     
