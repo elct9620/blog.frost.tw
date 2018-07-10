@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>淺談 Ruby 的 Fiber（三） | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="延續上一篇文章的實作，我們已經有一個簡易的 Thread 版本 TCP Socket 伺服器可以運作，那麼該怎麼用 Fiber 修改呢？">
+<meta name="keywords" content="Ruby,Thread,Concurrency">
+<meta property="og:type" content="article">
+<meta property="og:title" content="淺談 Ruby 的 Fiber（三）">
+<meta property="og:url" content="https://blog.frost.tw/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="延續上一篇文章的實作，我們已經有一個簡易的 Thread 版本 TCP Socket 伺服器可以運作，那麼該怎麼用 Fiber 修改呢？">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.frost.tw/images/2018-07-10-talk-about-ruby-s-fiber-part-3/thumbnail.jpg">
+<meta property="og:updated_time" content="2018-07-10T13:38:58.512Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="淺談 Ruby 的 Fiber（三）">
+<meta name="twitter:description" content="延續上一篇文章的實作，我們已經有一個簡易的 Thread 版本 TCP Socket 伺服器可以運作，那麼該怎麼用 Fiber 修改呢？">
+<meta name="twitter:image" content="https://blog.frost.tw/images/2018-07-10-talk-about-ruby-s-fiber-part-3/thumbnail.jpg">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/"
+  },
+  "headline":"淺談 Ruby 的 Fiber（三）",
+  "image": [
+    
+    "https://blog.frost.tw/images/2018-07-10-talk-about-ruby-s-fiber-part-3/thumbnail.jpg",
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2018-07-10T13:35:01.000Z",
+  "dateModified": "2018-07-10T13:38:58.512Z",
+  "description":"延續上一篇文章的實作，我們已經有一個簡易的 Thread 版本 TCP Socket 伺服器可以運作，那麼該怎麼用 Fiber 修改呢？",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/",
+      "name": "淺談 Ruby 的 Fiber（三）",
+      "image": "https://blog.frost.tw/images/2018-07-10-talk-about-ruby-s-fiber-part-3/thumbnail.jpg"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2018-07-10T13:35:01.000Z" class="article__time--header">
+      Jul.10
+    </time>
+    
+  
+    <h1 class="article__title">淺談 Ruby 的 Fiber（三）</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>延續<a href="https://blog.frost.tw/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/">上一篇</a>文章的實作，我們已經有一個簡易的 Thread 版本 TCP Socket 伺服器可以運作，那麼該怎麼用 Fiber 修改呢？</p>
+<a id="more"></a>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>在我們使用 Thread 的時候，應該要先執行哪個 Thread 中的任務會由作業系統或者語言本身底層的實作來協助我們處理，但是 Fiber 目前只能用來在不同的程式碼片段中切換，所以我們就需要自己管理應該要切換到哪一個片段。</p>
+<p>所以我們要先定義一個情境：</p>
+<p>當 Blocking I/O 發生的時候，會發生什麼事情？</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Server 嘗試讀取 Client 的資料</span></div><div class="line">resp = client.gets</div><div class="line"><span class="comment"># Blocking I/O 發生</span></div><div class="line"><span class="comment"># ...</span></div><div class="line"><span class="comment"># ...</span></div><div class="line"><span class="comment"># 使用者輸入 HELLO</span></div><div class="line"><span class="comment"># Blocking I/O 結束</span></div><div class="line">puts resp</div><div class="line"><span class="comment"># =&gt; HELLO</span></div></pre></td></tr></table></figure>
+<p>其實就是當我們嘗試做 Read（讀取）跟 Write（寫入）的時候，暫時無法操作的狀態。</p>
+<p>Ex. 想讀取資料卻無法讀取</p>
+<p>所以，根據上一篇文章的案例，當我們嘗試 <code>#gets</code> 卻沒有得到使用者的回應時，就應該先透過 <code>Fiber.yield</code> 把執行權限釋放出來。</p>
+<h2 id="嘗試"><a href="#嘗試" class="headerlink" title="嘗試"></a>嘗試</h2><p>因為邏輯上跟以往我們習慣的方式不太一樣，所以我們需要進行多次的嘗試，讓 Fiber 可以像我們預期的一樣運作。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">server = TCPServer.new <span class="number">3000</span></div><div class="line"></div><div class="line">fibers = []</div><div class="line">loop <span class="keyword">do</span></div><div class="line">  client = server.accept</div><div class="line">  client.puts <span class="string">'Hello World'</span></div><div class="line"></div><div class="line">  fibers.each(&amp;<span class="symbol">:resume</span>)</div><div class="line"></div><div class="line">  fiber = Fiber.new <span class="keyword">do</span></div><div class="line">    Fiber.<span class="keyword">yield</span></div><div class="line">    puts client.gets</div><div class="line">    client.close</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  fiber.resume</div><div class="line">  fibers &lt;&lt; fiber</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>這樣看起來好像會運作，不過當我們嘗試執行的時候，卻發現有一些奇怪的地方。</p>
+<ol>
+<li>輸入訊息後沒有馬上斷線</li>
+<li>第二個人連上後才會斷線</li>
+</ol>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>當第一個人連上後，會發生以下事情：</p>
+<ol>
+<li>先把 <code>fibers</code> 裡面存在的 Fiber 執行 <code>#resume</code> 一次</li>
+<li>對這次連上的使用者產生一個 <code>Fiber</code></li>
+<li>先執行一次（抵達第一次的 <code>Fiber.yield</code>）被暫停</li>
+<li>將目前的 Fiber 物件儲存在 <code>fibers</code> 中</li>
+<li>重新呼叫 <code>server.accept</code> -&gt; Blocking I/O</li>
+</ol>
+<p>第二個人連上後，會發生以下的事情</p>
+<ol>
+<li>先把 <code>fibers</code> 裡面存在的 Fiber 執行 <code>#resume</code> 一次</li>
+<li>第一個連線的使用者執行 <code>#gets</code> 行為 -&gt; Blocking I/O</li>
+</ol>
+<p>到目前為止已經被 Blocking I/O 堵住兩次，還比原本沒有 Fiber 的版本更難懂，那麼問題出在哪裡呢？</p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>首先，我們希望程式上遇到 Blocking I/O 時先不要卡住我們，所以我們需要將 <code>server.accept</code> 和 <code>client.gets</code> 這兩個行為調整成 Nonblocking I/O 的使用方式。</p>
+<p>也就是當遇到 Blocking I/O 的時候我們希望直接回傳「沒有資料」之類的訊息給我們，而不是直接停住。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">loop <span class="keyword">do</span></div><div class="line">  puts <span class="string">'LOOPING'</span></div><div class="line">  <span class="keyword">begin</span></div><div class="line">    client = server.accept_nonblock</div><div class="line">    <span class="comment"># 有人連上了！</span></div><div class="line">  <span class="keyword">rescue</span> IO::WaitReadable</div><div class="line">    <span class="comment"># 目前都沒有人連線！</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>以 <code>#accept_nonoblock</code> 這個用法作為例子，我們會發現，假設我們做 <code>puts &#39;LOOPING&#39;</code> 這段程式碼，如果是 <code>#accept</code> 的時候，需要有人連上才會顯示訊息，但是在 <code>#accept_nonblock</code> 的時候，則會不斷出現。</p>
+<p>同時，我們也會得到一個叫做 <code>IO::WaitReadable</code> 的錯誤，告訴我們現在雖然讀取了，但是實際上是無法讀取任何東西的，需要等待有東西可以讀取。</p>
+<p>透過這樣的機制，我們就可以在碰到這個錯誤時進行 <code>Fiber.yield</code> 先讓他暫停，等到我們確認他可以讀取後，再繼續執行。</p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>這篇文章我們發現如果使用 Thread 的話，基本上是由作業系統去管理碰到 Blocking I/O 時該怎麼做，但是如果是 Fiber 的話，我們就得完全靠 Ruby 來解決。</p>
+<p>同時也會遇到某些情境無法使用的狀況，像是 <code>net/http</code> 這個標準函式庫，並沒有提供 Nonblocking I/O 的方法，我們就無法透過在 Blocking I/O 狀態下先讓他暫停，並且先切換到其他工作上。</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Concurrency/">Concurrency</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Thread/">Thread</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>
