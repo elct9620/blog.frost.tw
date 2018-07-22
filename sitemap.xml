@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/</loc>
+    
+    <lastmod>2018-07-22T05:01:25.374Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2018/07/17/Talk-about-ruby-s-fiber-Part-4/</loc>
     
     <lastmod>2018-07-17T11:21:17.827Z</lastmod>
@@ -138,13 +145,6 @@
     <loc>https://blog.frost.tw/posts/2018/03/23/The-ruby-s-object-is-free-Part-2/</loc>
     
     <lastmod>2018-03-23T09:37:30.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/</loc>
-    
-    <lastmod>2018-03-21T03:27:09.000Z</lastmod>
     
   </url>
   
