@@ -16,11 +16,11 @@ tags: [教學,DevOps,Ruby on Rails]
 
 不過很幸運的是，隨著雲端相關的技術興起，我們現在可以用 5 美元左右就能租到一台適合的 VPS （Virtual Private Server） 主機，來放一些自己寫的小工具，或者個人網站。
 
-下面推薦幾家台灣開發者比較常用的主機商：
+下面推薦幾家台灣開發者比較常用的主機商（朋友提醒推薦連結雙方都有獎金，所以連結是我的推薦連結）：
 
- * [Vultr](https://vultr.com/)
- * [Linode](https://linode.com)
- * [DigitalOcean](https://digitalocean.com/)
+ * [Vultr](https://www.vultr.com/?ref=6889049)
+ * [Linode](https://www.linode.com/?r=36799dcc49cac9cef00c4a8fd49aaaf93a8148cc)
+ * [DigitalOcean](https://m.do.co/c/55a8b594beba)
 
 除了 DigitalOcean 沒有東京的機房之外，選擇東京（Tokyo）機房再連線速度上會是最適合的。不過 DigitalOcean 的新加坡機房其實也不慢，如果需要比較多的功能 DigitalOcean 在這方面表現的就相對其他好上很多。
 
