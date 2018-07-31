@@ -3,7 +3,7 @@
   <head>
   <meta charset="utf-8">
   
-  <title>Concurrency | 弦而時習之</title>
+  <title>第 3 頁 | Ruby | 弦而時習之</title>
   <meta name="theme-color" content="#EFEFEF">
 
   <meta name="author" content="蒼時弦也">
@@ -91,217 +91,28 @@
   
 <article class="post article is-index">
   <header class="article__header">
-    <time datetime="2018-07-29T12:56:09.000Z" class="article__time--header">
-      Jul.29
+    <time datetime="2013-11-02T17:38:00.000Z" class="article__time--header">
+      Nov.03
     </time>
     
   
-    <h3 class="article__title"><a href="/posts/2018/07/29/Talk-about-ruby-s-fiber-Part-6/" title="淺談 Ruby 的 Fiber（六）">淺談 Ruby 的 Fiber（六）</a></h3>
+    <h3 class="article__title"><a href="/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/" title="用 Vagrant 整合 Gitlab 與 Capistrano 做 Staging 環境自動部署">用 Vagrant 整合 Gitlab 與 Capistrano 做 Staging 環境自動部署</a></h3>
   
 
 
   </header>
   <div class="article__entry is-index">
     
-    <p>經過前面幾篇文章的介紹，我們已經初步的了解 Fiber 的性質。這系列的文章目標是利用 Fiber 實現再不透過 Thread 或者 Process 的情境，來實現支援多人連線的 TCP 聊天伺服器。</p>
-<p>從這一篇開始，我們就要正式的來挑戰完整的實作了！</p>
+    <p><del>這標題超級長的說（崩潰</del></p>
+<p>最近因為有實習生要來，所以把老爸公司設定好 Gitlab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。<br>不過原本規劃的 Staging 環境也是在這檯主機上（當初就很淡定把記憶體和處理器加高，因為我會狂開 VM XD）但是會有 SSH 權限上的問題，原本想利用 Git 的 Hook 之類的來處理，但是感覺似乎不太好。</p>
+<p>剛好這次看到 Gitlab / Gitlab-CI 的介紹文，我又再次嘗試安裝，過程上順利、簡單很多。<br>不過上次不順利肯定是我把整個環境裝在 NAS 裡面的關係 XDD</p>
+<p>從我建好 Gitlab / Gitlab-CI 到設定 Capistrano 到自動部署，其實花費不少時間，而且有很多「差點忘記」的部分，因此決定來寫一篇文章做筆記！</p>
     
     <footer class="article__footer">
       
         
         <div class="text-left">
-          <a href="/posts/2018/07/29/Talk-about-ruby-s-fiber-Part-6/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-07-24T12:24:31.000Z" class="article__time--header">
-      Jul.24
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/07/24/Talk-about-ruby-s-fiber-Part-5/" title="淺談 Ruby 的 Fiber（五）">淺談 Ruby 的 Fiber（五）</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>經過<a href="https://blog.frost.tw/posts/2018/07/17/Talk-about-ruby-s-fiber-Part-4/">上次</a>的嘗試，我們已經開始對於 Fiber 的性質有一些了解，目前還需要解決已經結束的 Fiber 被呼叫，以及來不及處理的問題。</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/07/24/Talk-about-ruby-s-fiber-Part-5/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-07-17T11:17:26.000Z" class="article__time--header">
-      Jul.17
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/07/17/Talk-about-ruby-s-fiber-Part-4/" title="淺談 Ruby 的 Fiber（四）">淺談 Ruby 的 Fiber（四）</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>在上週的<a href="https://blog.frost.tw/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/">文章</a>我們注意到 Fiber 的使用並不是那麼容易的，因為我們需要自行管理每一個 Fiber 被恢復（<code>#resume</code>）的時機，這週就繼續來挑戰吧！</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/07/17/Talk-about-ruby-s-fiber-Part-4/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-07-10T13:35:01.000Z" class="article__time--header">
-      Jul.10
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/" title="淺談 Ruby 的 Fiber（三）">淺談 Ruby 的 Fiber（三）</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>延續<a href="https://blog.frost.tw/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/">上一篇</a>文章的實作，我們已經有一個簡易的 Thread 版本 TCP Socket 伺服器可以運作，那麼該怎麼用 Fiber 修改呢？</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/07/10/Talk-about-ruby-s-fiber-Part-3/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-07-03T11:26:44.000Z" class="article__time--header">
-      Jul.03
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/" title="淺談 Ruby 的 Fiber（二）">淺談 Ruby 的 Fiber（二）</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p><a href="https://blog.frost.tw/posts/2018/06/26/Talk-about-ruby-s-fiber-Part-1/">第一篇</a>我們已經大致上了解 Fiber 的運作原理，不過要能夠實際上的掌握跟應用，我認為是需要靠實作來熟悉的。</p>
-<p>所以，這一篇我們先來講學習 Socket 最常見的 TCP 伺服器實作吧！</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-06-26T12:29:19.000Z" class="article__time--header">
-      Jun.26
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/06/26/Talk-about-ruby-s-fiber-Part-1/" title="淺談 Ruby 的 Fiber（ㄧ）">淺談 Ruby 的 Fiber（ㄧ）</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>前陣子再研究 Ruby 從 1.9.3 就開始提供的 Fiber 該怎麼使用，不過網路上的資料大多都只是簡單的討論。那麼 Fiber 到底是什麼呢？這系列的文章會詳細的介紹 Fiber 的基本概念，還有一些可以應用的方式。</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/06/26/Talk-about-ruby-s-fiber-Part-1/#more" class="article__more-link">繼續閱讀</a>
+          <a href="/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         
@@ -320,6 +131,8 @@
 
 
 <nav id="pagination" class="pagination">
+  
+    <a href="/tags/Ruby/page/2/" class="text-left pagination__prev">上一頁</a>
   
   
 </nav>
