@@ -29,7 +29,7 @@ thumbnail: https://blog.frost.tw/images/2018-07-03-talk-about-ruby-s-fiber-part-
 
 我們可以簡單的把他整理成類似像這樣的行為流程圖。
 
-![FlowchartDiagram1.png](https://blog.frost.tw/images/2018-07-03-talk-about-ruby-s-fiber-part-6/flowchart.png)
+![FlowchartDiagram1.png](https://blog.frost.tw/images/2018-07-29-talk-about-ruby-s-fiber-part-6/flowchart.png)
 
 如果照我們原來的做法，會發現很難統一管理 Fiber 來在可以操作時執行對應的動作，所以上圖執行 `Fiber.yield` 的部分，我們會用一個物件來做統一管理，其他部分則可以先維持原樣。
 
