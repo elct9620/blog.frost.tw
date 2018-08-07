@@ -91,6 +91,45 @@
   
 <article class="post article is-index">
   <header class="article__header">
+    <time datetime="2018-08-07T11:00:21.000Z" class="article__time--header">
+      Aug.07
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2018/08/07/Talk-about-ruby-s-fiber-Part-7/" title="淺談 Ruby 的 Fiber（七）">淺談 Ruby 的 Fiber（七）</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>上週我們開始重構 Fiber 的結構，透過一個統一的 <code>Selector</code> 物件來選取這個「當下」可以進行 I/O 操作的物件。</p>
+<p>不過，我們原本預期是因為使用 <code>rescue</code> 來捕捉錯誤控制流程才讓他運行不正常，經過一週的思考後，卻發現事情跟預想的不太一樣。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2018/08/07/Talk-about-ruby-s-fiber-Part-7/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
     <time datetime="2018-07-29T12:56:09.000Z" class="article__time--header">
       Jul.29
     </time>
@@ -419,48 +458,6 @@
         
         <div class="text-left">
           <a href="/posts/2018/03/23/The-ruby-s-object-is-free-Part-2/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-01-09T09:28:13.000Z" class="article__time--header">
-      Jan.09
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/01/09/How-ruby-raise-an-error/" title="Ruby 中該如何 Raise 一個錯誤">Ruby 中該如何 Raise 一個錯誤</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>前幾天的晚上朋友在 Facebook 上問了一個問題。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">raise HTTPError, <span class="string">'Not Found'</span></div></pre></td></tr></table></figure>
-<p>和</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">raise HTTPError.new(<span class="string">'Not Found'</span>)</div></pre></td></tr></table></figure>
-<p>哪個比較快？也因為這樣，我們意外的發現 Ruby 對上面兩段程式碼的定義上其實是不太一樣的。</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/01/09/How-ruby-raise-an-error/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         
