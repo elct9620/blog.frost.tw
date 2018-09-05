@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。">
-<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta name="keywords" content="教學,DevOps,Ruby on Rails">
 <meta property="og:type" content="article">
 <meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（七）">
 <meta property="og:url" content="https://blog.frost.tw/posts/2018/05/20/Getting-started-deploy-your-Ruby-on-Rails-Part-7/">
@@ -163,7 +163,7 @@
     <p>現在伺服器還沒辦法下載到 Ruby on Rails 專案的原始碼用來部署，這一篇會介紹該如何把原始碼下載回來，並且在伺服器上將相關的 Ruby Gem 都安裝好。</p>
 <a id="more"></a>
 <h2 id="Deploy-Key"><a href="#Deploy-Key" class="headerlink" title="Deploy Key"></a>Deploy Key</h2><p>要讓 Capistrano 自動在伺服器上下載原始碼，我們必須先讓 GitHub 或者 Gitlab 這類服務允許這台伺服器下載，所以我們要先對 <code>deploy</code> 這個部署用的使用者，產生一組下載原始碼的 SSH Key 也就是所謂的 Deploy Key。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo su - deploy</div><div class="line">ssh-keygen -t rsa</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su - deploy</span><br><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 <p>利用 <code>ssh-keygen</code> 指令，我們可以生成一組 Private Key 和一組 Public Key 給 <code>deploy</code> 這個使用者使用，跟我們用來 SSH 到伺服器的是一樣的概念，只不過現在是要讓他當作「驗證權限」的證明，讓 GitHub 接受伺服器下載原始碼。</p>
 <p>將生成的 <code>~/.ssh/id_rsa.pub</code> 內容，複製後貼到 GitHub 專案中 Settings &gt; Deploy Keys 裡面，用來允許這台伺服器下載。</p>
 <p><img src="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-7/figure.png" alt="螢幕快照 2018-05-20 下午10.08.30.png"></p>
@@ -172,21 +172,21 @@
 </blockquote>
 <p>如此一來，在設定正確的狀況下，我們就可以順利的讓伺服器下載到原始碼。</p>
 <h2 id="檢查"><a href="#檢查" class="headerlink" title="檢查"></a>檢查</h2><p>一般在部署之前，我們都會用 <code>cap staging deploy:check</code> 確認基本的操作都是正常的，也就是產生這次部署的版本、下載原始碼跟設定檔已經正確生成。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cap deploy:check</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cap deploy:check</span><br></pre></td></tr></table></figure>
 <p>如果伺服器正確的話，應該是不會有錯誤訊息。不過我們嘗試透過 git 來下載原始碼，伺服器上可能是沒有 git 環境的，所以先透過 yum 安裝套件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install git</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install git</span><br></pre></td></tr></table></figure>
 <p>如此一來，<code>cap staging deploy:check</code> 就會回報已經可以正確地產生新的資料夾，以及下載原始碼。</p>
 <h2 id="JavaScript-Runtime"><a href="#JavaScript-Runtime" class="headerlink" title="JavaScript Runtime"></a>JavaScript Runtime</h2><p>伺服器環境預設是沒有 JavaScript 的執行環境，不然在我們執行 <code>cap staging deploy</code> 的時候，就可以順利的部署完成。</p>
 <p>不過，因為 Assets Precompile 的關係，我們至少需要有 Node.js 的環境才行。</p>
 <p>我們可以利用 Node.js 官方提供的<a href="https://nodejs.org/en/download/package-manager/#enterprise-linux-and-fedora" target="_blank" rel="noopener">設定程式</a>，讓 CentOS 可以支援較新版本的 Node.js</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># Node 8 是寫這篇文章的穩定版</div><div class="line">curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Node 8 是寫這篇文章的穩定版</span><br><span class="line">curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -</span><br></pre></td></tr></table></figure>
 <p>當這段設定程式執行完畢後，我們就可以利用 yum 指令更新或者安裝。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y nodejs</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y nodejs</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>實際上 Node.js 的環境影響並不大，即使是舊版的 Node.js 環境也是可以正常的完成 Assets Precompile</p>
 </blockquote>
 <p>假設有使用 Webpack 的話，對於 Webpacker 這個 Gem 還會需要使用 Yarn 來安裝 Node.js 套件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo</div><div class="line">sudo yum install yarn</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo</span><br><span class="line">sudo yum install yarn</span><br></pre></td></tr></table></figure>
 <p>安裝的方法跟 Node.js 基本上是沒有太大的差異，一樣是透過官方的設定程式將 yum 可以安裝的來源增加，就可以透過 yum 安裝或者升級。</p>
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>現在我們只需要透過 <code>cap staging deploy</code> 就可以把 Ruby on Rails 專案傳到伺服器，並且將一切都安裝完畢。</p>
 <blockquote>

@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="經過前面五篇的教學，我們距離將 Ruby on Rails 部署到伺服器上越來越接近了。上一階段我們在本機段將部署的設定做完之後，這一篇文章會回到伺服器將部署所需的設定補齊，讓 Capistrano 可以正確的將程式碼部署到伺服器。">
-<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta name="keywords" content="教學,DevOps,Ruby on Rails">
 <meta property="og:type" content="article">
 <meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（六）">
 <meta property="og:url" content="https://blog.frost.tw/posts/2018/05/07/Getting-started-deploy-your-Ruby-on-Rails-Part-6/">
@@ -166,22 +166,22 @@
 <blockquote>
 <p>我們會習慣開設一個沒有 <code>sudo</code> 權限和密碼的使用者，只用於部署。</p>
 </blockquote>
-<h2 id="新增部署用帳號"><a href="#新增部署用帳號" class="headerlink" title="新增部署用帳號"></a>新增部署用帳號</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">useradd deploy</div></pre></td></tr></table></figure>
+<h2 id="新增部署用帳號"><a href="#新增部署用帳號" class="headerlink" title="新增部署用帳號"></a>新增部署用帳號</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd deploy</span><br></pre></td></tr></table></figure>
 <p>如果還記得我們在<a href="https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-1/">第一篇</a>裡面提到的新增使用者方法，後續的動作基本上是大同小異的。</p>
 <blockquote>
 <p>有些 Linux 系統不一定會在做完 <code>useradd</code> 後自動新增 <code>/home/deploy</code> 可以自己用 <code>mkdir /home/deploy</code> 後做 <code>chown -R deploy:deploy /home/deploy</code> 來手動設定。</p>
 </blockquote>
 <p>接下來，我們切換到 <code>deploy</code> 使用者，並且設定使用金鑰登入。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo su - deploy</div><div class="line">mkdir ~/.ssh</div><div class="line">chmod 700 ~/.ssh</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo su - deploy</span><br><span class="line">mkdir ~/.ssh</span><br><span class="line">chmod 700 ~/.ssh</span><br></pre></td></tr></table></figure>
 <p>複製本機的 <code>id_rsa.pub</code> 內容，並且貼到伺服器上的 <code>~/.ssh/authorized_keys</code> 上，如果忘記步驟可以回第一篇看。</p>
 <h2 id="安裝資料庫"><a href="#安裝資料庫" class="headerlink" title="安裝資料庫"></a>安裝資料庫</h2><p>一般情況下我們在 Ruby on Rails 專案大多採用 PostgreSQL 來做為資料庫，不過在 CentOS 上不一定會提供我們所希望的版本，所以需要先到 <a href="https://www.postgresql.org/download/linux/redhat/" target="_blank" rel="noopener">PostgreSQL 官網</a>取得對應的套件設定。</p>
 <p><img src="quiver-image-url/947E30127205650F228B211EF7CFBE67.png =960x540" alt="螢幕快照 2018-04-22 下午9.02.44.png"></p>
 <p>根據官網選擇所需的資料庫版本（目前大多是使用 9.5 ~ 9.7）然後取得安裝的指令。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 安裝 PostgreSQL 10 為例</span></div><div class="line"></div><div class="line">sudo yum install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm</div><div class="line">sudo yum install postgresql10-server</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安裝 PostgreSQL 10 為例</span></span><br><span class="line"></span><br><span class="line">sudo yum install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm</span><br><span class="line">sudo yum install postgresql10-server</span><br></pre></td></tr></table></figure>
 <p>因為我們需要的是伺服器，所以就可以不安裝客戶端的部分。不過我們可能會使用一些 PostgreSQL 的 Extension 以及 Ruby 需要有 PostgreSQL 的部分原始碼來編譯，所以我們需要再額外追加另外幾個套件。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install postgresql-contrib postgresql-devel postgresql-client</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install postgresql-contrib postgresql-devel postgresql-client</span><br></pre></td></tr></table></figure>
 <p>最後，將 PostgreSQL 伺服器開啟，並且設定為開機自動啟動。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo systemctl <span class="built_in">enable</span> postgresql-10</div><div class="line">sudo systemctl start postgresql-10</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> postgresql-10</span><br><span class="line">sudo systemctl start postgresql-10</span><br></pre></td></tr></table></figure>
 <h2 id="創建資料庫"><a href="#創建資料庫" class="headerlink" title="創建資料庫"></a>創建資料庫</h2><p>剛安裝好的狀況下，是只有 <code>postgres</code> 這個使用者可以使用的。而我們希望可以在不特別設定密碼的狀況下連上資料庫，所以我們可以透過以下的方法。</p>
 <ul>
 <li>建立 <code>deploy</code> 資料庫使用者</li>
@@ -191,17 +191,17 @@
 <blockquote>
 <p>其實應該是開好資料庫後指定 <code>deploy</code> 資料庫使用者為所有者，不過步驟會稍微複雜一些。</p>
 </blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo su - postgres</div><div class="line">createuser --createdb deploy</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su - postgres</span><br><span class="line">createuser --createdb deploy</span><br></pre></td></tr></table></figure>
 <p>完成之後，我們就可以回到 <code>deploy</code> 使用者上開設資料庫。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo su - deploy</div><div class="line">createdb example_db</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su - deploy</span><br><span class="line">createdb example_db</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><code>example_db</code> 記得替換成你的專案的名稱，像是 <code>mystore_production</code> 之類的。</p>
 </blockquote>
 <h2 id="準備設定檔"><a href="#準備設定檔" class="headerlink" title="準備設定檔"></a>準備設定檔</h2><p>在上一篇我們設定了 <code>config/secrets.yml</code> 為設定檔，所以我們需要先建立起來，以免在部屬的時候找不到。</p>
 <p>舉例來說，如果我們設定了 <code>deploy_to</code> 為  <code>/home/deploy/staging</code> 的話，需要先建立好 <code>shared</code> 目錄並把檔案放進去。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo su - deploy</div><div class="line">mkdir -p /home/deploy/staging/shared/config</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su - deploy</span><br><span class="line">mkdir -p /home/deploy/staging/shared/config</span><br></pre></td></tr></table></figure>
 <p>然後用 Vim 編輯 <code>config/secrets.yml</code> 這個檔案，將必要的內容放進去。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">staging:</span></div><div class="line"><span class="attr">  secret_key_base:</span> <span class="string">SECRET_KEY_BASE</span></div></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">staging:</span></span><br><span class="line"><span class="attr">  secret_key_base:</span> <span class="string">SECRET_KEY_BASE</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><code>secret_key_base</code> 的值可以用 <code>rake secret</code> 指令產生。</p>
 </blockquote>

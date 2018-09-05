@@ -178,7 +178,7 @@
 <p>看到這個畫面其實就是成功了，右上角的「View Live Site」就可以看到準備安裝的 WordPress 網誌。<br>（註：不知道是哪裡卡到，我這邊測試打開是一遍空白，如果各位有類似情況我們先放到一邊，安裝語言包先～）</p>
 <p><strong>如果想要先升級 WordPress 可以先不要做安裝的動作。</strong></p>
 <p>首先先下載 WordPress 的原始碼到電腦。<br>（註：AppFog 使用的 WordPress 阪本很舊，有需要可以下載新版的 WordPress 覆蓋過去，但是要確保 <code>wp-config.PHP</code> 沒有被蓋掉。）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">af pull &lt;APP 名稱&gt; &lt;下載的位置&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">af pull &lt;APP 名稱&gt; &lt;下載的位置&gt;</span><br></pre></td></tr></table></figure>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/177923/ZGdpsEm2SV2YmLj9EiBy_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-02-04%20%E4%B8%8B%E5%8D%882.44.07.png" alt="螢幕快照 2014-02-04 下午2.44.07.png"></p>
 <p>APP 名稱就是這個，我的就是 <code>aotoki-blog</code> 這會因為你的選擇而改變。<br>下載的位置就是你電腦的目錄，例如我用 <code>cd ~/Desktop</code> 然後用 <code>af pull aotoki-blog blog</code> 那就會存到我桌面上的 <code>blog</code> 資料夾裡面。</p>
 <p>（Windows 用戶沒有 ~ 符號，印象中是 %HOME_PATH% 或者 %HOMEPATH% 可以自己嘗試看看）</p>
@@ -187,11 +187,11 @@
 <p>這邊看到的是 3.4.2 版，寫這篇文章的時候已經是 3.8.1 版，太舊了，到 <a href="http://tw.wordpress.org/" target="_blank" rel="noopener">WordPress 正體中文</a> 的官方網站下載最新版，然後覆蓋掉整個 WordPress （除了 <code>wp-config.PHP</code> 之外）</p>
 <p>註：如果不想升級，必須自己到方網站下載 zh_TW.mo 檔案，然後放到 <code>wp-content/languages</code> 資料夾中。</p>
 <p>接著編輯 <code>wp-config.PHP</code> 檔案。</p>
-<p>找到<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">define(<span class="string">'WP_LANG'</span>, <span class="string">''</span>);</div></pre></td></tr></table></figure></p>
-<p>改為<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">define(<span class="string">'WP_LANG'</span>, <span class="string">'zh_TW'</span>);</div></pre></td></tr></table></figure></p>
+<p>找到<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'WP_LANG'</span>, <span class="string">''</span>);</span><br></pre></td></tr></table></figure></p>
+<p>改為<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'WP_LANG'</span>, <span class="string">'zh_TW'</span>);</span><br></pre></td></tr></table></figure></p>
 <p>簡單說就是指定使用的語言。</p>
 <p>然後上傳回 AppFog。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">af update &lt;APP 名稱&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">af update &lt;APP 名稱&gt;</span><br></pre></td></tr></table></figure>
 <p>註：有另一個叫做 <code>push</code> 的指令看起來好像跟 <code>pull</code> 是一對的，但是不是（千萬別用錯，我就踩到這雷⋯⋯）</p>
 <p><img src="http://user-image.logdown.io/user/52/blog/52/post/177923/cJYQyDZ4RveMfNlggUBX_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-02-04%20%E4%B8%8B%E5%8D%882.54.33.png" alt="螢幕快照 2014-02-04 下午2.54.33.png"></p>
 <p>其實這個步驟會要稍微等一下，不過不會太久。<br>（上傳失敗或有錯誤應該也蠻好懂的，不是全部 OK 應該就是有壞掉 XD）</p>

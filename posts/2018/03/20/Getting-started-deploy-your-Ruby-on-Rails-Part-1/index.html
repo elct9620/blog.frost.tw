@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="最近在公司發現其實不少同事都還沒有實際部署過一台伺服器的經驗，在有人負責 DevOps 的情況下，也許真的不太需要。又或者因為還是初級工程師的關係，沒有那個權限可以去安裝一次伺服器。甚至其實一直都使用著 Heroku 或者 AWS CodeDeploy 等服務的便利性，而沒有嘗試自己安裝一次。 不管是基於甚麼原因，總之先來安裝一次吧！">
-<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta name="keywords" content="教學,DevOps,Ruby on Rails">
 <meta property="og:type" content="article">
 <meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（一）">
 <meta property="og:url" content="https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="最近在公司發現其實不少同事都還沒有實際部署過一台伺服器的經驗，在有人負責 DevOps 的情況下，也許真的不太需要。又或者因為還是初級工程師的關係，沒有那個權限可以去安裝一次伺服器。甚至其實一直都使用著 Heroku 或者 AWS CodeDeploy 等服務的便利性，而沒有嘗試自己安裝一次。 不管是基於甚麼原因，總之先來安裝一次吧！">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-1/new_droplet.png">
-<meta property="og:updated_time" content="2018-07-22T05:01:25.374Z">
+<meta property="og:updated_time" content="2018-07-22T05:01:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部署你的第一個 Ruby on Rails 網站（一）">
 <meta name="twitter:description" content="最近在公司發現其實不少同事都還沒有實際部署過一台伺服器的經驗，在有人負責 DevOps 的情況下，也許真的不太需要。又或者因為還是初級工程師的關係，沒有那個權限可以去安裝一次伺服器。甚至其實一直都使用著 Heroku 或者 AWS CodeDeploy 等服務的便利性，而沒有嘗試自己安裝一次。 不管是基於甚麼原因，總之先來安裝一次吧！">
@@ -74,7 +74,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2018-03-20T12:44:52.000Z",
-  "dateModified": "2018-07-22T05:01:25.374Z",
+  "dateModified": "2018-07-22T05:01:25.000Z",
   "description":"最近在公司發現其實不少同事都還沒有實際部署過一台伺服器的經驗，在有人負責 DevOps 的情況下，也許真的不太需要。又或者因為還是初級工程師的關係，沒有那個權限可以去安裝一次伺服器。甚至其實一直都使用著 Heroku 或者 AWS CodeDeploy 等服務的便利性，而沒有嘗試自己安裝一次。不管是基於甚麼原因，總之先來安裝一次吧！",
   "author": {
     "@type": "Person",
@@ -178,7 +178,7 @@
 <h2 id="SSH-Key"><a href="#SSH-Key" class="headerlink" title="SSH Key"></a>SSH Key</h2><p>在把第一台伺服器開始之前，我們要先來談談 <code>SSH</code> 和 <code>SSH Key</code> 這兩個東西。簡單來說 <code>SSH</code> (Secure Shell) 是一種可以讓我們在遠端電腦上執行 Shell （打指令的地方）的工具，透過成對的 <code>SSH Key</code> 來進行加密傳輸。</p>
 <p>目前的 VPS 主機商大多會支援讓我們預先把 Public Key （兩組鑰匙可以公開的那一組）登記到主機商那邊，以便在開啟新伺服器的時候能夠預先的安裝進去。</p>
 <p>下面這個指令在 macOS 或是 Linux 上都可以執行。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 <p>中間會有一些問題，一般來說只要按 Enter 按鍵繼續執行即可。</p>
 <blockquote>
 <p>如果你已經設定過 git 並且能夠上傳到 Github 的話，就代表你已經產生過小心不要覆蓋掉摟！</p>
@@ -200,27 +200,27 @@
 <p>圖上的機房位置是選錯的，要記得選成 Singapore（新加坡）操作起來才會比較順暢。</p>
 </blockquote>
 <h2 id="進入伺服器"><a href="#進入伺服器" class="headerlink" title="進入伺服器"></a>進入伺服器</h2><p>當伺服器呈現 Ready 或者其它表示「開機完畢」的狀態時，我們就可以透過顯示在網頁上的 IP 位置來連上伺服器。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh root@172.31.1.1</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@172.31.1.1</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>上面指令的 <code>172.31.1.1</code> 記得換成你的 IP 位置。</p>
 </blockquote>
 <p>上面推薦的 Vultr、Linode 和 DigitalOcean 預設帳號都會是 <code>root</code>（系統管理員）透過這個帳號，我們就可以進入伺服器進行所有操作。</p>
 <h2 id="建立使用者"><a href="#建立使用者" class="headerlink" title="建立使用者"></a>建立使用者</h2><p>不過，直接使用 <code>root</code> 帳號來操作是非常危險的，所以我們會開設一個屬於自己的帳號，並且透過 <code>sudo</code> （Super User Do）這指令來表示「透過 <code>root</code> 的權力執行指令」</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">useradd elct9620 -G wheel</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd elct9620 -G wheel</span><br></pre></td></tr></table></figure>
 <p>上面的指令表示新增一個 <code>elct9620</code> 的使用者，並且加入 <code>wheel</code> 這個群組。</p>
 <blockquote>
 <p><code>wheel</code> 這個群組在 CentOS 7 通常會視為「有權限執行 <code>sudo</code> 指令」的使用者們</p>
 </blockquote>
 <h2 id="透過新使用者登入"><a href="#透過新使用者登入" class="headerlink" title="透過新使用者登入"></a>透過新使用者登入</h2><p>為了要可以透過新使用者登入，我們需要先對這個使用者設定 SSH Key 才行。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">su - elct9620</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - elct9620</span><br></pre></td></tr></table></figure>
 <p>因為是管理員，所以我們可以用 <code>su</code> (Switch User) 來切換到 <code>elct9620</code> 這個帳號。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir ~/.ssh</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.ssh</span><br></pre></td></tr></table></figure>
 <p>接著透過 <code>mkdir</code>（Make Directory）指令對 <code>elct9620</code> 這個帳號產生儲存 SSH 資訊的資料夾。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
 <p>這邊會透過 <code>vim</code> 來編輯檔案，因為操作對入門者有點困難，但是在管理伺服器上的時候卻很方便，所以建議大家至少熟悉可以插入內容。</p>
 <p>按下 <code>i</code> 進入 Insert Mode 後，可以直接用 Ctrl + V 把前面我們複製過的 <code>id_rsa.pub</code> 貼上，之後按 ESC 離開 Insert Mode 再依序按下鍵盤的 <code>:wq</code> 進行 Write and Quit （存檔並離開）</p>
 <p>最後，需要對檔案設定正確的權限（限定自己可以使用）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chmod 700 ~/.ssh</div><div class="line">chmod 600 ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 700 ~/.ssh</span><br><span class="line">chmod 600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
 <p>如此一來，我們就可以改成 <code>ssh elct9620@172.31.1.1</code> 來連上伺服器了！</p>
 <h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>到此為止，我們僅是能夠簡單的連上伺服器，並且以正確的使用者來進行操作。距離安裝伺服器還有一段距離，這系列的文章會盡可能的針對操作「詳細」的解釋。如果大家有注意到的話，會發現 Linux 的指令其實是把對應動作的單字重組，透過這樣的方式我們就可以「稍微容易」的記起常用的幾個操作。</p>
 <p>下一篇文章我們會稍微對伺服器做一些簡單的設定，並且熟悉基本操作。</p>

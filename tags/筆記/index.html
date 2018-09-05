@@ -297,9 +297,9 @@
   <div class="article__entry is-index">
     
     <p>前幾天的晚上朋友在 Facebook 上問了一個問題。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">raise HTTPError, <span class="string">'Not Found'</span></div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raise HTTPError, <span class="string">'Not Found'</span></span><br></pre></td></tr></table></figure>
 <p>和</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">raise HTTPError.new(<span class="string">'Not Found'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raise HTTPError.new(<span class="string">'Not Found'</span>)</span><br></pre></td></tr></table></figure>
 <p>哪個比較快？也因為這樣，我們意外的發現 Ruby 對上面兩段程式碼的定義上其實是不太一樣的。</p>
     
     <footer class="article__footer">

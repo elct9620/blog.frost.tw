@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="延續上一篇文章的內容，我們需要先在伺服器上進行設定，讓伺服器可以正確的安裝 Ruby 環境。如此一來，我們才能夠將 Ruby on Rails 部署到伺服器上面。 為了完成這些前置作業，我們還需要針對伺服器的設定進行完善的準備才行。">
-<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta name="keywords" content="教學,DevOps,Ruby on Rails">
 <meta property="og:type" content="article">
 <meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（二）">
 <meta property="og:url" content="https://blog.frost.tw/posts/2018/03/23/Getting-started-deploy-your-Ruby-on-Rails-Part-2/">
@@ -168,13 +168,13 @@
 <li>讓沒有密碼也可以做 <code>sudo</code></li>
 </ul>
 <p>如果想要設定密碼，我們可以先用 <code>root</code> 連線到伺服器，使用下面的指令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">passwd elct9620</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd elct9620</span><br></pre></td></tr></table></figure>
 <p>透過 <code>passwd</code> (Password) 指令，針對 <code>elct9620</code> 這個使用者進行密碼設定，如此一來就可以使用密碼來進行 <code>sudo</code> 的動作。</p>
 <p>如果想要使用無密碼的模式，我們可以讓所有屬於 <code>wheel</code> 這個群組的使用者賦予 <code>NOPASSWD</code> 的設定，讓所有指令都可以在不輸入密碼的狀態下使用。</p>
 <p>我們會需要用 Vim 模式進入 <code>sudo</code> 設定</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">visudo</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visudo</span><br></pre></td></tr></table></figure>
 <p>找下面這行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># %wheel  ALL=(ALL)       NOPASSWD: ALL</span></div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># %wheel  ALL=(ALL)       NOPASSWD: ALL</span></span><br></pre></td></tr></table></figure>
 <p>對 <code>#</code> 按 <code>x</code>（Delete）鍵再連續按下 <code>:wq</code> 存檔，就可以把註解刪掉，讓 <code>NOPASSWD</code> 的設定被啟用。</p>
 <p>接下來用自己的帳號 SSH 到伺服器，就可以利用 <code>sudo</code> 下達任何指令，而不需要輸入密碼。</p>
 <blockquote>
@@ -190,7 +190,7 @@
 <p>不同的套件管理工具有不一樣的指令，類似於我們用 <code>gem</code> 和 <code>npm</code> 會有一些指令上的差距一樣，這系列文章使用的 CentOS 是採用 <code>yum</code> 來安裝。不過就使用上的容易程度來說，其實 <code>apt-get</code> 算是比較簡單的，不過這些安裝指令在網路上其實都能找到，即使忘記怎麼使用只要善用 Google 也還是能很快的瞭解怎麼使用。</p>
 <p>為了要能夠在伺服器上運行 Ruby 我們除了可以透過 <code>yum</code> 安裝之外，也能夠自行下載 Ruby 的原始碼來編譯。不同的做法有不同的優缺點，以這次的計畫，我們希望能夠自行管理 Ruby 版本。所以採取自行編譯 Ruby 原始碼的方式來安裝環境，因此我們需要先有可以編譯 Ruby 環境的套件。</p>
 <p>參考 <a href="https://github.com/rbenv/ruby-build/wiki" target="_blank" rel="noopener">rbenv/ruby-build</a> 上面的說明，我們可以透過下面的指令簡單地將編譯 Ruby 所需套件找出來。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install -y gcc bzip2 openssl-devel libyaml-devel libffi-devel readline-devel zlib-devel gdbm-devel ncurses-devel</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc bzip2 openssl-devel libyaml-devel libffi-devel readline-devel zlib-devel gdbm-devel ncurses-devel</span><br></pre></td></tr></table></figure>
 <p>上述安裝的 <code>gcc</code> 套件是用來編譯的，而 <code>-devel</code> 結尾的套件是讓程式「編譯」的時候能夠找到原始碼資訊的對應資訊。</p>
 <blockquote>
 <p>一般安裝軟體的時候我們會希望儘可能節省空間，所以只會把 Binary（二進位可執行檔）的部分安裝進來。但是當我想要自行編譯某個程式的時候，就需要有一個參考去對應他的功能，而這些參考（ex. Header）就可以透過 <code>devel</code> 類型的套件來補足。</p>

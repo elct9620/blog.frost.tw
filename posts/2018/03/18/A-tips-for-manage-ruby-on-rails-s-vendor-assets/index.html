@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="在工作的時候經常會需要套用一些佈景主題，主要大多是因為客戶還在 MVP (最小可行產品) 的階段，只需要可以表現其商業價值運作的系統即可。不過，如果我們依照 Ruby on Rails 預設的方式把外部的佈景相關檔案分類後放到 vendor/assets 目錄下，反而會變得難以管理。">
-<meta name="keywords" content="筆記,技巧,Ruby on Rails">
+<meta name="keywords" content="筆記,Ruby on Rails,技巧">
 <meta property="og:type" content="article">
 <meta property="og:title" content="管理 Ruby on Rails 外部 Assets 的小技巧">
 <meta property="og:url" content="https://blog.frost.tw/posts/2018/03/18/A-tips-for-manage-ruby-on-rails-s-vendor-assets/">
@@ -178,9 +178,9 @@
 <p>在 Rails 5 之後，為了能夠支援 Webpack 來進行前端相關的編譯，會增加 <code>config/initializers/assets.rb</code> 這個檔案。</p>
 <p>我們就可以透過這個檔案對這些目錄設定，讓 Ruby on Rails 上的 Assets Pipeline 可以正確地讀取到。</p>
 <p>只要對 <code>config/initialize/assets.rb</code> 做一些設定。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Add additional assets to the asset load path.</span></div><div class="line">Rails.application.config.assets.paths += [</div><div class="line">  Rails.root.join(<span class="string">'vendor'</span>, <span class="string">'material'</span>, <span class="string">'css'</span>),</div><div class="line">  Rails.root.join(<span class="string">'vendor'</span>, <span class="string">'material'</span>, <span class="string">'js'</span>),</div><div class="line">  Rails.root.join(<span class="string">'vendor'</span>, <span class="string">'material'</span>, <span class="string">'images'</span>)</div><div class="line">]</div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add additional assets to the asset load path.</span></span><br><span class="line">Rails.application.config.assets.paths += [</span><br><span class="line">  Rails.root.join(<span class="string">'vendor'</span>, <span class="string">'material'</span>, <span class="string">'css'</span>),</span><br><span class="line">  Rails.root.join(<span class="string">'vendor'</span>, <span class="string">'material'</span>, <span class="string">'js'</span>),</span><br><span class="line">  Rails.root.join(<span class="string">'vendor'</span>, <span class="string">'material'</span>, <span class="string">'images'</span>)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <p>這種類型的情況是用在網站只需要套用一種佈景主題，所以我們可以明確地把 CSS / JS 等路徑都完整的指定出來，如此一來在 <code>application.css</code> 和 <code>application.js</code> 就可以透過下面這樣的方式將它讀取進來。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// application.js</span></div><div class="line"><span class="comment">//= require jquery.select2.js</span></div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// application.js</span></span><br><span class="line"><span class="comment">//= require jquery.select2.js</span></span><br></pre></td></tr></table></figure>
 <p>未來假設佈景主題需要更新，我們就可以透過刪除以及重新放置 <code>vendor/material</code> 目錄的方式來更動，而不容易和其他外部的 Assets 混在一起，而變得難以處理。</p>
 <p>這算是一個蠻實用的小技巧，在開發網站的時候要如何讓原始碼乾淨以及相依的套件容易維護一直都是個值得討論的題目。之後也會不時的更新 Ruby on Rails 的小技巧，除了因為最近太久沒有寫網誌之外。就是發現如果想分享一些很有趣的技術文章，還需要先讓讀者能夠透過過去的文章資料，一步步的了解脈絡才行。</p>
 <p>也因此，會先累積一部分偏向入門者的文章，來幫助讀者瞭解其他文章的背景是怎樣的狀況，才會採取這樣的行動或者做法。</p>

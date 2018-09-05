@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="經過第一篇和第二篇的說明，我想大家現在應該都有辦法順利的透過 SSH 進入自己的伺服器。 在第二篇的最後，我們針對 Ruby 環境預先做了準備，接下來就是安裝 Ruby 環境的時候了！">
-<meta name="keywords" content="教學,Ruby on Rails,DevOps">
+<meta name="keywords" content="教學,DevOps,Ruby on Rails">
 <meta property="og:type" content="article">
 <meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（三）">
 <meta property="og:url" content="https://blog.frost.tw/posts/2018/03/27/Getting-started-deploy-your-Ruby-on-Rails-Part-3/">
@@ -176,52 +176,52 @@
 <p>這次的範例會編譯 Ruby 2.4 版本，我們要先到 Ruby 官方網站的<a href="https://www.ruby-lang.org/zh_tw/downloads/" target="_blank" rel="noopener">下載頁面</a>來取得原始碼的壓縮檔。</p>
 <p><img src="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-3/screenshot.jpg" alt="螢幕快照 2018-03-26 下午10.17.13.png"></p>
 <p>如圖上顯示的一樣，目前最新的 Ruby 2.4.3 是我們想安裝的版本，所以對他點選右鍵後選擇「複製連結網址」就可以取得像是下面的下載位址。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.3.tar.gz</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.3.tar.gz</span><br></pre></td></tr></table></figure>
 <p>接下來我們到伺服器上用 <code>wget</code>（WWW Get）指令來下載檔案，除了 <code>curl</code> 這個之後會介紹的指令外，是在 Linux 上很常用來下載檔案的指令。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.3.tar.gz</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.3.tar.gz</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>如果發現沒有 <code>wget</code> 指令的話，可以利用上次介紹過的 <code>sudo yum install wget -y</code> 來安裝。</p>
 </blockquote>
 <p>下載完畢後，如果不確定操作是否正確，我們可以用 <code>ls</code> (List) 指令來看看現在這個目錄（資料夾）下面有沒有這個檔案。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls</span><br></pre></td></tr></table></figure>
 <p>結果會類似下面這樣</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[elct9620@deploy-example ~]$ ls</div><div class="line">ruby-2.4.3.tar.gz</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[elct9620@deploy-example ~]$ ls</span><br><span class="line">ruby-2.4.3.tar.gz</span><br></pre></td></tr></table></figure>
 <p>既然這是一個壓縮檔，我們理所當然的要下指令對他解壓縮了！</p>
 <p>在 Linux 中，我們通常會把檔案做成一個 <code>tar</code> 格式的檔案，然後再搭配上一個壓縮的格式（例如 Gzip 或者 Bzip2）所以才會有叫做 <code>.tar.gz</code> 或者 <code>.tgz</code> 這樣的副檔名。</p>
 <p>而 <code>tar</code> 也是 Linux 中的一個指令，可以用來壓縮或者解壓縮檔案。下面的指令同時做了 <code>-z</code> （用 Gzip 壓縮格式）<code>-x</code>（解壓縮）<code>-v</code>（顯示檔案內容）<code>-f</code>（指定檔案）來進行解壓縮，統合起來就是「用 Gzip 格式解壓縮 <code>ruby-2.4.3.tar.gz</code> 這個檔案，並顯示內容」</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -zxvf ruby-2.4.3.tar.gz</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf ruby-2.4.3.tar.gz</span><br></pre></td></tr></table></figure>
 <p>執行完畢後，再次用 <code>ls</code> 看一次，會發現多出了 <code>ruby-2.4.3</code> 這個資料夾。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[elct9620@deploy-example ~]$ ls</div><div class="line">ruby-2.4.3  ruby-2.4.3.tar.gz</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[elct9620@deploy-example ~]$ ls</span><br><span class="line">ruby-2.4.3  ruby-2.4.3.tar.gz</span><br></pre></td></tr></table></figure>
 <p>為了編譯 Ruby 方便下指令，我們要先用 <code>cd</code>（Change Directory）指令，切換到 <code>ruby-2.4.3</code> 這個目錄下。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> ruby-2.4.3</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ruby-2.4.3</span><br></pre></td></tr></table></figure>
 <p>同時可能會發現原本輸入指令左方的 <code>~</code> 符號變成了 <code>ruby-2.4.3</code>，這是表示你目前所在的資料夾，透過這樣的方式就不怕迷失在 Linux 的資料夾中。</p>
 <blockquote>
 <p><code>~</code> 符號是一個代號，表示這個使用者的家目錄，一般 Linux 的使用者都會在 <code>/home</code> 資料夾下面有一個對應自己帳號的資料夾。</p>
 </blockquote>
 <p>預設的 Ruby 會安裝到 <code>/usr/local</code> 這個位置，但是如果我們希望能管理多個版本的 Ruby 就需要明確的指定位置。</p>
 <p>我們可以透過執行 <code>configure</code> 這個檔案來對 Ruby 編譯時的行為做設定。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure --prefix=/usr/<span class="built_in">local</span>/ruby-2.4.3</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/ruby-2.4.3</span><br></pre></td></tr></table></figure>
 <p>不同的軟體會有不同的設定選項，如果有興趣的話可以去研究看除了指定資料夾之外還有哪些選擇。</p>
 <blockquote>
 <p>如果沒有跑出任何東西，麻煩回到第二篇（有修正過指令）目前 DigitalOcean 上面的 gcc 似乎只有舊版的 4 但是一樣可以使用。</p>
 </blockquote>
 <p>接下來，就是編譯 Ruby 了，因為 Ruby 採用了大部分 Linux 都會有的 <code>make</code>（類似 <code>rake</code> 可以幫我們自動執行各種指令） 所以我們就不需要另外的去安裝像是 <code>CMake</code> 或者 <code>Ninja</code> 之類的編譯工具。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
 <p>這邊會比較花時間，完成之後我們可以用 <code>install</code> 動作請 <code>make</code> 幫我們放到正確的位置。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make install</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install</span><br></pre></td></tr></table></figure>
 <p>不過這樣操作實際上是會發生錯誤的，因為 <code>/usr/local</code> 實際上還是所屬 <code>root</code> 我們可以用 <code>sudo</code> 指令提升權限。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo make install</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 <p>如此一來就能順利的在系統中把 Ruby 安裝進去了！</p>
 <p>可以透過手動執行 <code>ruby</code> 這個執行檔來確認 <code>ruby</code> 是正確執行的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/<span class="built_in">local</span>/ruby-2.4.3/bin/ruby -v</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="built_in">local</span>/ruby-2.4.3/bin/ruby -v</span><br></pre></td></tr></table></figure>
 <p>如果能看到版本號，就是我們正確的安裝 Ruby 了。不過每次都要指定位置是很不方便的，我們可以透過改變 <code>PATH</code> 環境設定來簡化操作。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/ruby-2.4.3/bin:<span class="variable">$PATH</span></div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/ruby-2.4.3/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
 <p>上面的 <code>export</code> 指令表示「從此之後都套用」後面我們將 <code>/usr/local/ruby-2.4.3/bin</code> 放在原本的 <code>PATH</code> 前面，表示優先從這個目錄開始找。</p>
 <p>如此一來就能用 <code>ruby -v</code> 直接執行 Ruby 進行操作，不過當下次登入 SSH 因為沒有執行這段指令，就會無法使用這個功能。</p>
 <p>如果大部分的情況都會採用 Ruby 2.4.3 的話，可以在 <code>/etc/profile.d</code> 這個資料夾放一個叫做 <code>ruby.sh</code> 的檔案。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo vi /etc/profile.d/ruby.sh</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/profile.d/ruby.sh</span><br></pre></td></tr></table></figure>
 <p>進入 Vim 後按下 <code>i</code> 進入編輯模式，輸入以下指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export PATH=/usr/local/ruby-2.4.3/bin:$PATH</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/ruby-2.4.3/bin:$PATH</span><br></pre></td></tr></table></figure>
 <p>再按下 <code>:wq</code> 進行存檔，如此一下下次預設就會採用 Ruby 2.4.3 做為預設的 Ruby 執行了。</p>
 <blockquote>
 <p>在 <code>/etc</code> 目錄下面的變更是對整個伺服器的修改，以後不管是誰打開都會預設使用 Ruby 2.4.3 這點需要注意。</p>
