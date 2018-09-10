@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Unreal Engine 4 的自動化測試 | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="最近幾年做測試似乎變成一個非常熱門的議題，而且也逐漸的被大多開發者了解到做測試的優點。不過，一般的軟體可以做測試倒是沒有什麼問題，那麼遊戲該怎麼做測試呢？ 我自己認為這是一個很難探討的問題，大部份的遊戲就基於不確定性而變得有趣。在充滿不確定的情境下，要做測試就變得非常困難了。 不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與">
+<meta name="keywords" content="筆記,UnrealEngine,UnitTest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unreal Engine 4 的自動化測試">
+<meta property="og:url" content="https://blog.frost.tw/unreal-engine-4-automation-testing/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="最近幾年做測試似乎變成一個非常熱門的議題，而且也逐漸的被大多開發者了解到做測試的優點。不過，一般的軟體可以做測試倒是沒有什麼問題，那麼遊戲該怎麼做測試呢？ 我自己認為這是一個很難探討的問題，大部份的遊戲就基於不確定性而變得有趣。在充滿不確定的情境下，要做測試就變得非常困難了。 不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unreal Engine 4 的自動化測試">
+<meta name="twitter:description" content="最近幾年做測試似乎變成一個非常熱門的議題，而且也逐漸的被大多開發者了解到做測試的優點。不過，一般的軟體可以做測試倒是沒有什麼問題，那麼遊戲該怎麼做測試呢？ 我自己認為這是一個很難探討的問題，大部份的遊戲就基於不確定性而變得有趣。在充滿不確定的情境下，要做測試就變得非常困難了。 不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與">
+<meta name="twitter:image" content="http://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/unreal-engine-4-automation-testing/"
+  },
+  "headline":"Unreal Engine 4 的自動化測試",
+  "image": [
+    
+    "http://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png",
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2015-06-11T23:26:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "description":"最近幾年做測試似乎變成一個非常熱門的議題，而且也逐漸的被大多開發者了解到做測試的優點。不過，一般的軟體可以做測試倒是沒有什麼問題，那麼遊戲該怎麼做測試呢？我自己認為這是一個很難探討的問題，大部份的遊戲就基於不確定性而變得有趣。在充滿不確定的情境下，要做測試就變得非常困難了。不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與數值上是以正確的數值做計算。那麼，就來談談 Unreal Engien 4 的自動化測試工具 Automation Tools 吧！",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/unreal-engine-4-automation-testing/",
+      "name": "Unreal Engine 4 的自動化測試",
+      "image": "http://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/unreal-engine-4-automation-testing/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2015-06-11T23:26:00.000Z" class="article__time--header">
+      Jun.12
+    </time>
+    
+  
+    <h1 class="article__title">Unreal Engine 4 的自動化測試</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>最近幾年做測試似乎變成一個非常熱門的議題，而且也逐漸的被大多開發者了解到做測試的優點。不過，一般的軟體可以做測試倒是沒有什麼問題，那麼遊戲該怎麼做測試呢？</p>
+<p>我自己認為這是一個很難探討的問題，大部份的遊戲就基於不確定性而變得有趣。在充滿不確定的情境下，要做測試就變得非常困難了。</p>
+<p>不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與數值上是以正確的數值做計算。</p>
+<p>那麼，就來談談 Unreal Engien 4 的自動化測試工具 <code>Automation Tools</code> 吧！</p>
+<a id="more"></a>
+<p>根據<a href="https://docs.unrealengine.com/latest/INT/Programming/Automation/index.html" target="_blank" rel="noopener">官方文件</a>的介紹，一共有五種功能包含在這個工具內。</p>
+<ul>
+<li>Unit Test - 單元測試</li>
+<li>Feature Test - 功能測試</li>
+<li>Smoke Test - 快速測試（我認為是這樣翻譯）</li>
+<li>Content Stress Test - （內容）壓力測試</li>
+<li>Screen Shot Comparison - 截圖比較</li>
+</ul>
+<p>不過我個人認為前面三種類似都很相似，而在 Unreal Engine 裡面硬要去區分似乎也是有點困難的。</p>
+<blockquote>
+<p>像是 Unit Test 的範例，使用的是 Somke Test 的模式</p>
+</blockquote>
+<h3 id="撰寫測試"><a href="#撰寫測試" class="headerlink" title="撰寫測試"></a>撰寫測試</h3><p>這部分的測試比較接近 Unit Test 的形式，主要是針對遊戲中的 API 做測試。</p>
+<p>首先，我們要在 <code>[Project]/Private</code> 目錄下新增一個 <code>Tests</code> 目錄，預設的測試檔案都會從這個目錄偵測。</p>
+<blockquote>
+<p>官方並沒有指出修改目錄的方式，因此也只能這樣使用。</p>
+</blockquote>
+<p>假設我要測試的是名為 <code>NPCTalk</code> 的功能，我的測試檔名就命名為 <code>NPCTalkTest.cpp</code> 基本上跟大部份的測試工具一樣。</p>
+<figure class="highlight cpp"><figcaption><span>Private/NPCTalk.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假設有一個 NPCTalk 的 Class 實作了一個 speak() 的靜態方法</span></span><br><span class="line">FString NPCTalk::speak() &#123;</span><br><span class="line">true<span class="keyword">return</span> TEXT(<span class="string">"Hello World!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那麼，我們的測試檔案就可以這樣寫。</p>
+<figure class="highlight cpp"><figcaption><span>Private/Tests/NPCTalkTest.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"NPCTalk.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AutomationTest.h"</span></span></span><br><span class="line"></span><br><span class="line">IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNPCTalkTest, <span class="string">"NPC.Talk.Speak"</span>, EAutomationTestFlags::ATF_SmokeTest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> FNPCTalkTest::RunTest(<span class="keyword">const</span> FString &amp;Parameters)</span><br><span class="line">&#123;</span><br><span class="line">trueTestEqual(TEXT(<span class="string">"NPC should says: Hello World!"</span>), NPCTalk::speak(), TEXT(<span class="string">"Hello World!"</span>));</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如此一來，當我們執行測試的時候，就可以檢查傳回的字串是否跟預期的一項是否為 <code>Hello World!</code> 了！</p>
+<p><code>IMPLEMENT_SIMPLE_AUTOMATION_TEST</code> 是預先寫好的巨集，用來幫助我們產生測試用的 Class 參數依序為：名稱、識別名稱（會在 Frontend 上顯示）、測試類型。</p>
+<p>測試類型基本上分為：遊戲、編輯器、命令列三種，詳細的請參考 <a href="https://Github.com/EpicGames/UnrealEngine/blob/8a80b5541f69a79abf5855668f39e1d643717600/Engine/Source/Runtime/Core/Public/Misc/AutomationTest.h" target="_blank" rel="noopener">AutomationTest.h</a> 這個檔案。</p>
+<p>這邊強烈建議用有自動補全的編輯器，因為官方文件基本上完全都沒有解釋使用的方式。</p>
+<h3 id="對-Actor-做測試"><a href="#對-Actor-做測試" class="headerlink" title="對 Actor 做測試"></a>對 Actor 做測試</h3><p>這部分就比較接近功能測試，用來檢測某些物件是否正常。不過缺點就是要做這些測試通常只有兩個選項，直接在遊戲地圖測試，或者製作專用的測試地圖。</p>
+<blockquote>
+<p>這要依照測試情境去決定，像是只是要測試某一種類的怪是否正常，卻得把場景上數百隻怪都測試一遍，除了費時之外也很不方便。</p>
+</blockquote>
+<figure class="highlight cpp"><figcaption><span>Private/MyActor.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"MyActor.h"</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Sets default values</span></span><br><span class="line">AMyActor::AMyActor()</span><br><span class="line">&#123;</span><br><span class="line"> 	<span class="comment">// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.</span></span><br><span class="line">truePrimaryActorTick.bCanEverTick = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Called when the game starts or when spawned</span></span><br><span class="line"><span class="keyword">void</span> AMyActor::BeginPlay()</span><br><span class="line">&#123;</span><br><span class="line">trueSuper::BeginPlay();</span><br><span class="line">true</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Called every frame</span></span><br><span class="line"><span class="keyword">void</span> AMyActor::Tick( <span class="keyword">float</span> DeltaTime )</span><br><span class="line">&#123;</span><br><span class="line">trueSuper::Tick( DeltaTime );</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">float</span> AMyActor::CalcDamage() &#123;</span><br><span class="line">    <span class="keyword">float</span> randRatio = FMath::FRandRange(<span class="number">0.8</span>, <span class="number">1.2</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">100.0f</span> * randRatio;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>這邊我寫了一個簡易的 Acotr 並且時做了一個叫做 <code>CalcDamage</code> 的方法，隨機傳回 80 ~ 120 的傷害數值。<br>接下來我們會針對場景上所有為 <code>MyActor</code> 類型的物件做檢測。</p>
+<p>因此，我們需要先創建一張新的地圖，並且把這些 Actor 放進場景。</p>
+<p><img src="http://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png" alt="螢幕快照 2015-06-12 下午4.30.22.png"></p>
+<p>如上圖所示，我在一張叫做 <code>TestMap</code> 的地圖中放置了三個類型是 <code>MyActor</code> 的物件。<br>接下來存擋即可，這樣我們就可以針對這三個物件做測試了！</p>
+<figure class="highlight cpp"><figcaption><span>Private/Tests/MyActorTest.cpp</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AutomationTest.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AutomationCommon.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"MyActor.h"</span></span></span><br><span class="line"></span><br><span class="line">DECLARE_LOG_CATEGORY_EXTERN(GameTest, All, All);</span><br><span class="line">DEFINE_LOG_CATEGORY(GameTest);</span><br><span class="line"></span><br><span class="line">IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMyActorTest, <span class="string">"MyActor.CalcDamage"</span>, EAutomationTestFlags::ATF_Game);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> ACTOR_DAMAGE = <span class="number">100.0f</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> MIN_DAMAGE_RATIO = <span class="number">0.8f</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> MAX_DAMAGE_RATIO = <span class="number">1.2f</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> FMyActorTest::RunTest(<span class="keyword">const</span> FString &amp;Parameters)</span><br><span class="line">&#123;</span><br><span class="line">    UGameplayStatics::OpenLevel(GWorld, TEXT(<span class="string">"TestMap"</span>));</span><br><span class="line">    <span class="keyword">for</span>(TObjectIterator&lt;AMyActor&gt; ActorIterator; ActorIterator; ++ActorIterator) &#123;</span><br><span class="line">        AMyActor* MyActor = *ActorIterator;</span><br><span class="line">        <span class="keyword">if</span>(MyActor) &#123;</span><br><span class="line">            <span class="keyword">float</span> actorDamage = MyActor-&gt;CalcDamage();</span><br><span class="line">            <span class="keyword">bool</span> bIsDamageValid = actorDamage &gt;= (ACTOR_DAMAGE * MIN_DAMAGE_RATIO) &amp;&amp;</span><br><span class="line">                                  actorDamage &lt;= (ACTOR_DAMAGE * MAX_DAMAGE_RATIO);</span><br><span class="line">            TestTrue(TEXT(<span class="string">"Damage should in the range 80.0 ~ 120.0"</span>), bIsDamageValid);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            UE_LOG(GameTest, Error, TEXT(<span class="string">"No My Actor found"</span>));</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本上就跟前一段的測試差不多，不過這邊將 Flag 限制為 <code>ATF_Game</code> 表示只有在 <code>Standlone Mode</code> 的時候才能夠運行這個測試（因為 Actor 必須實際在遊戲中執行才能表現出正常的運作）</p>
+<blockquote>
+<p>就理論上來說，也許能夠做到像是自動操作玩家打怪這類型的測試。<br>AI 可控制的並不限定是一般的怪，玩家也屬於 Pawn 是可被 AI 控制而非玩家的輸入設備（鍵盤、搖桿等）</p>
+</blockquote>
+<p>上述程式碼的寫法是參考 Unreal 論壇的<a href="https://forums.unrealengine.com/showthread.PHP?56106-Need-Help-with-Automation-Testing-in-4-6" target="_blank" rel="noopener">這篇文章</a>去實作的，也是我唯一看到比較完整關於 Automation Tools 的使用範例。</p>
+<blockquote>
+<p>直接用 TObjectIterator<tclass> 就可以拿到場景物件蠻神奇的，不過大概就跟一般遊戲執行時呼叫一樣吧 XD</tclass></p>
+</blockquote>
+<p><img src="http://user-image.logdown.io/user/52/blog/52/post/280172/1MYr9nWSYWrgjjpxMK6g_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.36.36.png" alt="螢幕快照 2015-06-12 下午4.36.36.png"></p>
+<p>因為是 <code>Standlone Mode</code> 才能執行的測試，我們需要借助 <code>Unreal Frontend</code> 去幫我們開啟遊戲。</p>
+<blockquote>
+<p>我試過用 Command Line / Editor 去開啟，都無法正常使用，這算是最方便使用的解法了！<br>Mac/Windows 都在引擎的 Binaries 目錄下，稍微找一下就可以找到了（一般放在對應的作業系統目錄中）</p>
+</blockquote>
+<p><img src="http://user-image.logdown.io/user/52/blog/52/post/280172/yufoKsUITMOKSE8vv3Gj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.38.35.png" alt="螢幕快照 2015-06-12 下午4.38.35.png"></p>
+<p>進去 Project Launcher 分頁，先把左上角的 Project 設定成要測試的專案，然後按下 <code>Launch</code> 就會開啟一個獨立的遊戲出來。</p>
+<p><img src="http://user-image.logdown.io/user/52/blog/52/post/280172/JoxJZQ8fSOO82xhjmhY2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.40.15.png" alt="螢幕快照 2015-06-12 下午4.40.15.png"></p>
+<p>開啟遊戲視窗後，進到 Session Frontend 裡面，選下面的 <code>Automation</code> 分頁，再點選 <code>Find Workers</code> 確保有抓到目前要測試的遊戲。</p>
+<blockquote>
+<p>我的截圖有一個 Instance 是 Timeout 狀態，那是因為我上一次跑完關掉後就會呈現這樣的狀態（無法清除掉蠻痛苦的⋯⋯）</p>
+</blockquote>
+<p><img src="http://user-image.logdown.io/user/52/blog/52/post/280172/cm2gylD0SSetLA8mgVs2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.42.18.png" alt="螢幕快照 2015-06-12 下午4.42.18.png"></p>
+<p>勾選好要跑的測試之後（預設只會跑幾個比較快的，一般是 Somke Test）讓他執行，如果順利通過就會像我這樣顯示綠色的。<br>同時也會發現遊戲地圖會切換到最後一個跑的測試地圖上，簡單說要做這類的測試會很花時間（苦笑）</p>
+<blockquote>
+<p>可以看到功能測試佔用的時間很長，搭配持續整合工具（Jenkins）之類的可能可以解決這個問題。<br>昨天參加 Epic Games 的演講，官方人員告訴我是可行的。不過跟自動化測試一樣，很少人討論（折衷方案是利用區網空閒的電腦，丟 Frontend 去跑，但是作業系統不同的關係我無法測試這個方法）</p>
+</blockquote>
+<h3 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h3><p>目前測試這個功能就到這邊，大致上不難應用。稍微熟悉的話至少能幫遊戲做一部分的測試，我想之後應該能節省掉不少時間吧！</p>
+<p>雖然還有像是開發 Plugin 時能不能做測試等等的問題，以及整合 CI 後該怎麼跑，不過就現況來說已經算是讓人挺滿意了！</p>
+<blockquote>
+<p>另外就是 Smoke Test 在 Editor 就可以用裡面的 Frontend 跑，不用特地單獨開 Frontend 來跑。</p>
+</blockquote>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/unreal-engine-4-automation-testing/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/unreal-engine-4-automation-testing/"></iframe>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/UnitTest/">UnitTest</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/UnrealEngine/">UnrealEngine</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/筆記/">筆記</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>The CSS3 Transition | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="好久沒寫，今天來分享一下應該是我本業的網頁設計相關文章 XDD 前幾天在 Google Reader 上看到 Zespia 換了新佈景，原本的佈景也是目前這個網誌用的 Slash 不過因為使用者越來越多，所以站長決定換新佈景～ 接著，我看到那中間的 “Z” 字 Logo 那透明度緩緩的恢復的效果非常的有興趣，於是，我開始了調查……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The CSS3 Transition">
+<meta property="og:url" content="https://blog.frost.tw/the-css3-transition/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="好久沒寫，今天來分享一下應該是我本業的網頁設計相關文章 XDD 前幾天在 Google Reader 上看到 Zespia 換了新佈景，原本的佈景也是目前這個網誌用的 Slash 不過因為使用者越來越多，所以站長決定換新佈景～ 接著，我看到那中間的 “Z” 字 Logo 那透明度緩緩的恢復的效果非常的有興趣，於是，我開始了調查……">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The CSS3 Transition">
+<meta name="twitter:description" content="好久沒寫，今天來分享一下應該是我本業的網頁設計相關文章 XDD 前幾天在 Google Reader 上看到 Zespia 換了新佈景，原本的佈景也是目前這個網誌用的 Slash 不過因為使用者越來越多，所以站長決定換新佈景～ 接著，我看到那中間的 “Z” 字 Logo 那透明度緩緩的恢復的效果非常的有興趣，於是，我開始了調查……">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/the-css3-transition/"
+  },
+  "headline":"The CSS3 Transition",
+  "image": [
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2012-05-08T13:02:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "description":"好久沒寫，今天來分享一下應該是我本業的網頁設計相關文章 XDD前幾天在 Google Reader 上看到 Zespia 換了新佈景，原本的佈景也是目前這個網誌用的 Slash 不過因為使用者越來越多，所以站長決定換新佈景～接著，我看到那中間的 “Z” 字 Logo 那透明度緩緩的恢復的效果非常的有興趣，於是，我開始了調查……",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/the-css3-transition/",
+      "name": "The CSS3 Transition",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/the-css3-transition/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2012-05-08T13:02:00.000Z" class="article__time--header">
+      May.08
+    </time>
+    
+  
+    <h1 class="article__title">The CSS3 Transition</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>好久沒寫，今天來分享一下應該是我本業的網頁設計相關文章 XDD</p>
+<p>前幾天在 Google Reader 上看到 <a href="http://zespia.tw/" target="_blank" rel="noopener">Zespia</a> 換了新佈景，原本的佈景也是目前這個網誌用的 <a href="http://zespia.tw/Octopress-Theme-Slash/index_tw.html" target="_blank" rel="noopener">Slash</a> 不過因為使用者越來越多，所以站長決定換新佈景～</p>
+<p>接著，我看到那中間的 “Z” 字 Logo 那透明度緩緩的恢復的效果非常的有興趣，於是，我開始了調查……</p>
+<a id="more"></a>
+<p>原本以為是用 JavaScript 所製作的效果（像是 jQuery 就有 Fade IN/OUT 的效果）不過仔細一看原始碼，就發現「我錯了！」</p>
+<p>裡面用著一個名為 transition 的屬性，好奇心一來就開始 Google 使用方法。</p>
+<p>嘗試幾次後，大概了解使用了！<br>（中文叫做「漸變」用途大概就是在 CSS 設定值變化時提供一個漸進的變化）</p>
+<p>不過以目前瀏覽器大戰的情況來看，用純 CSS 撰寫實在吃力不討好，於是我就用了 <a href="http://compass-style.org" target="_blank" rel="noopener">Compass</a> 稍微輔助。</p>
+<figure class="highlight scss"><figcaption><span>site.css.scss</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@<span class="keyword">import</span> <span class="string">"compass"</span>;</span><br><span class="line">@<span class="keyword">import</span> <span class="string">"compass/reset"</span>;</span><br><span class="line">@<span class="keyword">import</span> <span class="string">"compass/CSS3"</span>; <span class="comment">//屬於 CSS3 的功能</span></span><br><span class="line"></span><br><span class="line">@<span class="keyword">include</span> global-reset; <span class="comment">//CSS Reset</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">true<span class="attribute">padding</span>: <span class="number">10px</span>l</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//漸變方塊</span><br><span class="line">.box &#123;</span><br><span class="line">truebackground: adjust-lightness(blue, <span class="number">30</span>);</span><br><span class="line">true<span class="attribute">width</span>: <span class="number">50px</span>;</span><br><span class="line">true<span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">true@<span class="keyword">include</span> opacity(<span class="number">0.7</span>); <span class="comment">//透明度 30%</span></span><br><span class="line">true@<span class="keyword">include</span> border-radius(<span class="number">50%</span>); <span class="comment">//呈現球體</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.box</span>:hover &#123;</span><br><span class="line">true@<span class="keyword">include</span> opacity(<span class="number">1</span>); <span class="comment">//透明度 0% (不透明)</span></span><br><span class="line">true@<span class="keyword">include</span> transition-duration(<span class="number">0.3s</span>); <span class="comment">//0.3秒完成漸變</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之後在業面上套用屬性，游標一過去之後就會發生變化～</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>假設漸變設定在 .box 而非 .box:hover 上，那麼漸變的情會如下：</p>
+<ol>
+<li>瀏覽器初始化元素</li>
+<li>瀏覽器套用 CSS 屬性 (第一次漸變，會從 0px <em> 0px 漸變成 50px </em> 50 px)</li>
+<li>觸碰觸發漸變（透明度 30% &gt; 0% ）</li>
+</ol>
+<p>假設是如上述程式碼來做，那麼第二步驟（變大）的建變就不會有。<br>所以依照這個原理，在構成頁面區塊時只要設定上建變，就會出現開打開網頁，內容區塊會放大到相應大小的情況。</p>
+<blockquote>
+<p>不過我想只限於內容少於區塊大小的狀態</p>
+</blockquote>
+<p>大致上就是這樣摟～</p>
+<p>最近感覺繪畫上的能力進步不少，之後應該也會針對 Illustrator 多加努力，希望之後可以有一套自己風格的網頁設計～ </p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/the-css3-transition/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/the-css3-transition/"></iframe>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>mRuby on Web | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。 最初是看到 WebRuby 這個專案的應用 Webirb 才決定要挑戰將 mruby 丟到 Web 上面跑。  其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。">
+<meta name="keywords" content="心得,Ruby,筆記,MRuby">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mRuby on Web">
+<meta property="og:url" content="https://blog.frost.tw/mruby-on-web/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。 最初是看到 WebRuby 這個專案的應用 Webirb 才決定要挑戰將 mruby 丟到 Web 上面跑。  其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mRuby on Web">
+<meta name="twitter:description" content="忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。 最初是看到 WebRuby 這個專案的應用 Webirb 才決定要挑戰將 mruby 丟到 Web 上面跑。  其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/mruby-on-web/"
+  },
+  "headline":"mRuby on Web",
+  "image": [
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2015-04-10T06:58:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "description":"忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。最初是看到 WebRuby 這個專案的應用 Webirb 才決定要挑戰將 mruby 丟到 Web 上面跑。其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/mruby-on-web/",
+      "name": "mRuby on Web",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/mruby-on-web/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2015-04-10T06:58:00.000Z" class="article__time--header">
+      Apr.10
+    </time>
+    
+  
+    <h1 class="article__title">mRuby on Web</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。</p>
+<p>最初是看到 <a href="https://Github.com/xxuejie/webruby" target="_blank" rel="noopener">WebRuby</a> 這個專案的應用 <a href="http://joshnuss.github.io/mruby-web-irb/" target="_blank" rel="noopener">Webirb</a> 才決定要挑戰將 mruby 丟到 Web 上面跑。</p>
+<blockquote>
+<p>其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。</p>
+</blockquote>
+<a id="more"></a>
+<p>在兩年前（2013）的 JSDC 上，我首次得知了 <a href="http://asmjs.org" target="_blank" rel="noopener">ASM.js</a> 跟 <a href="http://emscripten.org" target="_blank" rel="noopener">Emscripten</a> 這兩個專案，當時只知道是一個可以把 C/C++ 的運行效能帶到 Web 上的專案，卻不得其門而入。</p>
+<p>不過最近再次回想起來，重新閱讀了一次 Emscripten 的文件後終於瞭解到入門的基礎用法。</p>
+<blockquote>
+<p>也許是兩年前的英文程度不好吧，或者當時因為沒有接觸太多 C/C++ 因此無法理解其深意。</p>
+</blockquote>
+<p>總而言之，在學會使用 Emscripten 的同時，我最想拉到網頁上的就是 mRuby 了（作為第一次跟 C/C++ 整合的語言，讓我很興奮，另外 Ruby 也是我目前最喜歡的語言 XD）</p>
+<h4 id="安裝-Emscripten"><a href="#安裝-Emscripten" class="headerlink" title="安裝 Emscripten"></a>安裝 Emscripten</h4><p>基本上依照官網的<a href="http://kripken.Github.io/emscripten-site/docs/getting_started/downloads.html" target="_blank" rel="noopener">安裝教學</a>應該就可以很順利的完成安裝。</p>
+<p>我自己是放在 <code>~/Workspace/Emscripten</code> 下面，要使用的時候就先跑一次 <code>source ./emSDK_env.sh</code> 來讓 <code>emcc</code> 等指令可以使用。</p>
+<blockquote>
+<p>SDK 的設計並不是很好，所以一定得在 SDK 目錄下跑 <code>source</code> 指令</p>
+</blockquote>
+<h4 id="目錄結構"><a href="#目錄結構" class="headerlink" title="目錄結構"></a>目錄結構</h4><p>單純是我習慣的配置，如果大家有自己的習慣可以修改。</p>
+<ul>
+<li>mRuby.js<ul>
+<li>mRuby/ - 原始碼</li>
+<li>build/ - 輸出檔案<ul>
+<li>src/ - mRuby 的 <code>.o</code> 檔案<ul>
+<li>gems/ Gem 的 <code>.o</code> 檔案</li>
+</ul>
+</li>
+<li>dest/ 輸出的 <code>.html</code> <code>.js</code> 檔案</li>
+</ul>
+</li>
+<li>mrbjs.c - 應用 mRuby 的 c 檔案（ main ）</li>
+<li>Makefile</li>
+</ul>
+</li>
+</ul>
+<h4 id="取得-mRuby"><a href="#取得-mRuby" class="headerlink" title="取得 mRuby"></a>取得 mRuby</h4><p>mRuby 是輕量的 ruby 套件，編譯完成的 <code>mruby.js</code> 加上一些預設的 gems （像是 <code>puts</code> 等支援）大約才 1.3 MB 左右，算是還在接受的範圍內。</p>
+<p>首先，先把 mRuby 的原始碼下載下來。</p>
+<blockquote>
+<p>git clone <a href="mailto:git@Github.com" target="_blank" rel="noopener">git@Github.com</a>:mRuby/mruby.git</p>
+</blockquote>
+<p>獲得原始碼後，我們需要配置一下 <code>build_config.rb</code> 這個檔案，加入名為 <code>emscripten</code> 的編譯器 toolchain 來產生可供網頁使用的版本。</p>
+<figure class="highlight ruby"><figcaption><span>build_config.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 略</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下配置是參考 WebRuby 的配置</span></span><br><span class="line">MRuby::Toolchain.new(<span class="symbol">:emscripten</span>) <span class="keyword">do</span> <span class="params">|conf|</span> <span class="comment"># 定義 Toolchain: emscripten</span></span><br><span class="line">  toolchain <span class="symbol">:clang</span> <span class="comment"># 從 clang 的 toolchain 繼承配置</span></span><br><span class="line"></span><br><span class="line">  conf.cc <span class="keyword">do</span> <span class="params">|cc|</span> <span class="comment"># 修改編譯設定</span></span><br><span class="line">    cc.command = <span class="string">"emcc"</span> <span class="comment"># 將原本的 cc 改為 emscripten 的 emcc</span></span><br><span class="line">    cc.flags.push(<span class="string">%w(-Wall -Werror-implicit-function-declaration -Wno-warn-absolute-paths -O0)</span>) <span class="comment"># 增加編譯的 flag</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">true<span class="comment"># 其他編譯選項的配置</span></span><br><span class="line">  conf.cxx.command = <span class="string">"emcc"</span></span><br><span class="line">  conf.linker.command = <span class="string">"emcc"</span></span><br><span class="line">  conf.archiver.command = <span class="string">"emar"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">MRuby::CrossBuild.new(<span class="string">"emscripten"</span>) <span class="keyword">do</span> <span class="params">|conf|</span> <span class="comment"># 增加 MRuby 編譯任務（跨平台類型的編譯）</span></span><br><span class="line">  toolchain <span class="symbol">:emscripten</span> <span class="comment"># 使用 Emscripten 編譯</span></span><br><span class="line"></span><br><span class="line">  conf.build_dir = File.expand_path(<span class="string">'build/emscripten'</span>) <span class="comment"># 設定編譯完成後檔案輸出位置</span></span><br><span class="line">  conf.gembox <span class="string">'default'</span> <span class="comment"># 選擇要一同編譯的 gem （Default 會包括 Ruby 預設的基本 Class 和 Method 在裡面）</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>完成之後運行 <code>rake</code> 指令就會自動編譯完成，此時理論上要在 <code>build/emscripten</code> 目錄看到編譯完成的 static library 等檔案。</p>
+<blockquote>
+<p>這邊要注意的是 <code>cc.flags.push</code> 項目加入了 <code>-O0</code> 這個 flag 之後會說明為什麼會使用 <code>-O0</code></p>
+</blockquote>
+<h4 id="mrbjs-c"><a href="#mrbjs-c" class="headerlink" title="mrbjs.c"></a>mrbjs.c</h4><p>這邊寫一個簡單的 C 去呼叫 mRuby 執行一段 Ruby Code 後續的應用就交給大家想像了～</p>
+<figure class="highlight c"><figcaption><span>mrbjs.c</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __EMSCRIPTEN__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;emscripten.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mRuby.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mRuby/compile.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mRuby/string.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">(mrb_state* mrb, <span class="keyword">const</span> <span class="keyword">char</span>* code)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  mrb_value result = mrb_load_string(mrb, code);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* return_str;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(mrb-&gt;exc) &#123;</span><br><span class="line">    return_str = mrb_string_value_ptr(mrb, mrb_obj_as_string(mrb, mrb_obj_value(mrb-&gt;exc)));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, return_str);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">  mrb_state* mrb = mrb_open();</span><br><span class="line">  webmrb_run(mrb, <span class="string">"puts \"Hello World\""</span>);</span><br><span class="line">  mrb_close(mrb);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h4><p>因為指令挺繁瑣的，所以就臨時抱佛腳看了一下 <a href="http://www.ruanyifeng.com/blog/2015/02/make.html" target="_blank" rel="noopener">Make 命令教程</a>這篇讓我印象深刻的教學（清楚簡單的說明用法，個人很喜歡）學了基本的 Makefile 撰寫方法。</p>
+<figure class="highlight makefile"><figcaption><span>Makefile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">MRB_SRC=mRuby/build/emscripten</span><br><span class="line">MRB_O=<span class="variable">$(MRB_SRC)</span>/src/*.o</span><br><span class="line">MRBLIB_O=<span class="variable">$(MRB_SRC)</span>/mrblib/*.o</span><br><span class="line">GEMS=<span class="variable">$(MRB_SRC)</span>/mrbgems <span class="comment"># Gems 比較特別，另外就是我找不到好方法可以 Nested 的複製 .o 檔案（有人知道請告訴我）</span></span><br><span class="line"></span><br><span class="line"><span class="section">.PONHY: build mrbsrc clean gems init</span></span><br><span class="line"></span><br><span class="line"><span class="section">init:</span></span><br><span class="line">  mkdir build</span><br><span class="line">  mkdir build/src</span><br><span class="line">  mkdir build/dest</span><br><span class="line"></span><br><span class="line"><span class="section">build: init mrbsrc gems mrbjs.o</span></span><br><span class="line">trueemcc ./build/src/*.o ./build/src/gems/*.o ./build/src/gems/**/*.o ./build/src/gems/**/src/*.o -o build/dest/mrbjs.html -O2 --memory-init-file 0</span><br><span class="line"></span><br><span class="line"><span class="section">mrbjs.o: mrbjs.c</span></span><br><span class="line">  emcc mrbjs.c -I mRuby/<span class="keyword">include</span> -o ./build/src/mrbjs.o -O2  -Wall -Werror-implicit-function-declaration  -Wno-warn-absolute-paths</span><br><span class="line"></span><br><span class="line"><span class="section">mrbsrc:</span></span><br><span class="line">  cp <span class="variable">$(MRB_O)</span> build/src</span><br><span class="line">  cp <span class="variable">$(MRBLIB_O)</span> build/src</span><br><span class="line"></span><br><span class="line"><span class="section">gems:</span></span><br><span class="line">  cp -r <span class="variable">$(GEMS)</span> build/src/gems</span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">  rm -rf build/*</span><br></pre></td></tr></table></figure>
+<p>之後運行 <code>make build</code> 就可以在 <code>build/dest</code> 目錄看到 <code>mrbjs.html</code> 這個檔案，開啟後如果正常運作就會看到出現 <code>Hello World</code> 的字樣在畫面上。</p>
+<blockquote>
+<p>我想大家可能會發現 <code>-O2</code> 這個 flag，跟前面的 <code>-O0</code> 又有什麼關係呢？後面的 FAQ 會解釋這個問題。</p>
+</blockquote>
+<h4 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h4><p><strong>Q: <code>-O0</code> 跟 <code>-O2</code> 到底是什麼？</strong></p>
+<p>這是 Emscripten 的 Optimize 設定項目，詳細可以參考 <a href="http://kripken.Github.io/emscripten-site/docs/optimizing/Optimizing-Code.html" target="_blank" rel="noopener">Emscripten - Optimizing Code</a> 這個頁面。</p>
+<p>前面在編譯 mRuby 的時候會使用 <code>-O0</code> （不優化）是因為 <code>nested structs</code> 的<a href="https://Github.com/kripken/emscripten/issues/2238" target="_blank" rel="noopener">展開問題</a>。不過我去追 Google 的 PNaCI 關於這個的討論串，似乎已經在去年年底解決了（Emscripten 專案何時支援還不確定）</p>
+<p>簡單說用了 <code>-O2</code> (release suggest) 的優化，在編譯的時候（產生 html/js）就會發生錯誤。</p>
+<blockquote>
+<p>個人認為這是 mRuby on Web 的效能貧頸，經過我自己簡單的 Benchmark ( <code>(1...10000).each { |i| i }</code> ) 在網頁上跑大概需要花 29ms ~ 33ms 但是一般的 Ruby 可以在 0.5ms 內完成，速度上差了快一百倍。<br>不過我也很樂見在 <code>-O2</code> 支援的同時這個問題理論上會被解決掉，因為能使用 <code>asm.js</code> 的加速，還有 Emscripten 的優化，照理說不應該慢到哪裡去（目前的問題應該在 libmRuby 太慢）</p>
+</blockquote>
+<p><strong>Q: <code>--memory-file-init</code> 是什麼？</strong></p>
+<p>個人推測是預先將一些靜態的結果先產生好，在執行時直接運行結果而非動態執行的設定，在這邊會設定為 0（關閉）是因為在 <code>WebRuby</code> 中有註解提及這會讓網站卡住，如果有興趣的話可以取消這個設定運行看看是否能正常運行。</p>
+<h4 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h4><p>我距離土炮 RPG Maker 又更進一步了，雖然試了很多方法果然還是在 Web 上覺得最舒適啊 XD<br>（Emscripten 已經做好 SDL 的 Port 可以說是一大福音啊～～）</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/mruby-on-web/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/mruby-on-web/"></iframe>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/MRuby/">MRuby</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/心得/">心得</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/筆記/">筆記</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

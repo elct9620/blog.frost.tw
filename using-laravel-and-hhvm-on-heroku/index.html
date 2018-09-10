@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Using Laravel and HHVM on Heroku | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD那時身為專業的阿宅，一定要馬上裝來玩一下。 隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）我又再次回想起這神奇的東西⋯⋯現實是 Composer 跑太慢被 HHVM 斷開魂結 當時我就想，既然我都搞了 Phalcon on Heroku 這東西，不如再來搞一個 HHVM">
+<meta name="keywords" content="心得,PaaS,PHP,Laravel,Heroku">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using Laravel and HHVM on Heroku">
+<meta property="og:url" content="https://blog.frost.tw/using-laravel-and-hhvm-on-heroku/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD那時身為專業的阿宅，一定要馬上裝來玩一下。 隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）我又再次回想起這神奇的東西⋯⋯現實是 Composer 跑太慢被 HHVM 斷開魂結 當時我就想，既然我都搞了 Phalcon on Heroku 這東西，不如再來搞一個 HHVM">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Using Laravel and HHVM on Heroku">
+<meta name="twitter:description" content="會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD那時身為專業的阿宅，一定要馬上裝來玩一下。 隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）我又再次回想起這神奇的東西⋯⋯現實是 Composer 跑太慢被 HHVM 斷開魂結 當時我就想，既然我都搞了 Phalcon on Heroku 這東西，不如再來搞一個 HHVM">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/using-laravel-and-hhvm-on-heroku/"
+  },
+  "headline":"Using Laravel and HHVM on Heroku",
+  "image": [
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2014-01-25T22:35:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "description":"會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD那時身為專業的阿宅，一定要馬上裝來玩一下。隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）我又再次回想起這神奇的東西⋯⋯現實是 Composer 跑太慢被 HHVM 斷開魂結當時我就想，既然我都搞了 Phalcon on Heroku 這東西，不如再來搞一個 HHVM 版本吧！沒想到官方竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XDPaaS 入門指南還沒斷，不過人生總是需要調味一下，就先讓我寫些別的吧 XD",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/using-laravel-and-hhvm-on-heroku/",
+      "name": "Using Laravel and HHVM on Heroku",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/using-laravel-and-hhvm-on-heroku/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2014-01-25T22:35:00.000Z" class="article__time--header">
+      Jan.26
+    </time>
+    
+  
+    <h1 class="article__title">Using Laravel and HHVM on Heroku</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD<br>那時身為專業的阿宅，一定要馬上裝來玩一下。</p>
+<p>隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）<br>我又再次回想起這神奇的東西⋯⋯<br><del>現實是 Composer 跑太慢被 HHVM 斷開魂結</del></p>
+<p>當時我就想，既然我都搞了 <a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon" target="_blank" rel="noopener">Phalcon on Heroku</a> 這東西，不如再來搞一個 HHVM 版本吧！</p>
+<p>沒想到<a href="https://Github.com/hhvm/Heroku-buildpack-hhvm" target="_blank" rel="noopener">官方</a>竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XD</p>
+<blockquote>
+<p>PaaS 入門指南還沒斷，不過人生總是需要調味一下，就先讓我寫些別的吧 XD</p>
+</blockquote>
+<a id="more"></a>
+<p>其實這有雷，但是沒有被雷打過（原來不是地雷）怎麼知道什麼叫做「痲痹」的感覺呢？<br>所以，請大家跟我一起來「被雷劈～」一下吧！<br><del>好吧，你要跳過我不介意，不過不要恨我把前置動作寫在過程喔（揪咪</del></p>
+<h3 id="初始化-Laravel-專案"><a href="#初始化-Laravel-專案" class="headerlink" title="初始化 Laravel 專案"></a>初始化 Laravel 專案</h3><p>根據官方公佈的新手預置技能<a href="http://laravel.com/docs/quick" target="_blank" rel="noopener">使用指南</a>只要執行以下動作即可。</p>
+<blockquote>
+<p>composer create-project laravel/laravel your-project-name –prefer-dist</p>
+</blockquote>
+<p>註<sup>1</sup>: your-project-name 就是專案名稱，應該不會有人打錯吧 XD<br>註<sup>2</sup>: 沒用過 <a href="https://getcomposer.org/" target="_blank" rel="noopener">composer</a> 嗎？這裡不是新手區，趕快去學這個技能吧！</p>
+<h3 id="生成-Heroku-力場"><a href="#生成-Heroku-力場" class="headerlink" title="生成 Heroku 力場"></a>生成 Heroku 力場</h3><blockquote>
+<p>git init</p>
+</blockquote>
+<p>這是基礎技能，可以參考一下 <a href="http://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2">PaaS 入門指南（二）</a>的相關說明</p>
+<blockquote>
+<p>Heroku create –buildpack <a href="https://Github.com/hhvm/heroku-buildpack-hhvm" target="_blank" rel="noopener">https://Github.com/hhvm/heroku-buildpack-hhvm</a></p>
+</blockquote>
+<p>註：如果不希望 APP 名稱是隨機的，可以在 <code>create</code> 後面加上名稱喔～</p>
+<p>最後使用黑暗魔法 - HHVM <a href="http://www.laravel-tricks.com/tricks/hhvm-config-for-laravel" target="_blank" rel="noopener">設定檔</a>！<br>適用于 Heroku 的版本如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Server &#123;</span><br><span class="line">  SourceRoot = /app/public/</span><br><span class="line">&#125;</span><br><span class="line">VirtualHost &#123;</span><br><span class="line"> * &#123;</span><br><span class="line">   Pattern = .*</span><br><span class="line">   RewriteRules &#123;</span><br><span class="line">      * &#123;</span><br><span class="line">        pattern = .?</span><br><span class="line">   			# app bootstrap</span><br><span class="line">        to = index.PHP</span><br><span class="line">        # append the original query string</span><br><span class="line">        qsa = true</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">StaticFile &#123;</span><br><span class="line">  Extensions &#123;</span><br><span class="line">    CSS = text/css</span><br><span class="line">    gif = image/gif</span><br><span class="line">    html = text/html</span><br><span class="line">    jpe = image/jpeg</span><br><span class="line">    jpeg = image/jpeg</span><br><span class="line">    jpg = image/jpeg</span><br><span class="line">    png = image/png</span><br><span class="line">    tif = image/tiff</span><br><span class="line">    tiff = image/tiff</span><br><span class="line">    txt = text/plain</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其實就是刪掉 <code>Port</code> 設定，因為 Heroku 會幫你指定這樣。<br>註：Extensions 可以自行追加，其實他有少一些項目 XD</p>
+<h3 id="自爆吧！"><a href="#自爆吧！" class="headerlink" title="自爆吧！"></a>自爆吧！</h3><blockquote>
+<p>git push Heroku master</p>
+</blockquote>
+<p>沒錯，現在你會看到網站順利地跑起來了！<br><del>哪裡有雷？給我出來面對！</del></p>
+<p>看清楚你的 Terminal 啊！是不是 <code>post-</code> 或者 <code>pre-</code> 這類跑完 <code>composer install</code> 該跑的 Script 都死了⋯⋯<br><strong>「因為找不到 PHP」</strong></p>
+<p>不過，即使你改為 <code>hhvm artisan</code> 也是不會動的噢～<br><del>不然怎麼會是雷，而且這樣其實本機跑也很不方便啊！</del></p>
+<h3 id="黑魔法！"><a href="#黑魔法！" class="headerlink" title="黑魔法！"></a>黑魔法！</h3><p>現在，打開 <code>composer.json</code> 然後把 <code>PHP</code> 改為 <code>$_</code> 就對了！<br>如下所示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">true<span class="attr">"name"</span>: <span class="string">"laravel/laravel"</span>,</span><br><span class="line">true<span class="attr">"description"</span>: <span class="string">"The Laravel Framework."</span>,</span><br><span class="line">true<span class="attr">"keywords"</span>: [<span class="string">"framework"</span>, <span class="string">"laravel"</span>],</span><br><span class="line">true<span class="attr">"license"</span>: <span class="string">"MIT"</span>,</span><br><span class="line">true<span class="attr">"require"</span>: &#123;</span><br><span class="line">truetrue<span class="attr">"laravel/framework"</span>: <span class="string">"4.1.*"</span></span><br><span class="line">true&#125;,</span><br><span class="line">true<span class="attr">"autoload"</span>: &#123;</span><br><span class="line">truetrue<span class="attr">"classmap"</span>: [</span><br><span class="line">truetruetrue<span class="string">"app/commands"</span>,</span><br><span class="line">truetruetrue<span class="string">"app/controllers"</span>,</span><br><span class="line">truetruetrue<span class="string">"app/models"</span>,</span><br><span class="line">truetruetrue<span class="string">"app/database/migrations"</span>,</span><br><span class="line">truetruetrue<span class="string">"app/database/seeds"</span>,</span><br><span class="line">truetruetrue<span class="string">"app/tests/TestCase.PHP"</span></span><br><span class="line">truetrue]</span><br><span class="line">true&#125;,</span><br><span class="line">true<span class="attr">"scripts"</span>: &#123;</span><br><span class="line">truetrue<span class="attr">"post-install-cmd"</span>: [</span><br><span class="line">truetruetrue<span class="string">"$_ artisan clear-compiled"</span>,</span><br><span class="line">truetruetrue<span class="string">"$_ artisan optimize"</span></span><br><span class="line">truetrue],</span><br><span class="line">truetrue<span class="attr">"post-update-cmd"</span>: [</span><br><span class="line">truetruetrue<span class="string">"$_ artisan clear-compiled"</span>,</span><br><span class="line">truetruetrue<span class="string">"$_ artisan optimize"</span></span><br><span class="line">truetrue],</span><br><span class="line">truetrue<span class="attr">"post-create-project-cmd"</span>: [</span><br><span class="line">truetruetrue<span class="string">"$_ artisan key:generate"</span></span><br><span class="line">truetrue]</span><br><span class="line">true&#125;,</span><br><span class="line">true<span class="attr">"config"</span>: &#123;</span><br><span class="line">truetrue<span class="attr">"preferred-install"</span>: <span class="string">"dist"</span></span><br><span class="line">true&#125;,</span><br><span class="line">true<span class="attr">"minimum-stability"</span>: <span class="string">"stable"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>git push Heroku master</p>
+</blockquote>
+<p>當你再次 push 上去時，一切就正常了！世界再次回歸秩序啊！！！</p>
+<p>註：本機建議在 <code>~/.bashrc</code> 之類的補上 <code>alias composer=&quot;PHP /bin/usr/local/composer&quot;</code> 之類的，不然本機會跑失敗喔！</p>
+<p>所以，到底發生了什麼？</p>
+<p>原來這個問題只要是 Heroku 的 PHP Buildpack 都會碰到，然後就有<del>歪國人</del>西方高人找到了<a href="http://blog.enge.me/post/a-comprehensive-tutorial-for-deploying-laravel-4-on-Heroku" target="_blank" rel="noopener">方法</a></p>
+<p>沒錯，就是 <code>$_</code> 這個魔法般的祕技⋯⋯</p>
+<p>那麼，鏡頭轉到 <code>bash</code> 的說明書上：<br><a href="http://www.gnu.org/software/bash/manual/bashref.html" target="_blank" rel="noopener">http://www.gnu.org/software/bash/manual/bashref.html</a></p>
+<blockquote>
+<p>When Bash invokes an external command, the variable ‘$_’ is set to the full path name of the command and passed to that command in its environment.)</p>
+</blockquote>
+<p>簡單來說 <code>$_</code> 基本上跟 <code>$!</code> 算是好兄弟之類的，效果都是「上一次執行的 XXX」這樣的感覺。<br><code>$_</code> 是「上一次執行的指令」然後在這個運用中，就很神奇的可以取得 HHVM 的執行指令（超神奇的！）然後就順利地將 Composer 的 Script 都跑起來了！</p>
+<p>喔耶，總之就這樣寫完了 XD</p>
+<p>因為上課時間關係，週二更新不方便，以後應該是週日或者週一更新網誌喔～<br>（不過我可能偷懶，還是訂閱 RSS 比較方便 XD）</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/using-laravel-and-hhvm-on-heroku/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/using-laravel-and-hhvm-on-heroku/"></iframe>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Heroku/">Heroku</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/Laravel/">Laravel</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/PHP/">PHP</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/PaaS/">PaaS</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/心得/">心得</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

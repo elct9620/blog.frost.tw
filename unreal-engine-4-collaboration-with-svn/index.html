@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  
+  <title>Unreal Engine 4 collaboration with SVN | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <meta name="description" content="這幾年來 3D 遊戲的門檻隨著 Unity3D 的出現，從原本 Open Source 的 Ogre Engine 等，層次一口氣提高到了「商業運用」的等級，支付一定的費用給引擎公司，也許就可以用到 3A 遊戲等級的引擎。只要有付費，許多問題與麻煩都可以交給引擎公司，相較 Open Source 的形式，某種意義上也是更加容易的製作遊戲（至少不會有問題找不到解法，大絕就是呼叫客服） 自從 UE3">
+<meta name="keywords" content="遊戲,心得,SVN,VCS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unreal Engine 4 collaboration with SVN">
+<meta property="og:url" content="https://blog.frost.tw/unreal-engine-4-collaboration-with-svn/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="這幾年來 3D 遊戲的門檻隨著 Unity3D 的出現，從原本 Open Source 的 Ogre Engine 等，層次一口氣提高到了「商業運用」的等級，支付一定的費用給引擎公司，也許就可以用到 3A 遊戲等級的引擎。只要有付費，許多問題與麻煩都可以交給引擎公司，相較 Open Source 的形式，某種意義上也是更加容易的製作遊戲（至少不會有問題找不到解法，大絕就是呼叫客服） 自從 UE3">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png">
+<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unreal Engine 4 collaboration with SVN">
+<meta name="twitter:description" content="這幾年來 3D 遊戲的門檻隨著 Unity3D 的出現，從原本 Open Source 的 Ogre Engine 等，層次一口氣提高到了「商業運用」的等級，支付一定的費用給引擎公司，也許就可以用到 3A 遊戲等級的引擎。只要有付費，許多問題與麻煩都可以交給引擎公司，相較 Open Source 的形式，某種意義上也是更加容易的製作遊戲（至少不會有問題找不到解法，大絕就是呼叫客服） 自從 UE3">
+<meta name="twitter:image" content="http://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388" />
+  <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Blog",
+    "name": "弦而時習之",
+    "url": "https://blog.frost.tw",
+    "image": "http://blog.frost.tw/icon-512.png",
+    "description": "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。",
+    "sameAs": [
+      "https://www.facebook.com/frost.tw/"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "蒼時弦也",
+    "url": "https://blog.frost.tw",
+    "sameAs": [
+      "https://www.facebook.com/elct9620",
+      "https://www.instagram.com/elct9620/",
+      "https://twitter.com/elct9620",
+      "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
+      "https://www.linkedin.com/in/elct9620"
+    ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"http://schema.org",
+  "@type":"Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.frost.tw/unreal-engine-4-collaboration-with-svn/"
+  },
+  "headline":"Unreal Engine 4 collaboration with SVN",
+  "image": [
+    
+    "http://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png",
+    
+    "http://blog.frost.tw/icon-512.png"
+  ],
+  "datePublished": "2014-04-06T23:16:00.000Z",
+  "dateModified": "2017-07-02T17:07:07.000Z",
+  "description":"這幾年來 3D 遊戲的門檻隨著 Unity3D 的出現，從原本 Open Source 的 Ogre Engine 等，層次一口氣提高到了「商業運用」的等級，支付一定的費用給引擎公司，也許就可以用到 3A 遊戲等級的引擎。只要有付費，許多問題與麻煩都可以交給引擎公司，相較 Open Source 的形式，某種意義上也是更加容易的製作遊戲（至少不會有問題找不到解法，大絕就是呼叫客服）自從 UE3 開放免費下載（抽成形式）後，這次的 UE4 稍微改了模式，月費制加抽成（5%）並且在最近公佈下載與付費的方式。而我的同學長久以來就有著要用 Unreal Engine 的怨念，但因為我一直以「在 Mac 上不方便」為理由，讓他乖乖選擇 Unity3D 不過 UE4 來勢洶洶的支援了 Mac 我也不得不認命⋯⋯",
+  "author": {
+    "@type": "Person",
+    "name": "蒼時弦也"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "蒼時弦也",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://blog.forst.tw/logo-wide.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "item": {
+      "@id": "https://blog.frost.tw",
+      "name": "弦而時習之 ",
+      "image": "http://blog.frost.tw/icon-512.png"
+    }
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+      "@id": "https://blog.frost.tw/unreal-engine-4-collaboration-with-svn/",
+      "name": "Unreal Engine 4 collaboration with SVN",
+      "image": "http://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png"
+    }
+  }]
+}
+</script>
+
+
+
+
+  
+  <link rel="canonical" href="https://blog.frost.tw/unreal-engine-4-collaboration-with-svn/" />
+  
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2014-04-06T23:16:00.000Z" class="article__time--header">
+      Apr.07
+    </time>
+    
+  
+    <h1 class="article__title">Unreal Engine 4 collaboration with SVN</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>這幾年來 3D 遊戲的門檻隨著 Unity3D 的出現，從原本 Open Source 的 Ogre Engine 等，層次一口氣提高到了「商業運用」的等級，支付一定的費用給引擎公司，也許就可以用到 3A 遊戲等級的引擎。只要有付費，許多問題與麻煩都可以交給引擎公司，相較 Open Source 的形式，某種意義上也是更加容易的製作遊戲（至少不會有問題找不到解法，大絕就是呼叫客服）</p>
+<p>自從 UE3 開放免費下載（抽成形式）後，這次的 UE4 稍微改了模式，月費制加抽成（5%）並且在最近公佈下載與付費的方式。</p>
+<p>而我的同學長久以來就有著要用 Unreal Engine 的怨念，但因為我一直以「在 Mac 上不方便」為理由，讓他乖乖選擇 Unity3D 不過 UE4 來勢洶洶的支援了 Mac 我也不得不認命⋯⋯</p>
+<a id="more"></a>
+<p>雖然台灣尚未開放付費，但是所謂的 Source Code （付費用戶可以取得，不過也得要可以拿到，因為要用它來 Compile 出遊戲⋯⋯）卻已經可以透過網路上下載（總是會有人想公佈出來嘛～～ XD）</p>
+<p>說到 Unreal Engine 我一直以來都覺得這架構很奇葩，雖然 UE4 有做過調整有了 Project 概念（上一代完全像是在做 MOD 一樣超痛苦）也換成了 C++ 撰寫（別亂來，還能夠支援 Mac / Win 不改程式 Compile 成功）各方面來說都是個吸引人的引擎。</p>
+<p>順帶一提，月費定價很便宜，台幣六百左右（重點是拿到就可以不更新，付費只是更新用的，軟體不會被鎖住不能開 XDD）</p>
+<p>那麼，既然要用這麼大型的引擎做遊戲，我們又不可能不回家，就只好找出線上協作的方案拉！<br>（這邊是用 SVN 不過實際用過 UE4 就會感受到大型遊戲公司的開發環境實在是太好了，光是 Compile 時間就可以看出設備的差異 XDD）</p>
+<p>首先，既然要用 SVN 就要有 SVN Server 這問題很簡單，隨便一檯電腦，或者 Synology 或者 QNAP 的 NAS 都行，不過用 NAS 的好處是比較省電，而 SVN 伺服器跟裝 APP 一樣簡單，又是設計給儲存的。<br>（UE4 範例遊戲專案開設完畢就是 600MB 上 SVN 抓回來就是 1GB 各種愉悅 XD）</p>
+<p>然後，以下是雷點（SNV Plugin 雖然官方提供，但是 Epic Game 自己不用，所以根本不知道這 Plugin 根本殘障⋯⋯）</p>
+<h3 id="開設專案"><a href="#開設專案" class="headerlink" title="開設專案"></a>開設專案</h3><p>首先，我們要有一個正常的 Game Project 大家都懂的⋯⋯<br>註：第一次用 SVN 所以都是基本技能 XD</p>
+<blockquote>
+<p>cd ~/Documents/Unreal Projects/myUE4Project<br>SVN import . svn://my-svn.server.com/myUE4Project</p>
+</blockquote>
+<p>個人習慣是這樣（跟 Git 做法一樣）總之就是先 Import 然後丟到遠端就對了⋯⋯<br>（不知道是不是因為我在 LAN 所以超級快就傳完了 0w0）</p>
+<blockquote>
+<p>cd ..<br>rm -rf myUE4Project</p>
+</blockquote>
+<p>各位沒看錯，就是要把這 Project 刪掉，因為 <code>SVN import .</code> 會在 myUE4Project 裡面開一個目錄也叫 myUE4Project 然後裡面才有 .svn 的目錄。<br>（沒試過把 .SVN 拉出來就是了 XD）</p>
+<blockquote>
+<p>SVN co svn://my-svn.server.com/myUE4Project</p>
+</blockquote>
+<p>重新抓下來，這樣就算是做完 <code>git init</code> 這動作了吧（趴</p>
+<h3 id="跳過不必要的檔案"><a href="#跳過不必要的檔案" class="headerlink" title="跳過不必要的檔案"></a>跳過不必要的檔案</h3><p>有一些檔案要 ignore 掉，因為是快取跟沒有用的檔案。</p>
+<blockquote>
+<p>SVN propedit svn:ignore .</p>
+</blockquote>
+<p>然後會打開預設編輯器（大概是 VIM 之類的⋯⋯）</p>
+<p>內容就這這幾個目錄<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Saved</span><br><span class="line">Intermediate</span><br><span class="line">build</span><br><span class="line">DerivedDataCache</span><br></pre></td></tr></table></figure></p>
+<p>然後，就是很悲劇的要來清理這些目錄拉⋯⋯<br>註：build 會失敗，很奇怪 XD</p>
+<blockquote>
+<p>SVN delete –keep-local Saved<br>SVN delete –keep-local Intermediate<br>SVN delete –keep-local build<br>SVN delete –keep-local DerivedDataCache<br>SVN commit</p>
+</blockquote>
+<p>完成後就算是做好一個乾淨的專案了～</p>
+<h3 id="UE4-設定"><a href="#UE4-設定" class="headerlink" title="UE4 設定"></a>UE4 設定</h3><p><img src="http://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png" alt="螢幕快照 2014-04-07 下午3.38.12.png"></p>
+<p>基本上就是右上角有個紅色叉叉（選單可以找到，但是我竟然找不到）點開後設定好，就會變成綠色箭頭。</p>
+<h3 id="編輯與上傳"><a href="#編輯與上傳" class="headerlink" title="編輯與上傳"></a>編輯與上傳</h3><p>編輯就跟一般編輯一樣（不過可以先去對要編輯的檔案 右鍵 &gt; Check Out 鎖住不讓其他人同時編輯）存檔時會一併做這些動作，並且 Check In 進去。</p>
+<p>最後就是 File &gt; Submit to Source Control 選則需要的檔案（這也很怪，遊戲引擎整個也混入 QAQ）然後 Submit 上去（要打說明，跟一般 Commit 一樣）</p>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>這個大雷，竟然完全沒有辦法「同步」所以就是手動跑 <code>SVN update</code> 去解了（不過至少還能看知道現在的 Rev 已經不是 HEAD 了就是⋯⋯）</p>
+<p>用 Mac 的用戶 XCode 支援，可以從那邊跑。<br>至於 Win 的用戶，可以安裝 TortoiseSVN 來做 Update 的動作。</p>
+<p>以上是目前搞 SVN 協作的小小心得，簡單說就是⋯⋯<br>「很雷」</p>
+<p>另外要 Mac / Win 這樣就可以協作了，不過有寫 Module （裡面有 C++ 程式）是要分別 Compile dylib 跟 dll 先丟上 SVN 不然會告訴你找不到 Module 不給開 XD</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button"
+               data-href="https://blog.frost.tw/unreal-engine-4-collaboration-with-svn/"
+               data-layout="button_count">
+          </div>
+        </div>
+        <p align="center">
+          <a href='https://ko-fi.com/J3J78093' target='_blank'>
+            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
+        </p>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/unreal-engine-4-collaboration-with-svn/"></iframe>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/SVN/">SVN</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/VCS/">VCS</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/心得/">心得</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/遊戲/">遊戲</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-2844969736316510"
+      data-ad-slot="5530952976"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  
+  <script type="text/javascript">
+  var disqus_shortname = 'revo-skill-frost';
+
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  </script>
+  
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>
