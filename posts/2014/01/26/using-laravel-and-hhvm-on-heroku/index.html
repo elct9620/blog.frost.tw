@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>Using Laravel and HHVM on Heroku | 弦而時習之</title>
@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
   <meta name="description" content="會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD那時身為專業的阿宅，一定要馬上裝來玩一下。 隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）我又再次回想起這神奇的東西⋯⋯現實是 Composer 跑太慢被 HHVM 斷開魂結 當時我就想，既然我都搞了 Phalcon on Heroku 這東西，不如再來搞一個 HHVM">
-<meta name="keywords" content="心得,PaaS,PHP,Laravel,Heroku">
+<meta name="keywords" content="心得,PHP,Laravel,Heroku,PaaS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Using Laravel and HHVM on Heroku">
 <meta property="og:url" content="https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/">
@@ -27,7 +27,7 @@
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
 <meta property="fb:app_id" content="178355449110">
 
-  <meta property="fb:pages" content="180666522388" />
+  <meta property="fb:pages" content="180666522388">
   <script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -116,7 +116,7 @@
 
 
   
-  <link rel="canonical" href="https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/" />
+  <link rel="canonical" href="https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/">
   
   <link href="/icon-512.png" rel="icon">
   <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
@@ -211,14 +211,12 @@
     <footer class="article__footer">
       
         <div class="text-center">
-          <div class="fb-share-button"
-               data-href="https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/"
-               data-layout="button_count">
+          <div class="fb-share-button" data-href="https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/" data-layout="button_count">
           </div>
         </div>
         <p align="center">
-          <a href='https://ko-fi.com/J3J78093' target='_blank'>
-            <img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+          <a href="https://ko-fi.com/J3J78093" target="_blank">
+            <img height="36" style="border:0px;height:36px;" src="https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0" border="0" alt="Buy Me a Coffee at ko-fi.com">
           </a>
         </p>
         <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/"></iframe>
@@ -235,11 +233,7 @@
     <div class="adv">
       <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
       <!-- 網誌_文末廣告 (Hexo) -->
-      <ins class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-2844969736316510"
-      data-ad-slot="5530952976"
-      data-ad-format="auto"></ins>
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2844969736316510" data-ad-slot="5530952976" data-ad-format="auto"></ins>
       <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
@@ -251,7 +245,7 @@
   <h1 class="comment-box__title">留言</h1>
 
   <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></noscript>
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </div>
 </section>
 
@@ -285,8 +279,7 @@
 
   
   <!-- Google Tag Manager -->
-  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
