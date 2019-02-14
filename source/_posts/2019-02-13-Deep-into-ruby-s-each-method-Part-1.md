@@ -33,7 +33,7 @@ class Iterator
   end
 
   def rewind
-    @prt = 0
+    @ptr = 0
   end
 end
 ```
