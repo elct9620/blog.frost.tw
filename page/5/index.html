@@ -64,61 +64,61 @@
     {
       "@type":"ListItem",
       "position": 1,
-      "url":"https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/"
+      "url":"https://blog.frost.tw/posts/2018/01/09/How-ruby-raise-an-error/"
     },
   
     {
       "@type":"ListItem",
       "position": 2,
-      "url":"https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/"
+      "url":"https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/"
     },
   
     {
       "@type":"ListItem",
       "position": 3,
-      "url":"https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/"
+      "url":"https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/"
     },
   
     {
       "@type":"ListItem",
       "position": 4,
-      "url":"https://blog.frost.tw/posts/2017/10/09/The-RubyKaigi-2017-let-me-reflection/"
+      "url":"https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/"
     },
   
     {
       "@type":"ListItem",
       "position": 5,
-      "url":"https://blog.frost.tw/posts/2017/05/01/Play-with-Rails-5-1-using-Redux-and-GraphQL/"
+      "url":"https://blog.frost.tw/posts/2017/10/09/The-RubyKaigi-2017-let-me-reflection/"
     },
   
     {
       "@type":"ListItem",
       "position": 6,
-      "url":"https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/"
+      "url":"https://blog.frost.tw/posts/2017/05/01/Play-with-Rails-5-1-using-Redux-and-GraphQL/"
     },
   
     {
       "@type":"ListItem",
       "position": 7,
-      "url":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/"
+      "url":"https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/"
     },
   
     {
       "@type":"ListItem",
       "position": 8,
-      "url":"https://blog.frost.tw/posts/2016/10/30/Afte-PHPConf-2016/"
+      "url":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/"
     },
   
     {
       "@type":"ListItem",
       "position": 9,
-      "url":"https://blog.frost.tw/posts/2016/09/17/the-new-vision-after-rubykaigi2016/"
+      "url":"https://blog.frost.tw/posts/2016/10/30/Afte-PHPConf-2016/"
     },
   
     {
       "@type":"ListItem",
       "position": 10,
-      "url":"https://blog.frost.tw/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/"
+      "url":"https://blog.frost.tw/posts/2016/09/17/the-new-vision-after-rubykaigi2016/"
     }
   
   ]
@@ -158,6 +158,48 @@
     </header>
     <div id="wrapper">
       
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2018-01-09T09:28:13.000Z" class="article__time--header">
+      Jan.09
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2018/01/09/How-ruby-raise-an-error/" title="Ruby 中該如何 Raise 一個錯誤">Ruby 中該如何 Raise 一個錯誤</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>前幾天的晚上朋友在 Facebook 上問了一個問題。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raise HTTPError, <span class="string">'Not Found'</span></span><br></pre></td></tr></table></figure>
+<p>和</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raise HTTPError.new(<span class="string">'Not Found'</span>)</span><br></pre></td></tr></table></figure>
+<p>哪個比較快？也因為這樣，我們意外的發現 Ruby 對上面兩段程式碼的定義上其實是不太一樣的。</p>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2018/01/09/How-ruby-raise-an-error/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
   
 <article class="post article is-index">
   <header class="article__header">
@@ -505,52 +547,6 @@
         
         <div class="text-left">
           <a href="/posts/2016/09/17/the-new-vision-after-rubykaigi2016/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2016-06-12T07:12:10.000Z" class="article__time--header">
-      Jun.12
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/" title="使用 Gitlab CI 整合 SonarQube">使用 Gitlab CI 整合 SonarQube</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>之前都在偷懶沒有寫網誌，剛好這次端午連假比較長。<br>所以想做測試跟實驗的部分都做完了，就來寫一篇關於 Gitlab CI 整合的經驗分享。</p>
-<p>文章中大致上會涵蓋這些部分：</p>
-<ul>
-<li>Gitlab CI 基本使用</li>
-<li>Rancher建置環境</li>
-<li>SonarQube 基本使用</li>
-<li>Gitlab CI 整合環境</li>
-</ul>
-<p>文章會以我在建構 CI 環境的過程中來講解，一些安裝跟配置的部分會直接跳過。</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         
