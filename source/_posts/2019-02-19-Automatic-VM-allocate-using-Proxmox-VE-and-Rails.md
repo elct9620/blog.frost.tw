@@ -19,11 +19,11 @@ thumbnail: https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-p
 
 開始之前先看一下週末大概一天多的快速原型長怎樣
 
-![螢幕快照 2019-02-18 上午12.34.25.png](https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/B1C5927BAA75A6CBB07D220E20B5E687.png =1919x678)
+![螢幕快照 2019-02-18 上午12.34.25.png](https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/B1C5927BAA75A6CBB07D220E20B5E687.png)
 
 > ProxmoxVE 的 Rollback 機制似乎連選項都會 Rollback 所以正在跑那台又被改回去原本設定的名字了⋯⋯
 
-![螢幕快照 2019-02-18 上午12.34.37.png](https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/6A5F3F8546357A6AC62C7EB32DC5033D.png =1904x668)
+![螢幕快照 2019-02-18 上午12.34.37.png](https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/6A5F3F8546357A6AC62C7EB32DC5033D.png)
 
 ## ProxmoxVE 的 Ticket 機制
 
@@ -43,7 +43,7 @@ req.body = URI.encode_www_form(username: 'xxx@pve', password: 'xxx')
 token = {}
 Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
   res = http.request(req)
-  
+
   token = Oj.load(res.body)&.fetch('data', {})
 end
 
