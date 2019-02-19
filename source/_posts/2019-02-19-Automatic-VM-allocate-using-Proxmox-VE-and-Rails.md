@@ -188,7 +188,7 @@ sudo yum install qemu-guest-agent
 
 重開機後如果在 ProxmoxVE 上看到這樣的訊息，就算是成功了！
 
-![螢幕快照 2019-02-18 上午1.09.10.png](quiver-image-url/912F134AB7BBA01EFA083119460302AB.png =388x293)
+![螢幕快照 2019-02-18 上午1.09.10.png](https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/912F134AB7BBA01EFA083119460302AB.png)
 
 不過，要能自動寫入 SSH Key 還有一個問題，因為 Qemu Guest Agent 雖然提供寫入檔案的功能，但是會受到以下限制：
 
