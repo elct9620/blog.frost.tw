@@ -19,7 +19,7 @@
 <meta property="og:description" content="之前有一段時間因為用 KVM 手動管理五倍的虛擬機花上不少時間，評估之後我們就調整成 ProxmoxVE 來管理，至少在大多數的情況有 GUI 是很方便的。 不過使用的權限還是限制在有權限管理機器的人身上，最近剛好有不少新同事加入，想讓他們練習部署伺服器。 所以就有了這樣的問題： 可以讓同事自己申請虛擬機來練習嗎？">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/thumbnail.jpg">
-<meta property="og:updated_time" content="2019-02-19T15:12:32.035Z">
+<meta property="og:updated_time" content="2019-02-19T15:21:44.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rails 串接 ProxmoxVE API 自動化教學用虛擬機分配">
 <meta name="twitter:description" content="之前有一段時間因為用 KVM 手動管理五倍的虛擬機花上不少時間，評估之後我們就調整成 ProxmoxVE 來管理，至少在大多數的情況有 GUI 是很方便的。 不過使用的權限還是限制在有權限管理機器的人身上，最近剛好有不少新同事加入，想讓他們練習部署伺服器。 所以就有了這樣的問題： 可以讓同事自己申請虛擬機來練習嗎？">
@@ -74,7 +74,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2019-02-19T11:41:59.000Z",
-  "dateModified": "2019-02-19T15:12:32.035Z",
+  "dateModified": "2019-02-19T15:21:44.604Z",
   "description":"之前有一段時間因為用 KVM 手動管理五倍的虛擬機花上不少時間，評估之後我們就調整成 ProxmoxVE 來管理，至少在大多數的情況有 GUI 是很方便的。不過使用的權限還是限制在有權限管理機器的人身上，最近剛好有不少新同事加入，想讓他們練習部署伺服器。所以就有了這樣的問題：可以讓同事自己申請虛擬機來練習嗎？",
   "author": {
     "@type": "Person",
@@ -228,7 +228,7 @@
 <p>因為我們習慣使用 CentOS 所以可以用 YUM 來安裝。</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install qemu-guest-agent</span><br></pre></td></tr></table></figure>
 <p>重開機後如果在 ProxmoxVE 上看到這樣的訊息，就算是成功了！</p>
-<p><img src="quiver-image-url/912F134AB7BBA01EFA083119460302AB.png =388x293" alt="螢幕快照 2019-02-18 上午1.09.10.png"></p>
+<p><img src="https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/912F134AB7BBA01EFA083119460302AB.png" alt="螢幕快照 2019-02-18 上午1.09.10.png"></p>
 <p>不過，要能自動寫入 SSH Key 還有一個問題，因為 Qemu Guest Agent 雖然提供寫入檔案的功能，但是會受到以下限制：</p>
 <ol>
 <li>設定檔預設不開放使用</li>
