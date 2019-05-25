@@ -47,7 +47,7 @@ thumbnail: https://blog.frost.tw/images/2018-10-09-customize-a-linux-for-your-ra
 
 # 初次嘗試
 
-首先，我們需要可以運行的環境。這篇文章使用的是 CentOS 7 來進行示範，所需的相關套件可以參考 [Yocto 官方文件](http://sunyongfeng.com/201610/programmer/yocto/Bitbake_practical_guide.html)來配置，另外要注意的是目前較新版本是需要有 Python 3 的環境，但是 CentOS 7 還是使用 Python 2 需要自己配置。
+首先，我們需要可以運行的環境。這篇文章使用的是 CentOS 7 來進行示範，所需的相關套件可以參考 [Yocto 官方文件](https://www.yoctoproject.org/docs/2.4/yocto-project-qs/yocto-project-qs.html#yp-resources)來配置，另外要注意的是目前較新版本是需要有 Python 3 的環境，但是 CentOS 7 還是使用 Python 2 需要自己配置。
 
 ## 下載 Poky
 
