@@ -19,7 +19,7 @@
 <meta property="og:description" content="最近因為手邊有一個工作以外的專案需要搭配硬體做一些 IoT 類型的應用，雖然之前在五倍紅寶石開發的 Tamashii 系列應用已經足以應對在這個專案上開發所需的解決方案，但是依舊缺少了一些功能。 也就是我們過去並沒有考慮到的，如果裝置是交給一般使用者的狀況下，如何在透過網路的前提將裝置更新。 這是很多硬體都會有的功能，但是就目前而言 Tamashii 並不支援。">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.frost.tw/images/2018-10-09-customize-a-linux-for-your-raspberrypi/thumbnail.jpg">
-<meta property="og:updated_time" content="2018-10-09T13:32:27.185Z">
+<meta property="og:updated_time" content="2019-05-25T07:34:56.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="客製化你樹莓派上運行的 Linux">
 <meta name="twitter:description" content="最近因為手邊有一個工作以外的專案需要搭配硬體做一些 IoT 類型的應用，雖然之前在五倍紅寶石開發的 Tamashii 系列應用已經足以應對在這個專案上開發所需的解決方案，但是依舊缺少了一些功能。 也就是我們過去並沒有考慮到的，如果裝置是交給一般使用者的狀況下，如何在透過網路的前提將裝置更新。 這是很多硬體都會有的功能，但是就目前而言 Tamashii 並不支援。">
@@ -74,7 +74,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2018-10-09T13:29:53.000Z",
-  "dateModified": "2018-10-09T13:32:27.185Z",
+  "dateModified": "2019-05-25T07:34:56.156Z",
   "description":"最近因為手邊有一個工作以外的專案需要搭配硬體做一些 IoT 類型的應用，雖然之前在五倍紅寶石開發的 Tamashii 系列應用已經足以應對在這個專案上開發所需的解決方案，但是依舊缺少了一些功能。也就是我們過去並沒有考慮到的，如果裝置是交給一般使用者的狀況下，如何在透過網路的前提將裝置更新。這是很多硬體都會有的功能，但是就目前而言 Tamashii 並不支援。",
   "author": {
     "@type": "Person",
@@ -182,7 +182,7 @@
 <p>以前嘗試過使用 Buildroot 來製作，但是失敗率非常高。</p>
 </blockquote>
 <p>簡單來說 Yocto 就是一堆社群貢獻預先撰寫好的建置腳本，因此我們只需要專注在自己需要預先加入這個 Linux 環境的部分，像是 Tamashii 或者 Ruby 的運行環境。</p>
-<h1 id="初次嘗試"><a href="#初次嘗試" class="headerlink" title="初次嘗試"></a>初次嘗試</h1><p>首先，我們需要可以運行的環境。這篇文章使用的是 CentOS 7 來進行示範，所需的相關套件可以參考 <a href="http://sunyongfeng.com/201610/programmer/yocto/Bitbake_practical_guide.html" target="_blank" rel="noopener">Yocto 官方文件</a>來配置，另外要注意的是目前較新版本是需要有 Python 3 的環境，但是 CentOS 7 還是使用 Python 2 需要自己配置。</p>
+<h1 id="初次嘗試"><a href="#初次嘗試" class="headerlink" title="初次嘗試"></a>初次嘗試</h1><p>首先，我們需要可以運行的環境。這篇文章使用的是 CentOS 7 來進行示範，所需的相關套件可以參考 <a href="https://www.yoctoproject.org/docs/2.4/yocto-project-qs/yocto-project-qs.html#yp-resources" target="_blank" rel="noopener">Yocto 官方文件</a>來配置，另外要注意的是目前較新版本是需要有 Python 3 的環境，但是 CentOS 7 還是使用 Python 2 需要自己配置。</p>
 <h2 id="下載-Poky"><a href="#下載-Poky" class="headerlink" title="下載 Poky"></a>下載 Poky</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b sumo git://git.yoctoproject.org/poky</span><br></pre></td></tr></table></figure>
 <p>Poky 類似於一個基礎的樣板，裡面將生成 Yocto 版本的 Linux 必要的相關檔案都放在裡面，我們可以基於這個資料夾來進行後續的設定跟配置。</p>
 <blockquote>

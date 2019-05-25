@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2018/10/09/Customize-a-linux-for-your-raspberrypi/</loc>
+    
+    <lastmod>2019-05-25T07:34:56.156Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/</loc>
     
     <lastmod>2019-05-20T14:10:45.009Z</lastmod>
@@ -75,13 +82,6 @@
     <loc>https://blog.frost.tw/posts/2018/10/02/Become-a-programmer-how-to-start/</loc>
     
     <lastmod>2018-10-16T03:09:04.470Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2018/10/09/Customize-a-linux-for-your-raspberrypi/</loc>
-    
-    <lastmod>2018-10-09T13:32:27.185Z</lastmod>
     
   </url>
   
