@@ -91,6 +91,49 @@
   
 <article class="post article is-index">
   <header class="article__header">
+    <time datetime="2019-06-18T11:13:17.000Z" class="article__time--header">
+      Jun.18
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/" title="Ruby 中 Constant 和 Class 的關係">Ruby 中 Constant 和 Class 的關係</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>下班前<a href="https://kaochenlong.com/" target="_blank" rel="noopener">龍哥</a>說在 Mailing List 看到了一段 Code 很有趣。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = Class.new</span><br><span class="line"></span><br><span class="line">p a        <span class="comment">#=&gt; #&lt;Class:0x0000558d34f68b48&gt;</span></span><br><span class="line">p a.name   <span class="comment">#=&gt; nil</span></span><br><span class="line"></span><br><span class="line">B = a</span><br><span class="line">p a.name   <span class="comment">#=&gt; 'B'</span></span><br><span class="line"></span><br><span class="line">C = a</span><br><span class="line">p C.name   <span class="comment">#=&gt; 'B'</span></span><br></pre></td></tr></table></figure>
+<p>裡面 <code>C = a</code> 到底發生了什麼事情，是很值得討論的，因為有了線索是 <code>rb_const_set</code> 可以找到原因，所以就利用下班時間來讀看看這段。</p>
+<blockquote>
+<p>關於前面的用法可以參考之前寫過的<a href="https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/">自由的 Ruby 類別</a>來了解原因。</p>
+</blockquote>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
     <time datetime="2019-01-14T14:00:39.000Z" class="article__time--header">
       Jan.14
     </time>
@@ -427,46 +470,6 @@
         
         <div class="text-left">
           <a href="/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2016-02-03T07:54:00.000Z" class="article__time--header">
-      Feb.03
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2016/02/03/how-deis-architecture-design-part-2/" title="Deis 架構分析（二）">Deis 架構分析（二）</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>延續<a href="http://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1">上一篇</a>的內容，這篇文章要先來討論比較好懂的 <code>Router</code> 部分。</p>
-<p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 <code>Router</code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。</p>
-<p>Deis 的原始碼都放在一起，其中 <a href="https://github.com/deis/deis/tree/master/router" target="_blank" rel="noopener">Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2016/02/03/how-deis-architecture-design-part-2/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         

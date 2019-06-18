@@ -64,61 +64,61 @@
     {
       "@type":"ListItem",
       "position": 1,
-      "url":"https://blog.frost.tw/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/"
+      "url":"https://blog.frost.tw/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/"
     },
   
     {
       "@type":"ListItem",
       "position": 2,
-      "url":"https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/"
+      "url":"https://blog.frost.tw/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/"
     },
   
     {
       "@type":"ListItem",
       "position": 3,
-      "url":"https://blog.frost.tw/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/"
+      "url":"https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/"
     },
   
     {
       "@type":"ListItem",
       "position": 4,
-      "url":"https://blog.frost.tw/posts/2019/03/12/I-make-a-trap-in-the-Ruby-the-usage-of-Signal/"
+      "url":"https://blog.frost.tw/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/"
     },
   
     {
       "@type":"ListItem",
       "position": 5,
-      "url":"https://blog.frost.tw/posts/2019/02/19/Automatic-VM-allocate-using-Proxmox-VE-and-Rails/"
+      "url":"https://blog.frost.tw/posts/2019/03/12/I-make-a-trap-in-the-Ruby-the-usage-of-Signal/"
     },
   
     {
       "@type":"ListItem",
       "position": 6,
-      "url":"https://blog.frost.tw/posts/2019/02/13/Deep-into-ruby-s-each-method-Part-1/"
+      "url":"https://blog.frost.tw/posts/2019/02/19/Automatic-VM-allocate-using-Proxmox-VE-and-Rails/"
     },
   
     {
       "@type":"ListItem",
       "position": 7,
-      "url":"https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/"
+      "url":"https://blog.frost.tw/posts/2019/02/13/Deep-into-ruby-s-each-method-Part-1/"
     },
   
     {
       "@type":"ListItem",
       "position": 8,
-      "url":"https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/"
+      "url":"https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/"
     },
   
     {
       "@type":"ListItem",
       "position": 9,
-      "url":"https://blog.frost.tw/posts/2018/11/27/Why-we-choose-the-Bootstrap/"
+      "url":"https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/"
     },
   
     {
       "@type":"ListItem",
       "position": 10,
-      "url":"https://blog.frost.tw/posts/2018/11/06/Become-a-programmer-Find-your-own-value/"
+      "url":"https://blog.frost.tw/posts/2018/11/27/Why-we-choose-the-Bootstrap/"
     }
   
   ]
@@ -158,6 +158,49 @@
     </header>
     <div id="wrapper">
       
+  
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="2019-06-18T11:13:17.000Z" class="article__time--header">
+      Jun.18
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/" title="Ruby 中 Constant 和 Class 的關係">Ruby 中 Constant 和 Class 的關係</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>下班前<a href="https://kaochenlong.com/" target="_blank" rel="noopener">龍哥</a>說在 Mailing List 看到了一段 Code 很有趣。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = Class.new</span><br><span class="line"></span><br><span class="line">p a        <span class="comment">#=&gt; #&lt;Class:0x0000558d34f68b48&gt;</span></span><br><span class="line">p a.name   <span class="comment">#=&gt; nil</span></span><br><span class="line"></span><br><span class="line">B = a</span><br><span class="line">p a.name   <span class="comment">#=&gt; 'B'</span></span><br><span class="line"></span><br><span class="line">C = a</span><br><span class="line">p C.name   <span class="comment">#=&gt; 'B'</span></span><br></pre></td></tr></table></figure>
+<p>裡面 <code>C = a</code> 到底發生了什麼事情，是很值得討論的，因為有了線索是 <code>rb_const_set</code> 可以找到原因，所以就利用下班時間來讀看看這段。</p>
+<blockquote>
+<p>關於前面的用法可以參考之前寫過的<a href="https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/">自由的 Ruby 類別</a>來了解原因。</p>
+</blockquote>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
   
 <article class="post article is-index">
   <header class="article__header">
@@ -504,45 +547,6 @@
         
         <div class="text-left">
           <a href="/posts/2018/11/27/Why-we-choose-the-Bootstrap/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-11-06T12:55:40.000Z" class="article__time--header">
-      Nov.06
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/11/06/Become-a-programmer-Find-your-own-value/" title="轉職工程師：尋找自己的價值">轉職工程師：尋找自己的價值</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>這系列的文章已經稍微討論過我自己在學習寫程式過程中的<a href="https://blog.frost.tw/posts/2018/09/25/Become-a-programmer-lose-at-the-starting-line/">心態</a>、<a href="https://blog.frost.tw/posts/2018/10/02/Become-a-programmer-how-to-start/">方法</a>跟<a href="https://blog.frost.tw/posts/2018/10/23/Become-a-programmer-Why-is-bottleneck-coming-very-soon/">困難</a>，最後就來討論最後一個我認為很重要的問題。</p>
-<p>不論學了什麼，或者有多麽厲害的技術，作為一個工程師我們的價值在哪裡？</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/11/06/Become-a-programmer-Find-your-own-value/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         

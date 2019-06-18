@@ -91,6 +91,49 @@
   
 <article class="post article is-index">
   <header class="article__header">
+    <time datetime="2019-06-18T11:13:17.000Z" class="article__time--header">
+      Jun.18
+    </time>
+    
+  
+    <h3 class="article__title"><a href="/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/" title="Ruby 中 Constant 和 Class 的關係">Ruby 中 Constant 和 Class 的關係</a></h3>
+  
+
+
+  </header>
+  <div class="article__entry is-index">
+    
+    <p>下班前<a href="https://kaochenlong.com/" target="_blank" rel="noopener">龍哥</a>說在 Mailing List 看到了一段 Code 很有趣。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = Class.new</span><br><span class="line"></span><br><span class="line">p a        <span class="comment">#=&gt; #&lt;Class:0x0000558d34f68b48&gt;</span></span><br><span class="line">p a.name   <span class="comment">#=&gt; nil</span></span><br><span class="line"></span><br><span class="line">B = a</span><br><span class="line">p a.name   <span class="comment">#=&gt; 'B'</span></span><br><span class="line"></span><br><span class="line">C = a</span><br><span class="line">p C.name   <span class="comment">#=&gt; 'B'</span></span><br></pre></td></tr></table></figure>
+<p>裡面 <code>C = a</code> 到底發生了什麼事情，是很值得討論的，因為有了線索是 <code>rb_const_set</code> 可以找到原因，所以就利用下班時間來讀看看這段。</p>
+<blockquote>
+<p>關於前面的用法可以參考之前寫過的<a href="https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/">自由的 Ruby 類別</a>來了解原因。</p>
+</blockquote>
+    
+    <footer class="article__footer">
+      
+        
+        <div class="text-left">
+          <a href="/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/#more" class="article__more-link">繼續閱讀</a>
+        </div>
+        
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+
+  
+
+
+
+
+
+  
+<article class="post article is-index">
+  <header class="article__header">
     <time datetime="2019-05-28T15:54:08.000Z" class="article__time--header">
       May.28
     </time>
@@ -433,46 +476,6 @@
         
         <div class="text-left">
           <a href="/posts/2018/11/06/Become-a-programmer-Find-your-own-value/#more" class="article__more-link">繼續閱讀</a>
-        </div>
-        
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-
-  
-
-
-
-
-
-  
-<article class="post article is-index">
-  <header class="article__header">
-    <time datetime="2018-10-23T12:49:47.000Z" class="article__time--header">
-      Oct.23
-    </time>
-    
-  
-    <h3 class="article__title"><a href="/posts/2018/10/23/Become-a-programmer-Why-is-bottleneck-coming-very-soon/" title="轉職工程師：為什麼馬上就遇到瓶頸？">轉職工程師：為什麼馬上就遇到瓶頸？</a></h3>
-  
-
-
-  </header>
-  <div class="article__entry is-index">
-    
-    <p>前面已經討論了<a href="https://blog.frost.tw/posts/2018/09/25/Become-a-programmer-lose-at-the-starting-line/">起步的心態</a>跟<a href="https://blog.frost.tw/posts/2018/10/02/Become-a-programmer-how-to-start/">起步的方法</a>兩個問題，好不容易開始寫程式了，卻發現⋯⋯</p>
-<p><strong>照著教學做，但是沒有教學就完全不會</strong></p>
-<p>不管是去上更多的課，還是看更多的教學，怎麼樣都無法擺脫這個問題。這到底是什麼原因呢？</p>
-    
-    <footer class="article__footer">
-      
-        
-        <div class="text-left">
-          <a href="/posts/2018/10/23/Become-a-programmer-Why-is-bottleneck-coming-very-soon/#more" class="article__more-link">繼續閱讀</a>
         </div>
         
         
