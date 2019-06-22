@@ -19,7 +19,7 @@
 <meta property="og:description" content="終於，要到完結篇了（誤這篇介紹完 Heroku 之後，就會開始寫進階運用的部分。（其實已經冒出幾篇，基本上不會針對 PaaS 而是一些在 Heroku 上面的運用做討論。） 不過，寫這篇之前，其實我很想寫一下 Unreal Engine 4 collaboration with SVN 這篇，因為最近 UE4 推出，雖然台灣地區還沒開放購買（月費約台幣六百，買一次就可以拿到該月版本，可不續費更新）">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://blog.frost.tw/icon-512.png">
-<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta property="og:updated_time" content="2019-06-22T02:47:31.548Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PaaS 入門指南（四）">
 <meta name="twitter:description" content="終於，要到完結篇了（誤這篇介紹完 Heroku 之後，就會開始寫進階運用的部分。（其實已經冒出幾篇，基本上不會針對 PaaS 而是一些在 Heroku 上面的運用做討論。） 不過，寫這篇之前，其實我很想寫一下 Unreal Engine 4 collaboration with SVN 這篇，因為最近 UE4 推出，雖然台灣地區還沒開放購買（月費約台幣六百，買一次就可以拿到該月版本，可不續費更新）">
@@ -72,7 +72,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2014-04-02T05:21:00.000Z",
-  "dateModified": "2017-07-02T17:07:07.000Z",
+  "dateModified": "2019-06-22T02:47:31.548Z",
   "description":"終於，要到完結篇了（誤這篇介紹完 Heroku 之後，就會開始寫進階運用的部分。（其實已經冒出幾篇，基本上不會針對 PaaS 而是一些在 Heroku 上面的運用做討論。）不過，寫這篇之前，其實我很想寫一下 Unreal Engine 4 collaboration with SVN 這篇，因為最近 UE4 推出，雖然台灣地區還沒開放購買（月費約台幣六百，買一次就可以拿到該月版本，可不續費更新）但是同學硬是找到原始碼（其實就在 Github 只不過付費用戶才能看到）經過幾番波折，就這樣成功在 Windows / Mac 上跑起來，於是就開始了 UE4 研究之旅。總之，下一篇大概就是 UE4 的 SVN （各種雷，完全找不到「SVN update」的功能⋯⋯卻可以 commit 啊）",
   "author": {
     "@type": "Person",
@@ -162,7 +162,7 @@
 <p>不過，寫這篇之前，其實我很想寫一下 Unreal Engine 4 collaboration with SVN 這篇，因為最近 UE4 推出，雖然台灣地區還沒開放購買（月費約台幣六百，買一次就可以拿到該月版本，可不續費更新）但是同學硬是找到原始碼（其實就在 Github 只不過付費用戶才能看到）</p>
 <p>經過幾番波折，就這樣成功在 Windows / Mac 上跑起來，於是就開始了 UE4 研究之旅。<br>總之，下一篇大概就是 UE4 的 SVN （各種雷，完全找不到「SVN update」的功能⋯⋯卻可以 commit 啊）</p>
 <a id="more"></a>
-<p>關於 Heroku 的預先環境配置，在 <a href="http://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2">PaaS 入門指南（二）</a>已經有跟大家提過，這邊先來簡單的回憶一下。<br>（驚悚的 Windows 體驗，真心建議大家裝個 VM 用 Ubuntu 還是比較方便⋯⋯）</p>
+<p>關於 Heroku 的預先環境配置，在 <a href="https://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2">PaaS 入門指南（二）</a>已經有跟大家提過，這邊先來簡單的回憶一下。<br>（驚悚的 Windows 體驗，真心建議大家裝個 VM 用 Ubuntu 還是比較方便⋯⋯）</p>
 <p>使用 Heroku 來說，其實方便很多，因為有 <a href="https://toolbelt.Heroku.com/" target="_blank" rel="noopener">Toolbelt</a> 可以輔助，預先安裝好下列的套件：</p>
 <ul>
 <li>Ruby</li>
@@ -188,7 +188,7 @@
 <p>切進去後，初始化 git 專案（Heroku 是利用 git 來管理，也提供退回版本的功能。）</p>
 <p>再將新專案的檔案加入 git 之前，我們先編輯 Gemfile</p>
 <figure class="highlight ruby"><figcaption><span>Gemfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">source <span class="string">'https://Rubygems.org'</span></span><br><span class="line">Ruby <span class="string">'2.0.0'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Bundle edge Rails instead: gem 'Rails', Github: 'rails/rails'</span></span><br><span class="line">gem <span class="string">'Rails'</span>, <span class="string">'4.0.2'</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>source &#39;http://Rubygems.org&#39;</code> 後面加入 <code>ruby &#39;2.0.0&#39;</code> 來告訴 Heroku 要使用的版本。<br>（這與 RVM 相容，大家可以不用擔心相容性）</p>
+<p>在 <code>source &#39;https://Rubygems.org&#39;</code> 後面加入 <code>ruby &#39;2.0.0&#39;</code> 來告訴 Heroku 要使用的版本。<br>（這與 RVM 相容，大家可以不用擔心相容性）</p>
 <p>註：如果 Mac 使用者有使用 <code>pow</code> 套用後卻因為 Ruby 版本發生問題無法順利啟動，可以加入 <code>.powrc</code> 這個檔案，內容如下</p>
 <figure class="highlight shell"><figcaption><span>.powrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ -f "$rvm_path/scripts/rvm" ]; then</span><br><span class="line">  source "$rvm_path/scripts/rvm"</span><br><span class="line">  rvm use .</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 <p>如此一來 <code>pow</code> 就可以自動切換到對應的 Ruby 版本。</p>

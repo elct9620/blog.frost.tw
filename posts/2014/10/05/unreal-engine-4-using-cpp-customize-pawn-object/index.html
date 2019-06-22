@@ -18,12 +18,12 @@
 <meta property="og:site_name" content="弦而時習之">
 <meta property="og:description" content="雖然 MRuby in C# 系列暫時沒辦法繼續撰寫，但是 Unreal Engine 4 系列大概會在畢業製作完成之前，陸陸續續地以筆記的形式更新出來。 實際上，用 Unreal Engine 4 開發遊戲是不太需要用 C++ 來處理的，內建的 Blueprints 功能就具備非常優質的設計，也算是整個引擎中不論美術、程式都會經常接觸的功能。其特色就是人人都能懂，美術可以用來控制動畫、程式可以用">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="http://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png">
-<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta property="og:image" content="https://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png">
+<meta property="og:updated_time" content="2019-06-22T02:47:31.556Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unreal Engine 4 - 用 C++ 自訂 Pawn 物件">
 <meta name="twitter:description" content="雖然 MRuby in C# 系列暫時沒辦法繼續撰寫，但是 Unreal Engine 4 系列大概會在畢業製作完成之前，陸陸續續地以筆記的形式更新出來。 實際上，用 Unreal Engine 4 開發遊戲是不太需要用 C++ 來處理的，內建的 Blueprints 功能就具備非常優質的設計，也算是整個引擎中不論美術、程式都會經常接觸的功能。其特色就是人人都能懂，美術可以用來控制動畫、程式可以用">
-<meta name="twitter:image" content="http://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png">
+<meta name="twitter:image" content="https://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png">
 <link rel="publisher" href="https://plus.google.com/117236344655673213049">
 <meta property="fb:app_id" content="178355449110">
 
@@ -69,12 +69,12 @@
   "headline":"Unreal Engine 4 - 用 C++ 自訂 Pawn 物件",
   "image": [
     
-    "http://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png",
+    "https://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png",
     
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2014-10-04T22:40:00.000Z",
-  "dateModified": "2017-07-02T17:07:07.000Z",
+  "dateModified": "2019-06-22T02:47:31.556Z",
   "description":"雖然 MRuby in C# 系列暫時沒辦法繼續撰寫，但是 Unreal Engine 4 系列大概會在畢業製作完成之前，陸陸續續地以筆記的形式更新出來。實際上，用 Unreal Engine 4 開發遊戲是不太需要用 C++ 來處理的，內建的 Blueprints 功能就具備非常優質的設計，也算是整個引擎中不論美術、程式都會經常接觸的功能。其特色就是人人都能懂，美術可以用來控制動畫、程式可以用來設計 AI 跟遊戲，上手的難度也非常低。那麼，會遭遇使用 C++ 來處理的情況是什麼呢？基本上可以分成兩種，第一種就是效能問題，目前還沒有碰過，不過以 C++ 撰寫的程式碼肯定會比較順暢（雖然我很懷疑 Blueprints 所編譯的成品就能產生接近 C++ 等級的效能）第二種則是 Unreal Engine 初期沒有考慮到，或者還未支援的的部分。像是在 4.5 的 UMG (Unreal Motion Graphics) 功能推出之前，需要用到 Slate UI 來輔助建構遊戲界面，就勢必得用 C++ 才能解決。總而言之，這篇文章在討論的就是第二種情況，我們需要的功能還未在 Unreal Engine 4 上面「好好的」運作。註：程式結構太複雜這點，原本想算進去。不過因為 Blueprints 不論註解還是開 Functions 都能做到，很難用這點來說是一種缺點⋯⋯",
   "author": {
     "@type": "Person",
@@ -108,7 +108,7 @@
     "item": {
       "@id": "https://blog.frost.tw/posts/2014/10/05/unreal-engine-4-using-cpp-customize-pawn-object/",
       "name": "Unreal Engine 4 - 用 C++ 自訂 Pawn 物件",
-      "image": "http://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png"
+      "image": "https://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png"
     }
   }]
 }
@@ -184,18 +184,18 @@
 <p>這篇文章的內容主要是 Unreal Engine 官方頻道上教學的內容，我則是針對一些細節的地方做筆記。</p>
 </blockquote>
 <h4 id="新增自訂-Pawn-物件"><a href="#新增自訂-Pawn-物件" class="headerlink" title="新增自訂 Pawn 物件"></a>新增自訂 Pawn 物件</h4><p>如果開設的是 Blueprints 專案，也不用擔心，直接使用 <code>Add Code to Project</code> 功能即可。</p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png" alt="螢幕快照 2014-10-05 下午9.36.34.png"></p>
+<p><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png" alt="螢幕快照 2014-10-05 下午9.36.34.png"></p>
 <p>之後會跳出選擇繼承的 Class 界面，這邊是要對 Pawn 做擴充所以就選擇 Pawn 這個 Class（當然，你可以依照需要選擇任何 Class）</p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/0HDwZSTQ3qqTMpe36Lmw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.45.png" alt="螢幕快照 2014-10-05 下午9.36.45.png"></p>
+<p><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/0HDwZSTQ3qqTMpe36Lmw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.45.png" alt="螢幕快照 2014-10-05 下午9.36.45.png"></p>
 <p>最後輸入 Class 的名稱即可</p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/argRnxXcTgOt1v8llrgu_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.08.png" alt="螢幕快照 2014-10-05 下午9.37.08.png"></p>
+<p><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/argRnxXcTgOt1v8llrgu_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.08.png" alt="螢幕快照 2014-10-05 下午9.37.08.png"></p>
 <blockquote>
 <p>在 Unreal Engine 4 中，Class Name 需要有 U 或者 A 的前置詞。<br>大致上就是 A 屬於「可放置於場景」的物件，而 U 屬於「無法放置於場景」的物件（需要依附在 Actor 上）<br>詳細請參考<a href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Reference/Classes/index.html" target="_blank" rel="noopener">官方文件</a></p>
 </blockquote>
 <p>引擎中可以直接開啓 Visual Studio 或者 XCode 透過這個功能可以很快的開啟程式專案。</p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/WcqXaPNsRmGJGPsJvfu4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.36.png" alt="螢幕快照 2014-10-05 下午9.37.36.png"></p>
+<p><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/WcqXaPNsRmGJGPsJvfu4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.36.png" alt="螢幕快照 2014-10-05 下午9.37.36.png"></p>
 <p>剛開啟的 XCode 專案預設不是建置給編輯器的版本，需要先修改一下。</p>
-<p><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/9xZ58RUlScvUzrhxCKIg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.38.08.png" alt="螢幕快照 2014-10-05 下午9.38.08.png"></p>
+<p><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/9xZ58RUlScvUzrhxCKIg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.38.08.png" alt="螢幕快照 2014-10-05 下午9.38.08.png"></p>
 <blockquote>
 <p>之後按下 Ctrl(Cmd) + B 建置就可以產生 DLL 檔了！<br>在 Unreal Engine 4.5 會支援 Hot Reload 所以不用重新開啟編輯器，在這之前每次建置都是要重開的，請注意。</p>
 </blockquote>
@@ -246,9 +246,9 @@
 <p><code>RootComponent</code> 應該是預設的屬性，在 Unreal Engine 中元件是有階層關係的（像是把攝影機附加在角色上面，直接做出追蹤角色的攝影機功能）而這個則是根節點，這邊把預設的 Collider 設定上去。</p>
 <p><code>AttachTo</code> 方法則是將目前這個元件附加到某一個元件上（簡單說是由 Child 決定要誰當 Parent XDD）</p>
 <h3 id="編譯與測試"><a href="#編譯與測試" class="headerlink" title="編譯與測試"></a>編譯與測試</h3><p>按下 Ctrl(Cmd) + B 然後重新開啟 Unreal Engine 看看我們的成果吧！</p>
-<p>新增 Blueprint 的時候可以找到剛剛加入的 <code>MyPawn</code><br><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/eztME94VQ8CEc37JziVg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.46.44.png" alt="螢幕快照 2014-10-05 下午10.46.44.png"></p>
-<p>編輯屬性的地方會發現剛剛增加「可編輯」的 <code>Health</code> 屬性出現了（並且在正確的分類下）<br><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/dEnYlpQTYC3JZ0W0aGP1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.17.png" alt="螢幕快照 2014-10-05 下午10.47.17.png"></p>
-<p>元件也多出剛剛增加的預設元件（並且可以修改其屬性）<br><img src="http://user-image.logdown.io/user/52/blog/52/post/236204/tpMWb91hSPGkjVrap6AM_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.42.png" alt="螢幕快照 2014-10-05 下午10.47.42.png"></p>
+<p>新增 Blueprint 的時候可以找到剛剛加入的 <code>MyPawn</code><br><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/eztME94VQ8CEc37JziVg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.46.44.png" alt="螢幕快照 2014-10-05 下午10.46.44.png"></p>
+<p>編輯屬性的地方會發現剛剛增加「可編輯」的 <code>Health</code> 屬性出現了（並且在正確的分類下）<br><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/dEnYlpQTYC3JZ0W0aGP1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.17.png" alt="螢幕快照 2014-10-05 下午10.47.17.png"></p>
+<p>元件也多出剛剛增加的預設元件（並且可以修改其屬性）<br><img src="https://user-image.logdown.io/user/52/blog/52/post/236204/tpMWb91hSPGkjVrap6AM_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.42.png" alt="螢幕快照 2014-10-05 下午10.47.42.png"></p>
 <p>這樣一來，就算是完成自訂 Pawn 的第一步了！</p>
 <p>像是 <code>ApplyDamage</code> 之類的方法，也都可以在 C++ 中實做，不過這些有時間再繼續研究吧！</p>
 <h3 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h3><p>Unreal Engine 4 單純使用 Blueprint 其實可以很快樂，雖然要摸熟的地方蠻多的，不過熟悉之後就很好上手。<br>但是一旦進入 C++ 的層次，實在是太複雜拉！可以的話，建議初學者避免使用 C++ 開發，先熟悉 Blueprint 之後在考慮學習 C++ 版本的開發，這對一般使用者來說要搞懂的東西太多、太複雜了，一時之間是很難學會的⋯⋯</p>

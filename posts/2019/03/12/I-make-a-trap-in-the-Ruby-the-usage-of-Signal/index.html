@@ -19,7 +19,7 @@
 <meta property="og:description" content="在 Ruby 之中，其實隱藏了很多非常實用的標準函式庫，而 Signal 就是其中一個。 我們在寫 Ruby 大多數時候都是 Ruby on Rails 框架的應用，但是你們有想過當我們在一些 Gem 運行的時候，使用 Ctrl + C 為什麼不會出現錯誤嗎？ 例如我們常常用到的 irb 和 pry 為什麼按下 Ctrl + C 的時候不是直接中斷，卻還能繼續運作？">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.frost.tw/images/2019-03-12-i-make-a-trap-in-the-ruby-the-usage-of-signal/thumbnail.jpg">
-<meta property="og:updated_time" content="2019-03-12T13:32:13.861Z">
+<meta property="og:updated_time" content="2019-06-22T02:47:31.597Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我在 Ruby 埋了一個陷阱 - Signal 的應用">
 <meta name="twitter:description" content="在 Ruby 之中，其實隱藏了很多非常實用的標準函式庫，而 Signal 就是其中一個。 我們在寫 Ruby 大多數時候都是 Ruby on Rails 框架的應用，但是你們有想過當我們在一些 Gem 運行的時候，使用 Ctrl + C 為什麼不會出現錯誤嗎？ 例如我們常常用到的 irb 和 pry 為什麼按下 Ctrl + C 的時候不是直接中斷，卻還能繼續運作？">
@@ -74,7 +74,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2019-03-12T13:29:15.000Z",
-  "dateModified": "2019-03-12T13:32:13.861Z",
+  "dateModified": "2019-06-22T02:47:31.597Z",
   "description":"在 Ruby 之中，其實隱藏了很多非常實用的標準函式庫，而 Signal 就是其中一個。我們在寫 Ruby 大多數時候都是 Ruby on Rails 框架的應用，但是你們有想過當我們在一些 Gem 運行的時候，使用 Ctrl + C 為什麼不會出現錯誤嗎？例如我們常常用到的 irb 和 pry 為什麼按下 Ctrl + C 的時候不是直接中斷，卻還能繼續運作？",
   "author": {
     "@type": "Person",
@@ -175,7 +175,7 @@
 <p>像是我想要終止 PID 1000 的程式，可以像這樣下指令。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -int 1000</span><br></pre></td></tr></table></figure>
 <p>如此一來就可以發送一個 SIGINT 給 PID 1000 的程式。</p>
-<p>由此可見，有很多我們平常在使用的東西都有支援接收訊號，例如 Nginx 的<a href="http://nginx.org/en/docs/control.html" target="_blank" rel="noopener">文件</a>就有說明哪些訊號可以做哪些事情。</p>
+<p>由此可見，有很多我們平常在使用的東西都有支援接收訊號，例如 Nginx 的<a href="https://nginx.org/en/docs/control.html" target="_blank" rel="noopener">文件</a>就有說明哪些訊號可以做哪些事情。</p>
 <p>像是 <code>SIGHUP</code> 可以讓 Nginx 重新讀取設定檔，也就是 <code>nginx -s reload</code> 的指令（雖然大多數時候我們可能都會直接重開 Nginx 吧⋯⋯）</p>
 <p>有了這些概念後，我們就可以用 Ruby 提供的 Signal 來做一些應用。</p>
 <h2 id="Graceful-Shutdown"><a href="#Graceful-Shutdown" class="headerlink" title="Graceful Shutdown"></a>Graceful Shutdown</h2><p>當我們在執行一個迴圈處理事情的時候，如果遇到中斷的情況，很有可能會沒有把事情做完。</p>

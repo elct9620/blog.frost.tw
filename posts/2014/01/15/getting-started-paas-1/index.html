@@ -19,7 +19,7 @@
 <meta property="og:description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://blog.frost.tw/icon-512.png">
-<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta property="og:updated_time" content="2019-06-22T02:47:31.542Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PaaS 入門指南（一）">
 <meta name="twitter:description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以">
@@ -72,7 +72,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2014-01-14T19:32:00.000Z",
-  "dateModified": "2017-07-02T17:07:07.000Z",
+  "dateModified": "2019-06-22T02:47:31.542Z",
   "description":"這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以及介紹的 PaaS 可能有付費也可能有免費，但是會讓大家在盡可能不花費的狀況下體驗與使用。那麼，正文開始。",
   "author": {
     "@type": "Person",
@@ -169,7 +169,7 @@
 <h2 id="平台介紹"><a href="#平台介紹" class="headerlink" title="平台介紹"></a>平台介紹</h2><p>接下來，我會依序介紹我所知道的 PaaS 服務。這幾年其實大部份的 PaaS 服務商都已經提供多種語言的支援，比較少針對單一語言，而 PaaS 也會因為服務商架構設計上的不同，能夠使用的範圍也不一樣。</p>
 <p>另外要<strong>注意</strong>的就是服務商免費方案大多是「開發用」的等級，如果要切換到「生產力環境」請務必做好付費的準備。<br>（而 PaaS 的收費比 IaaS 高出不少，主要是節省了網管人員的人事費用。不過這個差異是否適合自己的團隊，也是需要謹慎評估。）</p>
 <h3 id="Heroku"><a href="#Heroku" class="headerlink" title="Heroku"></a>Heroku</h3><p>假設說 IaaS 世界有著非常完善的 Amazon AWS 服務，那麼 PaaS 世界，我想 Heroku 擁有這樣的稱號應該也不為過。雖然 PaaS 平台都差不多，但是 Heroku 卻有著驚人的特性讓我對的評分增加不少。</p>
-<p>官方網站：<a href="http://www.heroku.com/" target="_blank" rel="noopener">http://www.Heroku.com</a></p>
+<p>官方網站：<a href="https://www.heroku.com/" target="_blank" rel="noopener">https://www.Heroku.com</a></p>
 <ul>
 <li>豐富的 Add-on 功能</li>
 <li>可客製化的 PaaS 運行環境</li>
@@ -179,7 +179,7 @@
 </ul>
 <p>唯一小小的缺點是目前沒有 MySQL 的 Add-on （開發用方案）可以使用（對一個 PHP Developer 來說）</p>
 <h3 id="AppFog"><a href="#AppFog" class="headerlink" title="AppFog"></a>AppFog</h3><p>原本是 PHPFog 後來使用 VMWare 開發的 CloudFoundry 而轉變為一個支援多種語言的 PaaS 服務。特色是可以自由分配 VM 的設計，而且免費方案非常大方（有 2GB 記憶體任你分配使用到每台 VM 上）</p>
-<p>官方網站：<a href="http://www.appfog.com/" target="_blank" rel="noopener">http://www.appfog.com/</a></p>
+<p>官方網站：<a href="https://www.appfog.com/" target="_blank" rel="noopener">https://www.appfog.com/</a></p>
 <ul>
 <li>可自由分配記憶體</li>
 <li>資料庫服務無需額外付費</li>
@@ -198,7 +198,7 @@
 <p>官方網站:<a href="https://www.dotcloud.com/" target="_blank" rel="noopener">https://www.dotcloud.com/</a></p>
 <p>因為沒有使用過，所以也沒辦法給出優點。如果有興趣的朋友，可以嘗試玩看看。</p>
 <h3 id="CloudFoundry"><a href="#CloudFoundry" class="headerlink" title="CloudFoundry"></a>CloudFoundry</h3><p>其實說是一個 Open Source 的 PaaS 解決方案會比較適合，不過官方網站也提供了免費試用，想要體驗的人也是可以拿來使用或者架設。是 VMWare 所開發的 Open Source 專案（印象中是透過社群營運）</p>
-<p>官方網站：<a href="http://www.cloudfoundry.com/" target="_blank" rel="noopener">http://www.cloudfoundry.com/</a></p>
+<p>官方網站：<a href="https://www.cloudfoundry.com/" target="_blank" rel="noopener">https://www.cloudfoundry.com/</a></p>
 <p>優點部分，因為是解決方案所以沒有太多可以討論的（實際上也不建議拿來當上線的服務主機）</p>
 <h3 id="PagodaBox"><a href="#PagodaBox" class="headerlink" title="PagodaBox"></a>PagodaBox</h3><p>單純的 PHP PaaS 服務，不過特別提出來是因為他有一個 Store 可以讓大家寫好一些設定讓其他使用者付費安裝（或者免費）這個機制很特殊，也使少數提供 SFTP 可以讓不會 Git 的使用者也能輕鬆使用的 PaaS 服務。</p>
 <p>官方網站：<a href="https://pagodabox.com" target="_blank" rel="noopener">https://pagodabox.com</a></p>

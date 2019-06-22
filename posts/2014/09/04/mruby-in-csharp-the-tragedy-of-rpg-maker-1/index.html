@@ -19,7 +19,7 @@
 <meta property="og:description" content="最近看到朋友提起 RPG Maker 又勾起我在 Mac 上使用 RPG Maker 的野心，雖然之前用 Wine 順利跑了起來，不過既然能寫 Ruby 當然要用各種奇怪的方式去玩弄。 結果，當我發現內建的 Library 要做到我想做的事情很困難的時候，腦抽的我決定自己做一個！ 不過，這年頭不跨平台其實還蠻空虛的，所以就從能夠跨平台來做選擇，至於為何會選 Mono 和 C# 大概就是受到 Uni">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://blog.frost.tw/icon-512.png">
-<meta property="og:updated_time" content="2017-07-02T17:07:07.000Z">
+<meta property="og:updated_time" content="2019-06-22T02:47:31.553Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MRuby in C# - 因 RPG Maker 的慘劇（一）">
 <meta name="twitter:description" content="最近看到朋友提起 RPG Maker 又勾起我在 Mac 上使用 RPG Maker 的野心，雖然之前用 Wine 順利跑了起來，不過既然能寫 Ruby 當然要用各種奇怪的方式去玩弄。 結果，當我發現內建的 Library 要做到我想做的事情很困難的時候，腦抽的我決定自己做一個！ 不過，這年頭不跨平台其實還蠻空虛的，所以就從能夠跨平台來做選擇，至於為何會選 Mono 和 C# 大概就是受到 Uni">
@@ -72,7 +72,7 @@
     "http://blog.frost.tw/icon-512.png"
   ],
   "datePublished": "2014-09-03T19:42:00.000Z",
-  "dateModified": "2017-07-02T17:07:07.000Z",
+  "dateModified": "2019-06-22T02:47:31.553Z",
   "description":"最近看到朋友提起 RPG Maker 又勾起我在 Mac 上使用 RPG Maker 的野心，雖然之前用 Wine 順利跑了起來，不過既然能寫 Ruby 當然要用各種奇怪的方式去玩弄。結果，當我發現內建的 Library 要做到我想做的事情很困難的時候，腦抽的我決定自己做一個！不過，這年頭不跨平台其實還蠻空虛的，所以就從能夠跨平台來做選擇，至於為何會選 Mono 和 C# 大概就是受到 Unity3D 跟 Unreal Engine 4 兩個目前都是非常有名的遊戲引擎影響吧！（上述兩個引擎都有使用 Mono 來協助實踐跨平台的功能）",
   "author": {
     "@type": "Person",
@@ -162,7 +162,7 @@
 <p>結果，當我發現內建的 Library 要做到我想做的事情很困難的時候，腦抽的我決定自己做一個！</p>
 <p>不過，這年頭不跨平台其實還蠻空虛的，所以就從能夠跨平台來做選擇，至於為何會選 Mono 和 C# 大概就是受到 Unity3D 跟 Unreal Engine 4 兩個目前都是非常有名的遊戲引擎影響吧！<br>（上述兩個引擎都有使用 Mono 來協助實踐跨平台的功能）</p>
 <a id="more"></a>
-<h3 id="Ruby-vs-MRuby"><a href="#Ruby-vs-MRuby" class="headerlink" title="Ruby vs MRuby"></a>Ruby vs MRuby</h3><p>一開始，我就從其他語言呼叫 Ruby 這方面開始著手，不過情況其實不樂觀。<br>找了不少資料只能找到 <a href="http://Ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html" target="_blank" rel="noopener">Programing Ruby</a> 的簡單介紹，以及名為 <a href="http://www.swig.org/" target="_blank" rel="noopener">SWIG</a> 這樣的工具。</p>
+<h3 id="Ruby-vs-MRuby"><a href="#Ruby-vs-MRuby" class="headerlink" title="Ruby vs MRuby"></a>Ruby vs MRuby</h3><p>一開始，我就從其他語言呼叫 Ruby 這方面開始著手，不過情況其實不樂觀。<br>找了不少資料只能找到 <a href="https://Ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html" target="_blank" rel="noopener">Programing Ruby</a> 的簡單介紹，以及名為 <a href="https://www.swig.org/" target="_blank" rel="noopener">SWIG</a> 這樣的工具。</p>
 <p>雖然有嘗試用過 Programing Ruby 的方式，但是似乎因為某些問題，我的 Herader 檔案是缺少的。<br>（雖然後面學到 Compile 後可能會增加這些檔案，不過到此我就放棄了 XD）</p>
 <p>之後就把目光轉移到適合用在嵌入式系統的 MRuby 了，後來也聽朋友說其實 MRuby 也相對 Ruby 比較容易嵌入。<br>雖然最近才 1.0.0 版，而且文件其實不多，不過經過後續的摸索，也算是順利能夠使用。</p>
 <h3 id="番外：C-與-C"><a href="#番外：C-與-C" class="headerlink" title="番外：C# 與 C"></a>番外：C# 與 C</h3><p>MRuby 與 Ruby 本身是用 C 語言所撰寫的，但是我用來開發的語言是 C# 就本身都是 C 系列的語言來說看似容易結合，不過現實是 C# 需要透過 P/Invoke 的功能來存取 C 語言的功能，也就是說我們必須先把 MRuby 做成一個 Shared Library （動態函式庫）再用 C# 存取即可。</p>
