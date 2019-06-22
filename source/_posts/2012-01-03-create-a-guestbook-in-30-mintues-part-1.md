@@ -16,7 +16,7 @@ tags:
 ### 規劃架構
 ---
 
-[![2012\-01\-03 16\-22\-15](http://farm8.staticflickr.com/7159/6626625299_e19bab872e.jpg)](http://www.flickr.com/photos/elct9620/6626625299/)
+[![2012\-01\-03 16\-22\-15](https://farm8.staticflickr.com/7159/6626625299_e19bab872e.jpg)](https://www.flickr.com/photos/elct9620/6626625299/)
 
 這是弦也在完成後的架構，不過也有先替之後的更新做了準備。<br />
 這次我們只需要用到這樣的結構就可以。
@@ -43,9 +43,9 @@ tags:
 
 首先，我們要先下載 Slim Framework 以及 ActiveMongo 然後放到 lib 資料夾，這樣之後才能夠使用。
 
-* Slim Framework - [http://www.slimframework.com/](http://www.slimframework.com/)
+* Slim Framework - [https://www.slimframework.com/](https://www.slimframework.com/)
 * ActiveMongo - [https://Github.com/crodas/ActiveMongo](https://github.com/crodas/ActiveMongo)
-* Bootstrap - [http://twitter.Github.com/bootstrap](http://twitter.github.com/bootstrap)
+* Bootstrap - [https://twitter.Github.com/bootstrap](https://twitter.github.com/bootstrap)
 
 雖然這次會使用到 Twitter 的 Bootstrap 不過我們採用直接連結的方式引入 CSS 檔，因為目前留言板還不需要做太多美化，只要介面看起來簡潔乾淨即可。
 
@@ -53,7 +53,7 @@ tags:
 
 解壓縮 Slim Framework 打開後，應該會看到這樣的畫面。<br />
 
-[![2012\-01\-03 16\-37\-19](http://farm8.staticflickr.com/7017/6626669915_4368aa2f0d.jpg)](http://www.flickr.com/photos/elct9620/6626669915/)
+[![2012\-01\-03 16\-37\-19](https://farm8.staticflickr.com/7017/6626669915_4368aa2f0d.jpg)](https://www.flickr.com/photos/elct9620/6626669915/)
 
 我們只需要 Slim 資料夾以及 .htaccess 檔而已，所以將 Slim 資料夾放到專案的 lib 資料夾裡面，並且把 .htaccess 檔放到專案的根目錄。
 
@@ -62,7 +62,7 @@ tags:
 ####ActiveMongo
 
 解壓縮 ActiveMongo 打開後，應該會發現只看到 lib 資料夾而沒有 ActiveMongo 資料夾，請先別急。<br />
-[![2012\-01\-03 16\-37\-29](http://farm8.staticflickr.com/7172/6626669973_d6a1e3d0a7.jpg)](http://www.flickr.com/photos/elct9620/6626669973/)
+[![2012\-01\-03 16\-37\-29](https://farm8.staticflickr.com/7172/6626669973_d6a1e3d0a7.jpg)](https://www.flickr.com/photos/elct9620/6626669973/)
 
 因為開發者不一樣的關係，所以習慣也不一樣。打開 lib 資料夾後馬上就發現直接就是檔案，為了方便自己整理，弦也決定重新命名 lib 為 ActiveMongo 並且複製到自己專案的 lib 資料夾內。<br />
 <br />

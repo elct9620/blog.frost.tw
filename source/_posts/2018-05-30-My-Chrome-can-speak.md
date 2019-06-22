@@ -69,5 +69,5 @@ window.speechSynthesis.speak(msg);
 
 ## 參考文章
 
-* http://blog.zhusee.in/post/56286985943/web-speech-api-part-i-using-speech-synthesis-to-make-bro
+* https://blog.zhusee.in/post/56286985943/web-speech-api-part-i-using-speech-synthesis-to-make-bro
 * https://developers.google.com/web/updates/2014/01/Web-apps-that-talk-Introduction-to-the-Speech-Synthesis-API

@@ -5,7 +5,7 @@ date: 2014-09-13 09:38
 comments: true
 tags: [Kinect, 遊戲, Unity3D]
 ---
-接續[上一篇](http://blog.frost.tw/posts/2014/09/13/zigfu-Kinect-across-the-platform-SDK)文章的介紹，這一篇文章會針對 Kinect 在遊戲類型應用上最為重要的功能「骨架」來做討論。
+接續[上一篇](https://blog.frost.tw/posts/2014/09/13/zigfu-Kinect-across-the-platform-SDK)文章的介紹，這一篇文章會針對 Kinect 在遊戲類型應用上最為重要的功能「骨架」來做討論。
 
 在 Zigfu 中，已經提供了 `ZigTrackedUser.Skeleton` 這個物件讓我們可以存取骨架，與前一篇文章不同的地方在於，我們會用 `Zig_UpdateUser` 這個方法存取骨架。
 
@@ -68,7 +68,7 @@ Zigfu 提供了三個方法讓我們可以了解玩家的狀況。
 首先，先建立一個新的場景，並且設置好 `Zig` 原件到場景上。
 接著製作一個物件群組，並且在裡面放置三個 Sphere（球體）。
 
-![螢幕快照 2014-09-13 下午6.50.04.png](http://user-image.logdown.io/user/52/blog/52/post/233256/Kugv9looSE2uLNOOi3ug_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%886.50.04.png)
+![螢幕快照 2014-09-13 下午6.50.04.png](https://user-image.logdown.io/user/52/blog/52/post/233256/Kugv9looSE2uLNOOi3ug_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%886.50.04.png)
 
 物件群組可以利用空物件來製作，為了方便辨識我製作了三種顏色的材質球放到不同的關節。
 （從肩膀開始剛好是 Red > Green > Blue 的順序。）
@@ -120,7 +120,7 @@ public class TrackUser : MonoBehaviour {
 
 因此要注意，物件是否被加入到正確的 Zigfu 物件中。
 
-![螢幕快照 2014-09-13 下午9.14.51.png](http://user-image.logdown.io/user/52/blog/52/post/233256/cw19asWlSVqmV57lkJor_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%889.14.51.png)
+![螢幕快照 2014-09-13 下午9.14.51.png](https://user-image.logdown.io/user/52/blog/52/post/233256/cw19asWlSVqmV57lkJor_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%889.14.51.png)
 
 之後把這個語法附加到 Zigfu（跟 Zig 元件相同的物件上）就可以了，上圖已經預先將骨架物件放進去了！
 
@@ -173,7 +173,7 @@ public class SimpleSkeleton : MonoBehaviour
 比較需要注意的是，這裡使用的是 `localPosition` 並且沒有與物件的基礎坐標做修正。
 （`localPosition` 會受到上層物件的位置影響）
 
-![螢幕快照 2014-09-13 下午9.24.29.png](http://user-image.logdown.io/user/52/blog/52/post/233256/4XxDPQlfTfmhYhDHSVN1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%889.24.29.png)
+![螢幕快照 2014-09-13 下午9.24.29.png](https://user-image.logdown.io/user/52/blog/52/post/233256/4XxDPQlfTfmhYhDHSVN1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%889.24.29.png)
 
 接下來對骨架物件設定，完成後就能夠看到右手的肩膀、手肘、手腕三個關節依照 Kinect 照到的位置做出改變。
 剩下的骨架控制就需要依照情況去儲存不同狀態、時間的骨架，並且做出對應的反應。

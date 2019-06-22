@@ -225,7 +225,7 @@ define [
   <li><a href="{{website}}" target="_blank">Website</a></li>
   {{/website}}
   {{#facebook}}
-  <li><a href="http://fb.me/{{facebook}}" target="_blank">Facebook</a></li>
+  <li><a href="https://fb.me/{{facebook}}" target="_blank">Facebook</a></li>
   {{/facebook}}
   {{#plurk}}
   <li><a href="https://plurk.com/{{plurk}}" target="_blank">Plurk</a></li>
@@ -238,7 +238,7 @@ define [
 
 最後就是替首頁加上 #app, #info, #bio 三個元素，讓 Backbone 可以捕捉並且替換。
 
-最後附上簡報：[http://slid.es/elct9620/coscup2013-sitcon-webiste](http://slid.es/elct9620/coscup2013-sitcon-webiste)
+最後附上簡報：[https://slid.es/elct9620/coscup2013-sitcon-webiste](https://slid.es/elct9620/coscup2013-sitcon-webiste)
 
 希望大家會喜歡，之後網站組也會繼續改進這套系統。
 

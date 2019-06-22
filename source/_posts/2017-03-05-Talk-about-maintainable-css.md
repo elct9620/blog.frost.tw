@@ -4,7 +4,7 @@ date: 2017-03-05 00:47:33
 tags: [CSS, 前端]
 ---
 
-這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 [Maintainable CSS](http://maintainablecss.com/) 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。
+這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 [Maintainable CSS](https://maintainablecss.com/) 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。
 
 幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS 逐漸複雜。所以開始有像是 OOCSS、SMACSS、BEM 等等理論出現，綜合來看這些技巧對於維護網站的樣式上都是很有幫助的。
 
@@ -18,7 +18,7 @@ Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就
 
 像是 `.col-md-12` 被分類在非語意化的類型，而 `.product` 則屬於語意化。就我自己的習慣，其實是偏向於語意化的，雖然說 `.col-md-12` 必須改寫成 `.column-medium-12` 或者 `.column-pad-12` 之類的形式，會要多打不少字，但是從結果上來看，原始碼的可讀性就會增加非常多。
 
-關於「語意化」的應用實例，可以參考 [Semantic UI](http://semantic-ui.com/) 的應用，這套 CSS Framework 就是以語意化為前提所設計，可以從中學習到非常多語意化的範例。
+關於「語意化」的應用實例，可以參考 [Semantic UI](https://semantic-ui.com/) 的應用，這套 CSS Framework 就是以語意化為前提所設計，可以從中學習到非常多語意化的範例。
 
 至於是否要堅持完全的語意化，我個人是認為不需要的。畢竟很多情境都不是絕對的，如果太過於堅持這些地方的話，反而會變成干擾排版的障礙，在可容許的範圍內有一些例外狀況是沒有關係的。
 

@@ -18,7 +18,7 @@ tags: [JavaScript, 遊戲, 心得, 程式, Unity3D]
 
 為了要投稿 SITCON 所以我做了不少準備，至少是把 Component Based Programing 整個概念都稍微研究過了一遍。
 
-首先，我們可以從[維基百科](http://en.wikipedia.org/wiki/Component-based_software_engineering)上面看到一些關於 Component Based Programing 的介紹與相關知識。
+首先，我們可以從[維基百科](https://en.wikipedia.org/wiki/Component-based_software_engineering)上面看到一些關於 Component Based Programing 的介紹與相關知識。
 
 最另外意外的是像是 Laravel (PHP Framework) 使用到的 IoC （單純是因為我以這個框架為契機了解 IoC 的概念）亦或是這幾年 Web Service 最常使用的 REST API 都屬於 Component Based Programing 的運用。
 
@@ -40,9 +40,9 @@ tags: [JavaScript, 遊戲, 心得, 程式, Unity3D]
 
 ## Unity3D 的元件化設計
 
-開始之前，我在 Google 找到了一篇關於遊戲的 Component Based Programing 的[翻譯文章](http://disp.cc/b/38-13mE)，大家可以先看看，個人感覺有點類似歷史簡介的東西，其實不管哪種做法都是有缺點（Ex. 關於 CPU 消耗的問題）不過在適當的情況使用，改善開發我想還是最主要的目標。
+開始之前，我在 Google 找到了一篇關於遊戲的 Component Based Programing 的[翻譯文章](https://disp.cc/b/38-13mE)，大家可以先看看，個人感覺有點類似歷史簡介的東西，其實不管哪種做法都是有缺點（Ex. 關於 CPU 消耗的問題）不過在適當的情況使用，改善開發我想還是最主要的目標。
 
-關於如何在 Unity3D 正確使用 Component 也有一份[簡報](http://www.slideshare.net/lucifuges/unity-13737954)非常不錯，裡面提到了正確拆解元件的方法以及概念。
+關於如何在 Unity3D 正確使用 Component 也有一份[簡報](https://www.slideshare.net/lucifuges/unity-13737954)非常不錯，裡面提到了正確拆解元件的方法以及概念。
 
 在讀完這些資料後，其實大家應該都對 Component-Based Programing 這個概念有所了解。下面就開始來討論 Unity3D 的 Component 吧！
 
@@ -50,9 +50,9 @@ tags: [JavaScript, 遊戲, 心得, 程式, Unity3D]
 
 打開 Unity3D 產生一個 Cube (GameObject) 然後看看 Inspector 上的設定。
 
-![螢幕快照 2014-01-03 上午10.50.34.png](http://user-image.logdown.io/user/52/blog/52/post/167832/CuK42JfRkyjT8XlK4GFg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8810.50.34.png)
+![螢幕快照 2014-01-03 上午10.50.34.png](https://user-image.logdown.io/user/52/blog/52/post/167832/CuK42JfRkyjT8XlK4GFg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8810.50.34.png)
 
-在 Unity3D 官網的 [Component](http://docs.unity3d.com/Documentation/ScriptReference/Component.html) 解釋中，提到「所有可以附加在 GameObject 的基礎類別」
+在 Unity3D 官網的 [Component](https://docs.unity3d.com/Documentation/ScriptReference/Component.html) 解釋中，提到「所有可以附加在 GameObject 的基礎類別」
 
 ### GameObject 上的 Component
 
@@ -76,7 +76,7 @@ function Update () {
 }
 ```
 
-![螢幕快照 2014-01-03 上午11.05.21.png](http://user-image.logdown.io/user/52/blog/52/post/167832/ZSSpuuoTSCc4YQ3JIJm0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8811.05.21.png)
+![螢幕快照 2014-01-03 上午11.05.21.png](https://user-image.logdown.io/user/52/blog/52/post/167832/ZSSpuuoTSCc4YQ3JIJm0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8811.05.21.png)
 
 從結果來看，我們觀察到第一個： **Inspector 上的都是 Component，一個 GameObject 的表現由 Component 決定**
 
@@ -116,11 +116,11 @@ function Update () {
 }
 ```
 
-![螢幕快照 2014-01-03 上午11.27.05.png](http://user-image.logdown.io/user/52/blog/52/post/167832/GBaDJWZKQI3t2jZmCFfn_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8811.27.05.png)
+![螢幕快照 2014-01-03 上午11.27.05.png](https://user-image.logdown.io/user/52/blog/52/post/167832/GBaDJWZKQI3t2jZmCFfn_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8811.27.05.png)
 
 看起來每次 `Instanticate` 出來的 GameObject 都是一個「獨立的物件」並不會參照到原本的物件上。
 
-關於這點，如果認真看官網的 [Instanticate](http://docs.unity3d.com/Documentation/ScriptReference/Object.Instantiate.html) 解釋，裡面這樣說「這類似於編輯器的複製動作，當你克隆一個元件時所有子物件以及元件都會被克隆一遍」
+關於這點，如果認真看官網的 [Instanticate](https://docs.unity3d.com/Documentation/ScriptReference/Object.Instantiate.html) 解釋，裡面這樣說「這類似於編輯器的複製動作，當你克隆一個元件時所有子物件以及元件都會被克隆一遍」
 
 其實這邊會有關於物件複製的疑問，全體克隆的行為其實仔細思考就會想通。至於大量的物件複製不會很慢的問題，就比較難想，目前我也想不到。不過，有時候必要的花費是必須的，這樣理解也許會比較好。
 
@@ -162,7 +162,7 @@ function Update () {
 ## 實作 Component 化的設計
 
 這部分我會實作一個 Player 物件，然後擁有 Collider 可以處理滑鼠點擊，並且用這個方式控制粒子特效的開啟或者關閉。
-（範例檔案：[下載](http://www.mediafire.com/download/9a0nl3mgoz8g8b8/Example.unitypackage)）
+（範例檔案：[下載](https://www.mediafire.com/download/9a0nl3mgoz8g8b8/Example.unitypackage)）
 
 為了將物件的任務個別分離，我這樣設計了我的物件階層。
 
@@ -249,7 +249,7 @@ function DeactiveBuffer() {
 ## 參考資料
 
 * https://speakerdeck.com/halflucifer/using-lua-to-build-a-component-based-architecture-for-game-apps
-* http://www.slideshare.net/lucifuges/unity-13737954
-* http://disp.cc/b/38-13mE
-* http://en.wikipedia.org/wiki/Component-based_software_engineering
-* http://www.cnblogs.com/ybgame/archive/2012/12/09/2810278.html (系列文)
+* https://www.slideshare.net/lucifuges/unity-13737954
+* https://disp.cc/b/38-13mE
+* https://en.wikipedia.org/wiki/Component-based_software_engineering
+* https://www.cnblogs.com/ybgame/archive/2012/12/09/2810278.html (系列文)

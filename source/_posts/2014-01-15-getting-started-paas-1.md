@@ -34,7 +34,7 @@ tags: [介紹, 雲端, PaaS, 入門]
 
 假設說 IaaS 世界有著非常完善的 Amazon AWS 服務，那麼 PaaS 世界，我想 Heroku 擁有這樣的稱號應該也不為過。雖然 PaaS 平台都差不多，但是 Heroku 卻有著驚人的特性讓我對的評分增加不少。
 
-官方網站：[http://www.Heroku.com](http://www.heroku.com/)
+官方網站：[https://www.Heroku.com](https://www.heroku.com/)
 
 * 豐富的 Add-on 功能
 * 可客製化的 PaaS 運行環境
@@ -48,7 +48,7 @@ tags: [介紹, 雲端, PaaS, 入門]
 
 原本是 PHPFog 後來使用 VMWare 開發的 CloudFoundry 而轉變為一個支援多種語言的 PaaS 服務。特色是可以自由分配 VM 的設計，而且免費方案非常大方（有 2GB 記憶體任你分配使用到每台 VM 上）
 
-官方網站：[http://www.appfog.com/](http://www.appfog.com/)
+官方網站：[https://www.appfog.com/](https://www.appfog.com/)
 
 * 可自由分配記憶體
 * 資料庫服務無需額外付費
@@ -80,7 +80,7 @@ tags: [介紹, 雲端, PaaS, 入門]
 
 其實說是一個 Open Source 的 PaaS 解決方案會比較適合，不過官方網站也提供了免費試用，想要體驗的人也是可以拿來使用或者架設。是 VMWare 所開發的 Open Source 專案（印象中是透過社群營運）
 
-官方網站：[http://www.cloudfoundry.com/](http://www.cloudfoundry.com/)
+官方網站：[https://www.cloudfoundry.com/](https://www.cloudfoundry.com/)
 
 優點部分，因為是解決方案所以沒有太多可以討論的（實際上也不建議拿來當上線的服務主機）
 

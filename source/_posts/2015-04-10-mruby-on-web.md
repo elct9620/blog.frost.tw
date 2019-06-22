@@ -7,13 +7,13 @@ tags: [Ruby, 心得, 筆記, MRuby]
 ---
 忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。
 
-最初是看到 [WebRuby](https://Github.com/xxuejie/webruby) 這個專案的應用 [Webirb](http://joshnuss.github.io/mruby-web-irb/) 才決定要挑戰將 mruby 丟到 Web 上面跑。
+最初是看到 [WebRuby](https://Github.com/xxuejie/webruby) 這個專案的應用 [Webirb](https://joshnuss.github.io/mruby-web-irb/) 才決定要挑戰將 mruby 丟到 Web 上面跑。
 
 > 其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。
 
 <!-- more -->
 
-在兩年前（2013）的 JSDC 上，我首次得知了 [ASM.js](http://asmjs.org) 跟 [Emscripten](http://emscripten.org) 這兩個專案，當時只知道是一個可以把 C/C++ 的運行效能帶到 Web 上的專案，卻不得其門而入。
+在兩年前（2013）的 JSDC 上，我首次得知了 [ASM.js](https://asmjs.org) 跟 [Emscripten](https://emscripten.org) 這兩個專案，當時只知道是一個可以把 C/C++ 的運行效能帶到 Web 上的專案，卻不得其門而入。
 
 不過最近再次回想起來，重新閱讀了一次 Emscripten 的文件後終於瞭解到入門的基礎用法。
 
@@ -23,7 +23,7 @@ tags: [Ruby, 心得, 筆記, MRuby]
 
 #### 安裝 Emscripten
 
-基本上依照官網的[安裝教學](http://kripken.Github.io/emscripten-site/docs/getting_started/downloads.html)應該就可以很順利的完成安裝。
+基本上依照官網的[安裝教學](https://kripken.Github.io/emscripten-site/docs/getting_started/downloads.html)應該就可以很順利的完成安裝。
 
 我自己是放在 `~/Workspace/Emscripten` 下面，要使用的時候就先跑一次 `source ./emSDK_env.sh` 來讓 `emcc` 等指令可以使用。
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
 
 #### Makefile
 
-因為指令挺繁瑣的，所以就臨時抱佛腳看了一下 [Make 命令教程](http://www.ruanyifeng.com/blog/2015/02/make.html)這篇讓我印象深刻的教學（清楚簡單的說明用法，個人很喜歡）學了基本的 Makefile 撰寫方法。
+因為指令挺繁瑣的，所以就臨時抱佛腳看了一下 [Make 命令教程](https://www.ruanyifeng.com/blog/2015/02/make.html)這篇讓我印象深刻的教學（清楚簡單的說明用法，個人很喜歡）學了基本的 Makefile 撰寫方法。
 
 ```makefile Makefile
 MRB_SRC=mRuby/build/emscripten
@@ -161,7 +161,7 @@ clean:
 
 **Q: `-O0` 跟 `-O2` 到底是什麼？**
 
-這是 Emscripten 的 Optimize 設定項目，詳細可以參考 [Emscripten - Optimizing Code](http://kripken.Github.io/emscripten-site/docs/optimizing/Optimizing-Code.html) 這個頁面。
+這是 Emscripten 的 Optimize 設定項目，詳細可以參考 [Emscripten - Optimizing Code](https://kripken.Github.io/emscripten-site/docs/optimizing/Optimizing-Code.html) 這個頁面。
 
 前面在編譯 mRuby 的時候會使用 `-O0` （不優化）是因為 `nested structs` 的[展開問題](https://Github.com/kripken/emscripten/issues/2238)。不過我去追 Google 的 PNaCI 關於這個的討論串，似乎已經在去年年底解決了（Emscripten 專案何時支援還不確定）
 

@@ -169,7 +169,7 @@ EOF
 
 不過第一個方法我沒成功過（牆角
 
-註：這個網址可以透過 Vulcan 編譯完畢後吐給你的網址 Ex. http://vulcan-aotoki.Herokuapp.com/output/4a669895-5308-4846-8a72-28d78d46a999 來代替（超神奇噢！？
+註：這個網址可以透過 Vulcan 編譯完畢後吐給你的網址 Ex. https://vulcan-aotoki.Herokuapp.com/output/4a669895-5308-4846-8a72-28d78d46a999 來代替（超神奇噢！？
 
 至於實際上邊議會有什麼地雷我都不知道啊！
 
@@ -177,7 +177,7 @@ EOF
 
 至於 Compile 的 Shell Script 其實可以用
 
-> curl --location "http://vulcan-aotoki.Herokuapp.com/output/4a669895-5308-4846-8a72-28d78d46a999" | tar zx
+> curl --location "https://vulcan-aotoki.Herokuapp.com/output/4a669895-5308-4846-8a72-28d78d46a999" | tar zx
 
 這樣的方式來替代將下載下來的 tgz 又放到其他地方，然後再 Download 下來。
 （不過這些 Output 會被保留到何時並沒有人知道⋯⋯）

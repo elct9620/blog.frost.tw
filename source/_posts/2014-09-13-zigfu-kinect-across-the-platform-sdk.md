@@ -20,7 +20,7 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 至於 Zigfu 大致上做了什麼呢？
 將驅動程式包裝起來，協助使用者安裝（Windows 使用者需要自己安裝驅動）並且提供 ZDK (SDK) 讓開發者可以用統一的界面，存取 Kinect（官方）、OpenNI、OpenNI2 的 Middleware。
 
-> 關於 OpenNI / OpenNI 2 的介紹，可以參考[這篇文章](http://viml.nchc.org.tw/blog/paper_info.PHP?CLASS_ID=1&SUB_ID=1&PAPER_ID=491)。
+> 關於 OpenNI / OpenNI 2 的介紹，可以參考[這篇文章](https://viml.nchc.org.tw/blog/paper_info.PHP?CLASS_ID=1&SUB_ID=1&PAPER_ID=491)。
 
 <!-- more -->
 
@@ -29,10 +29,10 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 
 ### 安裝
 
-首先，我們到官方網站的 [Plugin 下載頁面](http://zigfu.com/en/downloads/browserplugin/) 去下載 Plugin。
+首先，我們到官方網站的 [Plugin 下載頁面](https://zigfu.com/en/downloads/browserplugin/) 去下載 Plugin。
 （Windows 用戶應該是不需要，至於使用的 Kinect 是 For Windows 還是 For Xbox 要注意驅動是否正確。）
 
-完成之後，再到 [Unity3D ZDK 下載頁面](http://zigfu.com/en/zdk/unity3d/)下載適合 Unity3D 的 ZDK （是一個 Unitypackage 檔案，並且有含範例。）
+完成之後，再到 [Unity3D ZDK 下載頁面](https://zigfu.com/en/zdk/unity3d/)下載適合 Unity3D 的 ZDK （是一個 Unitypackage 檔案，並且有含範例。）
 
 之後在 Unity3D 開啟新專案，匯入 Custom Package 之後，就可以使用了。
 
@@ -79,7 +79,7 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 上面是節錄自 `Zig.cs` 這個檔案的內容，我們可以發現裡面對 `ZigInput` 設定了 `InputType` 跟 `Settings` 兩個數值。
 
 在 Unity3D 裡面看到就會是像這樣：
-![螢幕快照 2014-09-13 下午3.01.19.png](http://user-image.logdown.io/user/52/blog/52/post/233228/7rGRv56mTYCE21bemCWe_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.01.19.png)
+![螢幕快照 2014-09-13 下午3.01.19.png](https://user-image.logdown.io/user/52/blog/52/post/233228/7rGRv56mTYCE21bemCWe_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.01.19.png)
 
 簡單來說 `Zig` 元件幫我們把「讀取方式」以及讀取的方式設定好了！
 
@@ -88,11 +88,11 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 
 最後，我們需要注意 `Awake` 方法的最後一行 `ZigInput.Instance.AddListener(gameObject)` 這一句程式碼。
 
-> 在程式開發慣例中 Instance 通常是指物件的實體（就 Zigfu 的設計上，應該是屬於[單例](http://zh.wikipedia.org/wiki/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F)的設計，簡單說就是只會存在一個。）
+> 在程式開發慣例中 Instance 通常是指物件的實體（就 Zigfu 的設計上，應該是屬於[單例](https://zh.wikipedia.org/wiki/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F)的設計，簡單說就是只會存在一個。）
 
 `gameObject` 在 Unity3D 通常是指自己本身，而 `AddListener` 在這邊指的是「當更新時也一併更新這個物件」的意思。
 
-> Listener 基本上設計類似于[觀察者](http://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F)這種慣例，在 Unity3D 就類似於 `Update` 的感覺，在 Zigfu 中選擇了自行實作，跟 Unity3D 分開處理。
+> Listener 基本上設計類似于[觀察者](https://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F)這種慣例，在 Unity3D 就類似於 `Update` 的感覺，在 Zigfu 中選擇了自行實作，跟 Unity3D 分開處理。
 > 某方面也算是比較恰當的做法，畢竟 Kinect 裡面有自己的硬體，跟 Unity3D 分離就可以不受玩家主機的硬體限制。
 
 ### 從 Kinect 讀取影像
@@ -117,29 +117,29 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 
 接下來，我們先產生新的場景（Scene / Ctrl + N）並且新增一個 Empty GameObject 用來放置 Zig 元件。
 
-![螢幕快照 2014-09-13 下午3.22.26.png](http://user-image.logdown.io/user/52/blog/52/post/233228/yB4QZUyhRJC8zMc7IMgq_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.22.26.png)
+![螢幕快照 2014-09-13 下午3.22.26.png](https://user-image.logdown.io/user/52/blog/52/post/233228/yB4QZUyhRJC8zMc7IMgq_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.22.26.png)
 
 > 產生好物件之後，就馬上把物件命名為 Zigfu 這會是一個好習慣，在中後期專案變大的時候，檔案跟物件沒有好好命名的話，就會碰到非常多問題。而團隊合作的時候更是明顯，因此別忘記修改物件名稱。
 
-![螢幕快照 2014-09-13 下午3.22.43.png](http://user-image.logdown.io/user/52/blog/52/post/233228/0CMHeh13QWi6FZjqn6wW_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.22.43.png)
+![螢幕快照 2014-09-13 下午3.22.43.png](https://user-image.logdown.io/user/52/blog/52/post/233228/0CMHeh13QWi6FZjqn6wW_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.22.43.png)
 
 在 Zigfu 的 ZDK 匯入到 Unity3D 後，也已經自動對選單增加好所有可用的元件。
 我們在 Script 類型的選件中選擇 Zig 就可以對 Zigfu 物件新增這個元件了！
 
-![螢幕快照 2014-09-13 下午3.26.45.png](http://user-image.logdown.io/user/52/blog/52/post/233228/zmyH6trKQpKxGoQGnRnz_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.26.45.png)
+![螢幕快照 2014-09-13 下午3.26.45.png](https://user-image.logdown.io/user/52/blog/52/post/233228/zmyH6trKQpKxGoQGnRnz_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.26.45.png)
 
 預設的 Zig 元件沒有開啟 Update Image 的選項，因此我們要自己勾選起來。
 （上圖還是未勾選狀態）
 
-![螢幕快照 2014-09-13 下午3.30.52.png](http://user-image.logdown.io/user/52/blog/52/post/233228/rHuuWqqOQOe2Fw8JrLt8_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.30.52.png)
+![螢幕快照 2014-09-13 下午3.30.52.png](https://user-image.logdown.io/user/52/blog/52/post/233228/rHuuWqqOQOe2Fw8JrLt8_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.30.52.png)
 
 接著，我們會需要一個 Plane（平面）用來顯示 Kinect 讀取到的影像。
 
-![螢幕快照 2014-09-13 下午3.32.26.png](http://user-image.logdown.io/user/52/blog/52/post/233228/Ae9OtZ2fQU6jz8FWUru0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.32.26.png)
+![螢幕快照 2014-09-13 下午3.32.26.png](https://user-image.logdown.io/user/52/blog/52/post/233228/Ae9OtZ2fQU6jz8FWUru0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.32.26.png)
 
 接著調整 Plane（這邊我已經重新命名為 ImageViewer） 跟 Main Camera 讓平面可以順利被攝影機完整照到。
 
-![螢幕快照 2014-09-13 下午3.33.51.png](http://user-image.logdown.io/user/52/blog/52/post/233228/E5ujAGCtTVOdJCErzlge_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.33.51.png)
+![螢幕快照 2014-09-13 下午3.33.51.png](https://user-image.logdown.io/user/52/blog/52/post/233228/E5ujAGCtTVOdJCErzlge_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%883.33.51.png)
 
 在開始之前，我們先用範例的 ImageViewer 元件來測試效果。
 現在啟動遊戲的話，應該可以順利看到 Kinect 的 Camera 照到的影像被更新到 Plane 上。
@@ -151,7 +151,7 @@ Zigfu 基本上是設計給 Web 使用的，因此目前支援是 JavaScript 和
 
 我們先將 `ZigImageViewer.cs` 的內容複製到一個新的檔案 `CustomImageViewer.cs` 並且以此為基礎修改出我們自己的「圖片讀取功能」
 
-![螢幕快照 2014-09-13 下午4.11.40.png](http://user-image.logdown.io/user/52/blog/52/post/233228/Z5MfzZHuQiJIiz0dkmI8_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%884.11.40.png)
+![螢幕快照 2014-09-13 下午4.11.40.png](https://user-image.logdown.io/user/52/blog/52/post/233228/Z5MfzZHuQiJIiz0dkmI8_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-09-13%20%E4%B8%8B%E5%8D%884.11.40.png)
 
 並且把原本的 ImageViewer Panel 的 Script 改為 CustomImageViewer 來套用我們自己的讀取處理。
 （這邊最好先執行看看，是否可以順利運作。要注意 `class ZigImageViewer` 得改為跟檔名一樣的 `class CustomImageViewer` 才會正常運作。）

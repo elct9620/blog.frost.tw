@@ -18,7 +18,7 @@ tags:
 ### 規劃結構
 ---
 其實和上次大致上沒有什麼變化，不過架構稍微又更加的細分了一些。<br />
-[![螢幕快照 2012\-01\-25 下午10\.25\.44](http://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg)](http://www.flickr.com/photos/elct9620/6760280007/)
+[![螢幕快照 2012\-01\-25 下午10\.25\.44](https://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg)](https://www.flickr.com/photos/elct9620/6760280007/)
 
 ### 初始化系統
 ---
@@ -93,7 +93,7 @@ if(DB_USER || DB_PASS){
 
 /* 載入基本資訊 */
 $basePath = str_replace('/index.PHP', '', $app->request()->getRootUri()) . '/';
-$baseURL = "http://{$_SERVER['HTTP_HOST']}/{$basePath}";
+$baseURL = "https://{$_SERVER['HTTP_HOST']}/{$basePath}";
 
 $app->view()->setData('basePath', $basePath);
 $app->view()->setData('baseURL', $baseURL);
@@ -400,4 +400,4 @@ class Forums extends ActiveMongo
 下一篇文章除了將剩下的 Model 解釋完之外，還會繼續解說其餘的 Web App 部分。
 
 * Github 原始碼：[https://Github.com/elct9620/3Day-Forum/zipball/1.0](https://github.com/elct9620/3Day-Forum/zipball/1.0)
-* 線上範例 ：[http://the-3day-forum.Herokuapp.com/](http://the-3day-forum.herokuapp.com/)
+* 線上範例 ：[https://the-3day-forum.Herokuapp.com/](https://the-3day-forum.herokuapp.com/)

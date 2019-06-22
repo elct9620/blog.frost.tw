@@ -66,7 +66,7 @@ thumbnail: https://blog.frost.tw/images/2018-10-02-become-a-programmer-how-to-st
 
 不過比起這些，其實我還是比較推薦去跟「上課的老師」在一些社群活動中接觸看看，才知道適不適合。
 
-像是在五倍[龍哥](https://kaochenlong.com/)、[Kuro](https://kuro.tw/)、[Amos](http://csscoke.com/) 幾位講師有時候在公司就能碰到，我也有上過課都是不錯的。另外六角的話像是廖洧杰也是在前端社群很活躍的大大，另外 SkillTree 給我印象深刻的則是 [91 哥](https://dotblogs.com.tw/hatelove)的敏捷開發課程（雖然我聽的是研討會版本，但是收穫很多）
+像是在五倍[龍哥](https://kaochenlong.com/)、[Kuro](https://kuro.tw/)、[Amos](https://csscoke.com/) 幾位講師有時候在公司就能碰到，我也有上過課都是不錯的。另外六角的話像是廖洧杰也是在前端社群很活躍的大大，另外 SkillTree 給我印象深刻的則是 [91 哥](https://dotblogs.com.tw/hatelove)的敏捷開發課程（雖然我聽的是研討會版本，但是收穫很多）
 
 我會推薦去找講師交流看看，是因為即使像我「很熟悉寫程式」也不代表可以「好好教人」以擔任 Rails Girls 三次教練我的經驗，我到第三次才比較能好好引導學員，而且定的目標（作業）太不合理之類的，也會引響被教學者最後在學習上的態度。
 

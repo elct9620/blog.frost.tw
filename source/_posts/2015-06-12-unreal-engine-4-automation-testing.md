@@ -111,7 +111,7 @@ float AMyActor::CalcDamage() {
 
 因此，我們需要先創建一張新的地圖，並且把這些 Actor 放進場景。
 
-![螢幕快照 2015-06-12 下午4.30.22.png](http://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png)
+![螢幕快照 2015-06-12 下午4.30.22.png](https://user-image.logdown.io/user/52/blog/52/post/280172/NBKLYkieR66JMBqZbVVj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.30.22.png)
 
 如上圖所示，我在一張叫做 `TestMap` 的地圖中放置了三個類型是 `MyActor` 的物件。
 接下來存擋即可，這樣我們就可以針對這三個物件做測試了！
@@ -159,24 +159,24 @@ bool FMyActorTest::RunTest(const FString &Parameters)
 
 > 直接用 TObjectIterator<TClass> 就可以拿到場景物件蠻神奇的，不過大概就跟一般遊戲執行時呼叫一樣吧 XD
 
-![螢幕快照 2015-06-12 下午4.36.36.png](http://user-image.logdown.io/user/52/blog/52/post/280172/1MYr9nWSYWrgjjpxMK6g_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.36.36.png)
+![螢幕快照 2015-06-12 下午4.36.36.png](https://user-image.logdown.io/user/52/blog/52/post/280172/1MYr9nWSYWrgjjpxMK6g_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.36.36.png)
 
 因為是 `Standlone Mode` 才能執行的測試，我們需要借助 `Unreal Frontend` 去幫我們開啟遊戲。
 
 > 我試過用 Command Line / Editor 去開啟，都無法正常使用，這算是最方便使用的解法了！
 > Mac/Windows 都在引擎的 Binaries 目錄下，稍微找一下就可以找到了（一般放在對應的作業系統目錄中）
 
-![螢幕快照 2015-06-12 下午4.38.35.png](http://user-image.logdown.io/user/52/blog/52/post/280172/yufoKsUITMOKSE8vv3Gj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.38.35.png)
+![螢幕快照 2015-06-12 下午4.38.35.png](https://user-image.logdown.io/user/52/blog/52/post/280172/yufoKsUITMOKSE8vv3Gj_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.38.35.png)
 
 進去 Project Launcher 分頁，先把左上角的 Project 設定成要測試的專案，然後按下 `Launch` 就會開啟一個獨立的遊戲出來。
 
-![螢幕快照 2015-06-12 下午4.40.15.png](http://user-image.logdown.io/user/52/blog/52/post/280172/JoxJZQ8fSOO82xhjmhY2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.40.15.png)
+![螢幕快照 2015-06-12 下午4.40.15.png](https://user-image.logdown.io/user/52/blog/52/post/280172/JoxJZQ8fSOO82xhjmhY2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.40.15.png)
 
 開啟遊戲視窗後，進到 Session Frontend 裡面，選下面的 `Automation` 分頁，再點選 `Find Workers` 確保有抓到目前要測試的遊戲。
 
 > 我的截圖有一個 Instance 是 Timeout 狀態，那是因為我上一次跑完關掉後就會呈現這樣的狀態（無法清除掉蠻痛苦的⋯⋯）
 
-![螢幕快照 2015-06-12 下午4.42.18.png](http://user-image.logdown.io/user/52/blog/52/post/280172/cm2gylD0SSetLA8mgVs2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.42.18.png)
+![螢幕快照 2015-06-12 下午4.42.18.png](https://user-image.logdown.io/user/52/blog/52/post/280172/cm2gylD0SSetLA8mgVs2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-06-12%20%E4%B8%8B%E5%8D%884.42.18.png)
 
 勾選好要跑的測試之後（預設只會跑幾個比較快的，一般是 Somke Test）讓他執行，如果順利通過就會像我這樣顯示綠色的。
 同時也會發現遊戲地圖會切換到最後一個跑的測試地圖上，簡單說要做這類的測試會很花時間（苦笑）

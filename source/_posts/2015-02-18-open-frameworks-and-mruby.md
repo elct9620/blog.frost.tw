@@ -17,7 +17,7 @@ Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來�
 
 <!-- more -->
 
-首先，要使用 MRuby 必須先有 MRuby 才行，關於這部分請直接參考「[MRuby in C# 因 RPG Maker的慘劇（一）](http://blog.frost.tw/posts/2014/09/04/mRuby-in-csharp-the-tragedy-of-rpg-maker-1)」這篇文章，裡面會詳細說明建構 Static Library 的方法。
+首先，要使用 MRuby 必須先有 MRuby 才行，關於這部分請直接參考「[MRuby in C# 因 RPG Maker的慘劇（一）](https://blog.frost.tw/posts/2014/09/04/mRuby-in-csharp-the-tragedy-of-rpg-maker-1)」這篇文章，裡面會詳細說明建構 Static Library 的方法。
 
 > Open Frameworks 目前建置出來的是 32bit 的版本，因此跟 Mono 的情境一樣需要開啟 32bit 的編譯選項
 
@@ -27,7 +27,7 @@ Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來�
 
 為了要使用 MRuby 的套件，我們需要在專案面板中手動加入函式庫。
 
-![螢幕快照 2015-02-18 下午7.26.02.png](http://user-image.logdown.io/user/52/blog/52/post/255651/B3wRMPrVSoqEcOuFq9ug_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-02-18%20%E4%B8%8B%E5%8D%887.26.02.png)
+![螢幕快照 2015-02-18 下午7.26.02.png](https://user-image.logdown.io/user/52/blog/52/post/255651/B3wRMPrVSoqEcOuFq9ug_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-02-18%20%E4%B8%8B%E5%8D%887.26.02.png)
 
 做法不難，在 Linked Frameworks and Libraries 新增剛剛編譯好的 `libmRuby.a` 跟 `libmruby_core.a` 即可。
 
@@ -35,7 +35,7 @@ Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來�
 
 另一方面我們需要增加 Header 的設置。
 
-![螢幕快照 2015-02-18 下午7.29.11.png](http://user-image.logdown.io/user/52/blog/52/post/255651/F4WuHoSSou9LuXvCYfZr_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-02-18%20%E4%B8%8B%E5%8D%887.29.11.png)
+![螢幕快照 2015-02-18 下午7.29.11.png](https://user-image.logdown.io/user/52/blog/52/post/255651/F4WuHoSSou9LuXvCYfZr_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-02-18%20%E4%B8%8B%E5%8D%887.29.11.png)
 
 在 Build Settings 的 Tab 裡面找到「Header Search Path」並且加入即可。
 
@@ -313,6 +313,6 @@ end
 
 參考資料：
 
-* [mRuby/C構造体組み込みを読む](http://www.dzeta.jp/~junjis/code_reading/index.PHP?mruby%2FC%B9%BD%C2%A4%C2%CE%C1%C8%A4%DF%B9%FE%A4%DF%A4%F2%C6%C9%A4%E0)
+* [mRuby/C構造体組み込みを読む](https://www.dzeta.jp/~junjis/code_reading/index.PHP?mruby%2FC%B9%BD%C2%A4%C2%CE%C1%C8%A4%DF%B9%FE%A4%DF%A4%F2%C6%C9%A4%E0)
 * [hpc-mRuby](https://Github.com/tomykaira/hpc-mruby/blob/master/mrbgems/mruby-time/src/time.c) - 上面的 Wiki 解說的 time.c 就是這個檔案（搭配閱讀會比較好懂）
-* [mRubyのexamples](http://d.hatena.ne.jp/urekat/20120428/1335602756)
+* [mRubyのexamples](https://d.hatena.ne.jp/urekat/20120428/1335602756)

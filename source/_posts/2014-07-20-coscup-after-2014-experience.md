@@ -24,7 +24,7 @@ tags: [心得, SITCON]
 （本期外帶同學，應該逼同學寫一下心得吼～～）
 
 #### ECMAScript 6
-這場議程我不小心做 [Codewars](http://www.codewars.com/r/ggs0WQ) 做太高興，所以就漏掉了一些。
+這場議程我不小心做 [Codewars](https://www.codewars.com/r/ggs0WQ) 做太高興，所以就漏掉了一些。
 不過 ECMAScript 6 還是令人非常期待的，最近也因為 Codewars 常常上 MDN 看文件⋯⋯
 （總之，就開始來偷偷用吧 XDDDD）
 

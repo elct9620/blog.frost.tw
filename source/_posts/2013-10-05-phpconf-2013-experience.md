@@ -43,7 +43,7 @@ tags: [生活, 心得, PHPConf]
 ### 實戰 Phalcon Kernel
 
 其實說真的，最近幾年寫 PHP 的人的確感覺越來越少了⋯⋯
-因此今年的主題都落在如何讓 PHP 逆襲這件事情，前哨戰就由阿土伯介紹的 [Zephir](http://zephir-lang.com/) 這套神兵來解決了！
+因此今年的主題都落在如何讓 PHP 逆襲這件事情，前哨戰就由阿土伯介紹的 [Zephir](https://zephir-lang.com/) 這套神兵來解決了！
 
 Zephir 是什麼？簡單說就是用 Very (Super) like PHP syntax to write a PHP Extension.
 用非常類似於 PHP 的語法方式去寫一套 PHP Extension (原本需要用 C 但是現在你不用了！)
@@ -58,7 +58,7 @@ Zephir 是什麼？簡單說就是用 Very (Super) like PHP syntax to write a PH
 不過裡面也提到了很多特別的使用技巧，這真的是要靠創意和靈感才能發現的。
 像是把 CDN 當 NoSQL 的方式來使用（透過把網址當 Key 產生檔案，就能做出不會死還很穩定的 API）雖然僅限於非完全即時的 API 就是了～
 
-講者 [Tsung](http://blog.longwin.com.tw/) 也是大家查資料經常會找到的高手，今年也終於有機會看到本人了！
+講者 [Tsung](https://blog.longwin.com.tw/) 也是大家查資料經常會找到的高手，今年也終於有機會看到本人了！
 
 ### 進擊的快取 - 以 Drupal 的快取核心為例
 

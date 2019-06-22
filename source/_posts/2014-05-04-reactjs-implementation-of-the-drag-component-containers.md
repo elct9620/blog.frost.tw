@@ -150,7 +150,7 @@ ToolIcon = {
 	onDragStart: (event) ->
   	event.dataTransfer.setData "ComponentType", @componentType # 開始拖曳時儲存目前拖曳的元件類型
 	componentWillMount: ->
-  	@icon = @icon ? "http://placehold.it/50" # ICON 圖檔
+  	@icon = @icon ? "https://placehold.it/50" # ICON 圖檔
     @componentType = @componentType ? "Unknown" # ICON 類型
   render: ->
   	React.DOM.img {

@@ -150,7 +150,7 @@ namespace MRuby
 ```
 
 在 MRuby 中，會使用 Function Pointer 的方式儲存方法，若要在 C# 中實做一個 Function Pointer 可以利用 `delegate` 來實做，要說的話概念上是類似的東西。
-（參考資料：[http://www.cnblogs.com/oomusou/archive/2007/05/02/734290.html](http://www.cnblogs.com/oomusou/archive/2007/05/02/734290.html)）
+（參考資料：[https://www.cnblogs.com/oomusou/archive/2007/05/02/734290.html](https://www.cnblogs.com/oomusou/archive/2007/05/02/734290.html)）
 
 使用 `delegate` 功能需要指定方法的傳回值、接收的參數。不過在 MRuby 中都是固定傳回 `MrbValue` 並且把 `MrbState` 以及代表該物件實體的 `MrbValue` 存取進來。（到這邊應該很習慣了，不管是什麼數值都可以用 `MrbValue` 儲存）
 

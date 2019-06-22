@@ -24,7 +24,7 @@ tags: [心得, SITCON, 筆記, React.js]
 ### 拆分元件
 
 React.js 的 Component（元件）的概念，某種程度上是需要重新定義大家腦中 HTML / JS / CSS 配合的概念，而這個應用方式在很多時候其實能夠幫我們解決不少問題。
-（個人認為很像 [Shadow DOM](http://w3c.Github.io/webcomponents/spec/shadow/) 的感覺）
+（個人認為很像 [Shadow DOM](https://w3c.Github.io/webcomponents/spec/shadow/) 的感覺）
 
 而 Component 該怎麼拆分呢？簡單來說最小單位就像是一個 `<button>` 都可以視為一個 Component 只是要看需求。
 

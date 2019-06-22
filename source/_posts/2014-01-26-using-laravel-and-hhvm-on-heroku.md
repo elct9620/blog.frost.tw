@@ -26,7 +26,7 @@ tags: [PHP, Laravel, Heroku, 心得, PaaS]
 
 ### 初始化 Laravel 專案
 
-根據官方公佈的新手預置技能[使用指南](http://laravel.com/docs/quick)只要執行以下動作即可。
+根據官方公佈的新手預置技能[使用指南](https://laravel.com/docs/quick)只要執行以下動作即可。
 
 > composer create-project laravel/laravel your-project-name --prefer-dist
 
@@ -37,13 +37,13 @@ tags: [PHP, Laravel, Heroku, 心得, PaaS]
 
 > git init
 
-這是基礎技能，可以參考一下 [PaaS 入門指南（二）](http://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2)的相關說明
+這是基礎技能，可以參考一下 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2)的相關說明
 
 > Heroku create --buildpack https://Github.com/hhvm/heroku-buildpack-hhvm
 
 註：如果不希望 APP 名稱是隨機的，可以在 `create` 後面加上名稱喔～
 
-最後使用黑暗魔法 - HHVM [設定檔](http://www.laravel-tricks.com/tricks/hhvm-config-for-laravel)！
+最後使用黑暗魔法 - HHVM [設定檔](https://www.laravel-tricks.com/tricks/hhvm-config-for-laravel)！
 適用于 Heroku 的版本如下：
 
 ```
@@ -148,12 +148,12 @@ StaticFile {
 
 所以，到底發生了什麼？
 
-原來這個問題只要是 Heroku 的 PHP Buildpack 都會碰到，然後就有<del>歪國人</del>西方高人找到了[方法](http://blog.enge.me/post/a-comprehensive-tutorial-for-deploying-laravel-4-on-Heroku)
+原來這個問題只要是 Heroku 的 PHP Buildpack 都會碰到，然後就有<del>歪國人</del>西方高人找到了[方法](https://blog.enge.me/post/a-comprehensive-tutorial-for-deploying-laravel-4-on-Heroku)
 
 沒錯，就是 `$_` 這個魔法般的祕技⋯⋯
 
 那麼，鏡頭轉到 `bash` 的說明書上：
-http://www.gnu.org/software/bash/manual/bashref.html
+https://www.gnu.org/software/bash/manual/bashref.html
 
 > When Bash invokes an external command, the variable ‘$_’ is set to the full path name of the command and passed to that command in its environment.)
 

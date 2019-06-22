@@ -16,7 +16,7 @@ tags: [C++, 遊戲, 筆記]
 
 > 印象中 SDL 應該就是當時在書上看到的，不過書名實在想不起來。只知道是一本綠色封面的書，日本人寫的。
 
-關於入門的學習 [Willusher](http://www.willusher.io/pages/sdl2/) 這個網站的 SDL 入門教學來開始學習，畢竟 SDL2 的文字教學（個人不是很喜歡看影片）似乎不好找，又充斥著 SDL(SDL1) 的教學有時候還挺混亂的！
+關於入門的學習 [Willusher](https://www.willusher.io/pages/sdl2/) 這個網站的 SDL 入門教學來開始學習，畢竟 SDL2 的文字教學（個人不是很喜歡看影片）似乎不好找，又充斥著 SDL(SDL1) 的教學有時候還挺混亂的！
 
 <!-- more -->
 

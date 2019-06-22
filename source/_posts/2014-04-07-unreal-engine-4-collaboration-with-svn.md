@@ -77,7 +77,7 @@ DerivedDataCache
 
 ### UE4 設定
 
-![螢幕快照 2014-04-07 下午3.38.12.png](http://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png)
+![螢幕快照 2014-04-07 下午3.38.12.png](https://user-image.logdown.io/user/52/blog/52/post/192743/xm6y9WhGTqW17rgurYPw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-04-07%20%E4%B8%8B%E5%8D%883.38.12.png)
 
 基本上就是右上角有個紅色叉叉（選單可以找到，但是我竟然找不到）點開後設定好，就會變成綠色箭頭。
 

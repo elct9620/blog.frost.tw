@@ -33,7 +33,7 @@ tags: [JavaScript, CoffeeScript, UI, 前端, 界面]
 接著渲染 ( render ) 這個元件，在某一個 DOM 的物件上 Ex. document.body
 
 下面是以 CoffeeScript 所撰寫的 Hello World 版本，因為使用 CoffeeScript 因此和 JSX 不相容。
-不過仍能運作的關係是因為 JSX 算是輔助，只要在撰寫時使用「編譯後」的方式呈現即可（ [JSX Live Compiler](http://facebook.Github.io/react/jsx-compiler.html) 有興趣可以嘗試看看 ）
+不過仍能運作的關係是因為 JSX 算是輔助，只要在撰寫時使用「編譯後」的方式呈現即可（ [JSX Live Compiler](https://facebook.Github.io/react/jsx-compiler.html) 有興趣可以嘗試看看 ）
 
 ``` coffeescript
 HelloWorld = React.createClass {
@@ -49,7 +49,7 @@ HelloWorld = React.createClass {
 React.renderComponent (HelloWorld {name: "World"}), document.body
 ```
 
-Live Demo: http://jsfiddle.net/elct9620/TPHpS/
+Live Demo: https://jsfiddle.net/elct9620/TPHpS/
 
 ---
 
@@ -57,7 +57,7 @@ Live Demo: http://jsfiddle.net/elct9620/TPHpS/
 
 不過事實上其實非常精簡而且簡潔的，這邊先來討論他 DOM Like 的部分。
 
-![螢幕快照 2013-08-29 下午1.24.33.png](http://user-image.logdown.io/user/52/blog/52/post/95203/D8POboZ3RxSmSrhSJzwX_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-29%20%E4%B8%8B%E5%8D%881.24.33.png)
+![螢幕快照 2013-08-29 下午1.24.33.png](https://user-image.logdown.io/user/52/blog/52/post/95203/D8POboZ3RxSmSrhSJzwX_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-29%20%E4%B8%8B%E5%8D%881.24.33.png)
 
 從上圖來看，我們使用 [React] 裡面的 DOM 物件產生的 div 物件，或者是自行利用 createClass 產生的 DOM Like 物件（用這種方式稱呼似乎比較好理解），都是同一個類型物件下的產物，差別只在於原本的 DOM 物件沒有 state (狀態) 的屬性，這也是為什麼在 JSX 下會使用 &lt;Hello name="World" /&gt; 的方式撰寫的原因。
 
@@ -92,7 +92,7 @@ Button = React.createClass {
 React.renderComponent (Button {}), document.body
 ```
 
-Live Demo: http://jsfiddle.net/elct9620/cecjs/
+Live Demo: https://jsfiddle.net/elct9620/cecjs/
 
 這個範例我建立了一個叫做 Button 的物件，他會渲染出一個 HTML 的 button 元素，而上面套用的 class 樣式以及 Label 則會受到名為 btnClass 狀態的影響而產生改變。
 
@@ -139,7 +139,7 @@ Nickname = React.createClass {
 React.renderComponent (Nickname {nickname: "Wade"}), document.body
 ```
 
-Live Demo: http://jsfiddle.net/elct9620/ZrHy8/
+Live Demo: https://jsfiddle.net/elct9620/ZrHy8/
 
 在這段 Code 可以看到我對 input 設定了一個 ref 屬性，並且能夠在 onChange 事件發生時透過 @refs 來讀取對應的元素。
 
@@ -147,10 +147,10 @@ Live Demo: http://jsfiddle.net/elct9620/ZrHy8/
 
 ---
 
-![螢幕快照 2013-08-29 下午2.25.26.png](http://user-image.logdown.io/user/52/blog/52/post/95203/tuVxapuNTMOL2l3cAYE8_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-29%20%E4%B8%8B%E5%8D%882.25.26.png)
+![螢幕快照 2013-08-29 下午2.25.26.png](https://user-image.logdown.io/user/52/blog/52/post/95203/tuVxapuNTMOL2l3cAYE8_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-29%20%E4%B8%8B%E5%8D%882.25.26.png)
 
 那麼 [React] 適合被使用嗎？這是我在 Facebook 留言區塊發現的程式碼，每個使用 [React] 產生的元素都會有一個叫做 data-reactid 的屬性，用來辨識。
 
 所以，趕緊來試玩看看吧！使用起來其實也非常順暢。
 
-[React]: http://facebook.Github.io/react/
+[React]: https://facebook.Github.io/react/

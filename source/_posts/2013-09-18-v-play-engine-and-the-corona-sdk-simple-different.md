@@ -147,5 +147,5 @@ end
 
 如果文章有誤，也請大家指正。
 
-[V-Play]: http://v-play.net/
-[Corona]: http://coronalabs.com/
+[V-Play]: https://v-play.net/
+[Corona]: https://coronalabs.com/

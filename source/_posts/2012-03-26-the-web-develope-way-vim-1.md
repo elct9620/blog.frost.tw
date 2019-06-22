@@ -62,7 +62,7 @@ tags:
 
 經過一番折騰，大致上習慣了 Vim 操作與編輯文件，也稍微配置出了一套自己的常用 Plugin 跟設定檔。
 
-![http://i.imgur.com/KDluE.png](http://i.imgur.com/KDluE.png)
+![https://i.imgur.com/KDluE.png](https://i.imgur.com/KDluE.png)
 
 不過，在 Terminal 下的色調總是怪怪的。
 怎麼配也是弄不好，在我努力尋找配色方案時，有高手分享他的 Vim 配置。
@@ -74,7 +74,7 @@ tags:
 
 到目前為止，我的 Vim 配置已經告一段落。雖然熟悉使用 Vim 還有很長的一段路，但是至少已經有一套不錯的工具了！
 
-![http://i.imgur.com/DXOSK.png](http://i.imgur.com/DXOSK.png)
+![https://i.imgur.com/DXOSK.png](https://i.imgur.com/DXOSK.png)
 
 也順便給 Terminal 的配色修改了一下，感覺起來自己好像也變威了！
 不過，雖然有 Autocomplete 的 Plugin 不過相較 IDE 其實也是遜色很多，希望能夠純熟使用 VIM 之外，也能將許多程式撰寫上該記起來的東西記起來。

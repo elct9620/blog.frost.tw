@@ -25,7 +25,7 @@ tags: [Ruby, 心得]
 
 ### Understanding Typing, Understanding Ruby
 
-這場開場其實蠻棒的，我印象比較深刻的是關於 [DuckTyping](http://zh.wikipedia.org/wiki/%E9%B8%AD%E5%AD%90%E7%B1%BB%E5%9E%8B) 的部分，其實過去真的沒有思考過以這種方式的運用。
+這場開場其實蠻棒的，我印象比較深刻的是關於 [DuckTyping](https://zh.wikipedia.org/wiki/%E9%B8%AD%E5%AD%90%E7%B1%BB%E5%9E%8B) 的部分，其實過去真的沒有思考過以這種方式的運用。
 算是蠻大的啟發（在 Ruby 中用 `respond_to?` 去檢測是否有此方法，有的話就運行）
 
 另外就是對 Dynamic Typing 跟 Static Typing 的重新認識，很難得有機會這樣實際上了解兩種做法上背後的一些思考方式。兩者其實都還是有做型別檢查，只是先後的時機不同。而 Dynamic Typing 大多時候都得自己檢查。
@@ -128,14 +128,14 @@ Rails Girls 的發起人 Linda 跟 Terence 的演講（其實我不太認識 Ter
 
 大致上就是介紹 Functional Programing 的部分，不過我覺得特別的地方是一個物件導向的語言也能夠以這種方式來寫，真的蠻棒的，在適當的時候運用，應該是很不錯的 XD
 
-另外講者有一本書在講 Lambda 大家可以看看：[HappyLambda](http://leanpub.com/happylambda)
+另外講者有一本書在講 Lambda 大家可以看看：[HappyLambda](https://leanpub.com/happylambda)
 
 ### Ruby & Friends: Taking Go as an example
 
 個人蠻有興趣的一個主題，因為本身有在寫 Golang 所以就超有興趣 XD
 
 大致上就是在講 Ruby 跟 Golang 該怎麼溝通，主要是透過 Worker 的方式。
-其中就介紹了幾個套件，像是 [go-workers](https://Github.com/jrallison/go-workers) 跟 [goworker](http://www.goworker.org/) 等，把一些 Worker 用 Golang 感覺似乎蠻不錯的，效能有不少的提升啊 XD
+其中就介紹了幾個套件，像是 [go-workers](https://Github.com/jrallison/go-workers) 跟 [goworker](https://www.goworker.org/) 等，把一些 Worker 用 Golang 感覺似乎蠻不錯的，效能有不少的提升啊 XD
 
 另外也有介紹一下 RPC 的溝通方式，有 JSON 跟 Msgpack 兩種。不過我個人蠻偏好 Msgpack 的，用 Binary 的方式傳輸，不過另一點蠻棒的地方是語言的支援性真的不錯。
 
@@ -144,7 +144,7 @@ Rails Girls 的發起人 Linda 跟 Terence 的演講（其實我不太認識 Ter
 這場我基本上除了剛開始自我介紹有懂外，幾乎都不懂在幹嘛啊 XDD
 <del>然後中途就睡著了</del>
 
-後來醒來就是看到一些工具，我就記錄一下像是 [recap](http://gofreerange.com/recap/docs/recap.html) 跟 [celluloid](https://Github.com/celluloid/celluloid) 看起來跟早上第一場討論的東西有點類似。
+後來醒來就是看到一些工具，我就記錄一下像是 [recap](https://gofreerange.com/recap/docs/recap.html) 跟 [celluloid](https://Github.com/celluloid/celluloid) 看起來跟早上第一場討論的東西有點類似。
 
 後來結束後 Denny 說是在講平行運算之類的，我才比較有頓悟是在幹嘛 XD
 
@@ -178,7 +178,7 @@ LT 部分就選幾個比較有印象的吧 XD
 
 另外就是前面講 Functional Programing 的講者 Arne Brasseur 為了學中文用 Ruby 寫了一套 [Command Line Tool](https://Github.com/plexus/analects) 整個超強的，大家可以玩一下。
 
-還有一場講者介紹了他們的服務 [Lingo](http://www.lingohq.com/) 根本是超強的網站建制工具，看了我都想用了啊 XD
+還有一場講者介紹了他們的服務 [Lingo](https://www.lingohq.com/) 根本是超強的網站建制工具，看了我都想用了啊 XD
 不過考慮到現實面，就是台灣應該沒幾個人能用，所以還是當玩具玩玩看吧 XD
 
 另外還有像是嘗試把 Rails Deploy 到 Windows Server 2003 with IIS 這種恐怖的經驗分享（大概很恐怖吧 XD）

@@ -11,7 +11,7 @@ tags:
 
 我也順利的成為大學二年級的學生，而全新的課程，也終於擺脫一年級的基礎技巧，轉變為稍微特化專精的課程。雖然我不相許多同學跨兩個組別（系上的特色，讓學生選擇多媒體、動畫、遊戲三組）只主修多媒體，並且加上一門3D動畫以及角色造型。雖然課業壓力相對地減低，但是我也沒有過多的怠慢就是。
 
-這次，是要來說說 <a href="http://processing.org" target="_blank">Processing</a> 這個東西。
+這次，是要來說說 <a href="https://processing.org" target="_blank">Processing</a> 這個東西。
 
 一年級在上數位設計概論時，就從這位老師身上學到很多新的思考方式。這次的動態影像也不例外，讓我更確信除了網頁設計師外，我還能有更不同的選擇「互動媒體設計師」
 
@@ -19,7 +19,7 @@ tags:
 
 <!-- more -->
 
-那麼 <a href="http://processing.org" target="_blank">Processing</a> 是什麼呢？
+那麼 <a href="https://processing.org" target="_blank">Processing</a> 是什麼呢？
 
 我想，這樣解釋他會是比較適合的
 > 一個針對設計師、初學程式的人所設計的一種程式語言，並且擁有非常容易使用的圖形相關功能
@@ -35,22 +35,22 @@ tags:
 
 如果想要匯入 3D 的物件，其實非常容易，只要使用 PShape（類似於向量的圖形處理物件） 匯入即可
 
-![3D Object Loader](http://i.imgur.com/bcPWj.png) 
+![3D Object Loader](https://i.imgur.com/bcPWj.png) 
 
 或者使用 WebCam 與使用者進行互動，只要將 processing.video 的 Library import 後，也可以輕鬆使用。
 
-![Web Cam](http://i.imgur.com/fwjMW.jpg)
+![Web Cam](https://i.imgur.com/fwjMW.jpg)
 
 若要建立網路連線的遊戲，也可以輕鬆透過 processing.net 的 Library 進行創作。
 
 <div class="video-container">
-<iframe src="http://www.youtube.com/embed/WRUln3aKVwY" frameborder="0" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/WRUln3aKVwY" frameborder="0" allowfullscreen></iframe>
 </div>
 
 當然，制作 Android APP 也是非常容易的
 
 <div class="video-container">
-<iframe src="http://www.youtube.com/embed/lGZI1jQD0_Q" frameborder="0" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/lGZI1jQD0_Q" frameborder="0" allowfullscreen></iframe>
 </div>
 
 之後，會嘗試用更加互動性的方式去制作。

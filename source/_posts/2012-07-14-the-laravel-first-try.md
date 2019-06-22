@@ -20,7 +20,7 @@ tags:
 
 這步驟根本是湊字數的（被巴）
 
-我超貼心幫各位把<a href="http://laravel.com/" target="_blank">官網</a>都做好超連結了喔～～
+我超貼心幫各位把<a href="https://laravel.com/" target="_blank">官網</a>都做好超連結了喔～～
 
 總之就是下載，解壓縮，然後放到可以跑 PHP 的地方，幫 storage 資料夾設定為可寫。<br />
 大家可能會不太習慣，不過他是以 public 資料夾為瀏覽的目錄喔～

@@ -52,7 +52,7 @@ kill -int 1000
 
 如此一來就可以發送一個 SIGINT 給 PID 1000 的程式。
 
-由此可見，有很多我們平常在使用的東西都有支援接收訊號，例如 Nginx 的[文件](http://nginx.org/en/docs/control.html)就有說明哪些訊號可以做哪些事情。
+由此可見，有很多我們平常在使用的東西都有支援接收訊號，例如 Nginx 的[文件](https://nginx.org/en/docs/control.html)就有說明哪些訊號可以做哪些事情。
 
 像是 `SIGHUP` 可以讓 Nginx 重新讀取設定檔，也就是 `nginx -s reload` 的指令（雖然大多數時候我們可能都會直接重開 Nginx 吧⋯⋯）
 

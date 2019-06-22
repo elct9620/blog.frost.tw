@@ -30,7 +30,7 @@ tags: [前端, 心得]
 在遊戲中通常只有 Perspective / Orthographic 兩種攝影機可以使用，我們第一個目標就是要把它當作「相機」來進行操作。
 跟一般相機比較接近的是 Perspective Camera 因此我們選擇利用這個 Camera 來做攝影的動作。
 
-那麼，該怎麼截圖才對呢？可以參考網路上非常多的「[全景攝影教學](http://www.lazybox.com.tw/forum/fancystuff/photodiary/10335-87-lightroom--15-)」的做法，利用拼接數張相片來達成這個效果。
+那麼，該怎麼截圖才對呢？可以參考網路上非常多的「[全景攝影教學](https://www.lazybox.com.tw/forum/fancystuff/photodiary/10335-87-lightroom--15-)」的做法，利用拼接數張相片來達成這個效果。
 
 > 在 Prespective Camera 中，可以設定 Field of View (FOV) 這個設定值，最大可以達到 170 ~ 180 左右，簡單說就是廣角鏡頭的效果，能夠讓視野變得非常大，但是同時也讓畫面變形到無法辨識，因此這種方式是不可行的。
 
@@ -42,25 +42,25 @@ tags: [前端, 心得]
 
 因為是使用 Unreal Engine 來製作的，所以這邊就用 Unreal Engine 來示範架設攝影機的處理。
 
-![螢幕快照 2015-01-13 上午11.43.46.png](http://user-image.logdown.io/user/52/blog/52/post/249663/09DVxMSTT6YJgZCgrXiw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.43.46.png)
+![螢幕快照 2015-01-13 上午11.43.46.png](https://user-image.logdown.io/user/52/blog/52/post/249663/09DVxMSTT6YJgZCgrXiw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.43.46.png)
 
 首先我們先加入一個拍攝用的攝影機在希望拍攝全景圖場景的位置（之後可以刪掉，如果用不上的話⋯⋯）
 
-![螢幕快照 2015-01-13 上午11.46.15.png](http://user-image.logdown.io/user/52/blog/52/post/249663/4V6cxZEJTrGvnTy9wip4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.46.15.png)
+![螢幕快照 2015-01-13 上午11.46.15.png](https://user-image.logdown.io/user/52/blog/52/post/249663/4V6cxZEJTrGvnTy9wip4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.46.15.png)
 
 接下來調整攝影機位置到正確的點，這邊最重要的地方是把 (X, Y, Z) 三軸的旋轉都歸零，以免待會拍攝的時候發生問題。
 
-![螢幕快照 2015-01-13 上午11.47.21.png](http://user-image.logdown.io/user/52/blog/52/post/249663/0HCJoRfFTNKHA54pvWCi_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.47.21.png)
+![螢幕快照 2015-01-13 上午11.47.21.png](https://user-image.logdown.io/user/52/blog/52/post/249663/0HCJoRfFTNKHA54pvWCi_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.47.21.png)
 
 Unreal Engine 中有「Lock Viewport to Actor」的功能，利用這個功能將編輯器畫面對應到用來拍攝全景圖的攝影機上（主要是因為 Unreal Engine 的 Screenshot 功能是以編輯器的視窗為主）
 
-![螢幕快照 2015-01-13 上午11.50.38.png](http://user-image.logdown.io/user/52/blog/52/post/249663/roHN3olCQWbT0BVORWMP_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.50.38.png)
+![螢幕快照 2015-01-13 上午11.50.38.png](https://user-image.logdown.io/user/52/blog/52/post/249663/roHN3olCQWbT0BVORWMP_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.50.38.png)
 
 接下來隱藏掉一些不想出現在畫面上的物件（Ex. 小怪、遮蔽視線的物體）然後將 Realtime 功能關閉，開啟 Gameview 狀態讓編輯器畫面呈現「接近遊戲畫面」的狀態方便拍攝（過程不要點到場景物件，以免被拍到控制項）
 
-![螢幕快照 2015-01-13 上午11.51.08.png](http://user-image.logdown.io/user/52/blog/52/post/249663/6WjH80jJQwSog6ENHhyd_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.51.08.png)
+![螢幕快照 2015-01-13 上午11.51.08.png](https://user-image.logdown.io/user/52/blog/52/post/249663/6WjH80jJQwSog6ENHhyd_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.51.08.png)
 
-![螢幕快照 2015-01-13 上午11.51.21.png](http://user-image.logdown.io/user/52/blog/52/post/249663/rKN3lddTj61hyg7UfIhY_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.51.21.png)
+![螢幕快照 2015-01-13 上午11.51.21.png](https://user-image.logdown.io/user/52/blog/52/post/249663/rKN3lddTj61hyg7UfIhY_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.51.21.png)
 
 接下來開啟 High Resloution Screenshot 功能拍攝高畫質的全景圖吧！關於 Screenshot Size Multipler 的設定，就看大家的需求調整摟！（以我的解析度設定為 3 大概可以拿到約 600 萬畫素的截圖）
 
@@ -81,44 +81,44 @@ Unreal Engine 中有「Lock Viewport to Actor」的功能，利用這個功能�
 
 #### 拼接全景圖
 
-因為 Lightroom 有點大，所以就用了 OpenSource 的軟體 [Hugin](http://hugin.sourceforge.net) 來製作（其實非常好用）
+因為 Lightroom 有點大，所以就用了 OpenSource 的軟體 [Hugin](https://hugin.sourceforge.net) 來製作（其實非常好用）
 
-![螢幕快照 2015-01-13 下午12.01.22.png](http://user-image.logdown.io/user/52/blog/52/post/249663/MK3J09cTyeuF42BImv5y_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.01.22.png)
+![螢幕快照 2015-01-13 下午12.01.22.png](https://user-image.logdown.io/user/52/blog/52/post/249663/MK3J09cTyeuF42BImv5y_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.01.22.png)
 
 Mac 上打開會出現錯誤，按取消之後一樣可以正常使用（意義不明 XDD）
 
-![螢幕快照 2015-01-13 下午12.02.08.png](http://user-image.logdown.io/user/52/blog/52/post/249663/lGA9IJjjTS9FMywSRslr_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.02.08.png)
+![螢幕快照 2015-01-13 下午12.02.08.png](https://user-image.logdown.io/user/52/blog/52/post/249663/lGA9IJjjTS9FMywSRslr_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.02.08.png)
 
 開啟後選擇左上角的「載入圖片」一次選取剛剛全部拍攝的 26 張圖片後，會先詢問鏡頭的數據。
 > 這邊先填寫「焦距比」的設定值，也就是 Aspect 設定的 1.7778 然後再輸入水平視角的角度 FOV=90 度，最後會自動計算出焦距
 > 據說教學文章上說用 15mm ~ 25mm 的鏡頭會比較有透視感，但是遊戲攝影機拍出來隨便都 15mm 以下，到底是多有透視感啊 XDDD
 
-![螢幕快照 2015-01-13 下午12.04.55.png](http://user-image.logdown.io/user/52/blog/52/post/249663/kVa7Kq2dRDuY4dt1NLX2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.04.55.png)
+![螢幕快照 2015-01-13 下午12.04.55.png](https://user-image.logdown.io/user/52/blog/52/post/249663/kVa7Kq2dRDuY4dt1NLX2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.04.55.png)
 
 設定完畢後會發現畫面非常的奇怪，感覺只是單純地把圖片貼到球體上而已。不過這是正常情況（正射投影預設就是這樣啊 XD）
 
-![螢幕快照 2015-01-13 下午12.06.14.png](http://user-image.logdown.io/user/52/blog/52/post/249663/Uxog8yFLQs4n6cesVf67_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.06.14.png)
+![螢幕快照 2015-01-13 下午12.06.14.png](https://user-image.logdown.io/user/52/blog/52/post/249663/Uxog8yFLQs4n6cesVf67_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.06.14.png)
 
 點選「對準」按鈕之後，會開始計算這 26 張圖片的「重複」部分，並且以此為基準作為「對齊」的基準點。
 
 註：也因此，前面一個步驟視野 90 度卻用 45 度旋轉的理由就出現了（不然手動對齊可是會崩潰的）
 
-![螢幕快照 2015-01-13 下午12.08.33.png](http://user-image.logdown.io/user/52/blog/52/post/249663/diIjA5SnRUmMfc7v9lBN_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.08.33.png)
+![螢幕快照 2015-01-13 下午12.08.33.png](https://user-image.logdown.io/user/52/blog/52/post/249663/diIjA5SnRUmMfc7v9lBN_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.08.33.png)
 
 在預覽模式下可以看到軟體基本上算出了近百個對齊點才抓到正確的拼接參考，因此拍攝時多花點時間讓重複的部分夠多才能讓軟體自動的拼接。
 
-![螢幕快照 2015-01-13 下午12.10.07.png](http://user-image.logdown.io/user/52/blog/52/post/249663/DJ7mYBFPTgedqzDMput4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.10.07.png)
+![螢幕快照 2015-01-13 下午12.10.07.png](https://user-image.logdown.io/user/52/blog/52/post/249663/DJ7mYBFPTgedqzDMput4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.10.07.png)
 
-![螢幕快照 2015-01-13 下午12.11.36.png](http://user-image.logdown.io/user/52/blog/52/post/249663/9R8GP1HWRJexI8sTDlLi_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.11.36.png)
+![螢幕快照 2015-01-13 下午12.11.36.png](https://user-image.logdown.io/user/52/blog/52/post/249663/9R8GP1HWRJexI8sTDlLi_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.11.36.png)
 
 不過這時候可能會發現場景是上下顛倒的（不一定）這時候就利用移動/拖曳的功能，矯正場景到正確的位置。
 （這會影響到一開始的全景預覽位置是否正確，以及是否會有強烈的傾斜感）
 
-![螢幕快照 2015-01-13 下午12.13.21.png](http://user-image.logdown.io/user/52/blog/52/post/249663/m5R9U3BBQfiXJy5Ah7u2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.13.21.png)
+![螢幕快照 2015-01-13 下午12.13.21.png](https://user-image.logdown.io/user/52/blog/52/post/249663/m5R9U3BBQfiXJy5Ah7u2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.13.21.png)
 
 最後到投影設定檢查是否為「等距長方圓柱」這個設定值，確認無誤之後就可以進行輸出了！
 
-![螢幕快照 2015-01-13 下午12.14.27.png](http://user-image.logdown.io/user/52/blog/52/post/249663/8Js5Lw5RS6qWA3W62N1z_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.14.27.png)
+![螢幕快照 2015-01-13 下午12.14.27.png](https://user-image.logdown.io/user/52/blog/52/post/249663/8Js5Lw5RS6qWA3W62N1z_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.14.27.png)
 
 存好等距長方圓柱投影的貼圖後，就可以開始來製作 3D 的投影網頁場景摟！
 
@@ -215,9 +215,9 @@ class Scene
 		# 下面是計算攝影機面向的位置
     # 
     # 因為數學不好，看了很多資料覺得很崩潰（以下是利用公式計算，解釋會盡力表達）
-    # 資料：球座標系統 - http://zh.wikipedia.org/wiki/%E7%90%83%E5%9D%90%E6%A8%99%E7%B3%BB
-    # 資料：弧度 - http://zh.wikipedia.org/wiki/%E5%BC%A7%E5%BA%A6
-    # 資料：反三角函數 - http://zh.wikipedia.org/wiki/%E5%8F%8D%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0
+    # 資料：球座標系統 - https://zh.wikipedia.org/wiki/%E7%90%83%E5%9D%90%E6%A8%99%E7%B3%BB
+    # 資料：弧度 - https://zh.wikipedia.org/wiki/%E5%BC%A7%E5%BA%A6
+    # 資料：反三角函數 - https://zh.wikipedia.org/wiki/%E5%8F%8D%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0
     # 資料：JavaScript Math - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sin
     #
     # 1. 首先將 deg 轉 rad 是因為程式中接收的都是 radius （耍笨想很久沒想通 XD）

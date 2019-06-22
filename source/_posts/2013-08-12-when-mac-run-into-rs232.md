@@ -26,19 +26,19 @@ tags: [Mac, 網管]
 
 轉接頭除了網路購物可以找到外，中壢地區應該電子材料行比較容易取得。
 
-接下來是驅動，就目前來看似乎主要以 [Prolific](http://www.prolific.com.tw/) 這家為主流，我所購買的轉接頭官網上提供的驅動也是這家的（包裝盒內有光碟，但是小光碟 MBP 無法讀取）
+接下來是驅動，就目前來看似乎主要以 [Prolific](https://www.prolific.com.tw/) 這家為主流，我所購買的轉接頭官網上提供的驅動也是這家的（包裝盒內有光碟，但是小光碟 MBP 無法讀取）
 
 不過，很不幸的即使使用廠商官網上的 v1.0.9 驅動還是官方的 v1.5.0 抑或其它第三方驅動，都無法順利找到裝置。
 
 此時，我在另一篇文章發現如何找到適當驅動的方法，我去確認一下正在連接的 USB 轉接頭到底是什麼晶片組。
 
-![蒼時弦也的 USB 資訊](http://user-image.logdown.io/user/52/blog/52/post/84766/AB5mIrZSPeOTDYPWg8dn_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8810.47.59.png)
+![蒼時弦也的 USB 資訊](https://user-image.logdown.io/user/52/blog/52/post/84766/AB5mIrZSPeOTDYPWg8dn_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8810.47.59.png)
 
-製造商是 FDTI(http://www.ftdichip.com/) 這家公司，而非前面大家最常使用的 Prolific 這家廠商。
+製造商是 FDTI(https://www.ftdichip.com/) 這家公司，而非前面大家最常使用的 Prolific 這家廠商。
 
 不過，很不幸的是 FDTI 官網雖然寫著 Drivers 下載，但是抓下來卻是 Library 和 Header 的 SDK⋯⋯
 
-不過，在經過努力的 Google 之後，發現了[這個頁面](http://pbxbook.com/other/Mac-tty.html)
+不過，在經過努力的 Google 之後，發現了[這個頁面](https://pbxbook.com/other/Mac-tty.html)
 
 裡面可以下載到正確的 FDTI 以及 Mac 可用於連接 Console 的適當軟體，如果有興趣也可以參考看看。
 
@@ -52,11 +52,11 @@ tags: [Mac, 網管]
 
 `screen /dev/tty.usbserial-FTAJNHLA 115200` 輸入後就會發現畫面一片空白，如果最底下沒有訊息而且沒有被跳出，先嘗試輸入 Switch / UTM 這些設備的管理員賬號，運氣好就會有東西跑出來。
 
-![螢幕快照 2013-08-13 上午11.00.10.png](http://user-image.logdown.io/user/52/blog/52/post/84766/woHgLO0jT6ShkcIN78Vf_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8811.00.10.png)
+![螢幕快照 2013-08-13 上午11.00.10.png](https://user-image.logdown.io/user/52/blog/52/post/84766/woHgLO0jT6ShkcIN78Vf_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8811.00.10.png)
 
 接下來只要輸入正確的賬號密碼就可以順利登入了！
 
-![螢幕快照 2013-08-13 上午11.00.58.png](http://user-image.logdown.io/user/52/blog/52/post/84766/sNT4NKw2TAq2fmhxBdnX_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8811.00.58.png)
+![螢幕快照 2013-08-13 上午11.00.58.png](https://user-image.logdown.io/user/52/blog/52/post/84766/sNT4NKw2TAq2fmhxBdnX_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-13%20%E4%B8%8A%E5%8D%8811.00.58.png)
 
 這部分的操作本身並不困難，不過網路上的資料大多停留在 10.6 左右的版本，也沒有細說驅動程式有兩種晶片組的差異，很容易就因為裝錯驅動而無法使用。
 

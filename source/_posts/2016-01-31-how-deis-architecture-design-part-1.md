@@ -5,11 +5,11 @@ date: 2016-01-31 14:28
 comments: true
 tags: [CoreOS, Deis, 雲端, paas, 筆記, 心得]
 ---
-最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 [Deis](http://deis.io) 就是其中一個。
+最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 [Deis](https://deis.io) 就是其中一個。
 
 Deis 本身是受到 [Heroku](https://heroku.com) 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！
 
-關於 Deis 的架構，在官方的[文件](http://docs.deis.io/en/latest/understanding_deis/architecture/)已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。
+關於 Deis 的架構，在官方的[文件](https://docs.deis.io/en/latest/understanding_deis/architecture/)已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。
 
 > 我本身是 Heroku 的重度使用者，因為透過 git 管理以及豐富的 Addon 在開發時其實是非常方便的。
 > 不過有時候還是會受到一些限制，這時候 Deis 就提供了很大的幫助。不過這類 PaaS 工具其實還不能說非常成熟，使用上還是會有不少問題，透過了解底層的機制來建構一個自己的版本，在某些情境反而更加容易控制跟維護。

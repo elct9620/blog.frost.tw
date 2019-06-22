@@ -9,7 +9,7 @@ tags:
 
 好久沒寫，今天來分享一下應該是我本業的網頁設計相關文章 XDD
 
-前幾天在 Google Reader 上看到 [Zespia](http://zespia.tw/) 換了新佈景，原本的佈景也是目前這個網誌用的 [Slash](http://zespia.tw/Octopress-Theme-Slash/index_tw.html) 不過因為使用者越來越多，所以站長決定換新佈景～
+前幾天在 Google Reader 上看到 [Zespia](https://zespia.tw/) 換了新佈景，原本的佈景也是目前這個網誌用的 [Slash](https://zespia.tw/Octopress-Theme-Slash/index_tw.html) 不過因為使用者越來越多，所以站長決定換新佈景～
 
 接著，我看到那中間的 "Z" 字 Logo 那透明度緩緩的恢復的效果非常的有興趣，於是，我開始了調查……
 
@@ -22,7 +22,7 @@ tags:
 嘗試幾次後，大概了解使用了！
 （中文叫做「漸變」用途大概就是在 CSS 設定值變化時提供一個漸進的變化）
 
-不過以目前瀏覽器大戰的情況來看，用純 CSS 撰寫實在吃力不討好，於是我就用了 [Compass](http://compass-style.org) 稍微輔助。
+不過以目前瀏覽器大戰的情況來看，用純 CSS 撰寫實在吃力不討好，於是我就用了 [Compass](https://compass-style.org) 稍微輔助。
 
 ``` sCSS site.css.scss
 

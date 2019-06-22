@@ -17,7 +17,7 @@ tags: [Ruby, C#, 心得, 筆記]
 ### Ruby vs MRuby
 
 一開始，我就從其他語言呼叫 Ruby 這方面開始著手，不過情況其實不樂觀。
-找了不少資料只能找到 [Programing Ruby](http://Ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html) 的簡單介紹，以及名為 [SWIG](http://www.swig.org/) 這樣的工具。
+找了不少資料只能找到 [Programing Ruby](https://Ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html) 的簡單介紹，以及名為 [SWIG](https://www.swig.org/) 這樣的工具。
 
 雖然有嘗試用過 Programing Ruby 的方式，但是似乎因為某些問題，我的 Herader 檔案是缺少的。
 （雖然後面學到 Compile 後可能會增加這些檔案，不過到此我就放棄了 XD）

@@ -87,7 +87,7 @@ $app->get('/', function() use ($app){
 	<meta name="author" content="Aotoki" />
 
 	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
-	<link rel="stylesheet" href="http://twitter.Github.com/bootstrap/1.4.0/bootstrap.min.CSS" />
+	<link rel="stylesheet" href="https://twitter.Github.com/bootstrap/1.4.0/bootstrap.min.CSS" />
 	<style>
 		.container{
 			margin:15px auto;
@@ -158,7 +158,7 @@ $app->post('/new', function() use ($app){
 不過，大家一定有疑問，是怎麼讀取呢？ $app->requrest(); 會負責處理有關 HTTP 請求得部份，而留言都會以 POST 方式傳輸資料，所以就要以 $app->requrest()->post('資料名稱'); 來接收。<br />
 那麼為什麼 timestamp 不用接收呢？那是因為時間總不能由使用者自己決定，所以由我們產生（time() 會給出一組秒數，是從 1970 年 1 月 1 日到今天的秒數。）
 
-不過還是會有人對於 $app->post() 和 $app->get() 的差異有所疑惑吧！對，這個差異就在於 $app->post() 只接受 POST 傳輸資料，所以直接打開 http://網址/new 是會出現找不到頁面的喔！（這也是 Slim Framework的特性，在之後的文章會簡單介紹。）
+不過還是會有人對於 $app->post() 和 $app->get() 的差異有所疑惑吧！對，這個差異就在於 $app->post() 只接受 POST 傳輸資料，所以直接打開 https://網址/new 是會出現找不到頁面的喔！（這也是 Slim Framework的特性，在之後的文章會簡單介紹。）
 
 好，現在已經完成儲存留言的機制了！但是打開網頁卻出現了錯誤？
 
@@ -171,7 +171,7 @@ $app->get('/', function() use ($app){
 })->name('home');
 ```
 
-這樣一來，就可以正常使用摟！而使用 urlFor 的理由就是確保網址格式不會發生問題（像是把留言板放在 http://網址/gb/ 下，如果網址設定為 / 那就會跑去 http://網址/ 而非 http://網址/gb 摟！）
+這樣一來，就可以正常使用摟！而使用 urlFor 的理由就是確保網址格式不會發生問題（像是把留言板放在 https://網址/gb/ 下，如果網址設定為 / 那就會跑去 https://網址/ 而非 https://網址/gb 摟！）
 
 那麼，我們也該幫 $app->post('/new', function() use ($app){}); 設定一下，以備不實之需。
 ``` PHP index.PHP
@@ -240,9 +240,9 @@ $app->get('/', function() use ($app){
 (V1.0版有加上分頁功能和簡易的檢查機制，而V1.0.1版則是修正了程式碼的Bug各位所看到的都是V1.0.1的程式碼)
 
 * Source Code : [https://Github.com/elct9620/30minGuestBook](https://github.com/elct9620/30minGuestBook)
-* Demo : [http://the-30min-gb.Herokuapp.com/](http://the-30min-gb.herokuapp.com/) - 之後教學更新範例網站也會更新，可能不會和目前的一樣。
+* Demo : [https://the-30min-gb.Herokuapp.com/](https://the-30min-gb.herokuapp.com/) - 之後教學更新範例網站也會更新，可能不會和目前的一樣。
 
 分頁完成後大致上會長這樣：<br />
-[![2012\-01\-03 20\-04\-16](http://farm8.staticflickr.com/7174/6627445927_b4cc17ff2a.jpg)](http://www.flickr.com/photos/elct9620/6627445927/)
+[![2012\-01\-03 20\-04\-16](https://farm8.staticflickr.com/7174/6627445927_b4cc17ff2a.jpg)](https://www.flickr.com/photos/elct9620/6627445927/)
 
 <del>但是實際上會跟你想像的落差很大！</del>

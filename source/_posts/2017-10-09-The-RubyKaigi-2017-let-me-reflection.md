@@ -86,7 +86,7 @@ tags: [心得, Ruby]
 
 ![](/images/the-rubykaigi-2017-let-me-reflection/day3.jpg)
 
-「[The Ruby Module Builder Pattern](http://rubykaigi.org/2017/presentations/shioyama.html)」是在討論 Ruby 裡面的 Module 可以怎樣使用，是一場非常有用的應用技術演講。
+「[The Ruby Module Builder Pattern](https://rubykaigi.org/2017/presentations/shioyama.html)」是在討論 Ruby 裡面的 Module 可以怎樣使用，是一場非常有用的應用技術演講。
 
 講者的公司是日本 Steam 的金流代理商，另外講者自己的網誌也是很多很技術文章可以讀。
 

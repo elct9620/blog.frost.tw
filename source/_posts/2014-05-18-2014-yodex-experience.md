@@ -19,13 +19,13 @@ tags: [心得]
 就這類作品來說，我認為還是「內容」為主的創作，如果沒有內容的話基本上很難做出一個完整的作品，跟網頁設計感覺上差不多，都是要靠內容來豐富，單有設計沒什麼意義。
 
 互動作品#1 百陣：
-![2014-05-17 10.07.20.jpg](http://user-image.logdown.io/user/52/blog/52/post/199461/WaagaoL7SnyqaiKAFVBS_2014-05-17%2010.07.20.jpg)
+![2014-05-17 10.07.20.jpg](https://user-image.logdown.io/user/52/blog/52/post/199461/WaagaoL7SnyqaiKAFVBS_2014-05-17%2010.07.20.jpg)
 
 推測是 InDesign 製作的，其實就是很單純的點擊跟拖曳而已。點擊按鈕也沒有什麼反饋，就互動作品來說其實蠻普通的。
 不過內容很完整，而且這基本上是輔助性的作品，我想他的週邊反而設計的很不錯。
 
 互動作品#2 滑曆一族
-![2014-05-17 12.09.10.jpg](http://user-image.logdown.io/user/52/blog/52/post/199461/JU4ELJ2aTKqaze9RQcdh_2014-05-17%2012.09.10.jpg)
+![2014-05-17 12.09.10.jpg](https://user-image.logdown.io/user/52/blog/52/post/199461/JU4ELJ2aTKqaze9RQcdh_2014-05-17%2012.09.10.jpg)
 
 製作手法跟百陣差不多，問題也一樣。
 
@@ -35,7 +35,7 @@ tags: [心得]
 至於攝影跟動畫的作品，我完全不熟所以不好做評論。
 
 接下來就是遊戲的部分，我們依照最近距離的規則，先到了大同大學看「狐鈴」這部作品。
-![2014-05-17 13.22.55.jpg](http://user-image.logdown.io/user/52/blog/52/post/199461/0S3bwGbmTDqnBz7lvIaw_2014-05-17%2013.22.55.jpg)
+![2014-05-17 13.22.55.jpg](https://user-image.logdown.io/user/52/blog/52/post/199461/0S3bwGbmTDqnBz7lvIaw_2014-05-17%2013.22.55.jpg)
 
 其實大部份都是 UDK (Unreal Engine 3) 的預設功能，像是選單、FPS 模組修改等。
 不過美術、視覺都非常到位，而且音樂自己做，算是蠻用心的作品。
@@ -46,7 +46,7 @@ tags: [心得]
 這邊有段小插曲，就是我們在排隊的時候我發現旁邊穿著「磁場迷陣」T-Shirt 的人非常面熟，一問之下果然是作者**洪執宇**大大，就順便小聊了一下 XD
 （不過我竟然也被記住也蠻妙的，果然是平常臉書上太吵嗎 XD）
 
-![2014-05-17 14.49.38.jpg](http://user-image.logdown.io/user/52/blog/52/post/199461/MsLxa2iERyu7qhGW0j2b_2014-05-17%2014.49.38.jpg)
+![2014-05-17 14.49.38.jpg](https://user-image.logdown.io/user/52/blog/52/post/199461/MsLxa2iERyu7qhGW0j2b_2014-05-17%2014.49.38.jpg)
 
 我們主要在騷擾製作團隊，而且製作團隊也蠻熱心把製作的細節分享給大家。
 結束後就全組分攤買一份回去研究研究，不過當時據說程式跑出去了，所以沒機會交流一下（偷看到原始碼挺整齊的 XD）
@@ -56,7 +56,7 @@ tags: [心得]
 最後是 RED 這款遊戲，使用 RPG Maker 製作真的蠻強的。畢竟做成橫向捲軸格鬥，而且美術基本上應該非常吃重。
 不過我覺得是一個很不錯的案例，就是 RPG Maker 有著他的可能性。
 
-![2014-05-17 15.33.44.jpg](http://user-image.logdown.io/user/52/blog/52/post/199461/lnUKndgSzuf9hnWe29yo_2014-05-17%2015.33.44.jpg)
+![2014-05-17 15.33.44.jpg](https://user-image.logdown.io/user/52/blog/52/post/199461/lnUKndgSzuf9hnWe29yo_2014-05-17%2015.33.44.jpg)
 
 不過，我們也成功在這款遊戲達成「玩壞」的成就 XDD
 之後會開放下載，還蠻期待的。畢竟當時就是丟給同學玩，卡關死掉的時候我幫忙打一下 XD

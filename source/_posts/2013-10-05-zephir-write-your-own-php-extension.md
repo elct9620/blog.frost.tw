@@ -5,7 +5,7 @@ date: 2013-10-05 15:30
 comments: true
 tags: [PHP, C, Zephir, 網站開發]
 ---
-前一篇文章說到了 [Zephir](http://zephir-lang.com/) 於是這篇就要來研究一下摟～
+前一篇文章說到了 [Zephir](https://zephir-lang.com/) 於是這篇就要來研究一下摟～
 
 關於這篇文章，會做以下幾件事情：
 
@@ -59,7 +59,7 @@ export PATH=$PATH:~/.tools/zephir/bin
 ### 寫一個簡單的 Router
 
 為了可以觀察到改變，我們先來用 PHP 做一個簡單的 Router 測試。
-基本上就是會將 `http://localhost/myApp/index` 轉成 `$controller = new MyApp(); $controller->index()` 的語法。
+基本上就是會將 `https://localhost/myApp/index` 轉成 `$controller = new MyApp(); $controller->index()` 的語法。
 
 這邊基本上就不多敘述實作，以下是這次範例用的 Router 原始碼。
 
@@ -200,7 +200,7 @@ $router->dispatch();
 
 ### 改寫為 Zephir 版本
 
-雖然基本上都和 PHP 類似，不過仍有不少 [Syntax](http://zephir-lang.com/language.html) 上的差異，建議大家先稍微讀過（不會很難，比新學語言簡單多了！）
+雖然基本上都和 PHP 類似，不過仍有不少 [Syntax](https://zephir-lang.com/language.html) 上的差異，建議大家先稍微讀過（不會很難，比新學語言簡單多了！）
 
 一開始要初始化專案，我先建立一個 myExtension 放置我的 PHP Extension 專案，然後這邊建立一個 MyRouter 的專案。
 > mkdir -p ~/myExtension/MyRouter
@@ -379,7 +379,7 @@ $router->dispatch();
 
 註：上文都沒有產生任何 Router 可以讀取到的 Class 大家可以自己嘗試加入，以下為範例程式碼
 
-http://localhost/app/home
+https://localhost/app/home
 
 ``` PHP index.PHP
 <?PHP

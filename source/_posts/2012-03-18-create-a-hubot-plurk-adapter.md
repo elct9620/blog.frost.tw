@@ -158,12 +158,12 @@ class PlurkStreaming extends EventEmitter
       @token_secret = options.token_secret
       #建立 OAuth 連接
       @consumer = new oauth.OAuth(
-        "http://www.plurk.com/OAuth/request_token",
-        "http://www.plurk.com/OAuth/access_token",
+        "https://www.plurk.com/OAuth/request_token",
+        "https://www.plurk.com/OAuth/access_token",
         @key,
         @secret,
         "1.0",
-        "http://www.plurk.com/OAuth/authorize".
+        "https://www.plurk.com/OAuth/authorize".
         "HMAC-SHA1"
       )
       @domain = "www.plurk.com"
@@ -182,10 +182,10 @@ class PlurkStreaming extends EventEmitter
 
   request: (method, path, body, callback) ->
     #記錄一下這次的 Request
-    console.log("http://#{@domain}#{path}")
+    console.log("https://#{@domain}#{path}")
     
     # Callback 這邊先不丟進去，要用另一種方式處理
-    request = @consumer.get("http://#{@domain}#{path}", @token, @token_secret, null)
+    request = @consumer.get("https://#{@domain}#{path}", @token, @token_secret, null)
     
     request.on "response", (res) ->
       res.on "data", (chunk) ->
@@ -226,7 +226,7 @@ class PlurkStreaming extends EventEmitter
     console.log("[Comet] #{server}")
     
     # Callback 這邊先不丟進去，要用另一種方式處理
-    request = @consumer.get("http://#{@domain}#{path}", @token, @token_secret, null)
+    request = @consumer.get("https://#{@domain}#{path}", @token, @token_secret, null)
     
     request.on "response", (res) ->
       res.on "data", (chunk) ->
@@ -401,4 +401,4 @@ class PlurkStreaming extends EventEmitter
 5. scripts 資料夾內是互動部分，不需要像 Adapter 如此大費周章處理（新增檔案並且設計好對白，之後就會回噗了～）
 
 我開發用的機器人在此，大家可以去跟他玩玩<br />
-[http://plurk.com/elct9620_bot](http://plurk.com/elct9620_bot)
+[https://plurk.com/elct9620_bot](https://plurk.com/elct9620_bot)

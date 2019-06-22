@@ -9,7 +9,7 @@ tags:
 
 好像有一段時間沒寫網誌了！
 
-上週在 [Code School](http://codeschool.com) 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。
+上週在 [Code School](https://codeschool.com) 週末免費最後的二十多小時才發現有免費課程，趕緊選了一個進行後，覺得不錯，於是跟老爸討論後決定購買會員資格。
 
 經過一週的苦戰，總算是將十三個課程都全不上過一次。
 （不過只看投影片跟進行練習題，沒有看影片，因為有點花時間，所以只能之後慢慢補完）
@@ -87,7 +87,7 @@ There is items list.
 這樣一來就會有一個帶有 data-remote="true" 屬性的連結產生。
 （這方面還挺方便的，只要多加個 options 就轉職為 Ajax 了！）
 
-接著打開 http://ajax-test.dev/ 點了一下連結，啥都沒發生。
+接著打開 https://ajax-test.dev/ 點了一下連結，啥都沒發生。
 於是打開 Chrome 的開發人員工具（Command + Alt + I）一探究竟。
 
 確實，有 Ajax 請求，但是傳回的是 HTML 頁面，好像不太對。回想了一下 Code School 課程裡面有要增加 *.js.erb 之類的檔案，先去修改一下 Controller 讓他可以傳回 js 格式的檔案。
@@ -220,4 +220,4 @@ $ ->
 
 大致上就是這樣了！不過 View 部分需要另外寫一個 template 其實不怎麼方便，如果用 Mission 01 的方法因為還是 erb 可以讓 Server 去 render :partial => "itemList" 之類的，不過 Backbone.JS 似乎就不怎麼方便。這部分只能看情況取捨摟～
 
-做完 [Code School](http://codeschool.com) 的課程真的有覺得內力大增，至少學到很多優秀的技巧。
+做完 [Code School](https://codeschool.com) 的課程真的有覺得內力大增，至少學到很多優秀的技巧。

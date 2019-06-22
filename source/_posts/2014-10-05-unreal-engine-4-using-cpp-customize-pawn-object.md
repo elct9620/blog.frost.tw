@@ -43,15 +43,15 @@ Blueprints 繼承問題，我個人推測是因為 Constructor（建構子）和
 
 如果開設的是 Blueprints 專案，也不用擔心，直接使用 `Add Code to Project` 功能即可。
 
-![螢幕快照 2014-10-05 下午9.36.34.png](http://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png)
+![螢幕快照 2014-10-05 下午9.36.34.png](https://user-image.logdown.io/user/52/blog/52/post/236204/WhdDk1dSx6VVxFsmNJd2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.34.png)
 
 之後會跳出選擇繼承的 Class 界面，這邊是要對 Pawn 做擴充所以就選擇 Pawn 這個 Class（當然，你可以依照需要選擇任何 Class）
 
-![螢幕快照 2014-10-05 下午9.36.45.png](http://user-image.logdown.io/user/52/blog/52/post/236204/0HDwZSTQ3qqTMpe36Lmw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.45.png)
+![螢幕快照 2014-10-05 下午9.36.45.png](https://user-image.logdown.io/user/52/blog/52/post/236204/0HDwZSTQ3qqTMpe36Lmw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.36.45.png)
 
 最後輸入 Class 的名稱即可
 
-![螢幕快照 2014-10-05 下午9.37.08.png](http://user-image.logdown.io/user/52/blog/52/post/236204/argRnxXcTgOt1v8llrgu_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.08.png)
+![螢幕快照 2014-10-05 下午9.37.08.png](https://user-image.logdown.io/user/52/blog/52/post/236204/argRnxXcTgOt1v8llrgu_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.08.png)
 
 > 在 Unreal Engine 4 中，Class Name 需要有 U 或者 A 的前置詞。
 > 大致上就是 A 屬於「可放置於場景」的物件，而 U 屬於「無法放置於場景」的物件（需要依附在 Actor 上）
@@ -59,11 +59,11 @@ Blueprints 繼承問題，我個人推測是因為 Constructor（建構子）和
 
 引擎中可以直接開啓 Visual Studio 或者 XCode 透過這個功能可以很快的開啟程式專案。
 
-![螢幕快照 2014-10-05 下午9.37.36.png](http://user-image.logdown.io/user/52/blog/52/post/236204/WcqXaPNsRmGJGPsJvfu4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.36.png)
+![螢幕快照 2014-10-05 下午9.37.36.png](https://user-image.logdown.io/user/52/blog/52/post/236204/WcqXaPNsRmGJGPsJvfu4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.37.36.png)
 
 剛開啟的 XCode 專案預設不是建置給編輯器的版本，需要先修改一下。
 
-![螢幕快照 2014-10-05 下午9.38.08.png](http://user-image.logdown.io/user/52/blog/52/post/236204/9xZ58RUlScvUzrhxCKIg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.38.08.png)
+![螢幕快照 2014-10-05 下午9.38.08.png](https://user-image.logdown.io/user/52/blog/52/post/236204/9xZ58RUlScvUzrhxCKIg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%889.38.08.png)
 
 > 之後按下 Ctrl(Cmd) + B 建置就可以產生 DLL 檔了！
 > 在 Unreal Engine 4.5 會支援 Hot Reload 所以不用重新開啟編輯器，在這之前每次建置都是要重開的，請注意。
@@ -211,13 +211,13 @@ AMyPawn::AMyPawn(const class FPostConstructInitializeProperties& PCIP)
 按下 Ctrl(Cmd) + B 然後重新開啟 Unreal Engine 看看我們的成果吧！
 
 新增 Blueprint 的時候可以找到剛剛加入的 `MyPawn`
-![螢幕快照 2014-10-05 下午10.46.44.png](http://user-image.logdown.io/user/52/blog/52/post/236204/eztME94VQ8CEc37JziVg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.46.44.png)
+![螢幕快照 2014-10-05 下午10.46.44.png](https://user-image.logdown.io/user/52/blog/52/post/236204/eztME94VQ8CEc37JziVg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.46.44.png)
 
 編輯屬性的地方會發現剛剛增加「可編輯」的 `Health` 屬性出現了（並且在正確的分類下）
-![螢幕快照 2014-10-05 下午10.47.17.png](http://user-image.logdown.io/user/52/blog/52/post/236204/dEnYlpQTYC3JZ0W0aGP1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.17.png)
+![螢幕快照 2014-10-05 下午10.47.17.png](https://user-image.logdown.io/user/52/blog/52/post/236204/dEnYlpQTYC3JZ0W0aGP1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.17.png)
 
 元件也多出剛剛增加的預設元件（並且可以修改其屬性）
-![螢幕快照 2014-10-05 下午10.47.42.png](http://user-image.logdown.io/user/52/blog/52/post/236204/tpMWb91hSPGkjVrap6AM_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.42.png)
+![螢幕快照 2014-10-05 下午10.47.42.png](https://user-image.logdown.io/user/52/blog/52/post/236204/tpMWb91hSPGkjVrap6AM_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-10-05%20%E4%B8%8B%E5%8D%8810.47.42.png)
 
 這樣一來，就算是完成自訂 Pawn 的第一步了！
 

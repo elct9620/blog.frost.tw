@@ -9,7 +9,7 @@ tags: [心得, Docker]
 
 主要是因為有兩場議程是我希望在近期解決的問題，因此現場聽講肯定會是一個比較好的方法。
 
-![螢幕快照 2014-12-12 下午11.26.55.png](http://user-image.logdown.io/user/52/blog/52/post/245946/FyIvUNQnSRa5aNaLWzK3_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-12-12%20%E4%B8%8B%E5%8D%8811.26.55.png)
+![螢幕快照 2014-12-12 下午11.26.55.png](https://user-image.logdown.io/user/52/blog/52/post/245946/FyIvUNQnSRa5aNaLWzK3_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-12-12%20%E4%B8%8B%E5%8D%8811.26.55.png)
 
 實際上，我其實算是蠻早接觸 Docker 的使用者，不過當時除了建建 Container 之外也不能做些什麼，因此很自然的就沒有多加在意了（現在使用起來發現 Docker 多了不少功能和改進⋯⋯）
 
@@ -32,7 +32,7 @@ tags: [心得, Docker]
 也許是早起的關係，或者是最近忙於畢業製作而睡眠不足，這場我聽到一半就睡著了⋯⋯
 
 不過在議程的安排上，我認為主辦單位是很有心刻意的安排。
-這場演講的內容基本上都可以從[《Docker —— 從入門到實踐》](http://philipzheng.gitbooks.io/Docker_practice/)這本書中學到，也是入門 Docker 必讀的讀物之一（除非你不喜歡在第一步的時候閱讀中文文件）
+這場演講的內容基本上都可以從[《Docker —— 從入門到實踐》](https://philipzheng.gitbooks.io/Docker_practice/)這本書中學到，也是入門 Docker 必讀的讀物之一（除非你不喜歡在第一步的時候閱讀中文文件）
 
 #### Docker 的現況與未來
 
@@ -78,7 +78,7 @@ tags: [心得, Docker]
 
 #### 從Twelve-Factors App角度，看如何導入Docker技術
 
-這是另一場我想聽的議程，之前看過 Heroku 的 [The 12factors App](http://12factor.net/) 不過卻一直無法理解其精髓所在，這次算是讓我搞懂大部分的概念了。
+這是另一場我想聽的議程，之前看過 Heroku 的 [The 12factors App](https://12factor.net/) 不過卻一直無法理解其精髓所在，這次算是讓我搞懂大部分的概念了。
 
 像是前言部份講到傳統的 Desktop App 架構，到 Mobile App 和 HTML5 Web App 等等，再接著到現代雲端技術的三大理論「Mircoservice」「12factors App」「Reactive System」。
 

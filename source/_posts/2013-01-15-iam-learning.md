@@ -9,7 +9,7 @@ tags:
 
 其實這篇文章是想偷懶不寫的，不過因為早上在 Twitter 上跟 hlb (布丁) 大大的一小段對話，只好寫了（趴
 
-「到底別人的團隊到底是怎樣工作的啊？好像跟我的經驗都很不一樣？」[原文](http://minipai.tumblr.com/day/2013/01/15)
+「到底別人的團隊到底是怎樣工作的啊？好像跟我的經驗都很不一樣？」[原文](https://minipai.tumblr.com/day/2013/01/15)
 
 因為這句話，我也回復說「我也很好奇」「在 WebConf Day2 後跟朋友吃飯從 TEDxTaipei 的 Henry 那邊學到的東西」
 
@@ -19,7 +19,7 @@ tags:
 
 <!-- more -->
 
-關於 WebConf 的詳細心得，就參考 [WebConf 2013 會後心得](http://revo-skill.dev/blog/2013/01/14/webconf-2013/) 這篇文章，不多說了⋯⋯
+關於 WebConf 的詳細心得，就參考 [WebConf 2013 會後心得](https://revo-skill.dev/blog/2013/01/14/webconf-2013/) 這篇文章，不多說了⋯⋯
 
 這次選擇在設計軌 (R2) 裡面聽演講，有很大的原因是：「設計師的世界很神秘」<br />
 <del>絕對不是有正妹</del> 不過另一個原因是我在設計上有很大的瓶頸，想要突破拉～～

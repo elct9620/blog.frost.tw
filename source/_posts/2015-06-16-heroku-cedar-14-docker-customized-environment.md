@@ -127,9 +127,9 @@ ENV APR_VERSION 1.5.2
 ENV APR_UTIL_VERSION 1.5.4
 ENV LIBPCRE_VERSION 8.37
 
-ENV APACHE_URL http://www.us.apache.org/dist/httpd/httpd-${APACHE_VERSION}.tar.gz
-ENV APR_URL http://www.us.apache.org/dist/apr/apr-${APR_VERSION}.tar.gz
-ENV APR_UTIL_URL http://www.us.apache.org/dist/apr/apr-util-${APR_UTIL_VERSION}.tar.gz
+ENV APACHE_URL https://www.us.apache.org/dist/httpd/httpd-${APACHE_VERSION}.tar.gz
+ENV APR_URL https://www.us.apache.org/dist/apr/apr-${APR_VERSION}.tar.gz
+ENV APR_UTIL_URL https://www.us.apache.org/dist/apr/apr-util-${APR_UTIL_VERSION}.tar.gz
 ENV PCRE_URL ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${LIBPCRE_VERSION}.tar.gz
 
 ENV APACHE_DIR httpd-${APACHE_VERSION}

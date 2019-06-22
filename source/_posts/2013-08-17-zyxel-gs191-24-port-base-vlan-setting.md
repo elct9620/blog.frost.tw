@@ -21,7 +21,7 @@ tags: [網管, VLAN]
 
 雖然很順利的可以回家睡覺，但是第二天醒來還是渾身不舒服，因此決定一定要來「搞清楚狀況」用手機（前一天晚上只帶手機回家）刻苦地搜尋資料，並且順利了找到討論 Port Base VLAN 的文章。
 
-[VID 和 PVID 的區別](http://576642026.blog.51cto.com/1353191/811386)
+[VID 和 PVID 的區別](https://576642026.blog.51cto.com/1353191/811386)
 
 ---
 
@@ -58,7 +58,7 @@ tags: [網管, VLAN]
 
 那麼，就開始來設定 Port Base 的 VLAN 吧！
 
-![螢幕快照 2013-08-18 下午3.40.42.png](http://user-image.logdown.io/user/52/blog/52/post/87501/9Is7MPIZRcS5ZxmWuMNv_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-18%20%E4%B8%8B%E5%8D%883.40.42.png)
+![螢幕快照 2013-08-18 下午3.40.42.png](https://user-image.logdown.io/user/52/blog/52/post/87501/9Is7MPIZRcS5ZxmWuMNv_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-18%20%E4%B8%8B%E5%8D%883.40.42.png)
 
 我們要先來建立 VLAN 來繼續設定。
 
@@ -92,7 +92,7 @@ Port 1 的使用者連接 > 嘗試向外部連接 > 因為沒有 Tag 拿到預�
 以上是我推測的情況，實際運作因為沒有方便的封包檢測軟體也不敢確定。
 （從文章所說，當兩者 VID 不同時，回應會加上 Tag 而設備檢查的是 VLAN 是否相同，因此發生錯誤）
 
-![螢幕快照 2013-08-18 下午3.40.57.png](http://user-image.logdown.io/user/52/blog/52/post/87501/QBjF9xz4R2eGgwWL1my0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-18%20%E4%B8%8B%E5%8D%883.40.57.png)
+![螢幕快照 2013-08-18 下午3.40.57.png](https://user-image.logdown.io/user/52/blog/52/post/87501/QBjF9xz4R2eGgwWL1my0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-18%20%E4%B8%8B%E5%8D%883.40.57.png)
 （Port 23 是下一台 Switch 的 Port 因此把相關的 VID 都一起送過去）
 
 此時將全部 Port 發出的封包都改為 Untag 的狀態，也就是發出封包時都是沒有 Tag 的狀態。

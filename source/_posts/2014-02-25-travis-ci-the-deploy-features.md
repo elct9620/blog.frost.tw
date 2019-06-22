@@ -47,7 +47,7 @@ deploy:
 
 上面基本上就是最為基本的使用，不過要注意的是，假設測試的版本有多個（Ex. PHP 5.4, PHP 5.5）那麼這個動作也會被執行兩次（預設情況）
 
-後面就來談談[官方文件](http://docs.travis-ci.com/user/deployment/Heroku/)上所敘述的其他運用方式吧！
+後面就來談談[官方文件](https://docs.travis-ci.com/user/deployment/Heroku/)上所敘述的其他運用方式吧！
 （這個 Deploy 功能也支援像是 OpenShift, AWS 等，可以依照情況使用。）
 
 ### 不同 Branch Deploy 到不同 Heroku APP

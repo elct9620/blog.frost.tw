@@ -36,11 +36,11 @@ Ex. NKO 2013 的作品是學校的一項作業，還得繼續完善。
 
 **注意，成品是 APP 以下截圖為使用 Flash 製作時的畫面**
 
-![螢幕快照 2013-11-11 下午5.49.29.png](http://user-image.logdown.io/user/52/blog/52/post/159560/kCyN4Y91SpKaPsL6LaWS_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-11-11%20%E4%B8%8B%E5%8D%885.49.29.png)
+![螢幕快照 2013-11-11 下午5.49.29.png](https://user-image.logdown.io/user/52/blog/52/post/159560/kCyN4Y91SpKaPsL6LaWS_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-11-11%20%E4%B8%8B%E5%8D%885.49.29.png)
 
-![螢幕快照 2013-11-11 下午5.49.39.png](http://user-image.logdown.io/user/52/blog/52/post/159560/X1hxKxF3SXuDCq3aNYhy_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-11-11%20%E4%B8%8B%E5%8D%885.49.39.png)
+![螢幕快照 2013-11-11 下午5.49.39.png](https://user-image.logdown.io/user/52/blog/52/post/159560/X1hxKxF3SXuDCq3aNYhy_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-11-11%20%E4%B8%8B%E5%8D%885.49.39.png)
 
-![螢幕快照 2013-11-11 下午5.50.05.png](http://user-image.logdown.io/user/52/blog/52/post/159560/PThjct8lR8mSzQPRnwRd_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-11-11%20%E4%B8%8B%E5%8D%885.50.05.png)
+![螢幕快照 2013-11-11 下午5.50.05.png](https://user-image.logdown.io/user/52/blog/52/post/159560/PThjct8lR8mSzQPRnwRd_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-11-11%20%E4%B8%8B%E5%8D%885.50.05.png)
 
 其實現在已經可以看到連線狀態下的其他使用者，不過移動還有問題（像是會卡住或者不斷切換方向等問題）
 

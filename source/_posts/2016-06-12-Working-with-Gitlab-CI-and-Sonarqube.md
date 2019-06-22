@@ -385,7 +385,7 @@ sonar:
 最後，在專案目錄設定一下 Sonar 的設定檔，扣掉 Token 不適合放到 VCS 之外，其他都可以安心寫在裡面。
 
 ```properties  sonar-project.properties 
-sonar.host.url=http://sonarqube.xxx.com.tw
+sonar.host.url=https://sonarqube.xxx.com.tw
 # must be unique in a given SonarQube instance
 sonar.projectKey=storemap:Android
 # this is the name displayed in the SonarQube UI
@@ -401,7 +401,7 @@ sonar.sources=app/src
 #sonar.sourceEncoding=UTF-8
 ```
 
-預設的 `sonar.host.url` 是 `http://localhost:9000` 為了要正確上傳，記得加上這行設定到對應的網址上。
+預設的 `sonar.host.url` 是 `https://localhost:9000` 為了要正確上傳，記得加上這行設定到對應的網址上。
 
 ### Android SDK & JUnit
 

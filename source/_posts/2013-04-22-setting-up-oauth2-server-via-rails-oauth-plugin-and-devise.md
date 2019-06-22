@@ -42,7 +42,7 @@ tags:
 
 因為會員系統是基於 Devise 的，因此一開始就先考慮要搭配 Devise 實作。
 
-建置上基本上參考 [Rails and OAuth-Plugin Part1](http://unhandledexpression.com/2011/06/02/Rails-and-oauth-plugin-part-1-the-provider/) 這一篇文章
+建置上基本上參考 [Rails and OAuth-Plugin Part1](https://unhandledexpression.com/2011/06/02/Rails-and-oauth-plugin-part-1-the-provider/) 這一篇文章
 
 首先針對 Gemfile 追加 gems
 
@@ -175,17 +175,17 @@ class MyProvider extends OAuth2\Client\Provider\IdentityProvider
 	public $respondType = 'json'; // 我們的伺服器預設為 json 這行可以省略
 	
 	public function urlAuthorize() {
-		return "http://myserver.dev/oauth/authorize";
+		return "https://myserver.dev/oauth/authorize";
 	}
 	
 	public function urlAccessToken() {
-		return "http://myserver.dev/oauth/token"; // OAuth 2.0 使用這個即可，不過得在 rake routes 才會注意到它
+		return "https://myserver.dev/oauth/token"; // OAuth 2.0 使用這個即可，不過得在 rake routes 才會注意到它
 	}
 	
 	// 以下為 Client 本身實作，因為繼承的父類別會呼叫，因此須實做出來
 	public function urlUserDetails(OAuth2\Client\Token\AccessToken $token) {
 		// 這裡假設 Server 已經建立好 user_controller 並且以 OAuth 保護
-		return "http://myserver.dev/user.json?access_token=" . $token;
+		return "https://myserver.dev/user.json?access_token=" . $token;
 	}
 	
 	public function userDetails($response, OAuth2\Client\Token\AccessToken $token)
@@ -206,7 +206,7 @@ require 'myProvider.PHP'; // 剛剛建立的 Provider
 $provider = new MyProvider(Array(
 	'clientId' => 'YOUR_CLIENT_KEY',
 	'clientSecret' => 'YOUR_CLIENT_SECRET',
-	'redirectUri' => 'http://myclient.dev/' // 這是這個 PHP 運行的位置
+	'redirectUri' => 'https://myclient.dev/' // 這是這個 PHP 運行的位置
 ));
 
 if(!isset($_GET['code'])) {

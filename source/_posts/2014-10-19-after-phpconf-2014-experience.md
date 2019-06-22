@@ -162,7 +162,7 @@ tags: [PHP, 心得]
 龍哥就順便展示 Rails 4.2 的 Debugger 功能（類似 Breakpoint）和 Console ( 網頁中直接跑 Console 的神奇功能 ) 給我們看，看起來 Rails 4.2 會變得更好用。
 
 另外就是，其實 PHP 開發者常用的 XDebug 也是有類似 Breakpoint 的功能提供給開發者喔！
-請參照 [XDebug Remote Debug](http://xdebug.org/docs/remote) 的功能，就我最後一次使用的印象，跟 Breakpoint 用法差不多（雖然我一直沒懂 Breakpoint 怎麼用⋯⋯）
+請參照 [XDebug Remote Debug](https://xdebug.org/docs/remote) 的功能，就我最後一次使用的印象，跟 Breakpoint 用法差不多（雖然我一直沒懂 Breakpoint 怎麼用⋯⋯）
 
 ### MySQL 的效能救贖：Percona XtraDB Cluster
 
