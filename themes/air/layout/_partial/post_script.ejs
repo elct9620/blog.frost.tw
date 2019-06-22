@@ -1,6 +1,6 @@
 <% if(!is_amp()) { // AMP mode don't enable javascript %>
 
-  <% if (config.disqus_shortname){ %>
+  <% if (config.disqus_shortname && page.comments){ %>
   <script type="text/javascript">
   var disqus_shortname = '<%= config.disqus_shortname %>';
 
