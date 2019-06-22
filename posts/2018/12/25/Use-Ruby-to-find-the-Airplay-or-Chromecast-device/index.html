@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="從雲端開始熱門起來後，為了能能讓提供不同服務的伺服器能夠被自動的偵測，我們在許多雲端相關的工具都會看到 Service Discovery 這個名詞。 不過，除了雲端上的服務能夠透過這樣的機制互相「發現」對方，我們也可以在區網中用類似的方法找到「提供服務」的裝置。 這就要從 mDNS (Multicast DNS) 和 DNS-SD (DNS-based Service Discovery) 開始">
 <meta name="keywords" content="心得,Ruby,mDNS,DNS-SD">
@@ -336,13 +336,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -376,6 +376,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

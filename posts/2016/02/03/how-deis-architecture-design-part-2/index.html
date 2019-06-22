@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="延續上一篇的內容，這篇文章要先來討論比較好懂的 Router 部分。 首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 Router 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更">
 <meta name="keywords" content="雲端,筆記,CoreOS,Deis,paas">
@@ -263,13 +263,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -303,6 +303,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

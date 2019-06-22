@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="參加完新一代就差不多是要等畢業了（茶 文章開始之前，一定要先靠北一下新一代，呼籲大家在該死的投票時不要因為去參加新一代很方便就不選自己辦校外展，辦校外展雖然比較累但是至少還可以學個策展的經驗，也不會被人規劃超小的場地繳根本沒有減半一樣的場地費，還不用把門票錢送給人家，也不用因為贊助商獎項很多變成當人家充場面的工具人，傻傻等那只有 8% 比例的獎項頒完。  不過你們沒被陰過，不懂這感覺。沒關係，參加">
 <meta name="keywords" content="心得,遊戲,設計">
@@ -275,13 +275,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -315,6 +315,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

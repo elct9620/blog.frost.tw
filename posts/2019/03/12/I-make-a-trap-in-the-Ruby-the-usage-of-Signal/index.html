@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="在 Ruby 之中，其實隱藏了很多非常實用的標準函式庫，而 Signal 就是其中一個。 我們在寫 Ruby 大多數時候都是 Ruby on Rails 框架的應用，但是你們有想過當我們在一些 Gem 運行的時候，使用 Ctrl + C 為什麼不會出現錯誤嗎？ 例如我們常常用到的 irb 和 pry 為什麼按下 Ctrl + C 的時候不是直接中斷，卻還能繼續運作？">
 <meta name="keywords" content="心得,Ruby,作業系統,Daemon">
@@ -253,13 +253,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -293,6 +293,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

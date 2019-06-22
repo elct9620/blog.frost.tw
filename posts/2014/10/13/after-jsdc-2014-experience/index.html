@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="總覺得因為大四忙著畢業製作反而沒有太多時間寫文章，不過參加 Conference 總是會習慣寫篇心得記錄一下今年發生的事情，反而讓網誌充滿了心得啊 XDD  我快要變成寫心得高手拉！！  今年的 JSDC 有很大的轉變，其實我覺得這是一件「非常有勇氣」的事情。自從我接觸社群、Conference 到現在也有四年多，正好在這段時間台灣的社群活動也越來越熱烈，從剛開始一年只會參加兩三次活動，到今年我平">
 <meta name="keywords" content="心得,Conference">
@@ -284,13 +284,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -324,6 +324,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

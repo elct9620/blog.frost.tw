@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="據說自從期末開始後，就很久沒有寫網誌了⋯⋯ 就在期末快結束的某一天晚上，高中同學傳訊息問我：「有在忙嗎？」於是，我就這樣開始拯救快被二一的好朋友拉 XD 老師：「阿你們就回去改一改 Blogger 佈景當期末」 從以前開始，我就一直覺得 Blogger 的佈景超難改，那鬼一般的 XML 總是讓我的網誌東少一塊西少一塊（崩潰不過為了拯救同學，我只好開始重新面對它⋯⋯（至於我一直都沒有用 Blogge">
 <meta name="keywords" content="前端,心得,CSS">
@@ -277,13 +277,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -317,6 +317,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

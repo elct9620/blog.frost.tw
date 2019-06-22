@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="心得文沒有趁熱寫果然很容易忘記，這次來嘗試使用炫砲的標題來開始這篇文章。 這次會參加 TGDF（台北遊戲開發者論壇）其實是因為到了大三確定要做遊戲，卻每次都因為這類活動都在上課日，礙於請假問題而沒有去參加（組員都不太喜歡請假）現在大四課比較少，就跟老師請個假去參加了！ 雖然是擔任志工，不過基本上規劃還算不錯，人力需求非常的低有蠻多時間可以去聽演講。 關於這部分，一方面是餐飲的部分由參加者自行處理，">
 <meta name="keywords" content="心得,遊戲">
@@ -290,13 +290,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -330,6 +330,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

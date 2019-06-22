@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="這標題超級長的說（崩潰 最近因為有實習生要來，所以把老爸公司設定好 Gitlab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。不過原本規劃的 Staging 環境也是在這檯主機上（當初就很淡定把記憶體和處理器加高，因為我會狂開 VM XD）但是會有 SSH 權限上的問題，原本想利用 Git 的 Hook 之類的來處理，但是感覺似乎不太好。 剛好這次看到 Gitlab / Git">
 <meta name="keywords" content="Rails,心得,Ruby,Vagrant,GitLab,筆記,Capistrano">
@@ -269,13 +269,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -309,6 +309,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="昨晚參加 Golang 小聚後，回到家稍微思考了一下該做什麼⋯⋯ 有時候單純的交流似乎比聽演講不錯，不過各有利弊，但是我也該開始思考之後一年該做些什麼。 基本上我是個非常「雜食性」的人，所以舉凡設計、程式撰寫、音樂等大多都有一定程度的興趣，也因此很難以分配好足夠的時間去做該做的事情。 距離畢業其實剩下兩年多，個人對於繼續升學並沒有想法，基本上順其自然即可。 不過，之後該做什麼才能夠讓未來的路更加依">
 <meta name="keywords" content="生活,學習">
@@ -299,13 +299,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -339,6 +339,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

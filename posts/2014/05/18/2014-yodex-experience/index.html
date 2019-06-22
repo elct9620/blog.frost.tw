@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="咳了一周都還沒好，還好週六那天沒有很嚴重不然幾乎逛不下去。（看起來感冒問題比例很低，反倒是有類似咳嗽症狀的問題可能性比較高，總之希望趕快好啊⋯⋯） 今年因為互動老師的作業，早上先去繞了一下多媒體類的作品（雖然畢製做遊戲⋯⋯）也因此非常感謝我的組員（互動和畢製）分別替我看了大部份的作品，還有陪我先逛了多媒體類的作品。 雖然兩個類型的照片、觀看數量差不多，不過我這篇文章還是以畢製的遊戲類為主去寫。">
 <meta name="keywords" content="心得">
@@ -242,13 +242,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -282,6 +282,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>

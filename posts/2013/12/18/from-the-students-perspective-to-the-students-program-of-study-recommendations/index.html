@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" >
   <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
@@ -8,7 +8,7 @@
 
   <meta name="author" content="蒼時弦也">
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <meta name="description" content="雖然自己不是什麼高手，也沒什麼有建設性的建議，但是最近老爸公司來了實習生，我在跟實習生的互動過程中，發現了一些學生在學習程式上的一些要注意的部分，所以想來分享一下。 （先不討論我怎麼會在老爸公司寫扣，還有實習生怎麼出現的這些神秘問題了 XD）  其實已經有很多前輩已經分享過非常多有用的技巧與方法，這邊就單純以我個人的經驗，還有與實習生接觸後，我在教導實習生使用 Rails 和融入老爸公司開發流程的">
 <meta name="keywords" content="Rails,PHP,程式,經驗">
@@ -279,13 +279,13 @@
 
   
   <script type="text/javascript">
-  var disqus_shortname = 'revo-skill-frost';
+  window.disqus_shortname = 'revo-skill-frost';
 
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   }());
   </script>
@@ -319,6 +319,7 @@
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
        js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>
