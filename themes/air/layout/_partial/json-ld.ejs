@@ -1,4 +1,5 @@
 <script type="application/ld+json">
+  [
 {
     "@context": "http://schema.org",
     "@type": "Blog",
@@ -9,9 +10,7 @@
     "sameAs": [
       "https://www.facebook.com/frost.tw/"
     ]
-}
-</script>
-<script type="application/ld+json">
+},
 {
     "@context": "http://schema.org",
     "@type": "Person",
@@ -24,10 +23,7 @@
       "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
       "https://www.linkedin.com/in/elct9620"
     ]
-}
-</script>
-<% if(is_home()) { %>
-<script type="application/ld+json">
+}<% if(is_home()) { %>,
 {
   "@context":"http://schema.org",
   "@type":"ItemList",
@@ -40,14 +36,10 @@
     }<%- (config.per_page == index + 1) ? '' : ',' %>
   <% }) %>
   ]
-}
-</script>
-<% } %>
-<% if(is_post() || is_amp()) { %>
-<script type="application/ld+json">
+}<% } %><% if(is_post() || is_amp()) { %>,
 {
   "@context":"http://schema.org",
-  "@type":"Article",
+  "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "<%= page.permalink %>"
@@ -59,6 +51,7 @@
     <% } %>
     "<%= config.cover %>"
   ],
+  <% if(thumbnail(page)) { %>"thumbnailUrl": "<%= thumbnail(page) %>", <% } %>
   "datePublished": "<%= page.date.toDate().toISOString() %>",
   "dateModified": "<%= page.updated.toDate().toISOString() %>",
   "description":"<%- strip_html(page.excerpt).replace(/\"/g, "\\\"").replace(/\n/g, "") %>",
@@ -74,9 +67,7 @@
       "url": "http://blog.forst.tw/logo-wide.png"
     }
   }
-}
-</script>
-<script type="application/ld+json">
+},
 {
   "@context": "http://schema.org",
   "@type": "BreadcrumbList",
@@ -98,5 +89,6 @@
     }
   }]
 }
-</script>
 <% } %>
+]
+</script>
