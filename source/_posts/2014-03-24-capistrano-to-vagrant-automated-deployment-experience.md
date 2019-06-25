@@ -5,7 +5,7 @@ date: 2014-03-24 09:32
 comments: true
 tags: [Ruby, Rails, Vagrant, 心得, 筆記, Capistrano]
 ---
-之前寫過一篇關於 [Vagrant + Capistrano + Gitlab](https://blog.frost.tw/posts/2013/11/03/Vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed) 的自動化部署介紹。
+之前寫過一篇關於 [Vagrant + Capistrano + Gitlab](https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/) 的自動化部署介紹。
 
 不過當時因為一些問題，卡著沒有繼續完成測試。
 最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯

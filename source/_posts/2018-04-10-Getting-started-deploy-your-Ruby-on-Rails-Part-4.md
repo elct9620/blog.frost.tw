@@ -4,7 +4,7 @@ date: 2018-04-10 16:54:22
 tags: [教學,DevOps,Ruby on Rails]
 ---
 
-從[第一篇](https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/)到[第二篇](https://blog.frost.tw/posts/2018/03/23/Getting-started-deploy-your-Ruby-on-Rails-Part-2/)的說明，加上[第三篇](https://blog.frost.tw/posts/2018/03/23/Getting-started-deploy-your-Ruby-on-Rails-Part-3/)我想大家已經對編譯自己的環境稍為熟悉。
+從[第一篇](https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/)到[第二篇](https://blog.frost.tw/posts/2018/03/23/Getting-started-deploy-your-Ruby-on-Rails-Part-2/)的說明，加上[第三篇](https://blog.frost.tw/posts/2018/03/27/Getting-started-deploy-your-Ruby-on-Rails-Part-3/)我想大家已經對編譯自己的環境稍為熟悉。
 
 為了要可以用 Passenger 作為網站伺服器，我們需要自行編譯 Nginx 讓他可以使用 Passenger 模組。
 

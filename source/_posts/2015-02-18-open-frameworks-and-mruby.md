@@ -17,7 +17,7 @@ Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來�
 
 <!-- more -->
 
-首先，要使用 MRuby 必須先有 MRuby 才行，關於這部分請直接參考「[MRuby in C# 因 RPG Maker的慘劇（一）](https://blog.frost.tw/posts/2014/09/04/mRuby-in-csharp-the-tragedy-of-rpg-maker-1)」這篇文章，裡面會詳細說明建構 Static Library 的方法。
+首先，要使用 MRuby 必須先有 MRuby 才行，關於這部分請直接參考「[MRuby in C# 因 RPG Maker的慘劇（一）](https://blog.frost.tw/posts/2014/09/04/mruby-in-csharp-the-tragedy-of-rpg-maker-1/)」這篇文章，裡面會詳細說明建構 Static Library 的方法。
 
 > Open Frameworks 目前建置出來的是 32bit 的版本，因此跟 Mono 的情境一樣需要開啟 32bit 的編譯選項
 

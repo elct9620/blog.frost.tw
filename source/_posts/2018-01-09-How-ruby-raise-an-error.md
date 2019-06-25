@@ -96,7 +96,7 @@ make_exception(int argc, const VALUE *argv, int isstr)
 
 ```
 
-從這個角度看，我們會發現差異其實只是「多一次檢查」的程度，甚至不太影響運行的效能。不過從 [Programming Ruby](ruby-doc.com/docs/ProgrammingRuby/html/tut_exceptions.html) 這本書中的範例，卻發現了一個稍微意想不到的使用方法。
+從這個角度看，我們會發現差異其實只是「多一次檢查」的程度，甚至不太影響運行的效能。不過從 [Programming Ruby](https://ruby-doc.com/docs/ProgrammingRuby/html/tut_exceptions.html) 這本書中的範例，卻發現了一個稍微意想不到的使用方法。
 
 ```ruby
 def readData(socket)
