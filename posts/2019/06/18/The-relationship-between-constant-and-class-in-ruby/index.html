@@ -29,6 +29,7 @@
 
   <meta property="fb:pages" content="180666522388">
   <script type="application/ld+json">
+  [
 {
     "@context": "http://schema.org",
     "@type": "Blog",
@@ -39,9 +40,7 @@
     "sameAs": [
       "https://www.facebook.com/frost.tw/"
     ]
-}
-</script>
-<script type="application/ld+json">
+},
 {
     "@context": "http://schema.org",
     "@type": "Person",
@@ -54,14 +53,10 @@
       "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
       "https://www.linkedin.com/in/elct9620"
     ]
-}
-</script>
-
-
-<script type="application/ld+json">
+},
 {
   "@context":"http://schema.org",
-  "@type":"Article",
+  "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://blog.frost.tw/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/"
@@ -73,6 +68,7 @@
     
     "http://blog.frost.tw/icon-512.png"
   ],
+  "thumbnailUrl": "https://blog.frost.tw/images/2019-06-18-the-relationship-between-constant-and-class-in-ruby/thumbnail.png", 
   "datePublished": "2019-06-18T11:13:17.000Z",
   "dateModified": "2019-06-22T02:47:31.599Z",
   "description":"下班前龍哥說在 Mailing List 看到了一段 Code 很有趣。12345678910a = Class.newp a        #=&gt; #&lt;Class:0x0000558d34f68b48&gt;p a.name   #=&gt; nilB = ap a.name   #=&gt; 'B'C = ap C.name   #=&gt; 'B'裡面 C = a 到底發生了什麼事情，是很值得討論的，因為有了線索是 rb_const_set 可以找到原因，所以就利用下班時間來讀看看這段。關於前面的用法可以參考之前寫過的自由的 Ruby 類別來了解原因。",
@@ -88,9 +84,7 @@
       "url": "http://blog.forst.tw/logo-wide.png"
     }
   }
-}
-</script>
-<script type="application/ld+json">
+},
 {
   "@context": "http://schema.org",
   "@type": "BreadcrumbList",
@@ -112,8 +106,9 @@
     }
   }]
 }
-</script>
 
+]
+</script>
 
 
 

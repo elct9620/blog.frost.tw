@@ -19,7 +19,7 @@
 <meta property="og:description" content="之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。 不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="http://blog.frost.tw/icon-512.png">
-<meta property="og:updated_time" content="2019-06-22T02:47:31.548Z">
+<meta property="og:updated_time" content="2019-06-25T10:38:13.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Capistrano to Vagrant 自動部署心得">
 <meta name="twitter:description" content="之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。 不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯">
@@ -29,6 +29,7 @@
 
   <meta property="fb:pages" content="180666522388">
   <script type="application/ld+json">
+  [
 {
     "@context": "http://schema.org",
     "@type": "Blog",
@@ -39,9 +40,7 @@
     "sameAs": [
       "https://www.facebook.com/frost.tw/"
     ]
-}
-</script>
-<script type="application/ld+json">
+},
 {
     "@context": "http://schema.org",
     "@type": "Person",
@@ -54,14 +53,10 @@
       "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
       "https://www.linkedin.com/in/elct9620"
     ]
-}
-</script>
-
-
-<script type="application/ld+json">
+},
 {
   "@context":"http://schema.org",
-  "@type":"Article",
+  "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/"
@@ -71,8 +66,9 @@
     
     "http://blog.frost.tw/icon-512.png"
   ],
+  
   "datePublished": "2014-03-24T01:32:00.000Z",
-  "dateModified": "2019-06-22T02:47:31.548Z",
+  "dateModified": "2019-06-25T10:38:13.238Z",
   "description":"之前寫過一篇關於 Vagrant + Capistrano + Gitlab 的自動化部署介紹。不過當時因為一些問題，卡著沒有繼續完成測試。最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯",
   "author": {
     "@type": "Person",
@@ -86,9 +82,7 @@
       "url": "http://blog.forst.tw/logo-wide.png"
     }
   }
-}
-</script>
-<script type="application/ld+json">
+},
 {
   "@context": "http://schema.org",
   "@type": "BreadcrumbList",
@@ -110,8 +104,9 @@
     }
   }]
 }
-</script>
 
+]
+</script>
 
 
 
@@ -158,7 +153,7 @@
   </header>
   <div class="article__entry">
     
-    <p>之前寫過一篇關於 <a href="https://blog.frost.tw/posts/2013/11/03/Vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed">Vagrant + Capistrano + Gitlab</a> 的自動化部署介紹。</p>
+    <p>之前寫過一篇關於 <a href="https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/">Vagrant + Capistrano + Gitlab</a> 的自動化部署介紹。</p>
 <p>不過當時因為一些問題，卡著沒有繼續完成測試。<br>最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯</p>
 <a id="more"></a>
 <p>關於安裝與建制的部分就不多做討論，讓我們直接「切入核心」來討論 <code>cap deploy</code> 失敗的主要原因吧！</p>
@@ -200,7 +195,7 @@
 <p>然後我們產生一個名為 <code>gitlab_ci</code> 的檔案。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">touch script/gitlab_ci</span><br><span class="line">chmod +x script/gitlab_ci</span><br></pre></td></tr></table></figure>
 <p>要確定有給予執行全縣，不然在 Gitlab CI Runner 上會跑不起來。<br>（<code>script/</code> 目錄是 Rails 放置一些 Shell Script 或者直接執行的程式用的目錄）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用 RVM 切換到對應版本</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -- 因為我 Deploy 到 Heroku 有在 Gemfile 裡面指定版本</span></span><br><span class="line">rvm use .</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安裝 Gems</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -- 沒有 without development 是因為 capistrano 在這個 group 裡面</span></span><br><span class="line">bundle install --without production</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 進行測試</span></span><br><span class="line">bundle exec rake db:create RAILS_ENV=test</span><br><span class="line">bundle exec rake db:migrate RAILS_ENV=test</span><br><span class="line">bundle exec rake spec RAILS_ENV=test</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 進行 Nightly 的 Deploy</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -- 我只希望對 <span class="string">"develop"</span> branch 實行，所以透過 Gitlab CI 的環境變數判斷</span></span><br><span class="line">if [ "$CI_BUILD_REF_NAME" == "develop" ]; then</span><br><span class="line">bundle exec cap nightly rvm1:install:gems # 預先安裝 Gems</span><br><span class="line">bundle exec cap nightly deploy # 發佈（同時也會 restart puma 不過 env 不會改變，要注意）</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 使用 RVM 切換到對應版本</span><br><span class="line"><span class="meta">#</span> -- 因為我 Deploy 到 Heroku 有在 Gemfile 裡面指定版本</span><br><span class="line">rvm use .</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 安裝 Gems</span><br><span class="line"><span class="meta">#</span> -- 沒有 without development 是因為 capistrano 在這個 group 裡面</span><br><span class="line">bundle install --without production</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 進行測試</span><br><span class="line">bundle exec rake db:create RAILS_ENV=test</span><br><span class="line">bundle exec rake db:migrate RAILS_ENV=test</span><br><span class="line">bundle exec rake spec RAILS_ENV=test</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 進行 Nightly 的 Deploy</span><br><span class="line"><span class="meta">#</span> -- 我只希望對 "develop" branch 實行，所以透過 Gitlab CI 的環境變數判斷</span><br><span class="line">if [ "$CI_BUILD_REF_NAME" == "develop" ]; then</span><br><span class="line">bundle exec cap nightly rvm1:install:gems # 預先安裝 Gems</span><br><span class="line">bundle exec cap nightly deploy # 發佈（同時也會 restart puma 不過 env 不會改變，要注意）</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
 <p>只後只要 <code>develop</code> branch 有變動，就可以自動地將最新版本的程式發佈到 Nightly Server 上面了！<br>（只是建議 Ruby 版本變更等情況，最好預先跑過 <code>rvm1:install:gems</code> 不然會吃到一次 Faild 的 Test 喔 XD）</p>
 <p>目前 Gitlab 還不支援 Success Script 所以只能先這樣土炮一下了 XD</p>
 <p>註： Puma 預設是 Unix Socket 建議搭配 Nginx 使用，還有 Port Forward 轉出來給 Host 主機處理。</p>

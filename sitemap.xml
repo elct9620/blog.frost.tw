@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</loc>
+    
+    <lastmod>2019-06-25T10:38:13.238Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2015/02/18/open-frameworks-and-mruby/</loc>
+    
+    <lastmod>2019-06-25T10:37:30.967Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/</loc>
+    
+    <lastmod>2019-06-25T10:36:46.607Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2018/01/09/How-ruby-raise-an-error/</loc>
+    
+    <lastmod>2019-06-25T10:35:50.333Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/</loc>
     
     <lastmod>2019-06-22T02:47:31.599Z</lastmod>
@@ -124,13 +152,6 @@
     <loc>https://blog.frost.tw/posts/2018/05/01/The-RubyElixirConfTW-2018-Experience/</loc>
     
     <lastmod>2019-06-22T02:47:31.581Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-4/</loc>
-    
-    <lastmod>2019-06-22T02:47:31.579Z</lastmod>
     
   </url>
   
@@ -268,13 +289,6 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2015/02/18/open-frameworks-and-mruby/</loc>
-    
-    <lastmod>2019-06-22T02:47:31.561Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.frost.tw/posts/2015/01/13/bring-the-games-scene-into-webpage/</loc>
     
     <lastmod>2019-06-22T02:47:31.560Z</lastmod>
@@ -369,13 +383,6 @@
     <loc>https://blog.frost.tw/posts/2014/04/07/unreal-engine-4-collaboration-with-svn/</loc>
     
     <lastmod>2019-06-22T02:47:31.549Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</loc>
-    
-    <lastmod>2019-06-22T02:47:31.548Z</lastmod>
     
   </url>
   
@@ -831,13 +838,6 @@
     <loc>https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</loc>
     
     <lastmod>2018-03-16T01:29:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2018/01/09/How-ruby-raise-an-error/</loc>
-    
-    <lastmod>2018-03-15T03:00:35.000Z</lastmod>
     
   </url>
   

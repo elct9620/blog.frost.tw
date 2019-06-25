@@ -29,6 +29,7 @@
 
   <meta property="fb:pages" content="180666522388">
   <script type="application/ld+json">
+  [
 {
     "@context": "http://schema.org",
     "@type": "Blog",
@@ -39,9 +40,7 @@
     "sameAs": [
       "https://www.facebook.com/frost.tw/"
     ]
-}
-</script>
-<script type="application/ld+json">
+},
 {
     "@context": "http://schema.org",
     "@type": "Person",
@@ -54,14 +53,10 @@
       "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
       "https://www.linkedin.com/in/elct9620"
     ]
-}
-</script>
-
-
-<script type="application/ld+json">
+},
 {
   "@context":"http://schema.org",
-  "@type":"Article",
+  "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/"
@@ -71,6 +66,7 @@
     
     "http://blog.frost.tw/icon-512.png"
   ],
+  
   "datePublished": "2016-02-03T07:54:00.000Z",
   "dateModified": "2019-06-22T02:47:31.568Z",
   "description":"延續上一篇的內容，這篇文章要先來討論比較好懂的 Router 部分。首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 Router 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。Deis 的原始碼都放在一起，其中 Router 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！",
@@ -86,9 +82,7 @@
       "url": "http://blog.forst.tw/logo-wide.png"
     }
   }
-}
-</script>
-<script type="application/ld+json">
+},
 {
   "@context": "http://schema.org",
   "@type": "BreadcrumbList",
@@ -110,8 +104,9 @@
     }
   }]
 }
-</script>
 
+]
+</script>
 
 
 

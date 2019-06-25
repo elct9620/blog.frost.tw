@@ -19,7 +19,7 @@
 <meta property="og:description" content="自從畢製開始與同學開發遊戲後，我就開始喜歡嘗試運用一些工具如 HTML5、Mono、Processing 等來製作一些屬於自己的「遊戲框架」 自從上次嘗試使用 Mono 與 MRuby 結合後，這次在與朋友的閒聊中回想起了 Open Frameworks 這套工具。Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來說比 Processing 改進不少，">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://user-image.logdown.io/user/52/blog/52/post/255651/B3wRMPrVSoqEcOuFq9ug_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-02-18%20%E4%B8%8B%E5%8D%887.26.02.png">
-<meta property="og:updated_time" content="2019-06-22T02:47:31.561Z">
+<meta property="og:updated_time" content="2019-06-25T10:37:30.967Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Open Frameworks 與 MRuby">
 <meta name="twitter:description" content="自從畢製開始與同學開發遊戲後，我就開始喜歡嘗試運用一些工具如 HTML5、Mono、Processing 等來製作一些屬於自己的「遊戲框架」 自從上次嘗試使用 Mono 與 MRuby 結合後，這次在與朋友的閒聊中回想起了 Open Frameworks 這套工具。Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來說比 Processing 改進不少，">
@@ -29,6 +29,7 @@
 
   <meta property="fb:pages" content="180666522388">
   <script type="application/ld+json">
+  [
 {
     "@context": "http://schema.org",
     "@type": "Blog",
@@ -39,9 +40,7 @@
     "sameAs": [
       "https://www.facebook.com/frost.tw/"
     ]
-}
-</script>
-<script type="application/ld+json">
+},
 {
     "@context": "http://schema.org",
     "@type": "Person",
@@ -54,14 +53,10 @@
       "https://plus.google.com/+%E8%92%BC%E6%99%82%E5%BC%A6%E4%B9%9F-plus",
       "https://www.linkedin.com/in/elct9620"
     ]
-}
-</script>
-
-
-<script type="application/ld+json">
+},
 {
   "@context":"http://schema.org",
-  "@type":"Article",
+  "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://blog.frost.tw/posts/2015/02/18/open-frameworks-and-mruby/"
@@ -73,8 +68,9 @@
     
     "http://blog.frost.tw/icon-512.png"
   ],
+  "thumbnailUrl": "https://user-image.logdown.io/user/52/blog/52/post/255651/B3wRMPrVSoqEcOuFq9ug_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-02-18%20%E4%B8%8B%E5%8D%887.26.02.png", 
   "datePublished": "2015-02-18T03:15:00.000Z",
-  "dateModified": "2019-06-22T02:47:31.561Z",
+  "dateModified": "2019-06-25T10:37:30.967Z",
   "description":"自從畢製開始與同學開發遊戲後，我就開始喜歡嘗試運用一些工具如 HTML5、Mono、Processing 等來製作一些屬於自己的「遊戲框架」自從上次嘗試使用 Mono 與 MRuby 結合後，這次在與朋友的閒聊中回想起了 Open Frameworks 這套工具。Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來說比 Processing 改進不少，至少就我這幾天的體驗來看，以我目前的實力已經可以純熟運用了！過去曾有一段時間嘗試玩過，但是因為沒有 Project Generator 輔助建構專案，再加上與 C++ 其實不是那麼的熟悉，因而放棄。這次透過 Unreal Engine 的經驗，以及上次 MRuby 的整合讓我順利的開始使用 Open Frameworks。這篇文章主要會分享我使用 Open Frameworks 開啟一個 Ruby 檔案，並且執行裡面的方法在介面中繪製圖像的做法。目前我認為這個方法其實還不太完善，不過作為初次的嘗試可以算是一個不錯的成果。",
   "author": {
     "@type": "Person",
@@ -88,9 +84,7 @@
       "url": "http://blog.forst.tw/logo-wide.png"
     }
   }
-}
-</script>
-<script type="application/ld+json">
+},
 {
   "@context": "http://schema.org",
   "@type": "BreadcrumbList",
@@ -112,8 +106,9 @@
     }
   }]
 }
-</script>
 
+]
+</script>
 
 
 
@@ -167,7 +162,7 @@
 </blockquote>
 <p>這篇文章主要會分享我使用 Open Frameworks 開啟一個 Ruby 檔案，並且執行裡面的方法在介面中繪製圖像的做法。<br>目前我認為這個方法其實還不太完善，不過作為初次的嘗試可以算是一個不錯的成果。</p>
 <a id="more"></a>
-<p>首先，要使用 MRuby 必須先有 MRuby 才行，關於這部分請直接參考「<a href="https://blog.frost.tw/posts/2014/09/04/mRuby-in-csharp-the-tragedy-of-rpg-maker-1">MRuby in C# 因 RPG Maker的慘劇（一）</a>」這篇文章，裡面會詳細說明建構 Static Library 的方法。</p>
+<p>首先，要使用 MRuby 必須先有 MRuby 才行，關於這部分請直接參考「<a href="https://blog.frost.tw/posts/2014/09/04/mruby-in-csharp-the-tragedy-of-rpg-maker-1/">MRuby in C# 因 RPG Maker的慘劇（一）</a>」這篇文章，裡面會詳細說明建構 Static Library 的方法。</p>
 <blockquote>
 <p>Open Frameworks 目前建置出來的是 32bit 的版本，因此跟 Mono 的情境一樣需要開啟 32bit 的編譯選項</p>
 </blockquote>
