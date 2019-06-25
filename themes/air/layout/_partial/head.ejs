@@ -10,7 +10,11 @@
   if (page.year) title.push(__('archive_b', page.year + (page.month ? '/' + page.month : '')));
   else title.push(__('archive_a'));
   }
-  title.push(config.title);
+  if (is_home() || page.tag) {
+    title.push(config.title + ' - 蒼時弦也的程式筆記');
+  } else {
+    title.push(config.title);
+  }
   %>
   <title><%= title.join(' | ') %></title>
   <meta name="theme-color" content="#EFEFEF">
