@@ -13,7 +13,7 @@ hexo.extend.helper.register('description', function(post, site, is_category, is_
     description.push(post.category || post.tag)
   }
 
-  description.push(post.description || site.description)
+  description.push(post.description || post.excerpt || site.description)
 
   return description.join(' | ')
 })
