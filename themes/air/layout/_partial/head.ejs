@@ -11,7 +11,7 @@
   else title.push(__('archive_a'));
   }
   if (is_home() || page.tag) {
-    title.push(config.title + ' - 蒼時弦也的程式筆記');
+    title.push(config.title + ' - ' + config.subtitle);
   } else {
     title.push(config.title);
   }
@@ -20,7 +20,6 @@
   <meta name="theme-color" content="#EFEFEF">
 
   <% if (config.author){ %><meta name="author" content="<%= config.author %>"><% } %>
-  <% if (page.keywords){ %><meta name="keywords" content="<%= page.keywords %>"><% } %>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <%- partial('open_graph') %>
