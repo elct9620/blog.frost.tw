@@ -3,7 +3,7 @@ layout: post
 title: 'Deis 架構分析（一）'
 date: 2016-01-31 14:28
 comments: true
-tags: [CoreOS, Deis, 雲端, paas, 筆記, 心得]
+tags: [CoreOS, Deis, 雲端, PaaS, 筆記, 心得]
 ---
 最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 [Deis](https://deis.io) 就是其中一個。
 

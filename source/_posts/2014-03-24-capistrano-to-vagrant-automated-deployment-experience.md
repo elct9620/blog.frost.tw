@@ -5,7 +5,7 @@ date: 2014-03-24 09:32
 comments: true
 tags: [Ruby, Rails, Vagrant, 心得, 筆記, Capistrano]
 ---
-之前寫過一篇關於 [Vagrant + Capistrano + Gitlab](https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/) 的自動化部署介紹。
+之前寫過一篇關於 [Vagrant + Capistrano + GitLab](https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/) 的自動化部署介紹。
 
 不過當時因為一些問題，卡著沒有繼續完成測試。
 最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯
@@ -17,10 +17,10 @@ tags: [Ruby, Rails, Vagrant, 心得, 筆記, Capistrano]
 首先，來看看本次環境的設定（基本上跟上次差不多）
 
 * **Ubuntu 13.10 (Server)**
-  * **Gitlab**
-  * **Gitlab CI**
+  * **GitLab**
+  * **GitLab CI**
   * VMs
-  		* **Gitlab CI Runner#1**
+  		* **GitLab CI Runner#1**
 	  	* **Nightly Server**
  
 那麼，主要會發生問題的部分其實大多是在 CI Runner 跟 Nightly Server 上。
@@ -62,7 +62,7 @@ sudo apt-get install libmysqlclient-dev
 到這邊，就剩下 Shell Script 的部分。
 不過在這之前，我們得先做一下簡易的 Setup 讓 Nightly Server 正常運作。
 
-（以下操作是在 Gitlab-Runner 上）
+（以下操作是在 GitLab-Runner 上）
 
 ```
 git clone git@example.com:my-repo
@@ -107,7 +107,7 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 最後是撰寫 CI 的測試 Shell Script 了！
 （這邊只是參考，因為目前系統還有部分沒有整併 Script 的版本，所以暫時將測試部分分離出來）
 
-Gitlab CI 中只要這樣設定即可：`./script/gitlab_ci`
+GitLab CI 中只要這樣設定即可：`./script/gitlab_ci`
 
 然後我們產生一個名為 `gitlab_ci` 的檔案。
 
@@ -116,7 +116,7 @@ touch script/gitlab_ci
 chmod +x script/gitlab_ci
 ```
 
-要確定有給予執行全縣，不然在 Gitlab CI Runner 上會跑不起來。
+要確定有給予執行全縣，不然在 GitLab CI Runner 上會跑不起來。
 （`script/` 目錄是 Rails 放置一些 Shell Script 或者直接執行的程式用的目錄）
 
 ```shell
@@ -136,7 +136,7 @@ bundle exec rake db:migrate RAILS_ENV=test
 bundle exec rake spec RAILS_ENV=test
 
 # 進行 Nightly 的 Deploy
-# -- 我只希望對 "develop" branch 實行，所以透過 Gitlab CI 的環境變數判斷
+# -- 我只希望對 "develop" branch 實行，所以透過 GitLab CI 的環境變數判斷
 if [ "$CI_BUILD_REF_NAME" == "develop" ]; then
 bundle exec cap nightly rvm1:install:gems # 預先安裝 Gems
 bundle exec cap nightly deploy # 發佈（同時也會 restart puma 不過 env 不會改變，要注意）
@@ -148,6 +148,6 @@ exit 0
 只後只要 `develop` branch 有變動，就可以自動地將最新版本的程式發佈到 Nightly Server 上面了！
 （只是建議 Ruby 版本變更等情況，最好預先跑過 `rvm1:install:gems` 不然會吃到一次 Faild 的 Test 喔 XD）
 
-目前 Gitlab 還不支援 Success Script 所以只能先這樣土炮一下了 XD
+目前 GitLab 還不支援 Success Script 所以只能先這樣土炮一下了 XD
 
 註： Puma 預設是 Unix Socket 建議搭配 Nginx 使用，還有 Port Forward 轉出來給 Host 主機處理。

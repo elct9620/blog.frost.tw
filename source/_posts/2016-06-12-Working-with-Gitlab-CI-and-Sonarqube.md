@@ -1,18 +1,18 @@
 ---
-title: 使用 Gitlab CI 整合 SonarQube
+title: 使用 GitLab CI 整合 SonarQube
 date: 2016-06-12 15:12:10
-tags: ["Gitlab", "心得", "Android"]
+tags: ["GitLab", "心得", "Android"]
 ---
 
 之前都在偷懶沒有寫網誌，剛好這次端午連假比較長。
-所以想做測試跟實驗的部分都做完了，就來寫一篇關於 Gitlab CI 整合的經驗分享。
+所以想做測試跟實驗的部分都做完了，就來寫一篇關於 GitLab CI 整合的經驗分享。
 
 文章中大致上會涵蓋這些部分：
 
-* Gitlab CI 基本使用
+* GitLab CI 基本使用
 * Rancher建置環境
 * SonarQube 基本使用
-* Gitlab CI 整合環境
+* GitLab CI 整合環境
 
 文章會以我在建構 CI 環境的過程中來講解，一些安裝跟配置的部分會直接跳過。
 
@@ -155,10 +155,10 @@ sonarqube:
 
 這樣一來就能跑起來了，至於像是 Nginx 的反向代理我就不另外敘述摟～～
 
-### Gitlab CI 入門
+### GitLab CI 入門
 
 安裝部分就參考官方的[文件](https://gitlab.com/gitlab-org/gitlab-ci-multi-runner)來安裝，基本上不難。
-之後就是把它 Register 到 Gitlab 上面，有趣的是他可以登記到多個 Gitlab 而不限一個，我自己是開一個 Container 去跑，然後給權限讓他能在 Host 上面開新的 Container (Runner) 這樣。
+之後就是把它 Register 到 GitLab 上面，有趣的是他可以登記到多個 GitLab 而不限一個，我自己是開一個 Container 去跑，然後給權限讓他能在 Host 上面開新的 Container (Runner) 這樣。
 
 那麼，先來講幾個關鍵的點吧 XD
 
@@ -166,7 +166,7 @@ sonarqube:
 
 因為路由器設定的問題，所以在 Runner 去 Clone 專案的時候會有些障礙。
 
-假設我的 Gitlab Host 是 `gitlab.xxx.com.tw` 那麼網路設定大概是這樣。
+假設我的 GitLab Host 是 `gitlab.xxx.com.tw` 那麼網路設定大概是這樣。
 
 LAN ----> NAT -----> WAN
 
@@ -181,9 +181,9 @@ LAN IP ----> NAT -----> Server
 
 結果 NAT 就不覺得 Server 裡面是走 59.x.x.50 進來的（崩潰）
 
-所以只好對 Gitlab Runner 動手腳 XD
+所以只好對 GitLab Runner 動手腳 XD
 
-> Gitlab CI 的 Runner 有一個全域的設定檔，我們給他改造一下
+> GitLab CI 的 Runner 有一個全域的設定檔，我們給他改造一下
 
 ```toml /etc/gitlab-runner/config.tmol
 [[runners]]
@@ -237,7 +237,7 @@ sonar:
     - "/bin/true"
 ```
 
-先看一下我目前用的 Gitlab CI 設定檔。
+先看一下我目前用的 GitLab CI 設定檔。
 
 基本上分為兩種
 
@@ -272,7 +272,7 @@ rspec: # 新增 RSpec 任務
 
 這邊基本上不難，但是要注意幾點
 
-* Working Directory 是在 Gitlab 設定的目錄
+* Working Directory 是在 GitLab 設定的目錄
 * Script 跟 Entrypoint 不相容，他是真實一段 Shell Script 注入你的 Script
 * Cache 只在 Working Directory 中可以運作
 
@@ -281,7 +281,7 @@ rspec: # 新增 RSpec 任務
 ---
 
 其他部分看文件就好了，最基本的使用其實就這樣 XD
-然後放到專案的根目錄下就會自動被 Gitlab 偵測然後自動運行。
+然後放到專案的根目錄下就會自動被 GitLab 偵測然後自動運行。
 
 > 關於 Pipline 等等就等之後有機會再跟大家分享拉 XD
 
@@ -363,11 +363,11 @@ VERSION=${CI_BUILD_TAG:-"${CI_BUILD_REF_NAME}"}
 
 > 但是似乎會被蓋掉拉，所以有實用性有待商榷（但是這是必填項目）
 
-剩下的 `OPTS` 則是跟 Gitlab 整合的部分，目前還沒有成功。
+剩下的 `OPTS` 則是跟 GitLab 整合的部分，目前還沒有成功。
 
-> 正常運作的話會自動到 Gitlab 當次 Commit 留言說有 Bad Semll 之類的 XD
+> 正常運作的話會自動到 GitLab 當次 Commit 留言說有 Bad Semll 之類的 XD
 
-最後是 Token 了，因為不可能直接把 Token 寫在 `.gitlab-ci.yml` 當環境變數放進去，所以我是在 Gitlab 的專案設定中寫進去。
+最後是 Token 了，因為不可能直接把 Token 寫在 `.gitlab-ci.yml` 當環境變數放進去，所以我是在 GitLab 的專案設定中寫進去。
 
 也許你會想說這樣做：
 
@@ -377,7 +377,7 @@ sonar:
     - -Dsonar.logn=${SONAR_TOKEN}
 ```
 
-但是前面有提到，因為是 Gitlab 自己的 Shell Script 所以不太可能這樣做。
+但是前面有提到，因為是 GitLab 自己的 Shell Script 所以不太可能這樣做。
 所以就只好給個 Shell Script 來自己處理這個問題摟～ XD
 
 > 寫這篇文章時想到我好像可以設定 $PATH 然後直接跑 `sonar-scanner -Dsonar.login` 就好了！？
@@ -454,7 +454,7 @@ RUN  mkdir ~/.gradle \
 
 ---
 
-剩下的 Cache 就參考前面我的 Gitlab 設定檔摟
+剩下的 Cache 就參考前面我的 GitLab 設定檔摟
 
 ```yaml
 before_script:
@@ -476,7 +476,7 @@ junit:
     - ./gradlew test
 ```
 
-這邊比較特別的是我將 Gradle 的目錄改到目前 Gitlab 運行的目錄。
+這邊比較特別的是我將 Gradle 的目錄改到目前 GitLab 運行的目錄。
 前面有提到因為 Cache 只對當前目錄（專案目錄）有效果，所以必須這樣設定才能正確的快取到。
 
 不過原本做的設定也會一併消失，所以要在寫入一次設定。

@@ -10,7 +10,7 @@ tags: [DevOps,Ruby on Rails,教學]
 
 ## Deploy Key
 
-要讓 Capistrano 自動在伺服器上下載原始碼，我們必須先讓 GitHub 或者 Gitlab 這類服務允許這台伺服器下載，所以我們要先對 `deploy` 這個部署用的使用者，產生一組下載原始碼的 SSH Key 也就是所謂的 Deploy Key。
+要讓 Capistrano 自動在伺服器上下載原始碼，我們必須先讓 GitHub 或者 GitLab 這類服務允許這台伺服器下載，所以我們要先對 `deploy` 這個部署用的使用者，產生一組下載原始碼的 SSH Key 也就是所謂的 Deploy Key。
 
 ```bash
 sudo su - deploy

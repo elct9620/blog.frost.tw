@@ -1,46 +1,46 @@
 ---
 layout: post
-title: '用 Vagrant 整合 Gitlab 與 Capistrano 做 Staging 環境自動部署'
+title: '用 Vagrant 整合 GitLab 與 Capistrano 做 Staging 環境自動部署'
 date: 2013-11-03 01:38
 comments: true
 tags: [Ruby, Rails, Vagrant, GitLab, 心得, 筆記, Capistrano]
 ---
 <del>這標題超級長的說（崩潰</del>
 
-最近因為有實習生要來，所以把老爸公司設定好 Gitlab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。
+最近因為有實習生要來，所以把老爸公司設定好 GitLab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。
 不過原本規劃的 Staging 環境也是在這檯主機上（當初就很淡定把記憶體和處理器加高，因為我會狂開 VM XD）但是會有 SSH 權限上的問題，原本想利用 Git 的 Hook 之類的來處理，但是感覺似乎不太好。
 
-剛好這次看到 Gitlab / Gitlab-CI 的介紹文，我又再次嘗試安裝，過程上順利、簡單很多。
+剛好這次看到 GitLab / GitLab-CI 的介紹文，我又再次嘗試安裝，過程上順利、簡單很多。
 不過上次不順利肯定是我把整個環境裝在 NAS 裡面的關係 XDD
 
-從我建好 Gitlab / Gitlab-CI 到設定 Capistrano 到自動部署，其實花費不少時間，而且有很多「差點忘記」的部分，因此決定來寫一篇文章做筆記！
+從我建好 GitLab / GitLab-CI 到設定 Capistrano 到自動部署，其實花費不少時間，而且有很多「差點忘記」的部分，因此決定來寫一篇文章做筆記！
 
 <!-- more -->
 
 以下是我的環境配置（只有一台電腦）
 
 * **Host 主機**  
-	Gitlab Server / Gitlab CI Server
-	* **Gitlab Runner VM** (一台)
+	GitLab Server / GitLab CI Server
+	* **GitLab Runner VM** (一台)
   * **Staging VM** （一台）
   
 Runner 因為可能會跑 PHP / Ruby 等其他程式語言，避免污染 Host 主機的環境，所以改為開設 VM 運行。
-（Host 主機使用 Ubuntu 13.04 Server 僅安裝 Nginx 和 Gitlab / Gitlab CI 與所需環境）
+（Host 主機使用 Ubuntu 13.04 Server 僅安裝 Nginx 和 GitLab / GitLab CI 與所需環境）
 
 以下所有 VM 都是設定 Private 並且以 `10.0.100.100/255.255.255.0` 的規則設定，起始 IP 為 100。
 
-### 安裝 Gitlab
+### 安裝 GitLab
 [安裝教學](https://Github.com/gitlabhq/gitlabhq/blob/master/doc/install/installation.md)
-### 安裝 Gitlab CI
+### 安裝 GitLab CI
 [安裝教學](https://Github.com/gitlabhq/gitlab-ci/blob/master/doc/installation.md)
 
 上述這兩者安裝都非常簡單，按照官方的文件 Step by Step 即可。
 
-比較特別的部分是因為 Gitlab / Gitlab CI 都安裝在同一台主機，要另外修改一下 Nginx 設定檔。
+比較特別的部分是因為 GitLab / GitLab CI 都安裝在同一台主機，要另外修改一下 Nginx 設定檔。
 
-把 Gitlab CI 的 Niginx 設定檔中 `listen 80 default_server` 的 `default_server` 刪除，這樣才不會發生錯誤（那是設定預設開啟哪個網站的設定，只能有一個）
+把 GitLab CI 的 Niginx 設定檔中 `listen 80 default_server` 的 `default_server` 刪除，這樣才不會發生錯誤（那是設定預設開啟哪個網站的設定，只能有一個）
 
-### 安裝 Gitlab CI Runner
+### 安裝 GitLab CI Runner
 [安裝教學](https://Github.com/gitlabhq/gitlab-ci-runner#installation)
 
 基本上也是按照官方的教學處理即可，不過因為是在 VM 所以要先做以下步驟找出 Host 主機的 IP Address 來設定。
@@ -60,7 +60,7 @@ ip addr show
 
 確定完成後就運行 `bundle exec ./bin/setup` 指令設定 Runner 註冊到 CI Server 裡面。
 
-到目前為止，所有設定都是 Gitlab 會設定好的。
+到目前為止，所有設定都是 GitLab 會設定好的。
 
 ---
 
@@ -106,20 +106,20 @@ gem update rake
 
 ``` conf /etc/hosts
 127.0.0.1 localhost
-# 和前面設定 Runner 一樣，讓 VM 認出 Host 上面的 Gitlab
+# 和前面設定 Runner 一樣，讓 VM 認出 Host 上面的 GitLab
 10.0.100.1 gitlab.vm ci.gitlab.vm
 ```
 
-接著產生一組 SSH Key 給 Gitlab 辨識（如果是 Public Project 基本上不需要）
+接著產生一組 SSH Key 給 GitLab 辨識（如果是 Public Project 基本上不需要）
 ```
 ssh-keygen -t rsa
-# 複製 id_rsa.pub 的內容貼到 Gitlab 的 Deploy Key 裡面
+# 複製 id_rsa.pub 的內容貼到 GitLab 的 Deploy Key 裡面
 cat ~/.ssh/id_rsa.pub 
 ```
 
 然後切回 Runner 把他的 Public Key 也複製起來，切到 Staging VM 加入 Authorized Keys 裡面讓 Runner 可以直接 SSH 連到 Staging VM 裡面。
 
-``` shell Gitlab CI Runner
+``` shell GitLab CI Runner
 cat ~/.ssh/id_rsa.pub
 ```
 
@@ -205,9 +205,9 @@ branch = ENV['CI_BUILD_REF'] if ENV['CI_BUILD_REF']
 set :branch, branch
 ```
 
-這邊用的 CI_BUILD_REF 是 Gitlab CI 提供的環境變數，可以用輔助來決定是 Deploy 最新的 Commit 還是某個 Branch 上的最新 Commit （CI_BUILD_REF_NAME + CI_BUILD_REF）這部分可以研究 Gitlab CI 的文件來調整。
+這邊用的 CI_BUILD_REF 是 GitLab CI 提供的環境變數，可以用輔助來決定是 Deploy 最新的 Commit 還是某個 Branch 上的最新 Commit （CI_BUILD_REF_NAME + CI_BUILD_REF）這部分可以研究 GitLab CI 的文件來調整。
 
-完成之後就是開 Repoistory 然後設定好 Gitlab / Gitlab CI 的 Server 設定，接著修改 Gitlab CI 要跑的 Script 就完成了！
+完成之後就是開 Repoistory 然後設定好 GitLab / GitLab CI 的 Server 設定，接著修改 GitLab CI 要跑的 Script 就完成了！
 
 參考用的 Script 語法
 ``` shell scripts
