@@ -48,10 +48,7 @@
   "publisher": {
     "@type": "Organization",
     "name": "蒼時弦也",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "http://blog.forst.tw/logo-wide.png"
-    }
+    "logo": "https://blog.frost.tw/icon-512.png"
   }
 },
 {
@@ -75,7 +72,13 @@
     }
   }]
 }
-
+,
+{
+"@context": "https://schema.org",
+  "@type": "Organization",
+  "url": "https://blog.frost.tw",
+  "logo": "https://blog.frost.tw/icon-512.png"
+}
 ]</script><link rel="canonical" href="https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-mintues-part-1/"><link href="/icon-512.png" rel="icon"><link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml"><!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--><link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"><script async src="/js/turbolinks.js"></script></head><body><div id="fb-root" data-turbolinks-permanent></div><header id="header"><h1 id="sitename"><a href="/" class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id="slogan" class="slogan align-center text-center"><h2 class="slogan__title">Aotokitsuruya</h2><p class="slogan__description">The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside></header><div id="wrapper"><article class="post article"><header class="article__header"><time datetime="2012-01-03T08:10:00.000Z" class="article__time--header">Jan.03</time><h1 class="article__title">三十分鐘做一個留言板 Part 1</h1></header><div class="article__entry"><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr><p>其實我自己也不確定是不是三十分鐘完成，畢竟弦也在製作時花了數倍的時間做 Debug 和架構的動作，不過如果再做一次，我想就有信心三十分鐘完成的！</p><a id="more"></a><h3 id="規劃架構"><a href="#規劃架構" class="headerlink" title="規劃架構"></a>規劃架構</h3><hr><p><a href="https://www.flickr.com/photos/elct9620/6626625299/" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://farm8.staticflickr.com/7159/6626625299_e19bab872e.jpg" alt="2012\-01\-03 16\-22\-15"></a></p><p>這是弦也在完成後的架構，不過也有先替之後的更新做了準備。<br><br>這次我們只需要用到這樣的結構就可以。</p><pre>
 + app/
     + models/
