@@ -34,10 +34,10 @@
 
   <link rel="stylesheet" href="<%- config.root %>css/style.css" media="screen" type="text/css">
   <script async src="<%- config.root %>js/turbolinks.js"></script>
-  <% if (page.prev){ %>
+  <% if (page.prev && page.prev_link){ %>
     <link href="<%- config.url + '/' + page.prev_link %>" rel="prev" />
   <% } %>
-  <% if (page.next){ %>
+  <% if (page.next && page.next_link){ %>
     <link href="<%- config.url + '/' + page.next_link %>" rel="next">
   <% } %>
 </head>
