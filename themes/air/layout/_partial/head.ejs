@@ -34,4 +34,10 @@
 
   <link rel="stylesheet" href="<%- config.root %>css/style.css" media="screen" type="text/css">
   <script async src="<%- config.root %>js/turbolinks.js"></script>
+  <% if (page.prev){ %>
+    <link href="<%- config.url + '/' + page.prev_link %>" rel="prev" />
+  <% } %>
+  <% if (page.next){ %>
+    <link href="<%- config.url + '/' + page.next_link %>" rel="next">
+  <% } %>
 </head>

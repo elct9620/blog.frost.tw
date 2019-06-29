@@ -1,8 +1,8 @@
 <nav id="pagination" class="pagination">
   <% if (page.prev){ %>
-    <a href="<%- config.root %><%- page.prev_link %>" class="text-left pagination__prev" rel="prev"><%= __('prev') %></a>
+    <a href="<%- config.root %><%- page.prev_link %>" class="text-left pagination__prev"><%= __('prev') %></a>
   <% } %>
   <% if (page.next){ %>
-    <a href="<%- config.root %><%- page.next_link %>" class="text-right pagination__next" rel="next"><%= __('next') %></a>
+    <a href="<%- config.root %><%- page.next_link %>" class="text-right pagination__next"><%= __('next') %></a>
   <% } %>
 </nav>
