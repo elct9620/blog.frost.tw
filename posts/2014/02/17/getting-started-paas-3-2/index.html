@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>PaaS 入門指南（三）之二 | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="據說PaaS 入門指南（三）網址設錯，我要開始寫才發現 XD這篇文章會來示範如何用 OpenShift 架設 WordPress 網誌，在此之前要先告知大家。最近 AppFog 決定改變方針，已經註冊的用戶免費方案降為 512MB 而之後不開放免費方案申請（假設經驗是對的，過幾年 AppFog 的免費用戶大概就會被停了吧 XD 上次是取消網址⋯⋯）也因此，之後的文章講完基本運用後，就不會另外提 A"><meta name="keywords" content="雲端,介紹,PaaS,入門"><meta property="og:type" content="article"><meta property="og:title" content="PaaS 入門指南（三）之二"><meta property="og:url" content="https://blog.frost.tw/posts/2014/02/17/getting-started-paas-3-2/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="據說PaaS 入門指南（三）網址設錯，我要開始寫才發現 XD這篇文章會來示範如何用 OpenShift 架設 WordPress 網誌，在此之前要先告知大家。最近 AppFog 決定改變方針，已經註冊的用戶免費方案降為 512MB 而之後不開放免費方案申請（假設經驗是對的，過幾年 AppFog 的免費用戶大概就會被停了吧 XD 上次是取消網址⋯⋯）也因此，之後的文章講完基本運用後，就不會另外提 A"><meta property="og:locale" content="zh-TW"><meta property="og:image" content="https://user-image.logdown.io/user/52/blog/52/post/179066/645f8alkQUOeeV3PVJj1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-02-17%20%E4%B8%8B%E5%8D%888.17.14.png"><meta property="og:updated_time" content="2019-06-29T07:42:39.092Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="PaaS 入門指南（三）之二"><meta name="twitter:description" content="據說PaaS 入門指南（三）網址設錯，我要開始寫才發現 XD這篇文章會來示範如何用 OpenShift 架設 WordPress 網誌，在此之前要先告知大家。最近 AppFog 決定改變方針，已經註冊的用戶免費方案降為 512MB 而之後不開放免費方案申請（假設經驗是對的，過幾年 AppFog 的免費用戶大概就會被停了吧 XD 上次是取消網址⋯⋯）也因此，之後的文章講完基本運用後，就不會另外提 A"><meta name="twitter:image" content="https://user-image.logdown.io/user/52/blog/52/post/179066/645f8alkQUOeeV3PVJj1_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-02-17%20%E4%B8%8B%E5%8D%888.17.14.png"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Blog",
     "name": "弦而時習之",
     "url": "https://blog.frost.tw",
@@ -11,7 +11,7 @@
     ]
 },
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Person",
     "name": "蒼時弦也",
     "url": "https://blog.frost.tw",
@@ -24,7 +24,7 @@
     ]
 },
 {
-  "@context":"http://schema.org",
+  "@context":"https://schema.org",
   "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -52,7 +52,7 @@
   }
 },
 {
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [{
     "@type": "ListItem",

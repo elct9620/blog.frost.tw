@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>ZyXEL GS1910-24 的 Port Base VLAN 設定 | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="老爸公司的網路線也漸漸的配置完成，也因此需要將 Switch 和 UTM 等設備都設定好。在朋友的建議下，決定使用 Port Base 的 VLAN 不過，遭遇的不少困難。像是朋友知道有 VLAN 這東西但是 Port Base 的設定完全不熟之類的注意，本篇文章為個人理解，有錯誤或者建議請告知修正"><meta name="keywords" content="網管,VLAN"><meta property="og:type" content="article"><meta property="og:title" content="ZyXEL GS1910-24 的 Port Base VLAN 設定"><meta property="og:url" content="https://blog.frost.tw/posts/2013/08/17/zyxel-gs191-24-port-base-vlan-setting/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="老爸公司的網路線也漸漸的配置完成，也因此需要將 Switch 和 UTM 等設備都設定好。在朋友的建議下，決定使用 Port Base 的 VLAN 不過，遭遇的不少困難。像是朋友知道有 VLAN 這東西但是 Port Base 的設定完全不熟之類的注意，本篇文章為個人理解，有錯誤或者建議請告知修正"><meta property="og:locale" content="zh-TW"><meta property="og:image" content="https://user-image.logdown.io/user/52/blog/52/post/87501/9Is7MPIZRcS5ZxmWuMNv_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-18%20%E4%B8%8B%E5%8D%883.40.42.png"><meta property="og:updated_time" content="2019-06-29T07:42:39.063Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="ZyXEL GS1910-24 的 Port Base VLAN 設定"><meta name="twitter:description" content="老爸公司的網路線也漸漸的配置完成，也因此需要將 Switch 和 UTM 等設備都設定好。在朋友的建議下，決定使用 Port Base 的 VLAN 不過，遭遇的不少困難。像是朋友知道有 VLAN 這東西但是 Port Base 的設定完全不熟之類的注意，本篇文章為個人理解，有錯誤或者建議請告知修正"><meta name="twitter:image" content="https://user-image.logdown.io/user/52/blog/52/post/87501/9Is7MPIZRcS5ZxmWuMNv_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-18%20%E4%B8%8B%E5%8D%883.40.42.png"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Blog",
     "name": "弦而時習之",
     "url": "https://blog.frost.tw",
@@ -11,7 +11,7 @@
     ]
 },
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Person",
     "name": "蒼時弦也",
     "url": "https://blog.frost.tw",
@@ -24,7 +24,7 @@
     ]
 },
 {
-  "@context":"http://schema.org",
+  "@context":"https://schema.org",
   "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -52,7 +52,7 @@
   }
 },
 {
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [{
     "@type": "ListItem",

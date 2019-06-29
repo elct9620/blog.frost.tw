@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>用 React.js 實作拖曳與元件容器 | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="「很久很久以前，有一個叫做 OwaBin (芋冰) 的食物，可以讓設計師用拖拉就做出 Launcher 這真是太神奇了！」原本想說可以很歡樂的再 HanGee 幫忙設計跟網站，但是畢製的不可逆性質，讓我得把事情先推掉。（也包括 SITCON 的任務，現在也在培養新人了⋯⋯）半個月前討論這個計劃時，我非常有興趣，所以馬上做了一個簡易的測試版。這篇文章會來說明這個功能。預期完成的功能如下："><meta name="keywords" content="CoffeeScript,心得,Web,程式語言"><meta property="og:type" content="article"><meta property="og:title" content="用 React.js 實作拖曳與元件容器"><meta property="og:url" content="https://blog.frost.tw/posts/2014/05/04/reactjs-implementation-of-the-drag-component-containers/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="「很久很久以前，有一個叫做 OwaBin (芋冰) 的食物，可以讓設計師用拖拉就做出 Launcher 這真是太神奇了！」原本想說可以很歡樂的再 HanGee 幫忙設計跟網站，但是畢製的不可逆性質，讓我得把事情先推掉。（也包括 SITCON 的任務，現在也在培養新人了⋯⋯）半個月前討論這個計劃時，我非常有興趣，所以馬上做了一個簡易的測試版。這篇文章會來說明這個功能。預期完成的功能如下："><meta property="og:locale" content="zh-TW"><meta property="og:image" content="http://blog.frost.tw/icon-512.png"><meta property="og:updated_time" content="2019-06-29T07:42:39.100Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="用 React.js 實作拖曳與元件容器"><meta name="twitter:description" content="「很久很久以前，有一個叫做 OwaBin (芋冰) 的食物，可以讓設計師用拖拉就做出 Launcher 這真是太神奇了！」原本想說可以很歡樂的再 HanGee 幫忙設計跟網站，但是畢製的不可逆性質，讓我得把事情先推掉。（也包括 SITCON 的任務，現在也在培養新人了⋯⋯）半個月前討論這個計劃時，我非常有興趣，所以馬上做了一個簡易的測試版。這篇文章會來說明這個功能。預期完成的功能如下："><meta name="twitter:image" content="http://blog.frost.tw/icon-512.png"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Blog",
     "name": "弦而時習之",
     "url": "https://blog.frost.tw",
@@ -11,7 +11,7 @@
     ]
 },
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Person",
     "name": "蒼時弦也",
     "url": "https://blog.frost.tw",
@@ -24,7 +24,7 @@
     ]
 },
 {
-  "@context":"http://schema.org",
+  "@context":"https://schema.org",
   "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -50,7 +50,7 @@
   }
 },
 {
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [{
     "@type": "ListItem",

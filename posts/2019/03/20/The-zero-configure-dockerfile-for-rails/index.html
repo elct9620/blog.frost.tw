@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>如何在沒有任何設定下產生 Rails 的 Docker Image | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="前陣子看到 Throughbot 這間在 Ruby 圈 算是蠻有名的公司做了一個叫做 Suspenders 的 Gem 主要是對 Rails 擴充，簡單說就是基於原本的 rails new 做了一個替代品，而這個替代品會自動幫你先做好一些原本要手動做的事情。像是安裝好常用的 Gem、套版之類的，想了一下覺得五倍其實也很需要，不少新專案也都是從我這邊經手初始化的，有一個這樣的工具會省下不少時間。所以"><meta name="keywords" content="Rails,Ruby,Docker,Gem"><meta property="og:type" content="article"><meta property="og:title" content="如何在沒有任何設定下產生 Rails 的 Docker Image"><meta property="og:url" content="https://blog.frost.tw/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="前陣子看到 Throughbot 這間在 Ruby 圈 算是蠻有名的公司做了一個叫做 Suspenders 的 Gem 主要是對 Rails 擴充，簡單說就是基於原本的 rails new 做了一個替代品，而這個替代品會自動幫你先做好一些原本要手動做的事情。像是安裝好常用的 Gem、套版之類的，想了一下覺得五倍其實也很需要，不少新專案也都是從我這邊經手初始化的，有一個這樣的工具會省下不少時間。所以"><meta property="og:locale" content="zh-TW"><meta property="og:image" content="https://blog.frost.tw/images/2019-03-20-the-zero-configure-dockerfile-for-rails/thumbnail.jpg"><meta property="og:updated_time" content="2019-06-29T07:42:39.186Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="如何在沒有任何設定下產生 Rails 的 Docker Image"><meta name="twitter:description" content="前陣子看到 Throughbot 這間在 Ruby 圈 算是蠻有名的公司做了一個叫做 Suspenders 的 Gem 主要是對 Rails 擴充，簡單說就是基於原本的 rails new 做了一個替代品，而這個替代品會自動幫你先做好一些原本要手動做的事情。像是安裝好常用的 Gem、套版之類的，想了一下覺得五倍其實也很需要，不少新專案也都是從我這邊經手初始化的，有一個這樣的工具會省下不少時間。所以"><meta name="twitter:image" content="https://blog.frost.tw/images/2019-03-20-the-zero-configure-dockerfile-for-rails/thumbnail.jpg"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Blog",
     "name": "弦而時習之",
     "url": "https://blog.frost.tw",
@@ -11,7 +11,7 @@
     ]
 },
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Person",
     "name": "蒼時弦也",
     "url": "https://blog.frost.tw",
@@ -24,7 +24,7 @@
     ]
 },
 {
-  "@context":"http://schema.org",
+  "@context":"https://schema.org",
   "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -52,7 +52,7 @@
   }
 },
 {
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [{
     "@type": "ListItem",

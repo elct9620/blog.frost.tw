@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>用 Redux 跟 GraphQL 玩 Rails 5.1 | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="上週五在處理網址續費的時候，發現幫老爸公司管理的網址已經多到一個程度。所以就決定把手邊可以轉移的服務都往 Gandi 丟過去。畢竟粗略估算可以達到 Grid B 的費率（實際上只有九五折）不過考量到有 API 能夠管理，以及一些自動化的手段，雖然相對還是稍微貴了一點，但是省去後續不少麻煩確實是有利的。也因為這樣，就打算以串 Gandi 的 API 來練手一下，原本是想做完管理 Domain 的部分"><meta name="keywords" content="Rails,Redux,GraphQL"><meta property="og:type" content="article"><meta property="og:title" content="用 Redux 跟 GraphQL 玩 Rails 5.1"><meta property="og:url" content="https://blog.frost.tw/posts/2017/05/01/Play-with-Rails-5-1-using-Redux-and-GraphQL/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="上週五在處理網址續費的時候，發現幫老爸公司管理的網址已經多到一個程度。所以就決定把手邊可以轉移的服務都往 Gandi 丟過去。畢竟粗略估算可以達到 Grid B 的費率（實際上只有九五折）不過考量到有 API 能夠管理，以及一些自動化的手段，雖然相對還是稍微貴了一點，但是省去後續不少麻煩確實是有利的。也因為這樣，就打算以串 Gandi 的 API 來練手一下，原本是想做完管理 Domain 的部分"><meta property="og:locale" content="zh-TW"><meta property="og:image" content="http://blog.frost.tw/icon-512.png"><meta property="og:updated_time" content="2019-06-29T07:42:39.142Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="用 Redux 跟 GraphQL 玩 Rails 5.1"><meta name="twitter:description" content="上週五在處理網址續費的時候，發現幫老爸公司管理的網址已經多到一個程度。所以就決定把手邊可以轉移的服務都往 Gandi 丟過去。畢竟粗略估算可以達到 Grid B 的費率（實際上只有九五折）不過考量到有 API 能夠管理，以及一些自動化的手段，雖然相對還是稍微貴了一點，但是省去後續不少麻煩確實是有利的。也因為這樣，就打算以串 Gandi 的 API 來練手一下，原本是想做完管理 Domain 的部分"><meta name="twitter:image" content="http://blog.frost.tw/icon-512.png"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Blog",
     "name": "弦而時習之",
     "url": "https://blog.frost.tw",
@@ -11,7 +11,7 @@
     ]
 },
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Person",
     "name": "蒼時弦也",
     "url": "https://blog.frost.tw",
@@ -24,7 +24,7 @@
     ]
 },
 {
-  "@context":"http://schema.org",
+  "@context":"https://schema.org",
   "@type":"BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -50,7 +50,7 @@
   }
 },
 {
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [{
     "@type": "ListItem",
