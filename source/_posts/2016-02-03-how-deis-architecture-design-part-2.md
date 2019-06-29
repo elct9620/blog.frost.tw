@@ -3,7 +3,7 @@ layout: post
 title: 'Deis 架構分析（二）'
 date: 2016-02-03 15:54
 comments: true
-tags: [Deis, paas, 筆記, 雲端, CoreOS]
+tags: [Deis, PaaS, 筆記, 雲端, CoreOS]
 ---
 延續[上一篇](https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1)的內容，這篇文章要先來討論比較好懂的 `Router` 部分。
 
