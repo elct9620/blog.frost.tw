@@ -5,7 +5,7 @@ date: 2016-02-03 15:54
 comments: true
 tags: [Deis, PaaS, 筆記, 雲端, CoreOS]
 ---
-延續[上一篇](https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1)的內容，這篇文章要先來討論比較好懂的 `Router` 部分。
+延續[上一篇](https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/)的內容，這篇文章要先來討論比較好懂的 `Router` 部分。
 
 首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 `Router` 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。
 

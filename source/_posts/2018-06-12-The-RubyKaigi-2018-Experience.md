@@ -106,13 +106,13 @@ tags: [心得, RubyKaigi, Ruby]
 
 ![2018-06-03 18.35.42.jpg](https://blog.frost.tw/images/the-rubykaigi-2018-experience/F87A7CB27AB13B8B604F16B071BA7CEC.jpg)
 
-![2018-06-04 11.35.43.jpg](https://blog.frost.tw/images/the-rubykaigi-2018-experience/5C138CFC021AA9946D6907837313D5C8.jpg =3096x5504)
+![2018-06-04 11.35.43.jpg](https://blog.frost.tw/images/the-rubykaigi-2018-experience/5C138CFC021AA9946D6907837313D5C8.jpg)
 
 最後則是去拜訪一下客戶，然後就結束這次的日本行程。
 
 另外比較的別的是日本有不少電腦書都是動漫風格的，有漫畫的電腦書超想要的！！
 
-![2018-06-04 14.11.51.jpg](https://blog.frost.tw/images/the-rubykaigi-2018-experience/BEFCEC952C4A354900876931339F3EC0.jpg =3096x5504)
+![2018-06-04 14.11.51.jpg](https://blog.frost.tw/images/the-rubykaigi-2018-experience/BEFCEC952C4A354900876931339F3EC0.jpg)
 
 ## 後記
 

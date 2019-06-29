@@ -5,7 +5,7 @@ date: 2014-09-13 09:38
 comments: true
 tags: [Kinect, 遊戲, Unity3D]
 ---
-接續[上一篇](https://blog.frost.tw/posts/2014/09/13/zigfu-Kinect-across-the-platform-SDK)文章的介紹，這一篇文章會針對 Kinect 在遊戲類型應用上最為重要的功能「骨架」來做討論。
+接續[上一篇](https://blog.frost.tw/posts/2014/09/13/zigfu-kinect-across-the-platform-sdk/)文章的介紹，這一篇文章會針對 Kinect 在遊戲類型應用上最為重要的功能「骨架」來做討論。
 
 在 Zigfu 中，已經提供了 `ZigTrackedUser.Skeleton` 這個物件讓我們可以存取骨架，與前一篇文章不同的地方在於，我們會用 `Zig_UpdateUser` 這個方法存取骨架。
 

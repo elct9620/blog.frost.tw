@@ -16,7 +16,7 @@ tags: [介紹, 雲端, PaaS, 入門]
 
 <!-- more -->
 
-關於 Heroku 的預先環境配置，在 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2)已經有跟大家提過，這邊先來簡單的回憶一下。
+關於 Heroku 的預先環境配置，在 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-paas-2)已經有跟大家提過，這邊先來簡單的回憶一下。
 （驚悚的 Windows 體驗，真心建議大家裝個 VM 用 Ubuntu 還是比較方便⋯⋯）
 
 使用 Heroku 來說，其實方便很多，因為有 [Toolbelt](https://toolbelt.Heroku.com/) 可以輔助，預先安裝好下列的套件：

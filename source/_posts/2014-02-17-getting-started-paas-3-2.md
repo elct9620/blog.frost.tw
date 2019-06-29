@@ -5,7 +5,7 @@ date: 2014-02-17 12:08
 comments: true
 tags: [介紹, 雲端, PaaS, 入門]
 ---
-據說[PaaS 入門指南（三）](https://blog.frost.tw/posts/2014/02/04/getting-started-PaaS-3)網址設錯，我要開始寫才發現 XD
+據說[PaaS 入門指南（三）](https://blog.frost.tw/posts/2014/02/04/getting-started-paas-3)網址設錯，我要開始寫才發現 XD
 
 這篇文章會來示範如何用 OpenShift 架設 WordPress 網誌，在此之前要先告知大家。
 最近 AppFog 決定改變方針，已經註冊的用戶免費方案降為 512MB 而之後不開放免費方案申請（假設經驗是對的，過幾年 AppFog 的免費用戶大概就會被停了吧 XD 上次是取消網址⋯⋯）

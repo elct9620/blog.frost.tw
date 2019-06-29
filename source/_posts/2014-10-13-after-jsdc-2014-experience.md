@@ -60,7 +60,7 @@ tags: [心得, Conference]
 講者還介紹很多不錯的工具跟網站，主要是一邊穿插介紹 Browserify 可以做到的事情，一邊介紹工具。
 <del>我不會說我只聽到工具怎麼跟 Browserify 一起用，卻忘記細節拉</del>
 
-個人最喜歡的是 [NodeSchool](Nodeschool.io) 裡面除了 Node.js 的基礎教學之外，還可以學到像是 Shader、WebGL 的知識，對目前的我來說有很大的幫助。
+個人最喜歡的是 [NodeSchool](https://nodeschool.io) 裡面除了 Node.js 的基礎教學之外，還可以學到像是 Shader、WebGL 的知識，對目前的我來說有很大的幫助。
 （中途跑去玩，錯過 Minecraft 的 Demo 只看到一部分⋯⋯）
 
 #### ZMQ 的安全與架構 in node.js

@@ -37,7 +37,7 @@ tags: [PHP, Laravel, Heroku, 心得, PaaS]
 
 > git init
 
-這是基礎技能，可以參考一下 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2)的相關說明
+這是基礎技能，可以參考一下 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-paas-2)的相關說明
 
 > Heroku create --buildpack https://Github.com/hhvm/heroku-buildpack-hhvm
 

@@ -5,7 +5,7 @@ date: 2014-01-21 03:14
 comments: true
 tags: [介紹, 雲端, PaaS, 入門]
 ---
-在第一篇文章 [PaaS 入門指南（一）](https://blog.frost.tw/posts/2014/01/15/getting-started-PaaS-1)已經簡單介紹了 PaaS 的基本概念，還有一些常見的 PaaS 服務。
+在第一篇文章 [PaaS 入門指南（一）](https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/)已經簡單介紹了 PaaS 的基本概念，還有一些常見的 PaaS 服務。
 
 這篇文章，則會介紹使用 PaaS 所需的基本技能以及軟體。雖然使用 PaaS 的方式大多在服務提供者的網站上會有簡易的介紹，但是如果想要體驗各式的 PaaS 最好還是能夠熟悉這些工具的基本操作。
 

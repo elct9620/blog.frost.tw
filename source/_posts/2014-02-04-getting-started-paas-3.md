@@ -8,7 +8,7 @@ tags: [介紹, 雲端, PaaS, 入門]
 過年我就淡定放假不寫文了（被拖走
 根據 Google Analytic 統計，週二的這篇文章會讓訪客增長 XD
 
-上一篇極其混亂的 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-PaaS-2)已經簡易的向大家介紹相關工具的安裝（各種痛苦啊那個，感覺 AppFog 的對 Windows 比較友善⋯⋯）
+上一篇極其混亂的 [PaaS 入門指南（二）](https://blog.frost.tw/posts/2014/01/21/getting-started-paas-2)已經簡易的向大家介紹相關工具的安裝（各種痛苦啊那個，感覺 AppFog 的對 Windows 比較友善⋯⋯）
 
 這篇我們先休息一下，因為我發現字太多我寫很累看的人好像也很累 XD
 先來簡易介紹一下 AppFog / OpenShift 的快速安裝功能。

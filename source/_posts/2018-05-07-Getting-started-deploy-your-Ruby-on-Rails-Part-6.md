@@ -8,7 +8,7 @@ tags: [DevOps, 教學, Ruby on Rails]
 
 <!-- more -->
 
-在[上一篇](https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-5/)裡面，我們設定了部署到 Staging 的使用者為 `deploy` 所以我們要先在伺服器上增加這個使用者。
+在[上一篇](https://blog.frost.tw/posts/2018/04/15/Getting-started-deploy-your-Ruby-on-Rails-Part-5/)裡面，我們設定了部署到 Staging 的使用者為 `deploy` 所以我們要先在伺服器上增加這個使用者。
 
 > 我們會習慣開設一個沒有 `sudo` 權限和密碼的使用者，只用於部署。
 
@@ -18,7 +18,7 @@ tags: [DevOps, 教學, Ruby on Rails]
 useradd deploy
 ```
 
-如果還記得我們在[第一篇](https://blog.frost.tw/posts/2018/04/10/Getting-started-deploy-your-Ruby-on-Rails-Part-1/)裡面提到的新增使用者方法，後續的動作基本上是大同小異的。
+如果還記得我們在[第一篇](https://blog.frost.tw/posts/2018/03/20/Getting-started-deploy-your-Ruby-on-Rails-Part-1/)裡面提到的新增使用者方法，後續的動作基本上是大同小異的。
 
 > 有些 Linux 系統不一定會在做完 `useradd` 後自動新增 `/home/deploy` 可以自己用 `mkdir /home/deploy` 後做 `chown -R deploy:deploy /home/deploy` 來手動設定。
 
@@ -37,7 +37,7 @@ chmod 700 ~/.ssh
 
 一般情況下我們在 Ruby on Rails 專案大多採用 PostgreSQL 來做為資料庫，不過在 CentOS 上不一定會提供我們所希望的版本，所以需要先到 [PostgreSQL 官網](https://www.postgresql.org/download/linux/redhat/)取得對應的套件設定。
 
-![螢幕快照 2018-04-22 下午9.02.44.png](quiver-image-url/947E30127205650F228B211EF7CFBE67.png =960x540)
+![螢幕快照 2018-04-22 下午9.02.44.png](https://blog.frost.tw/images/2018-05-07-getting-started-deploy-your-ruby-on-rails-part-6/947E30127205650F228B211EF7CFBE67.png)
 
 根據官網選擇所需的資料庫版本（目前大多是使用 9.5 ~ 9.7）然後取得安裝的指令。
 
