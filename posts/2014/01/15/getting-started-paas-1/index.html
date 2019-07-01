@@ -1,4 +1,34 @@
-<!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>PaaS 入門指南（一） | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以"><meta name="keywords" content="雲端,介紹,PaaS,入門"><meta property="og:type" content="article"><meta property="og:title" content="PaaS 入門指南（一）"><meta property="og:url" content="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以"><meta property="og:locale" content="zh-TW"><meta property="og:image" content="http://blog.frost.tw/icon-512.png"><meta property="og:updated_time" content="2019-06-29T15:43:47.179Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="PaaS 入門指南（一）"><meta name="twitter:description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以"><meta name="twitter:image" content="http://blog.frost.tw/icon-512.png"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>PaaS 入門指南（一） | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <meta name="description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以">
+<meta name="keywords" content="雲端,介紹,PaaS,入門">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PaaS 入門指南（一）">
+<meta property="og:url" content="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2019-06-29T15:43:47.179Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PaaS 入門指南（一）">
+<meta name="twitter:description" content="這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。 內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。 至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388">
+  <script type="application/ld+json">
+  [
 {
     "@context": "https://schema.org",
     "@type": "Blog",
@@ -78,4 +108,212 @@
   "url": "https://blog.frost.tw",
   "logo": "https://blog.frost.tw/icon-512.png"
 }
-]</script><link rel="canonical" href="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/"><link href="/icon-512.png" rel="icon"><link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml"><!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--><link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"><script async src="/js/turbolinks.js"></script></head><body><div id="fb-root" data-turbolinks-permanent></div><header id="header"><h1 id="sitename"><a href="/" class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id="slogan" class="slogan align-center text-center"><h2 class="slogan__title">Aotokitsuruya</h2><p class="slogan__description">The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside></header><div id="wrapper"><article class="post article"><header class="article__header"><time datetime="2014-01-14T19:32:00.000Z" class="article__time--header">Jan.15</time><h1 class="article__title">PaaS 入門指南（一）</h1></header><div class="article__entry"><p>這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。</p><p>內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。</p><p>至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以及介紹的 PaaS 可能有付費也可能有免費，但是會讓大家在盡可能不花費的狀況下體驗與使用。</p><p>那麼，正文開始。</p><a id="more"></a><h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>在我接觸雲端時，接觸到幾個相關的詞，那就是 IaaS, PaaS, SaaS 這幾項，依序就是 基礎作為服務、平台作為服務、軟體作為服務。</p><p>也很剛好的，他們也剛好是層層遞進的關係。以 IaaS 來說就類似你買的一台伺服器（主機）而 PaaS 就類似於事先設定好了環境（買主機幫你裝好作業系統）而 SaaS 則是連軟體都安裝完畢，可以直接使用（買來的電腦附贈了 Office 可以使用）</p><p>對於網站來說 PaaS 就是一個「預先」配置好作業系統，並且可以運行你的軟體（網站）的服務。</p><h2 id="平台介紹"><a href="#平台介紹" class="headerlink" title="平台介紹"></a>平台介紹</h2><p>接下來，我會依序介紹我所知道的 PaaS 服務。這幾年其實大部份的 PaaS 服務商都已經提供多種語言的支援，比較少針對單一語言，而 PaaS 也會因為服務商架構設計上的不同，能夠使用的範圍也不一樣。</p><p>另外要<strong>注意</strong>的就是服務商免費方案大多是「開發用」的等級，如果要切換到「生產力環境」請務必做好付費的準備。<br>（而 PaaS 的收費比 IaaS 高出不少，主要是節省了網管人員的人事費用。不過這個差異是否適合自己的團隊，也是需要謹慎評估。）</p><h3 id="Heroku"><a href="#Heroku" class="headerlink" title="Heroku"></a>Heroku</h3><p>假設說 IaaS 世界有著非常完善的 Amazon AWS 服務，那麼 PaaS 世界，我想 Heroku 擁有這樣的稱號應該也不為過。雖然 PaaS 平台都差不多，但是 Heroku 卻有著驚人的特性讓我對的評分增加不少。</p><p>官方網站：<a href="https://www.heroku.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.Heroku.com</a></p><ul><li>豐富的 Add-on 功能</li><li>可客製化的 PaaS 運行環境</li><li>使用 Git 進行版本管理（可線上 Rollback 版本）</li><li>完整的管理界面</li><li>支援自定域名（免費）</li></ul><p>唯一小小的缺點是目前沒有 MySQL 的 Add-on （開發用方案）可以使用（對一個 PHP Developer 來說）</p><h3 id="AppFog"><a href="#AppFog" class="headerlink" title="AppFog"></a>AppFog</h3><p>原本是 PHPFog 後來使用 VMWare 開發的 CloudFoundry 而轉變為一個支援多種語言的 PaaS 服務。特色是可以自由分配 VM 的設計，而且免費方案非常大方（有 2GB 記憶體任你分配使用到每台 VM 上）</p><p>官方網站：<a href="https://www.appfog.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.appfog.com/</a></p><ul><li>可自由分配記憶體</li><li>資料庫服務無需額外付費</li></ul><p>基本上和 Heroku 其實就是差在免費方案的使用上限上，比較可惜的是後來將免費方案的 Custom Domain 功能取消。</p><h3 id="OpenShift"><a href="#OpenShift" class="headerlink" title="OpenShift"></a>OpenShift</h3><p>由 RedHat 主導的 PaaS 平台，現在加入了完善的網頁管理界面後，變成非常適合新手使用的 PaaS 平台。有著 One Click 就能完成 Load Blancing 配置的方便功能。</p><p>官方網站：<a href="https://openshift.redhat.com/" rel="external nofollow noopener noreferrer" target="_blank">https://openshift.redhat.com/</a></p><ul><li>支援自定域名</li><li>設定 Load Blancing 非常簡單</li><li>提供 Jenkins 在 Deploy 後進行測試，避免出問題的網站上線</li><li>可客製化的 PaaS 運行環境</li></ul><p>其實我還沒怎麼玩過，不過 CI 服務非常吸引人，另外就是收費其實不高。只是看起來這個服務，似乎不是給一般人使用的，最高的方案應該還不夠給大企業用，大概是要另外洽談吧⋯⋯</p><h3 id="dotCloud"><a href="#dotCloud" class="headerlink" title="dotCloud"></a>dotCloud</h3><p>應該是這幾家裡面唯一一個一開始就要付費的服務，特別提出來是背後的 IaaS 建構有 OpenSource 而且也已經可以在 Github 上找 Open Source 的方案建構 Heroku Like 的服務方式。</p><p>官方網站:<a href="https://www.dotcloud.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.dotcloud.com/</a></p><p>因為沒有使用過，所以也沒辦法給出優點。如果有興趣的朋友，可以嘗試玩看看。</p><h3 id="CloudFoundry"><a href="#CloudFoundry" class="headerlink" title="CloudFoundry"></a>CloudFoundry</h3><p>其實說是一個 Open Source 的 PaaS 解決方案會比較適合，不過官方網站也提供了免費試用，想要體驗的人也是可以拿來使用或者架設。是 VMWare 所開發的 Open Source 專案（印象中是透過社群營運）</p><p>官方網站：<a href="https://www.cloudfoundry.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.cloudfoundry.com/</a></p><p>優點部分，因為是解決方案所以沒有太多可以討論的（實際上也不建議拿來當上線的服務主機）</p><h3 id="PagodaBox"><a href="#PagodaBox" class="headerlink" title="PagodaBox"></a>PagodaBox</h3><p>單純的 PHP PaaS 服務，不過特別提出來是因為他有一個 Store 可以讓大家寫好一些設定讓其他使用者付費安裝（或者免費）這個機制很特殊，也使少數提供 SFTP 可以讓不會 Git 的使用者也能輕鬆使用的 PaaS 服務。</p><p>官方網站：<a href="https://pagodabox.com" rel="external nofollow noopener noreferrer" target="_blank">https://pagodabox.com</a></p><ul><li>提供 Store 機制（Ex. WordPress 的預先設定版本）</li><li>提供 SFTP</li><li>支援自定域名</li></ul><p>基本上算是個蠻容易上手的 PaaS 平台，不過僅限 PHP Developer 或者一般架站玩家了。</p><hr><p>其實還有一些 PaaS 沒想到，這邊介紹比較多是 PHP / Ruby 的環境，不過像是 <a href="https://www.nodejitsu.com/" rel="external nofollow noopener noreferrer" target="_blank">Nodejitsu</a> 之類的，也都不錯。（剛剛還發現 Nodejitsu 竟然提供 Open Source 的 Hosting 寫 Node 的朋友快上 XD）</p><p>下一篇文章會介紹玩 PaaS 要會的基本技能（Ex. Git, Command Line, SSH 等）希望這一系列文章結束後，大家都可以輕鬆玩雲端服務 XD</p><footer class="article__footer"><div class="text-center"><div class="fb-share-button" data-href="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/" data-layout="button_count"></div></div><p align="center"></p><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:Cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:active,.bmc-button:focus,.bmc-button:hover{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/aotoki" rel="external nofollow noopener noreferrer"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg" alt="Buy me a Coffee"><span style="margin-left:5px">Buy me a Coffee</span></a><p></p><iframe scrolling="no" frameborder="0" style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/"></iframe><ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/PaaS/">PaaS</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/介紹/">介紹</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/入門/">入門</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/雲端/">雲端</a></li></ul></footer></div></article><div class="adv"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2844969736316510" data-ad-slot="5530952976" data-ad-format="auto"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({})</script></div><section id="comment" class="comment-box"><h1 class="comment-box__title">留言</h1><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a rel="nofollow" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></section></div><footer id="footer"><div id="copyright">&copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank" rel="external nofollow noopener noreferrer">蒼時弦也</a>. All right reversed.</div></footer><script type="text/javascript">window.disqus_shortname="revo-skill-frost",function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="//"+window.disqus_shortname+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)}()</script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a);r.async=!0,r.src="//www.googletagmanager.com/gtm.js?id=GTM-5TQLRN",m.parentNode.insertBefore(r,m)}(window,document,"script","dataLayer")</script><script>window.fbAsyncInit=function(){FB.init({appId:"178355449110",xfbml:!0,version:"v2.12"}),FB.AppEvents.logPageView()},function(e,n,t){var o,s=e.getElementsByTagName(n)[0];e.getElementById(t)||((o=e.createElement(n)).id=t,o.src="https://connect.facebook.net/zh_TW/sdk.js",o.async=!0,s.parentNode.insertBefore(o,s))}(document,"script","facebook-jssdk")</script><script src="/js/app.js"></script><div class="loading"></div></body></html>
+]
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/">
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+  
+  
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2014-01-14T19:32:00.000Z" class="article__time--header">
+      Jan.15
+    </time>
+    
+  
+    <h1 class="article__title">PaaS 入門指南（一）</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。</p>
+<p>內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。</p>
+<p>至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以及介紹的 PaaS 可能有付費也可能有免費，但是會讓大家在盡可能不花費的狀況下體驗與使用。</p>
+<p>那麼，正文開始。</p>
+<a id="more"></a>
+<h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><p>在我接觸雲端時，接觸到幾個相關的詞，那就是 IaaS, PaaS, SaaS 這幾項，依序就是 基礎作為服務、平台作為服務、軟體作為服務。</p>
+<p>也很剛好的，他們也剛好是層層遞進的關係。以 IaaS 來說就類似你買的一台伺服器（主機）而 PaaS 就類似於事先設定好了環境（買主機幫你裝好作業系統）而 SaaS 則是連軟體都安裝完畢，可以直接使用（買來的電腦附贈了 Office 可以使用）</p>
+<p>對於網站來說 PaaS 就是一個「預先」配置好作業系統，並且可以運行你的軟體（網站）的服務。</p>
+<h2 id="平台介紹"><a href="#平台介紹" class="headerlink" title="平台介紹"></a>平台介紹</h2><p>接下來，我會依序介紹我所知道的 PaaS 服務。這幾年其實大部份的 PaaS 服務商都已經提供多種語言的支援，比較少針對單一語言，而 PaaS 也會因為服務商架構設計上的不同，能夠使用的範圍也不一樣。</p>
+<p>另外要<strong>注意</strong>的就是服務商免費方案大多是「開發用」的等級，如果要切換到「生產力環境」請務必做好付費的準備。<br>（而 PaaS 的收費比 IaaS 高出不少，主要是節省了網管人員的人事費用。不過這個差異是否適合自己的團隊，也是需要謹慎評估。）</p>
+<h3 id="Heroku"><a href="#Heroku" class="headerlink" title="Heroku"></a>Heroku</h3><p>假設說 IaaS 世界有著非常完善的 Amazon AWS 服務，那麼 PaaS 世界，我想 Heroku 擁有這樣的稱號應該也不為過。雖然 PaaS 平台都差不多，但是 Heroku 卻有著驚人的特性讓我對的評分增加不少。</p>
+<p>官方網站：<a href="https://www.heroku.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.Heroku.com</a></p>
+<ul>
+<li>豐富的 Add-on 功能</li>
+<li>可客製化的 PaaS 運行環境</li>
+<li>使用 Git 進行版本管理（可線上 Rollback 版本）</li>
+<li>完整的管理界面</li>
+<li>支援自定域名（免費）</li>
+</ul>
+<p>唯一小小的缺點是目前沒有 MySQL 的 Add-on （開發用方案）可以使用（對一個 PHP Developer 來說）</p>
+<h3 id="AppFog"><a href="#AppFog" class="headerlink" title="AppFog"></a>AppFog</h3><p>原本是 PHPFog 後來使用 VMWare 開發的 CloudFoundry 而轉變為一個支援多種語言的 PaaS 服務。特色是可以自由分配 VM 的設計，而且免費方案非常大方（有 2GB 記憶體任你分配使用到每台 VM 上）</p>
+<p>官方網站：<a href="https://www.appfog.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.appfog.com/</a></p>
+<ul>
+<li>可自由分配記憶體</li>
+<li>資料庫服務無需額外付費</li>
+</ul>
+<p>基本上和 Heroku 其實就是差在免費方案的使用上限上，比較可惜的是後來將免費方案的 Custom Domain 功能取消。</p>
+<h3 id="OpenShift"><a href="#OpenShift" class="headerlink" title="OpenShift"></a>OpenShift</h3><p>由 RedHat 主導的 PaaS 平台，現在加入了完善的網頁管理界面後，變成非常適合新手使用的 PaaS 平台。有著 One Click 就能完成 Load Blancing 配置的方便功能。</p>
+<p>官方網站：<a href="https://openshift.redhat.com/" rel="external nofollow noopener noreferrer" target="_blank">https://openshift.redhat.com/</a></p>
+<ul>
+<li>支援自定域名</li>
+<li>設定 Load Blancing 非常簡單</li>
+<li>提供 Jenkins 在 Deploy 後進行測試，避免出問題的網站上線</li>
+<li>可客製化的 PaaS 運行環境</li>
+</ul>
+<p>其實我還沒怎麼玩過，不過 CI 服務非常吸引人，另外就是收費其實不高。只是看起來這個服務，似乎不是給一般人使用的，最高的方案應該還不夠給大企業用，大概是要另外洽談吧⋯⋯</p>
+<h3 id="dotCloud"><a href="#dotCloud" class="headerlink" title="dotCloud"></a>dotCloud</h3><p>應該是這幾家裡面唯一一個一開始就要付費的服務，特別提出來是背後的 IaaS 建構有 OpenSource 而且也已經可以在 Github 上找 Open Source 的方案建構 Heroku Like 的服務方式。</p>
+<p>官方網站:<a href="https://www.dotcloud.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.dotcloud.com/</a></p>
+<p>因為沒有使用過，所以也沒辦法給出優點。如果有興趣的朋友，可以嘗試玩看看。</p>
+<h3 id="CloudFoundry"><a href="#CloudFoundry" class="headerlink" title="CloudFoundry"></a>CloudFoundry</h3><p>其實說是一個 Open Source 的 PaaS 解決方案會比較適合，不過官方網站也提供了免費試用，想要體驗的人也是可以拿來使用或者架設。是 VMWare 所開發的 Open Source 專案（印象中是透過社群營運）</p>
+<p>官方網站：<a href="https://www.cloudfoundry.com/" rel="external nofollow noopener noreferrer" target="_blank">https://www.cloudfoundry.com/</a></p>
+<p>優點部分，因為是解決方案所以沒有太多可以討論的（實際上也不建議拿來當上線的服務主機）</p>
+<h3 id="PagodaBox"><a href="#PagodaBox" class="headerlink" title="PagodaBox"></a>PagodaBox</h3><p>單純的 PHP PaaS 服務，不過特別提出來是因為他有一個 Store 可以讓大家寫好一些設定讓其他使用者付費安裝（或者免費）這個機制很特殊，也使少數提供 SFTP 可以讓不會 Git 的使用者也能輕鬆使用的 PaaS 服務。</p>
+<p>官方網站：<a href="https://pagodabox.com" rel="external nofollow noopener noreferrer" target="_blank">https://pagodabox.com</a></p>
+<ul>
+<li>提供 Store 機制（Ex. WordPress 的預先設定版本）</li>
+<li>提供 SFTP</li>
+<li>支援自定域名</li>
+</ul>
+<p>基本上算是個蠻容易上手的 PaaS 平台，不過僅限 PHP Developer 或者一般架站玩家了。</p>
+<hr>
+<p>其實還有一些 PaaS 沒想到，這邊介紹比較多是 PHP / Ruby 的環境，不過像是 <a href="https://www.nodejitsu.com/" rel="external nofollow noopener noreferrer" target="_blank">Nodejitsu</a> 之類的，也都不錯。（剛剛還發現 Nodejitsu 竟然提供 Open Source 的 Hosting 寫 Node 的朋友快上 XD）</p>
+<p>下一篇文章會介紹玩 PaaS 要會的基本技能（Ex. Git, Command Line, SSH 等）希望這一系列文章結束後，大家都可以輕鬆玩雲端服務 XD</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button" data-href="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/" data-layout="button_count">
+          </div>
+        </div>
+        <div class="text-center mt-1">
+          <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#ffffff !important;background-color:#000000 !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 1px 9px !important;font-size: 22px !important;letter-spacing:0.6px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Cookie', cursive !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#ffffff !important;}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/aotoki" rel="external nofollow noopener noreferrer"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg" alt="Buy me a Coffee"><span style="margin-left:5px">Buy me a Coffee</span></a>
+        </div>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/"></iframe>
+        
+          <ul class="article__tag-list"><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/PaaS/">PaaS</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/介紹/">介紹</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/入門/">入門</a></li><li class="article__tag-list-item"><a class="article__tag-list-link" href="/tags/雲端/">雲端</a></li></ul>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2844969736316510" data-ad-slot="5530952976" data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a rel="nofollow" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank" rel="external nofollow noopener noreferrer">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  <script type="text/javascript">
+  window.disqus_shortname = 'revo-skill-frost';
+
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  
+  </script>
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>

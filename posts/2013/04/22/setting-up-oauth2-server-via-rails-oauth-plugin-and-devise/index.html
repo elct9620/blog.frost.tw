@@ -1,4 +1,33 @@
-<!DOCTYPE html><html lang="zh-TW"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><title>使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器 | 弦而時習之</title><meta name="theme-color" content="#EFEFEF"><meta name="author" content="蒼時弦也"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="description" content="其實，這是一篇掃雷文（誤 大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 400 Bad Request 最後受不了而放棄。 這次，除了順利挑戰 Invalid OAuth Request 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！ 事不宜遲，讓我們開始進行這一連串的大戰"><meta property="og:type" content="article"><meta property="og:title" content="使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器"><meta property="og:url" content="https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/"><meta property="og:site_name" content="弦而時習之"><meta property="og:description" content="其實，這是一篇掃雷文（誤 大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 400 Bad Request 最後受不了而放棄。 這次，除了順利挑戰 Invalid OAuth Request 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！ 事不宜遲，讓我們開始進行這一連串的大戰"><meta property="og:locale" content="zh-TW"><meta property="og:image" content="http://blog.frost.tw/icon-512.png"><meta property="og:updated_time" content="2019-06-29T15:43:47.167Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器"><meta name="twitter:description" content="其實，這是一篇掃雷文（誤 大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 400 Bad Request 最後受不了而放棄。 這次，除了順利挑戰 Invalid OAuth Request 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！ 事不宜遲，讓我們開始進行這一連串的大戰"><meta name="twitter:image" content="http://blog.frost.tw/icon-512.png"><link rel="publisher" href="https://plus.google.com/117236344655673213049"><meta property="fb:app_id" content="178355449110"><meta property="fb:pages" content="180666522388"><script type="application/ld+json">[
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器 | 弦而時習之</title>
+  <meta name="theme-color" content="#EFEFEF">
+
+  <meta name="author" content="蒼時弦也">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <meta name="description" content="其實，這是一篇掃雷文（誤 大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 400 Bad Request 最後受不了而放棄。 這次，除了順利挑戰 Invalid OAuth Request 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！ 事不宜遲，讓我們開始進行這一連串的大戰">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器">
+<meta property="og:url" content="https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/">
+<meta property="og:site_name" content="弦而時習之">
+<meta property="og:description" content="其實，這是一篇掃雷文（誤 大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 400 Bad Request 最後受不了而放棄。 這次，除了順利挑戰 Invalid OAuth Request 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！ 事不宜遲，讓我們開始進行這一連串的大戰">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="http://blog.frost.tw/icon-512.png">
+<meta property="og:updated_time" content="2019-06-29T15:43:47.167Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器">
+<meta name="twitter:description" content="其實，這是一篇掃雷文（誤 大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 400 Bad Request 最後受不了而放棄。 這次，除了順利挑戰 Invalid OAuth Request 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！ 事不宜遲，讓我們開始進行這一連串的大戰">
+<meta name="twitter:image" content="http://blog.frost.tw/icon-512.png">
+<link rel="publisher" href="https://plus.google.com/117236344655673213049">
+<meta property="fb:app_id" content="178355449110">
+
+  <meta property="fb:pages" content="180666522388">
+  <script type="application/ld+json">
+  [
 {
     "@context": "https://schema.org",
     "@type": "Blog",
@@ -78,4 +107,239 @@
   "url": "https://blog.frost.tw",
   "logo": "https://blog.frost.tw/icon-512.png"
 }
-]</script><link rel="canonical" href="https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/"><link href="/icon-512.png" rel="icon"><link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml"><!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--><link rel="stylesheet" href="/css/style.css" media="screen" type="text/css"><script async src="/js/turbolinks.js"></script></head><body><div id="fb-root" data-turbolinks-permanent></div><header id="header"><h1 id="sitename"><a href="/" class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id="slogan" class="slogan align-center text-center"><h2 class="slogan__title">Aotokitsuruya</h2><p class="slogan__description">The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside></header><div id="wrapper"><article class="post article"><header class="article__header"><time datetime="2013-04-22T02:05:00.000Z" class="article__time--header">Apr.22</time><h1 class="article__title">使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器</h1></header><div class="article__entry"><p>其實，這是一篇掃雷文（誤</p><p>大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 <strong>400 Bad Request</strong> 最後受不了而放棄。</p><p>這次，除了順利挑戰 <strong>Invalid OAuth Request</strong> 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！</p><p>事不宜遲，讓我們開始進行這一連串的大戰吧！</p><a id="more"></a><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="###前情提要"></a>###前情提要</h2><p>基本上，就是老爸公司的系統發展到某個程度後，開始有 SSO 的需求。因為系統本身是一個獎金計算的機制，為了搭配購物而在上週<del>死命暴走</del>把精簡版的訂單管理系統加入。</p><p>不過，客戶總不可能每個都天生神力自行開發購物車吧？因此就有了<del>從來沒有停過的</del>建構一個購物平台（基於原有系統）的輔助平台功能了（遠目</p><p>不過，多重的帳號與重複的資料是我們不樂見的，因此開始尋找 SSO (Single Sign-on) 的幾解決方案。</p><p>從 RubyCAS, BrowserID, OpenID, OAuth 都有評估，最後身為<del>萬惡開發人員</del>的我還是判斷 OAuth 最為適合。而 OAuth 2.0 也是我比較希望使用的模式，因此再次開啓失敗之路（誤</p><h2 id="現況分析"><a href="#現況分析" class="headerlink" title="###現況分析"></a>###現況分析</h2><p>因為目前主要的系統是使用 Rails 去進行開發的，所以就不考慮其他語言的實踐，以及 RubyCAS 需要另外建置伺服器的方式（另一方面是再開伺服器除了維護成本外，還有資金的限制，整合在現有系統內會是筆記好的選擇）</p><p>而目前 Ruby 大致上呈現 OAuth2 Client &gt; OAuth2 Server 的狀況，相對的之後打算開發輔助平台的 PHP 則呈現 OAuth2 Server &gt; OAuth2 Client 的狀態（此指的是實踐的容易程度）</p><p>在眾多 Ruby Gems 裡面，唯獨 oauth-plugin 較為完整（平均 OAuth2 相關 Gem 大多 7 個月沒有更新，因此差異不大）</p><h2 id="伺服器實作"><a href="#伺服器實作" class="headerlink" title="###伺服器實作"></a>###伺服器實作</h2><p>因為會員系統是基於 Devise 的，因此一開始就先考慮要搭配 Devise 實作。</p><p>建置上基本上參考 <a href="https://unhandledexpression.com/2011/06/02/Rails-and-oauth-plugin-part-1-the-provider/" rel="external nofollow noopener noreferrer" target="_blank">Rails and OAuth-Plugin Part1</a> 這一篇文章</p><p>首先針對 Gemfile 追加 gems</p><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gem <span class="string">'devise'</span></span><br><span class="line">gem <span class="string">'oauth-plugin'</span>, <span class="string">"&gt;= 0.4.1"</span> <span class="comment"># 使用最新的 0.4.1 版</span></span><br></pre></td></tr></table></figure><p>接著執行 bundle install 進行安裝</p><blockquote><p>$ bundle install</p></blockquote><p>完成之後建置所需的 Controller / Model / View</p><blockquote><p>$ Rails g devise:install<br><br>$ Rails g devise User<br><br>$ Rails g oauth_provider<br></p></blockquote><p>然後更新資料庫<br><br><small>在這之前可以先修改 db/migrations 的 migrate 資訊，調整成所需的資料表結構</small></p><blockquote><p>$ rake db:migrate</p></blockquote><p>接下來修改 config/application.rb 加入 OAuth-Plugin 的 Middleware</p><figure class="highlight ruby"><figcaption><span>config/application.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">'oauth/rack/oauth_filter'</span></span><br><span class="line">config.middleware.use OAuth::Rack::OAuthFilter</span><br></pre></td></tr></table></figure><p>註：上述程式碼不是在第一行/最後加入，而是在再 <code>class Application &lt; Rails::Application</code> 裡面</p><p>接下來編輯 User Model ( 前面 Rails g devise User 所產生的，依照你產生的 Model 修改 )</p><p>加入以下程式碼（對應 user 的 application 以及產生的 tokens）<br></p><figure class="highlight ruby"><figcaption><span>app/model/user.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">has_many <span class="symbol">:client_applications</span></span><br><span class="line">has_many <span class="symbol">:tokens</span>, <span class="symbol">:class_name=&gt;<span class="string">"OauthToken"</span></span>,<span class="symbol">:order=&gt;<span class="string">"authorized_at desc"</span></span>,<span class="symbol">:include=&gt;</span>[<span class="symbol">:client_application</span>]</span><br></pre></td></tr></table></figure><p></p><p>註： <code>:include =&gt; [:client_application]</code> 這部分目前不確定是否適用，不過因為 oauth-plugin 的設計，預設也是無法修改此部分，在 Rails 3.2.13 仍是正常的</p><p>在參考文件中，會將 alias 分別放入 oauth_clients_controller.rb 和 oauth_controller.rb</p><p>不過這邊我們要改放到 application_controller.rb (後面會提到這個問題)</p><p>加入以下程式碼<br></p><figure class="highlight ruby"><figcaption><span>app/controllers/appication_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alias</span> <span class="symbol">:logged_in?</span> <span class="symbol">:user_signed_in?</span></span><br><span class="line"><span class="keyword">alias</span> <span class="symbol">:loggin_required</span> <span class="symbol">:authenticate_user!</span></span><br></pre></td></tr></table></figure><p></p><p>上面的程式碼其實只是將 Devise 的方法提供給 OAuth-Plugin 而已（因為使用名稱不同，所以提供一個別名）</p><p>接著創建一些被 OAuth 保護的 Resources</p><blockquote><p>$ Rails g controller data index</p></blockquote><p>這部分就由各位自行處理</p><p>然後編輯這個 resources 加入 before_filter 為保護狀態</p><p>加入以下程式碼（相同於 before_filter 的位置）<br></p><figure class="highlight ruby"><figcaption><span>app/controllers/data_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oauthenticate <span class="comment"># before_filter :oauth_required 的替代，也可傳入 :only =&gt; [:show, :index] 等</span></span><br></pre></td></tr></table></figure><p></p><p>官方文件上所敘述的<code>before_filter :oauth_require</code> 只會呼叫 OAuth 1.0 的方法，即使順利取得 Access Token 附加在網址上發出請求，也會得到 401 的錯誤，因此改為使用 oauthenticate 就能夠正常（從原始碼來看，在 oauth_require 執行的時候是直接呼叫 oauth 1.0 的 method 而 oauthenticate 則是建立 filter 從 env 判斷版本）</p><p>最後依照參考資料補上一些必要的部分。</p><figure class="highlight ruby"><figcaption><span>app/controllers/application_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">current_user=</span><span class="params">(user)</span></span></span><br><span class="line">truecurrent_user = user</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure><p>在原始碼中有使用到這個部分，需要額外補上</p><p>以及 Routes 設定中補上 oauth/revoke 的數值（不知道為什麼預設的 route 漏掉了⋯⋯）</p><figure class="highlight ruby"><figcaption><span>config/routes.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">post <span class="string">'oauth/revoke'</span></span><br></pre></td></tr></table></figure><p>直到這裡，就全部告一段落了！</p><p>另外 app/views/oauth_clients 裡面的 _form.html.erb, edit.html.erb, index.html.erb 使用很多舊版或者現在無法使用的語法，記得自行重寫，不然是無法正常運作的！</p><h2 id="客戶端實作"><a href="#客戶端實作" class="headerlink" title="###客戶端實作"></a>###客戶端實作</h2><p>解決完 Server 之後，就要來處理 Client 部分了（這部分使用 PHP 製作）</p><p>首先，到 Server 註冊好帳號、並且創建 Application 然後取得 Client Key, Client Secret 之後在繼續吧！</p><p>註：OAuth-Plugin 產生的 View 呈現的是 OAuth 1.0 的 Token 網址，後面會提到 2.0 所需使用的部分</p><p>首先，先進行 composer 的初始化</p><blockquote><p>$ composer init</p></blockquote><p>或者本地版本（我習慣把 composer 安裝到 /usr/local/bin 裡面方便使用 - MacOSX）</p><blockquote><p>PHP composer.phar init</p></blockquote><p>接著編輯 composer.json</p><p>在 require 裡面加入 OAuth Client 的實作<br></p><figure class="highlight"><figcaption><span>composer.json</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">require: &#123;</span><br><span class="line">true"lncd/oauth2-client": "*" </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>註：這邊是為了測試方便而使用這一個 Client 實際開發時還是建議用 <a href="https://code.google.com/p/oauth2-PHP/" rel="external nofollow noopener noreferrer" target="_blank">OAuth2-PHP</a> 之類的 Library （以後有機會，會再寫一篇相關的文章討論 OAuth2 PHP Client 的使用心得）</p><p>完成後更新套件</p><blockquote><p>$ composer install</p></blockquote><p>或者 update (如果執行過 install)</p><blockquote><p>$ composer update</p></blockquote><p>因為這款 OAuth Client 是以 Provider 為基準的，因此我們要自行時做一個 Provider Class 來進行連接。</p><p>我是參考原有的 Provider 中 Github 的改寫<br></p><figure class="highlight php"><figcaption><span>myProvider.PHP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyProvider</span> <span class="keyword">extends</span> <span class="title">OAuth2</span>\<span class="title">Client</span>\<span class="title">Provider</span>\<span class="title">IdentityProvider</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">true<span class="keyword">public</span> $respondType = <span class="string">'json'</span>; <span class="comment">// 我們的伺服器預設為 json 這行可以省略</span></span><br><span class="line">true</span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">urlAuthorize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">truetrue<span class="keyword">return</span> <span class="string">"https://myserver.dev/oauth/authorize"</span>;</span><br><span class="line">true&#125;</span><br><span class="line">true</span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">urlAccessToken</span><span class="params">()</span> </span>&#123;</span><br><span class="line">truetrue<span class="keyword">return</span> <span class="string">"https://myserver.dev/oauth/token"</span>; <span class="comment">// OAuth 2.0 使用這個即可，不過得在 rake routes 才會注意到它</span></span><br><span class="line">true&#125;</span><br><span class="line">true</span><br><span class="line">true<span class="comment">// 以下為 Client 本身實作，因為繼承的父類別會呼叫，因此須實做出來</span></span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">urlUserDetails</span><span class="params">(OAuth2\Client\Token\AccessToken $token)</span> </span>&#123;</span><br><span class="line">truetrue<span class="comment">// 這裡假設 Server 已經建立好 user_controller 並且以 OAuth 保護</span></span><br><span class="line">truetrue<span class="keyword">return</span> <span class="string">"https://myserver.dev/user.json?access_token="</span> . $token;</span><br><span class="line">true&#125;</span><br><span class="line">true</span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">userDetails</span><span class="params">($response, OAuth2\Client\Token\AccessToken $token)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">true 	<span class="comment">// 預設是建立一個 User Object, 這裡只需看結果所以直接傳回 json_decode 後的資料</span></span><br><span class="line">truetrue<span class="keyword">return</span> $response;</span><br><span class="line">true&#125;</span><br></pre></td></tr></table></figure><p></p><p>然後我們建立一個 index.PHP 來連接 OAuth 伺服器</p><figure class="highlight php"><figcaption><span>index.PHP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">'vendor/autoload.PHP'</span>; <span class="comment">// Composer 的 Autoload</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'myProvider.PHP'</span>; <span class="comment">// 剛剛建立的 Provider</span></span><br><span class="line"></span><br><span class="line">$provider = <span class="keyword">new</span> MyProvider(<span class="keyword">Array</span>(</span><br><span class="line">true<span class="string">'clientId'</span> =&gt; <span class="string">'YOUR_CLIENT_KEY'</span>,</span><br><span class="line">true<span class="string">'clientSecret'</span> =&gt; <span class="string">'YOUR_CLIENT_SECRET'</span>,</span><br><span class="line">true<span class="string">'redirectUri'</span> =&gt; <span class="string">'https://myclient.dev/'</span> <span class="comment">// 這是這個 PHP 運行的位置</span></span><br><span class="line">));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'code'</span>])) &#123;</span><br><span class="line">true$provider-&gt;authorize(); <span class="comment">// 如果沒有取得 authorization code 則先進行認證</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">true<span class="keyword">try</span> &#123;</span><br><span class="line">truetrue$token = $provider-&gt;getAccessToken(<span class="string">'authorization_code'</span>, <span class="keyword">array</span>(<span class="string">'code'</span> =&gt; $_GET[<span class="string">'code'</span>]));</span><br><span class="line">truetrue</span><br><span class="line">truetrue<span class="keyword">try</span> &#123;</span><br><span class="line">truetruetrue$user = $provider-&gt;getUserDetails($token);</span><br><span class="line">truetruetrue</span><br><span class="line">truetruetrue<span class="comment">// 傳回一些 $user 的資訊</span></span><br><span class="line">truetruetrue</span><br><span class="line">truetrue&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">truetruetrue<span class="comment">// 取得資源失敗時的處理</span></span><br><span class="line">truetrue&#125;</span><br><span class="line">truetrue</span><br><span class="line">true&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">truetrue<span class="comment">// 處理取得 Access Token 失敗時的處理</span></span><br><span class="line">true&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>如果到此都順利完成，那就是完成 Server (Ruby) / Client (PHP) 的實作了！</p><p><del>據說某人從下午開始弄，弄到晚上十二點才全部解完，白白排了很多原始碼找問題</del></p><p>那麼，祝各位順利～</p><footer class="article__footer"><div class="text-center"><div class="fb-share-button" data-href="https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/" data-layout="button_count"></div></div><p align="center"></p><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:Cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:active,.bmc-button:focus,.bmc-button:hover{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/aotoki" rel="external nofollow noopener noreferrer"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg" alt="Buy me a Coffee"><span style="margin-left:5px">Buy me a Coffee</span></a><p></p><iframe scrolling="no" frameborder="0" style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/"></iframe></footer></div></article><div class="adv"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2844969736316510" data-ad-slot="5530952976" data-ad-format="auto"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({})</script></div><section id="comment" class="comment-box"><h1 class="comment-box__title">留言</h1><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a rel="nofollow" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></section></div><footer id="footer"><div id="copyright">&copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank" rel="external nofollow noopener noreferrer">蒼時弦也</a>. All right reversed.</div></footer><script type="text/javascript">window.disqus_shortname="revo-skill-frost",function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="//"+window.disqus_shortname+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)}()</script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a);r.async=!0,r.src="//www.googletagmanager.com/gtm.js?id=GTM-5TQLRN",m.parentNode.insertBefore(r,m)}(window,document,"script","dataLayer")</script><script>window.fbAsyncInit=function(){FB.init({appId:"178355449110",xfbml:!0,version:"v2.12"}),FB.AppEvents.logPageView()},function(e,n,t){var o,s=e.getElementsByTagName(n)[0];e.getElementById(t)||((o=e.createElement(n)).id=t,o.src="https://connect.facebook.net/zh_TW/sdk.js",o.async=!0,s.parentNode.insertBefore(o,s))}(document,"script","facebook-jssdk")</script><script src="/js/app.js"></script><div class="loading"></div></body></html>
+]
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/">
+  <link href="/icon-512.png" rel="icon">
+  <link rel="alternate" href="/feed.xml" title="弦而時習之" type="application/rss+xml">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <script async src="/js/turbolinks.js"></script>
+  
+  
+</head>
+
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    <header id="header">
+      
+<h1 id="sitename">
+  <a href="/" class="hide-text logo--icon align-center">
+  弦而時習之
+  </a>
+</h1>
+
+<aside id="slogan" class="slogan align-center text-center">
+  <h2 class="slogan__title">Aotokitsuruya</h2>
+  <p class="slogan__description">The Web is attracting  me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p>
+</aside>
+
+    </header>
+    <div id="wrapper">
+      
+<article class="post article">
+  <header class="article__header">
+    <time datetime="2013-04-22T02:05:00.000Z" class="article__time--header">
+      Apr.22
+    </time>
+    
+  
+    <h1 class="article__title">使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器</h1>
+  
+
+
+  </header>
+  <div class="article__entry">
+    
+    <p>其實，這是一篇掃雷文（誤</p>
+<p>大約半年前（根據某人開 Issue 的記錄，是 7 個月之前）我也嘗試過安裝 oauth-plugin 來建置 OAuth2 伺服器，但是因為長達好幾小時 <strong>400 Bad Request</strong> 最後受不了而放棄。</p>
+<p>這次，除了順利挑戰 <strong>Invalid OAuth Request</strong> 之外，從 400 甚至 401 都挑戰的我，終於戰勝了地雷啊！</p>
+<p>事不宜遲，讓我們開始進行這一連串的大戰吧！</p>
+<a id="more"></a>
+<h2 id="前情提要"><a href="#前情提要" class="headerlink" title="###前情提要"></a>###前情提要</h2><p>基本上，就是老爸公司的系統發展到某個程度後，開始有 SSO 的需求。因為系統本身是一個獎金計算的機制，為了搭配購物而在上週<del>死命暴走</del>把精簡版的訂單管理系統加入。</p>
+<p>不過，客戶總不可能每個都天生神力自行開發購物車吧？因此就有了<del>從來沒有停過的</del>建構一個購物平台（基於原有系統）的輔助平台功能了（遠目</p>
+<p>不過，多重的帳號與重複的資料是我們不樂見的，因此開始尋找 SSO (Single Sign-on) 的幾解決方案。</p>
+<p>從 RubyCAS, BrowserID, OpenID, OAuth 都有評估，最後身為<del>萬惡開發人員</del>的我還是判斷 OAuth 最為適合。而 OAuth 2.0 也是我比較希望使用的模式，因此再次開啓失敗之路（誤</p>
+<h2 id="現況分析"><a href="#現況分析" class="headerlink" title="###現況分析"></a>###現況分析</h2><p>因為目前主要的系統是使用 Rails 去進行開發的，所以就不考慮其他語言的實踐，以及 RubyCAS 需要另外建置伺服器的方式（另一方面是再開伺服器除了維護成本外，還有資金的限制，整合在現有系統內會是筆記好的選擇）</p>
+<p>而目前 Ruby 大致上呈現 OAuth2 Client &gt; OAuth2 Server 的狀況，相對的之後打算開發輔助平台的 PHP 則呈現 OAuth2 Server &gt; OAuth2 Client 的狀態（此指的是實踐的容易程度）</p>
+<p>在眾多 Ruby Gems 裡面，唯獨 oauth-plugin 較為完整（平均 OAuth2 相關 Gem 大多 7 個月沒有更新，因此差異不大）</p>
+<h2 id="伺服器實作"><a href="#伺服器實作" class="headerlink" title="###伺服器實作"></a>###伺服器實作</h2><p>因為會員系統是基於 Devise 的，因此一開始就先考慮要搭配 Devise 實作。</p>
+<p>建置上基本上參考 <a href="https://unhandledexpression.com/2011/06/02/Rails-and-oauth-plugin-part-1-the-provider/" rel="external nofollow noopener noreferrer" target="_blank">Rails and OAuth-Plugin Part1</a> 這一篇文章</p>
+<p>首先針對 Gemfile 追加 gems</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gem <span class="string">'devise'</span></span><br><span class="line">gem <span class="string">'oauth-plugin'</span>, <span class="string">"&gt;= 0.4.1"</span> <span class="comment"># 使用最新的 0.4.1 版</span></span><br></pre></td></tr></table></figure>
+<p>接著執行 bundle install 進行安裝</p>
+<blockquote>
+<p>$ bundle install</p>
+</blockquote>
+<p>完成之後建置所需的 Controller / Model / View</p>
+<blockquote>
+<p>$ Rails g devise:install <br><br>$ Rails g devise User <br><br>$ Rails g oauth_provider <br></p>
+</blockquote>
+<p>然後更新資料庫<br><br><small>在這之前可以先修改 db/migrations 的 migrate 資訊，調整成所需的資料表結構</small></p>
+<blockquote>
+<p>$ rake db:migrate</p>
+</blockquote>
+<p>接下來修改 config/application.rb 加入 OAuth-Plugin 的 Middleware</p>
+<figure class="highlight ruby"><figcaption><span>config/application.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">'oauth/rack/oauth_filter'</span></span><br><span class="line">config.middleware.use OAuth::Rack::OAuthFilter</span><br></pre></td></tr></table></figure>
+<p>註：上述程式碼不是在第一行/最後加入，而是在再 <code>class Application &lt; Rails::Application</code> 裡面</p>
+<p>接下來編輯 User Model ( 前面 Rails g devise User 所產生的，依照你產生的 Model 修改 )</p>
+<p>加入以下程式碼（對應 user 的 application 以及產生的 tokens）<br><figure class="highlight ruby"><figcaption><span>app/model/user.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">has_many <span class="symbol">:client_applications</span></span><br><span class="line">has_many <span class="symbol">:tokens</span>, <span class="symbol">:class_name=&gt;<span class="string">"OauthToken"</span></span>,<span class="symbol">:order=&gt;<span class="string">"authorized_at desc"</span></span>,<span class="symbol">:include=&gt;</span>[<span class="symbol">:client_application</span>]</span><br></pre></td></tr></table></figure></p>
+<p>註： <code>:include =&gt; [:client_application]</code> 這部分目前不確定是否適用，不過因為 oauth-plugin 的設計，預設也是無法修改此部分，在 Rails 3.2.13 仍是正常的</p>
+<p>在參考文件中，會將 alias 分別放入 oauth_clients_controller.rb 和 oauth_controller.rb</p>
+<p>不過這邊我們要改放到 application_controller.rb (後面會提到這個問題)</p>
+<p>加入以下程式碼<br><figure class="highlight ruby"><figcaption><span>app/controllers/appication_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alias</span> <span class="symbol">:logged_in?</span> <span class="symbol">:user_signed_in?</span></span><br><span class="line"><span class="keyword">alias</span> <span class="symbol">:loggin_required</span> <span class="symbol">:authenticate_user!</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的程式碼其實只是將 Devise 的方法提供給 OAuth-Plugin 而已（因為使用名稱不同，所以提供一個別名）</p>
+<p>接著創建一些被 OAuth 保護的 Resources</p>
+<blockquote>
+<p>$ Rails g controller data index</p>
+</blockquote>
+<p>這部分就由各位自行處理</p>
+<p>然後編輯這個 resources 加入 before_filter 為保護狀態</p>
+<p>加入以下程式碼（相同於 before_filter 的位置）<br><figure class="highlight ruby"><figcaption><span>app/controllers/data_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oauthenticate <span class="comment"># before_filter :oauth_required 的替代，也可傳入 :only =&gt; [:show, :index] 等</span></span><br></pre></td></tr></table></figure></p>
+<p>官方文件上所敘述的<code>before_filter :oauth_require</code> 只會呼叫 OAuth 1.0 的方法，即使順利取得 Access Token 附加在網址上發出請求，也會得到 401 的錯誤，因此改為使用 oauthenticate 就能夠正常（從原始碼來看，在 oauth_require 執行的時候是直接呼叫 oauth 1.0 的 method 而 oauthenticate 則是建立 filter 從 env 判斷版本）</p>
+<p>最後依照參考資料補上一些必要的部分。</p>
+<figure class="highlight ruby"><figcaption><span>app/controllers/application_controller.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">current_user=</span><span class="params">(user)</span></span></span><br><span class="line">truecurrent_user = user</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在原始碼中有使用到這個部分，需要額外補上</p>
+<p>以及 Routes 設定中補上 oauth/revoke 的數值（不知道為什麼預設的 route 漏掉了⋯⋯）</p>
+<figure class="highlight ruby"><figcaption><span>config/routes.rb</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">post <span class="string">'oauth/revoke'</span></span><br></pre></td></tr></table></figure>
+<p>直到這裡，就全部告一段落了！</p>
+<p>另外 app/views/oauth_clients 裡面的 _form.html.erb, edit.html.erb, index.html.erb 使用很多舊版或者現在無法使用的語法，記得自行重寫，不然是無法正常運作的！</p>
+<h2 id="客戶端實作"><a href="#客戶端實作" class="headerlink" title="###客戶端實作"></a>###客戶端實作</h2><p>解決完 Server 之後，就要來處理 Client 部分了（這部分使用 PHP 製作）</p>
+<p>首先，到 Server 註冊好帳號、並且創建 Application 然後取得 Client Key, Client Secret 之後在繼續吧！</p>
+<p>註：OAuth-Plugin 產生的 View 呈現的是 OAuth 1.0 的 Token 網址，後面會提到 2.0 所需使用的部分</p>
+<p>首先，先進行 composer 的初始化</p>
+<blockquote>
+<p>$ composer init</p>
+</blockquote>
+<p>或者本地版本（我習慣把 composer 安裝到 /usr/local/bin 裡面方便使用 - MacOSX）</p>
+<blockquote>
+<p>PHP composer.phar init</p>
+</blockquote>
+<p>接著編輯 composer.json</p>
+<p>在 require 裡面加入 OAuth Client 的實作<br><figure class="highlight"><figcaption><span>composer.json</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">require: &#123;</span><br><span class="line">true"lncd/oauth2-client": "*" </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>註：這邊是為了測試方便而使用這一個 Client 實際開發時還是建議用 <a href="https://code.google.com/p/oauth2-PHP/" rel="external nofollow noopener noreferrer" target="_blank">OAuth2-PHP</a> 之類的 Library （以後有機會，會再寫一篇相關的文章討論 OAuth2 PHP Client 的使用心得）</p>
+<p>完成後更新套件</p>
+<blockquote>
+<p>$ composer install</p>
+</blockquote>
+<p>或者 update (如果執行過 install)</p>
+<blockquote>
+<p>$ composer update</p>
+</blockquote>
+<p>因為這款 OAuth Client 是以 Provider 為基準的，因此我們要自行時做一個 Provider Class 來進行連接。</p>
+<p>我是參考原有的 Provider 中 Github 的改寫<br><figure class="highlight php"><figcaption><span>myProvider.PHP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyProvider</span> <span class="keyword">extends</span> <span class="title">OAuth2</span>\<span class="title">Client</span>\<span class="title">Provider</span>\<span class="title">IdentityProvider</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">true<span class="keyword">public</span> $respondType = <span class="string">'json'</span>; <span class="comment">// 我們的伺服器預設為 json 這行可以省略</span></span><br><span class="line">true</span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">urlAuthorize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">truetrue<span class="keyword">return</span> <span class="string">"https://myserver.dev/oauth/authorize"</span>;</span><br><span class="line">true&#125;</span><br><span class="line">true</span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">urlAccessToken</span><span class="params">()</span> </span>&#123;</span><br><span class="line">truetrue<span class="keyword">return</span> <span class="string">"https://myserver.dev/oauth/token"</span>; <span class="comment">// OAuth 2.0 使用這個即可，不過得在 rake routes 才會注意到它</span></span><br><span class="line">true&#125;</span><br><span class="line">true</span><br><span class="line">true<span class="comment">// 以下為 Client 本身實作，因為繼承的父類別會呼叫，因此須實做出來</span></span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">urlUserDetails</span><span class="params">(OAuth2\Client\Token\AccessToken $token)</span> </span>&#123;</span><br><span class="line">truetrue<span class="comment">// 這裡假設 Server 已經建立好 user_controller 並且以 OAuth 保護</span></span><br><span class="line">truetrue<span class="keyword">return</span> <span class="string">"https://myserver.dev/user.json?access_token="</span> . $token;</span><br><span class="line">true&#125;</span><br><span class="line">true</span><br><span class="line">true<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">userDetails</span><span class="params">($response, OAuth2\Client\Token\AccessToken $token)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">true 	<span class="comment">// 預設是建立一個 User Object, 這裡只需看結果所以直接傳回 json_decode 後的資料</span></span><br><span class="line">truetrue<span class="keyword">return</span> $response;</span><br><span class="line">true&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然後我們建立一個 index.PHP 來連接 OAuth 伺服器</p>
+<figure class="highlight php"><figcaption><span>index.PHP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?PHP</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">'vendor/autoload.PHP'</span>; <span class="comment">// Composer 的 Autoload</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'myProvider.PHP'</span>; <span class="comment">// 剛剛建立的 Provider</span></span><br><span class="line"></span><br><span class="line">$provider = <span class="keyword">new</span> MyProvider(<span class="keyword">Array</span>(</span><br><span class="line">true<span class="string">'clientId'</span> =&gt; <span class="string">'YOUR_CLIENT_KEY'</span>,</span><br><span class="line">true<span class="string">'clientSecret'</span> =&gt; <span class="string">'YOUR_CLIENT_SECRET'</span>,</span><br><span class="line">true<span class="string">'redirectUri'</span> =&gt; <span class="string">'https://myclient.dev/'</span> <span class="comment">// 這是這個 PHP 運行的位置</span></span><br><span class="line">));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'code'</span>])) &#123;</span><br><span class="line">true$provider-&gt;authorize(); <span class="comment">// 如果沒有取得 authorization code 則先進行認證</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">true<span class="keyword">try</span> &#123;</span><br><span class="line">truetrue$token = $provider-&gt;getAccessToken(<span class="string">'authorization_code'</span>, <span class="keyword">array</span>(<span class="string">'code'</span> =&gt; $_GET[<span class="string">'code'</span>]));</span><br><span class="line">truetrue</span><br><span class="line">truetrue<span class="keyword">try</span> &#123;</span><br><span class="line">truetruetrue$user = $provider-&gt;getUserDetails($token);</span><br><span class="line">truetruetrue</span><br><span class="line">truetruetrue<span class="comment">// 傳回一些 $user 的資訊</span></span><br><span class="line">truetruetrue</span><br><span class="line">truetrue&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">truetruetrue<span class="comment">// 取得資源失敗時的處理</span></span><br><span class="line">truetrue&#125;</span><br><span class="line">truetrue</span><br><span class="line">true&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">truetrue<span class="comment">// 處理取得 Access Token 失敗時的處理</span></span><br><span class="line">true&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果到此都順利完成，那就是完成 Server (Ruby) / Client (PHP) 的實作了！</p>
+<p><del>據說某人從下午開始弄，弄到晚上十二點才全部解完，白白排了很多原始碼找問題</del></p>
+<p>那麼，祝各位順利～</p>
+
+    
+    <footer class="article__footer">
+      
+        <div class="text-center">
+          <div class="fb-share-button" data-href="https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/" data-layout="button_count">
+          </div>
+        </div>
+        <div class="text-center mt-1">
+          <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#ffffff !important;background-color:#000000 !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 1px 9px !important;font-size: 22px !important;letter-spacing:0.6px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Cookie', cursive !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#ffffff !important;}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/aotoki" rel="external nofollow noopener noreferrer"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg" alt="Buy me a Coffee"><span style="margin-left:5px">Buy me a Coffee</span></a>
+        </div>
+        <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=https://blog.frost.tw/posts/2013/04/22/setting-up-oauth2-server-via-rails-oauth-plugin-and-devise/"></iframe>
+        
+      
+    </footer>
+  </div>
+</article>
+
+
+  
+    <div class="adv">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 網誌_文末廣告 (Hexo) -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2844969736316510" data-ad-slot="5530952976" data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  
+
+  
+<section id="comment" class="comment-box">
+  <h1 class="comment-box__title">留言</h1>
+
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a rel="nofollow" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+
+
+
+
+    </div>
+    <footer id="footer">
+      <div id="copyright">
+  &copy;2013 <a href="https://plus.google.com/117236344655673213049?rel=author" target="_blank" rel="external nofollow noopener noreferrer">蒼時弦也</a>. All right reversed.
+</div>
+
+    </footer>
+    
+
+  <script type="text/javascript">
+  window.disqus_shortname = 'revo-skill-frost';
+
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + window.disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+  
+  </script>
+
+  
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5TQLRN');</script>
+  <!-- End Google Tag Manager -->
+  
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '178355449110',
+        xfbml      : true,
+        version    : 'v2.12'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+       js.async = true
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <script src="/js/app.js"></script>
+
+
+    <div class="loading"></div>
+  </body>
+</html>
