@@ -68,7 +68,7 @@ google_plus: https://plus.google.com/117236344655673213049
 fb_app_id: 178355449110
 
 # Optimize
-all_minifier: true
+all_minifier: false
 
 node_sass:
   outputStyle: ompressed
