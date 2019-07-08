@@ -54,6 +54,8 @@ nofollow:
   exclude:
     - frost.tw
     - aotoki.dev
+    - basaltic.tw
+    - rookie.works
 
 # Disqus
 disqus_shortname: revo-skill-frost
