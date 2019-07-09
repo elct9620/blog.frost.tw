@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/</loc>
+    
+    <lastmod>2019-07-09T11:14:30.069Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2018/05/07/Getting-started-deploy-your-Ruby-on-Rails-Part-6/</loc>
     
     <lastmod>2019-06-29T15:46:18.763Z</lastmod>
@@ -212,14 +219,14 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2018/05/30/My-Chrome-can-speak/</loc>
+    <loc>https://blog.frost.tw/posts/2018/05/28/Getting-started-deploy-your-Ruby-on-Rails-Part-8/</loc>
     
     <lastmod>2019-06-29T15:43:47.236Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2018/05/28/Getting-started-deploy-your-Ruby-on-Rails-Part-8/</loc>
+    <loc>https://blog.frost.tw/posts/2018/05/30/My-Chrome-can-speak/</loc>
     
     <lastmod>2019-06-29T15:43:47.236Z</lastmod>
     
@@ -611,14 +618,14 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</loc>
+    <loc>https://blog.frost.tw/posts/2014/04/02/getting-started-paas-4/</loc>
     
     <lastmod>2019-06-29T15:43:47.188Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2014/04/02/getting-started-paas-4/</loc>
+    <loc>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</loc>
     
     <lastmod>2019-06-29T15:43:47.188Z</lastmod>
     
@@ -772,14 +779,14 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/08/12/when-mac-run-into-rs232/</loc>
+    <loc>https://blog.frost.tw/posts/2013/08/15/junior-year-learning-plan/</loc>
     
     <lastmod>2019-06-29T15:43:47.170Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2013/08/15/junior-year-learning-plan/</loc>
+    <loc>https://blog.frost.tw/posts/2013/08/12/when-mac-run-into-rs232/</loc>
     
     <lastmod>2019-06-29T15:43:47.170Z</lastmod>
     
@@ -877,14 +884,14 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/09/04/canon-powershot-s100-and-ibuddy-ap-open-box/</loc>
+    <loc>https://blog.frost.tw/posts/2012/09/22/another-way-using-processing/</loc>
     
     <lastmod>2019-06-29T15:43:47.161Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/09/22/another-way-using-processing/</loc>
+    <loc>https://blog.frost.tw/posts/2012/09/04/canon-powershot-s100-and-ibuddy-ap-open-box/</loc>
     
     <lastmod>2019-06-29T15:43:47.161Z</lastmod>
     
@@ -926,13 +933,6 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/05/11/the-idea-which-i-think-of-interest/</loc>
-    
-    <lastmod>2019-06-29T15:43:47.157Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.frost.tw/posts/2012/05/17/goals-and-desires/</loc>
     
     <lastmod>2019-06-29T15:43:47.157Z</lastmod>
@@ -940,14 +940,21 @@
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/05/08/the-css3-transition/</loc>
+    <loc>https://blog.frost.tw/posts/2012/05/11/the-idea-which-i-think-of-interest/</loc>
+    
+    <lastmod>2019-06-29T15:43:47.157Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.frost.tw/posts/2012/04/03/the-web-develop-way-reflection/</loc>
     
     <lastmod>2019-06-29T15:43:47.156Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.frost.tw/posts/2012/04/03/the-web-develop-way-reflection/</loc>
+    <loc>https://blog.frost.tw/posts/2012/05/08/the-css3-transition/</loc>
     
     <lastmod>2019-06-29T15:43:47.156Z</lastmod>
     
