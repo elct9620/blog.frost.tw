@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/</loc>
+    
+    <lastmod>2019-07-29T07:22:57.816Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.frost.tw/posts/2019/07/29/My-experience-after-RubyConf-Taiwan-2019/</loc>
     
-    <lastmod>2019-07-29T07:13:40.806Z</lastmod>
+    <lastmod>2019-07-29T07:22:11.533Z</lastmod>
     
   </url>
   
@@ -82,13 +89,6 @@
     <loc>https://blog.frost.tw/posts/2019/02/13/Deep-into-ruby-s-each-method-Part-1/</loc>
     
     <lastmod>2019-06-29T15:43:47.255Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/</loc>
-    
-    <lastmod>2019-06-29T15:43:47.254Z</lastmod>
     
   </url>
   
