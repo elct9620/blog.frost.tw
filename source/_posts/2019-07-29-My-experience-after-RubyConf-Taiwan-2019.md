@@ -110,7 +110,7 @@ Fiber 我當初會有興趣是因為他跟 Goroutine 很類似，所以我就跑
 
 整體上來說有一種 JavaScript 到處亂跳的 Callback 的感覺，所以我很難解釋，又沒有時間讓我思考怎樣畫圖才能動作，所以最後就是台下大家一臉呆滯。
 
-簡單說就是討論 Enumerator 是怎麼來餓，然後 Enumerator::Generator 和 Enumerator::Yielder 為什麼要存在，以及 Enumerator::Lazy 是怎樣應運用跟運作，結束後還好有 [c9s](https://medium.com/@c9s) 大大提問，雖然只是確認一些細節，但是至少讓我感覺到安慰，畢竟後面這種混亂的狀態還有人能搞懂⋯⋯
+簡單說就是討論 Enumerator 是怎麼來的，然後 Enumerator::Generator 和 Enumerator::Yielder 為什麼要存在，以及 Enumerator::Lazy 是怎樣應運用跟運作，結束後還好有 [c9s](https://medium.com/@c9s) 大大提問，雖然只是確認一些細節，但是至少讓我感覺到安慰，畢竟後面這種混亂的狀態還有人能搞懂⋯⋯
 
 > 總而言之，之後我會想辦法再寫幾篇文章討論這個，然後盡可能的詳細一點。
 
@@ -152,7 +152,7 @@ Fiber 我當初會有興趣是因為他跟 Goroutine 很類似，所以我就跑
 
 後面大概四點快五點，我跑去翻 Samuel 寫的 Async Gem 裡面有一個關於 Enumerator 的問題被特別提出來，因為我的主題就是討論 Enumerator 所以就打開來看了一下，但是又沒有跟上討論的點就只好去問本人。
 
-然後就這樣得到了一個半小時的 Commiter 一對一教學的機會，這個問題是一個在所有 Ruby 版本（1.9 之後有 Fiber）都會有的問題，他又很剛好是我在讀 Enumerator 原始碼的部分被我跳過的部分，簡單說就是 Enumerator 其實是有用 Fiber 的。
+然後就這樣得到了一個半小時的 Commiter 一對一教學的機會，這個問題是一個在所有 Ruby 版本（1.9 之後有 Fiber）都會有的問題，他又很剛好是我在讀 Enumerator 原始碼的時候被我跳過的部分，簡單說就是 Enumerator 其實是有用 Fiber 的。
 
 但是，因為 Ruby 目前的 Fiber 機制不夠完善，造成了下面的情況
 
@@ -171,7 +171,7 @@ f.resume
 
 照 Fiber 的邏輯，應該是要 `#to_a` 得到 `[1]` 然後 `f.resume` 得到一個 `2` 的回傳值，但是因為 `to_enum` 會產生一個 Fiber 區段，造成 `Fiber.yield` 實際上是跟 `yield 1` 的效果一樣，結果就變成 `#to_a` 得到 `[1, 2]` 然後 `f.resume` 是 `nil` 的狀況。
 
-後面的討論（應該是單方面聽解說）就是圍繞在這個情境下要怎麼處理，還有 Samuel 的 [PR]https://github.com/ruby/ruby/pull/2002) 怎麼暫時性的解決，而這個解法其實不算好。就再講到 `Fiber.yield` 和 `#resume` 的行為是怎樣實作的，以及目前 Ruby 缺少了怎樣的機制才造成這個問題的發生等等。
+後面的討論（應該是單方面聽解說）就是圍繞在這個情境下要怎麼處理，還有 Samuel 的 [PR](https://github.com/ruby/ruby/pull/2002) 怎麼暫時性的解決，而這個解法其實不算好。就再講到 `Fiber.yield` 和 `#resume` 的行為是怎樣實作的，以及目前 Ruby 缺少了怎樣的機制才造成這個問題的發生等等。
 
 非常有趣，不過我想大概也不是我目前能幫忙解決的 XD
 

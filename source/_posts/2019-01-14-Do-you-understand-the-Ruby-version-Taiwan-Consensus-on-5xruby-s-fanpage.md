@@ -265,7 +265,7 @@ def 九二共識(國家:, 制度:)
     
     define_method '建立共識？' do |定義|
       return 是 如果 定義 == 對方.定義
-      raise "這不是#{other}共識"
+      raise "這不是#{對方}共識"
     end
   end
 end
