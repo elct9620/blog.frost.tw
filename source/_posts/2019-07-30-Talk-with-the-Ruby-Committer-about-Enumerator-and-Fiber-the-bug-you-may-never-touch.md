@@ -89,21 +89,21 @@ get_next_values(VALUE obj, struct enumerator *e)
     VALUE curr, vs;
 
     if (e->stop_exc)
-	    rb_exc_raise(e->stop_exc);
+      rb_exc_raise(e->stop_exc);
 
     curr = rb_fiber_current();
 
     if (!e->fib || !rb_fiber_alive_p(e->fib)) {
-	    next_init(obj, e);
+      next_init(obj, e);
     }
 
     vs = rb_fiber_resume(e->fib, 1, &curr);
     if (e->stop_exc) {
-	    e->fib = 0;
-	    e->dst = Qnil;
-	    e->lookahead = Qundef;
-	    e->feedvalue = Qundef;
-	    rb_exc_raise(e->stop_exc);
+      e->fib = 0;
+      e->dst = Qnil;
+      e->lookahead = Qundef;
+      e->feedvalue = Qundef;
+      rb_exc_raise(e->stop_exc);
     }
     return vs;
 }
@@ -213,7 +213,7 @@ end
 
 讀到這裡，不得不感嘆一下 Ruby Commiter 們用如此漂亮的方式設計了一個機能，我們都知道 Enumerator 對應的 `#each` 裡面只要給了 `yield` 基本上就是一個無法停止的狀態，他會不斷呼叫我們給的 Block 直到沒有 `yield` 再被呼叫，所以在 Ruby 裡面這算是一種「迭代」
 
-但是想要控制迭代的進度，用步盡的方式進行呢？如果採用一般的方式可能要做很多動作才能達成，此時 Fiber 這種可以暫時某個位置執行其他任務，再跳回去的機制就變得非常實用。以應用案例來說，我想這大概也是非常漂亮的一個學習參考，以我過去對 Fiber 的理解是沒辦法想到這樣的使用方式的。
+但是想要控制迭代的進度，用步進的方式進行呢？如果採用一般的方式可能要做很多動作才能達成，此時 Fiber 這種可以暫時某個位置執行其他任務，再跳回去的機制就變得非常實用。以應用案例來說，我想這大概也是非常漂亮的一個學習參考，以我過去對 Fiber 的理解是沒辦法想到這樣的使用方式的。
 
 ## 被少考慮的情境
 
@@ -331,10 +331,10 @@ rb_fiber_resume(VALUE fibval, int argc, const VALUE *argv)
     rb_fiber_t *fib = fiber_ptr(fibval);
 
     if (fib->prev != 0 || fiber_is_root_p(fib)) {
-	     rb_raise(rb_eFiberError, "double resume");
+      rb_raise(rb_eFiberError, "double resume");
     }
     if (fib->transferred != 0) {
-	    rb_raise(rb_eFiberError, "cannot resume transferred Fiber");
+      rb_raise(rb_eFiberError, "cannot resume transferred Fiber");
     }
 
     return fiber_switch(fib, argc, argv, 1);
@@ -370,7 +370,7 @@ fiber_switch(rb_fiber_t *fib, int argc, const VALUE *argv, int is_resume)
     // 略
 
     if (is_resume) {
-	    fib->prev = fiber_current();
+      fib->prev = fiber_current();
     }
 
     // 略
@@ -385,19 +385,19 @@ return_fiber(void)
     rb_fiber_t *prev = fib->prev;
 
     if (!prev) {
-	    rb_thread_t *th = GET_THREAD();
-	    rb_fiber_t *root_fiber = th->root_fiber;
+      rb_thread_t *th = GET_THREAD();
+      rb_fiber_t *root_fiber = th->root_fiber;
 
-	    VM_ASSERT(root_fiber != NULL);
+      VM_ASSERT(root_fiber != NULL);
 
-	    if (root_fiber == fib) {
-	        rb_raise(rb_eFiberError, "can't yield from root fiber");
+      if (root_fiber == fib) {
+        rb_raise(rb_eFiberError, "can't yield from root fiber");
     	}
-	    return root_fiber;
+      return root_fiber;
     }
     else {
-	    fib->prev = NULL;
-	    return prev;
+      fib->prev = NULL;
+      return prev;
     }
 }
 ```
