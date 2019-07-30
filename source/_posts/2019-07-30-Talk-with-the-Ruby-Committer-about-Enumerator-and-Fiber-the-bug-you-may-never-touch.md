@@ -2,7 +2,7 @@
 title: 你大概沒機會遇到的 Bug - 跟 Ruby Committer 聊 Enumerator 跟 Fiber
 date: 2019-07-30 14:11:31
 tags: [RubyConfTW, Bug, Ruby, Enumerator, Fiber]
-thumbnail: https://images/2019-07-30-talk-with-the-ruby-commiter-about-enumerator-and-fiber-the-bug-you-may-never-touch/thumbnail.jpg
+thumbnail: https://blog.frost.tw/images/2019-07-30-talk-with-the-ruby-commiter-about-enumerator-and-fiber-the-bug-you-may-never-touch/thumbnail.jpg
 ---
 
 今年 [RubyConf Taiwan](https://2019.rubyconf.tw/) 嘗試辦了 After Hack 這個活動，也因此有機會可以跟 Ruby 語言的 Commiter 聊一些有趣的問題。
