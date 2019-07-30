@@ -29,7 +29,7 @@ Matz 這幾年講的 Keynote 都偏向 Ruby 3 的目標跟方向，還有 Ruby C
 
 ## Rethinking the View Layer with Components
 
-這場因為[幕凡](https://ryudo.tw/)在今年 [RubyKaigi](https://rubykaigi.org/2019) 有跟我提過，所以大概是有一個概念的。今年感覺都沒有很集中，但是又感覺都大概懂，很微妙的狀態。
+這場因為[慕凡](https://ryudo.tw/)在今年 [RubyKaigi](https://rubykaigi.org/2019) 有跟我提過，所以大概是有一個概念的。今年感覺都沒有很集中，但是又感覺都大概懂，很微妙的狀態。
 
 簡單來說是在討論 Rails 在 View 層的實作，目前我們的測試都是仰賴 Feature 之類的去驗證畫面是否正常的。
 這邊是將 View 分解成 Component（元件）的形式，將一些細碎的部分用 Ruby 來實作，有點類似 Decorator 的感覺，但更接近 React 的元件概念。
@@ -72,7 +72,7 @@ method(:puts).source_location
 
 主要是在講用 Ruby Fiber 機制開發的 Web Server 能達到處理 100 萬連線的過程，這幾天仔細看 Ruby Core 的 Mailing List 才發現是 Commiter 等級的超級大大。
 
-裡面有一段是一結束就被幕凡問，我後面跑去問了好幾個熟人也都不知道。
+裡面有一段是一結束就被慕凡問，我後面跑去問了好幾個熟人也都不知道。
 
 Fiber 我當初會有興趣是因為他跟 Goroutine 很類似，所以我就跑去研究，去年到日本員工旅遊的時候有去參加 [Asakusa.rb](https://asakusarb.doorkeeper.jp/) 活動的時候有問了一下那邊的大大，然後再經過幾個月的整理歸納出一個大概的概念，才剛好能搞懂這段問題。
 
