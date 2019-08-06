@@ -151,7 +151,7 @@
   @include element('tag-list-item') {
     display: inline-block;
 
-    margin: 0 .5em;
+    margin: .5em .5em;
     padding: .25em .5em;
 
     background-color: $linkColor;
