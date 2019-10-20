@@ -1,7 +1,7 @@
 ---
 title: COSCUP 2019 - 演講後談復活的頁遊 - Unlight （二）
 date: 2019-10-20 17:09:31
-tags: ￼￼￼￼￼￼￼￼[COSCUP, Game, Ruby, Golang, HTML5, JavaScript, DevOps, Docker, Unlight]
+tags: [COSCUP, Game, Ruby, Golang, HTML5, JavaScript, DevOps, Docker, Unlight]
 thumbnail: https://blog.frost.tw/images/2019-09-03-coscup-2019-talk-about-the-browser-game-unlight-which-i-revived-it/screenshot.png
 ---
 
