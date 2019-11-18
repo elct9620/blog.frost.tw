@@ -23,6 +23,6 @@
     "hexo-renderer-sass": "^0.4.0",
     "hexo-renderer-stylus": "^0.3.0",
     "hexo-server": "^0.3.3",
-    "image-size": "^0.7.4"
+    "image-size": "^0.7.5"
   }
 }
