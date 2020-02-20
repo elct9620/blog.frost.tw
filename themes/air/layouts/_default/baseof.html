@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="{{ .Lang }}">
+  <head>
+    <title>{{ block "title" . }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
     {{- partial "head.html" . -}}
-    <body>
-        <div id="fb-root" data-turbolinks-permanent></div>
-        {{- partial "header.html" . -}}
-        <div id="wrapper">
-        {{- block "main" . }}{{- end }}
-        </div>
-        {{- partial "footer.html" . -}}
-        {{- partial "post_scripts.html" . -}}
-        <div class="loading"></div>
-    </body>
+  </head>
+  <body>
+    <div id="fb-root" data-turbolinks-permanent></div>
+    {{- partial "header.html" . -}}
+    <div id="wrapper">
+      {{- block "main" . }}{{- end }}
+    </div>
+    {{- partial "footer.html" . -}}
+    {{- partial "post_scripts.html" . -}}
+    <div class="loading"></div>
+  </body>
 </html>
