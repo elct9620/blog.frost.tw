@@ -1,0 +1,7 @@
+{{ define "main" }}
+  {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" "posts") }}
+  {{ range $paginator.Pages }}
+    {{ partial "excerpt.html" . }}
+  {{ end }}
+  {{ partial "pagination.html" $paginator}}
+{{ end }}

@@ -1,0 +1,7 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{{ $turbolinks := resources.Get "js/turbolinks.js" | resources.Minify -}}
+{{ partial "meta.html" . }}
+{{ partial "meta_json_ld.html" . }}
+{{ partial "styles.html" . }}
+<script async src="{{ $turbolinks.RelPermalink }}"></script>

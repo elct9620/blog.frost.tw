@@ -1,0 +1,8 @@
+<nav id="pagination" class="pagination">
+  {{ if eq .HasPrev true }}
+  <a href="{{ .Prev.URL }}" class="text-left pagination__prev">{{ i18n "prevPage" }}</a>
+  {{ end }}
+  {{ if eq .HasNext true }}
+  <a href="{{ .Next.URL }}" class="text-right pagination__next">{{ i18n "nextPage" }}</a>
+  {{ end }}
+</nav>

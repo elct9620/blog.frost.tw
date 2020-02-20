@@ -1,0 +1,6 @@
+{{ $options := (dict "targetPath" "css/styls.css" "outputStyle" "compressed" "enableSourceMap" false) -}}
+{{ if eq hugo.Environment "development" -}}
+  {{ $options = merge $options (dict "outputStyle" "nested" "enableSourceMap" true) -}}
+{{ end -}}
+{{ $style := resources.Get "css/style.scss" | resources.ToCSS $options -}}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}">
