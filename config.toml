@@ -10,6 +10,8 @@ hasCJKLanguage = true
   title = "弦而時習之"
   subtitle = "蒼時弦也的程式筆記"
   description = "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。"
+  tag_manager = "GTM-5TQLRN"
+  facebook_app_id = "178355449110"
 
 [frontmatter]
 date = [":filename", ":default"]
