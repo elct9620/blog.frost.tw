@@ -1,0 +1,39 @@
+baseURL = "https://blog.frost.tw/"
+languageCode = "zh-TW"
+title = "弦而時習之"
+theme = "air"
+DefaultContentLanguage = "zh-tw"
+hasCJKLanguage = true
+
+[params]
+  title = "弦而時習之"
+  subtitle = "蒼時弦也的程式筆記"
+  description = "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。"
+
+[frontmatter]
+date = [":filename", ":default"]
+
+[permalinks]
+posts = "/posts/:year/:month/:day/:slug"
+
+[languages]
+  [languages.en]
+    contentDir = "content/en"
+    languageName = "English"
+    weight = 10
+  [languages.zh-TW]
+    contentDir = "content/zh-tw"
+    languageName = "繁體中文"
+    weight = 1
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+    style = "solarized-dark"
+    tabWidth = 2

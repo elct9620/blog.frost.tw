@@ -1,0 +1,7 @@
+{{ $turbolinks := resources.Get "js/turbolinks.js" | resources.Minify -}}
+<meta charset="utf-8">
+<meta name="theme-color" content="#EFEFEF">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>{{ block "title" . }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+{{ partial "styles.html" . }}
+<script async src="{{ $turbolinks.RelPermalink }}"></script>

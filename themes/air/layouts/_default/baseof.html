@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{ .Lang }}">
+    {{- partial "head.html" . -}}
+    <body>
+        <div id="fb-root" data-turbolinks-permanent></div>
+        {{- partial "header.html" . -}}
+        <div id="wrapper">
+        {{- block "main" . }}{{- end }}
+        </div>
+        {{- partial "footer.html" . -}}
+        {{- partial "post_scripts.html" . -}}
+        <div class="loading"></div>
+    </body>
+</html>

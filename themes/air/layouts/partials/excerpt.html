@@ -1,0 +1,16 @@
+<article class="post article is-index">
+  <header class="article__header">
+    <time datetime="{{ .PublishDate }}" class="article__time--header">
+      {{ dateFormat "Jan.2" .Date  }}
+    </time>
+    <h3 class="article__title"><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h3>
+  </header>
+  <div class="article__entry is-index">
+    {{ .Summary }}
+    <footer class="article__footer">
+      <div class="text-left">
+        <a href="{{ .Permalink }}#more" class="article__more-link">Read More</a>
+      </div>
+    </footer>
+  </div>
+</article>
