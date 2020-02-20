@@ -4,6 +4,7 @@ title = "弦而時習之"
 theme = "air"
 DefaultContentLanguage = "zh-tw"
 hasCJKLanguage = true
+disablePathToLower = true
 
 [params]
   author = "蒼時弦也"
