@@ -1,2 +1,8 @@
 [readMore]
 other = "繼續閱讀"
+
+[prevPage]
+other = "上一頁"
+
+[nextPage]
+other = "下一頁"

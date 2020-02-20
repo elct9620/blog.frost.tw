@@ -5,13 +5,5 @@
   {{ range $paginator.Pages }}
     {{ partial "excerpt.html" . }}
   {{ end }}
-  <nav id="pagination" class="pagination">
-    {{/* template "_internal/pagination.html" . */}}
-    {{ if eq $paginator.HasPrev true }}
-      <a href="{{ $paginator.Prev.URL }}" class="text-left pagination__prev">Prev</a>
-    {{ end }}
-    {{ if eq $paginator.HasNext true }}
-      <a href="{{ $paginator.Next.URL }}" class="text-right pagination__next">Next</a>
-    {{ end }}
-  </nav>
+  {{ partial "pagination.html" $paginator }}
 {{ end }}
