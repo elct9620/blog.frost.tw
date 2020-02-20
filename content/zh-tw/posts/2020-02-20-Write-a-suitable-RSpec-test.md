@@ -3,6 +3,8 @@ title: 撰寫一個合適的 RSpec 測試
 date: 2020-02-20 00:26:16
 tags: [Ruby, RSpec, 心得, BDD, TDD, Rails]
 slug: Write-a-suitable-RSpec-test
+thumbnail: https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg
+credit: Photo by Rodolfo Clix from Pexels
 ---
 
 包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。

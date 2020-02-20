@@ -2,6 +2,8 @@
 title: Write a suitable RSpec test
 date: 2020-02-20 00:26:16
 tags: [Ruby, RSpec, 心得, BDD, TDD, Rails]
+thumbnail: https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg
+credit: Photo by Rodolfo Clix from Pexels
 ---
 
 Include me, write test is many people's nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.
