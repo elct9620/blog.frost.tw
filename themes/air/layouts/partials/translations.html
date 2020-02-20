@@ -1,0 +1,5 @@
+<nav class="translation">
+  {{ range .Translations }}
+  <a class="translation__link" href={{ .Permalink }}>{{ .Language.LanguageName }}</a>
+  {{ end }}
+</nav>

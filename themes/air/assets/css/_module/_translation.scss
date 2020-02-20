@@ -1,0 +1,16 @@
+// Translation Module
+
+@include block("translation") {
+  text-align: right;
+  margin: -1.5em -4em 1.5em;
+
+  @include element("link") {
+    display: inline-block;
+    padding: .5em 1em;
+
+    color: $white;
+    background-color: $linkColor;
+
+    text-decoration: none;
+  }
+}

@@ -6,6 +6,7 @@
     <h1 class="article__title">{{ .Title }}</h1>
   </header>
   <div class="article__entry">
+    {{ partial "translations.html" . }}
     {{ .Content }}
     <footer class="article__footer">
         <div class="text-center">
