@@ -1,5 +1,5 @@
 {{ define "main" }}
-  {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" "posts") }}
+  {{ $paginator := .Paginate (.Pages) }}
   {{ range $paginator.Pages }}
     {{ partial "excerpt.html" . }}
   {{ end }}
