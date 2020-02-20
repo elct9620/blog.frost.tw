@@ -116,6 +116,11 @@ hr {
   border-bottom: 1px solid lighten($exLightFontColor, 10%);
 }
 
+#wrapper {
+  overflow: hidden;
+  zoom: 1;
+}
+
 // Advertisement
 .adv {
   max-width: 75%;
