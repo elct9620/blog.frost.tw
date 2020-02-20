@@ -19,7 +19,7 @@
     "description": {{ . }},
     {{ end -}}
     {{ end -}}
-    {{ with $.Param "image" -}}
+    {{ with $.Param "thumbnail" -}}
     "image" : {{ . | absURL }},
     {{ end -}}
     {{ with $.Param "author" -}}
@@ -43,5 +43,30 @@
       {{ end -}}
       "url": {{ .Site.BaseURL }}
     }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@id": "{{ .Site.BaseURL | absLangURL }}",
+        "name": "{{ .Site.Title }}",
+        {{ with .Site.Param "cover" -}}
+        "image": "{{ . }}"
+        {{ end -}}
+      }
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@id": "{{ .Permalink }}",
+        "name": "{{ .Title }}",
+        {{ with .Param "thumbnail" -}}
+        "image": "{{ . }}"
+        {{ end -}}
+      }
+    }]
   }
 </script>
