@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Lambda on 弦而時習之</title><link>https://blog.frost.tw/tags/Lambda/</link><description>Recent content in Lambda on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Mon, 20 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/Lambda/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Ruby 的 Lambda 做條件判斷</title><link>https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/</link><pubDate>Mon, 20 May 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/</guid><description>&lt;p>週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">fn&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">other&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">other&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="o">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="n">fn&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="o">&lt;/span>&lt;span class="c1"># =&amp;gt; false&lt;/span>
+&lt;span class="n">fn&lt;/span> &lt;span class="o">===&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="o">&lt;/span>&lt;span class="c1"># =&amp;gt; true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。&lt;/p></description></item></channel></rss>

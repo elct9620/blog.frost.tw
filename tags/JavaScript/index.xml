@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JavaScript on 弦而時習之</title><link>https://blog.frost.tw/tags/JavaScript/</link><description>Recent content in JavaScript on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Sun, 20 Oct 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/JavaScript/index.xml" rel="self" type="application/rss+xml"/><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （二）</title><link>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</link><pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</guid><description>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
+&lt;p>中間在鐵人賽的部分花了一些時間把目前理解到關於 Unlight 的一些基本設計整理出來，後面則是實作。至於近期也已經開始在搭建 HTML5 版本的底層設計，還有 mruby 的&lt;a href="https://github.com/elct9620/mruby.wasm">整合&lt;/a>（因為想提供 Mod 功能到遊戲中）等等東西都在進行中，十一月還要飛日本一趟參加 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a>，可以說是完全都閒不下來。&lt;/p>
+&lt;p>總之，讓我們在來看看 COSCUP 這場演講的後續吧 XD&lt;/p></description></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （一）</title><link>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</link><pubDate>Tue, 03 Sep 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</guid><description>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
+不過看起來還是有很多人沒有機會來聽，雖然之後因為會把一部分重心放在這款遊戲上，所以應該還是有不少機會，但還是簡單的來彙整一下今天講的東西。&lt;/p>
+&lt;p>上一篇&lt;a href="https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/">快速閱讀 Unlight 原始碼&lt;/a>大致上有提到了我在當時看到原始碼的看法跟概觀。有興趣的話可以搭配&lt;a href="https://speakerdeck.com/elct9620/2019-coscup-fu-huo-ge-browser-game-unlight-kai-yuan-shi-jian">演講簡報&lt;/a>一起讀這篇文章。&lt;/p>
+&lt;p>另外，這次整個遊戲運作起來除了我自己本身對 Ruby / ActionScript 有一定的了解外，也要感謝一下我們這個團隊（&lt;a href="https://unlight.app">Open Unlight&lt;/a>）的初期成員 Poka 和舞鶴，給我硬體上的支援跟對其他玩家的客服支援，不然有時候真的很難同時處理這些事情。&lt;/p></description></item><item><title>用 CloudFlare Workers 製作簡單的 Uptime Status 頁面</title><link>https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/</link><pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/</guid><description>&lt;p>最近跟朋友弄了一個透過 Chatbot 做出手遊效果的專案，沒出什麼意外的話大概能在九月看到一個雛形。不過既然是手遊類型的遊戲，更新資料跟維護其實就會遇到一些困難點。&lt;/p>
+&lt;p>如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。
+如此一來，讓玩家知道遊戲（機器人）正在更新，處於無法使用的狀態，就是一個重要的關鍵。&lt;/p></description></item><item><title>我的 Chrome 會說話</title><link>https://blog.frost.tw/posts/2018/05/30/My-Chrome-can-speak/</link><pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/05/30/My-Chrome-can-speak/</guid><description>&lt;p>這是很多年前的事情了，當時看到別人的 Chrome 竟然會說話，讓我震驚了很久。但是花了很多年都沒有找到要怎麼做，不過最近因為一些關係，我終於知道了他的秘密！&lt;/p></description></item><item><title>使用 Turbolinks 時 Google Analytics 並沒有正確運作</title><link>https://blog.frost.tw/posts/2018/03/24/Google-Analytics-not-correct-when-using-turbolinks/</link><pubDate>Sat, 24 Mar 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/03/24/Google-Analytics-not-correct-when-using-turbolinks/</guid><description>&lt;p>最近因為在&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>配合同事做官網的 SEO 優化，比較常見的行銷工具像是 Google Analytics 之類的就一起拿出來玩。&lt;/p>
+&lt;p>實驗的對象首選當然是自己的網站，不過在調整的時候卻發現有一些情況有點異常。&lt;/p></description></item><item><title>Unity3D - 元件化的遊戲製作</title><link>https://blog.frost.tw/posts/2014/01/03/unity3d-component-of-game-production/</link><pubDate>Fri, 03 Jan 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/01/03/unity3d-component-of-game-production/</guid><description>&lt;p>這篇文章一部份是寫給同學看的，在做遊戲中似乎挺常使用到的，而這個「特性」如果能夠理解的話，未來同學在製作遊戲應該也是會順利很多，另一方面就是 SITCON 的投稿，大概就是以這個為主軸來討論。&lt;/p>
+&lt;p>依照網路上的說法，這個概念應該是在 Unity3D 熱門之後，才比較被大眾所熟悉。而我個人是在 2013 年的 COSCUP 在半路大的&lt;a href="https://speakerdeck.com/halflucifer/using-lua-to-build-a-component-based-architecture-for-game-apps">演講&lt;/a>第一次獲得「元件化」的關鍵字，這確實也是一個不一樣的概念。&lt;/p>
+&lt;p>至於後續如何呢？讓我們一起看下去。
+（關於非遊戲的討論，我之後會另外寫文章，這邊以 Unity3D 的 Component 概念為主。）&lt;/p></description></item><item><title>在忙，也要寫一下 NKO 2013</title><link>https://blog.frost.tw/posts/2013/11/11/busy-but-also-to-write-about-nko-2013/</link><pubDate>Mon, 11 Nov 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/11/11/busy-but-also-to-write-about-nko-2013/</guid><description>&lt;p>這篇必須是短文 XD&lt;/p>
+&lt;p>其實 NKO 2013 結束之後，我依舊還有著不少東西得完成⋯⋯&lt;/p>
+&lt;p>Ex. NKO 2013 的作品是學校的一項作業，還得繼續完善。&lt;/p>
+&lt;p>廢話不多說，趕緊來講講今年的 NKO 2013 吧 XD&lt;/p></description></item><item><title>V-Play Engine 與 Corona SDK 的簡易比較</title><link>https://blog.frost.tw/posts/2013/09/18/v-play-engine-and-the-corona-sdk-simple-different/</link><pubDate>Wed, 18 Sep 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/09/18/v-play-engine-and-the-corona-sdk-simple-different/</guid><description>&lt;p>原本這篇是想寫關於 &lt;a href="https://v-play.net/">V-Play&lt;/a> Engine 來制作一個簡單的小遊戲，不過後來因為作業上的需求，我有另外去接觸 &lt;a href="https://coronalabs.com/">Corona&lt;/a> SDK 於是就變成了一篇比較文。&lt;/p>
+&lt;p>雖然兩者大概都是接觸約一周到兩週的程度，沒辦法做太深入地分析與討論，但是就我自己的感覺來說，最後是選擇了 &lt;a href="https://coronalabs.com/">Corona&lt;/a> SDK 來做為制作遊戲的引擎。&lt;/p>
+&lt;p>雖然實際上比較想制作 PC/Mac 平台的遊戲，不過就現況來說遊戲引擎都轉戰移動裝置市場，也只好先暫時如此了⋯⋯&lt;/p></description></item><item><title>React - Facebook 的 UI 元件 Library</title><link>https://blog.frost.tw/posts/2013/08/29/react-facebook-ui-component-library/</link><pubDate>Thu, 29 Aug 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/08/29/react-facebook-ui-component-library/</guid><description>&lt;p>昨天在 TEDxTaipei 實習的時候說要修正之前 Timer (計時器) 的錯誤，我馬上就想到可以用 Facebook 的 &lt;a href="https://facebook.Github.io/react/">React&lt;/a> 來改寫。&lt;/p>
+&lt;p>之前就非常想玩看看，這次完了之後發現確實不錯，可以來推一下 XDD&lt;/p>
+&lt;p>註：暑假剛好有機會在 TEDxTaipei 實習，主要處理 WordPress 後端一些 PHP Code 和一些與前端搭配的技術，而計時器在 TEDxTaipei 會自行製作是因為有多了幾個特殊的按鈕的關係。&lt;/p></description></item><item><title>COSCUP 2013 - Lighting Talk 補充</title><link>https://blog.frost.tw/posts/2013/08/05/coscup-2-13-lighting-talk-additional/</link><pubDate>Mon, 05 Aug 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/08/05/coscup-2-13-lighting-talk-additional/</guid><description>&lt;p>其實我以為我很快就沒東西，沒想到還能超過一分鐘。&lt;/p>
+&lt;p>第一次不知道該講什麼，我真的該分享一下怎麼制作的，是個很簡單卻又非常有趣的作品。&lt;/p>
+&lt;p>因為 Github 的 API 是允許 Cross-Domain 存取的，也因為這樣，我才能夠順利地從 Github 上把我們 Staff 的個人簡介拉出來，然後透過 Backbone 去呈現。&lt;/p>
+&lt;p>我一共用到了這些 JavaScript Libary / Tools&lt;/p>
+&lt;ul>
+&lt;li>RequireJS (AMD)
+&lt;ul>
+&lt;li>RequireJS Text Plugin&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Backbone.js (MVP/MVC)
+&lt;ul>
+&lt;li>Underscore.js (相依)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>jQuery (DOM操作)&lt;/li>
+&lt;li>Mustache.js (Template)&lt;/li>
+&lt;li>Markdown.js (Praser)&lt;/li>
+&lt;li>Modernizr&lt;/li>
+&lt;/ul>
+&lt;p>實作也非常簡單，只需要約六七個檔案就能完成。&lt;/p></description></item></channel></rss>

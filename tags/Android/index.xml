@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Android on 弦而時習之</title><link>https://blog.frost.tw/tags/Android/</link><description>Recent content in Android on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Sun, 12 Jun 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/Android/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 GitLab CI 整合 SonarQube</title><link>https://blog.frost.tw/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/</link><pubDate>Sun, 12 Jun 2016 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2016/06/12/Working-with-Gitlab-CI-and-Sonarqube/</guid><description>&lt;p>之前都在偷懶沒有寫網誌，剛好這次端午連假比較長。
+所以想做測試跟實驗的部分都做完了，就來寫一篇關於 GitLab CI 整合的經驗分享。&lt;/p>
+&lt;p>文章中大致上會涵蓋這些部分：&lt;/p>
+&lt;ul>
+&lt;li>GitLab CI 基本使用&lt;/li>
+&lt;li>Rancher建置環境&lt;/li>
+&lt;li>SonarQube 基本使用&lt;/li>
+&lt;li>GitLab CI 整合環境&lt;/li>
+&lt;/ul>
+&lt;p>文章會以我在建構 CI 環境的過程中來講解，一些安裝跟配置的部分會直接跳過。&lt;/p></description></item></channel></rss>

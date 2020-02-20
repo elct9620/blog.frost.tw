@@ -1,0 +1,115 @@
+<!doctype html><html lang=zh-tw><head><title>V-Play Engine 與 Corona SDK 的簡易比較 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="原本這篇是想寫關於 V-Play Engine 來制作一個簡單的小遊戲，不過後來因為作業上的需求，我有另外去接觸 Corona SDK 於是就變成了一篇比較文。
+雖然兩者大概都是接觸約一周到兩週的程度，沒辦法做太深入地分析與討論，但是就我自己的感覺來說，最後是選擇了 Corona SDK 來做為制作遊戲的引擎。 …"><meta name=created content="2013-09-18T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="V-Play Engine 與 Corona SDK 的簡易比較"><meta property="og:url" content="https://blog.frost.tw/posts/2013/09/18/v-play-engine-and-the-corona-sdk-simple-different/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2013/09/18/v-play-engine-and-the-corona-sdk-simple-different/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"V-Play Engine 與 Corona SDK 的簡易比較","datePublished":"2013-09-18T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2013/09/18/v-play-engine-and-the-corona-sdk-simple-different/","description":"原本這篇是想寫關於 V-Play Engine 來制作一個簡單的小遊戲，不過後來因為作業上的需求，我有另外去接觸 Corona SDK 於是就變成了一篇比較文。\n雖然兩者大概都是接觸約一周到兩週的程度，沒辦法做太深入地分析與討論，但是就我自己的感覺來說，最後是選擇了 Corona SDK 來做為制作遊戲的引擎。 …\n","keywords":["JavaScript","Lua","遊戲","SDK","心得"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2013\/09\/18\/v-play-engine-and-the-corona-sdk-simple-different\/","name":"V-Play Engine 與 Corona SDK 的簡易比較"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.18</time><h1 class=article__title>V-Play Engine 與 Corona SDK 的簡易比較</h1></header><div class=article__entry><nav class=translation></nav><p>原本這篇是想寫關於 <a href=https://v-play.net/>V-Play</a> Engine 來制作一個簡單的小遊戲，不過後來因為作業上的需求，我有另外去接觸 <a href=https://coronalabs.com/>Corona</a> SDK 於是就變成了一篇比較文。</p><p>雖然兩者大概都是接觸約一周到兩週的程度，沒辦法做太深入地分析與討論，但是就我自己的感覺來說，最後是選擇了 <a href=https://coronalabs.com/>Corona</a> SDK 來做為制作遊戲的引擎。</p><p>雖然實際上比較想制作 PC/Mac 平台的遊戲，不過就現況來說遊戲引擎都轉戰移動裝置市場，也只好先暫時如此了⋯⋯</p><p>既然要做比較，那麼還是開個表格來好好對照一下會比較恰當。</p><table><thead><tr><th align=center></th><th align=center><strong>V-Play Game Engine</strong></th><th align=center><strong>Corona SDK</strong></th></tr></thead><tbody><tr><td align=center><strong>收費方式</strong></td><td align=center>Android/iOS 發佈收費</td><td align=center>依照營業額升級方案</td></tr><tr><td align=center><strong>使用語言</strong></td><td align=center>QML/JavaScript</td><td align=center>Lua</td></tr><tr><td align=center><strong>教學文件</strong></td><td align=center>無經驗初學者較容易懂</td><td align=center>適合有經驗者閱讀</td></tr><tr><td align=center><strong>設計架構</strong></td><td align=center>概念上好懂，實際撰寫與程式開發差異大</td><td align=center>標準的 Lua 風格，與一般程式人員習慣類似</td></tr><tr><td align=center><strong>引擎架構</strong></td><td align=center>感覺還在發展中</td><td align=center>比較完整</td></tr><tr><td align=center><strong>模擬運行</strong></td><td align=center>一般 Qt 建制出來的應用</td><td align=center>Corona 內建的模擬器</td></tr><tr><td align=center><strong>建置測試</strong></td><td align=center>需手動上傳後下載放入手機</td><td align=center>整合在軟體內，仍需手動匯入手機</td></tr><tr><td align=center><strong>使用案例</strong></td><td align=center>幾乎沒有看到</td><td align=center>官網有幾個不錯的作品</td></tr><tr><td align=center><strong>使用範圍</strong></td><td align=center>純遊戲開發</td><td align=center>一般 APP 或遊戲</td></tr></tbody></table><p>以上是我想到的項目，其實有些好像是廢話啊（笑</p><p>事實上，假設沒有要制作 PC/Mac 的遊戲需求，我認為選擇 <a href=https://coronalabs.com/>Corona</a> SDK 會比選擇 <a href=https://v-play.net/>V-Play</a> 還好，在 V-Play 的撰寫上對有經驗的開發者（會寫程式）是件很微妙的的感覺，怎麼寫怎麼不對勁。</p><p>關於這個問題，我認為是 QML 造成的關係，其實這個概念很好，不過不斷的建立階層然後組合起來，其實感覺非常的微妙⋯⋯</p><pre><code class=language-qml data-lang=qml>import V-Play 1.0
+
+EntityBase {
+	Rectangle {
+		width: 10
+		height: 10
+	}
+}
+
+</code></pre><pre><code class=language-qml data-lang=qml>import V-Play 1.0
+import &quot;Box.qml&quot;
+
+GameWindow {
+	Scene {
+		Box {
+			x: 10
+			y: 10
+		}
+	}
+}
+
+</code></pre><p>不過架構概念上其實蠻適合撰寫遊戲，因為是以元件的形式去組合，其實在設計遊戲架構時是不錯的。
+不過卻會因為不斷的加入同樣的東西去設定某個元件而越來越囧吧 XDD</p><p>另一方面 <a href=https://coronalabs.com/>Corona</a> SDK 寫起來就是單純的 Lua 毫無違和啊 XDD</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-lua data-lang=lua><span class=kd>local</span> <span class=n>storyboard</span> <span class=o>=</span> <span class=n>require</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>storyboard</span><span class=s2>&#34;</span><span class=p>)</span>
+<span class=kd>local</span> <span class=n>scene</span> <span class=o>=</span> <span class=n>storyboard.newScene</span><span class=p>(</span><span class=p>)</span>
+
+<span class=kr>function</span> <span class=nc>scene</span><span class=p>:</span><span class=nf>createScene</span><span class=p>(</span> <span class=n>event</span> <span class=p>)</span>
+  <span class=c1>-- Do something ...</span>
+<span class=kr>end</span>
+
+<span class=kr>function</span> <span class=nc>scene</span><span class=p>:</span><span class=nf>enterScene</span><span class=p>(</span> <span class=n>event</span> <span class=p>)</span>
+	<span class=c1>-- Do something repeate</span>
+<span class=kr>end</span>
+
+<span class=kr>function</span> <span class=nc>scene</span><span class=p>:</span><span class=nf>exitScene</span><span class=p>(</span> <span class=n>event</span> <span class=p>)</span>
+ <span class=c1>-- Do something ...</span>
+<span class=kr>end</span>
+
+<span class=kr>function</span> <span class=nc>scene</span><span class=p>:</span><span class=nf>destroyScene</span><span class=p>(</span> <span class=n>event</span> <span class=p>)</span>
+ <span class=c1>-- Do something ...</span>
+<span class=kr>end</span>
+
+<span class=n>scene</span><span class=p>:</span><span class=n>addEventListener</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>createScene</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>scene</span><span class=p>)</span>
+<span class=n>scene</span><span class=p>:</span><span class=n>addEventListener</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>enterScene</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>scene</span><span class=p>)</span>
+<span class=n>scene</span><span class=p>:</span><span class=n>addEventListener</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>exitScene</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>scene</span><span class=p>)</span>
+<span class=n>scene</span><span class=p>:</span><span class=n>addEventListener</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>destroyScene</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>scene</span><span class=p>)</span>
+
+<span class=kr>return</span> <span class=n>scene</span>
+</code></pre></td></tr></table></div></div><p>Event Driven 類型的設計，感覺跟遊戲設計上比較接近。</p><p>註：<a href=https://v-play.net/>V-Play</a> 是在元件中敘述 collision 時的動作，而 <a href=https://coronalabs.com/>Corona</a> 則是對物件或者場景監聽事件，就邏輯上本身不太一樣。</p><hr><p>而實際製作上，其實差異上大概就是幾個設定時的做法問題。
+（其實主要差異大概就是上面提的這樣，目前我用 <a href=https://v-play.net/>V-Play</a> 做了打磚塊的原型，而 <a href=https://coronalabs.com/>Corona</a> 則是一款守塔遊戲原型）</p><p>在使用 <a href=https://v-play.net/>V-Play</a> 的部分，因為都直接寫在原件中，所以基本上不太需要一些特殊設定。</p><p>而 <a href=https://coronalabs.com/>Corona</a> 是使用這種方式對物理和漸變（transition）做處理的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-lua data-lang=lua>
+<span class=kd>local</span> <span class=n>physics</span> <span class=o>=</span> <span class=n>reqire</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>physics</span><span class=s2>&#34;</span><span class=p>)</span>
+<span class=c1>-- Some Physics Settings ...</span>
+
+<span class=c1>-- Some Object</span>
+<span class=kd>local</span> <span class=n>object</span> <span class=o>=</span> <span class=n>display.newRect</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>10</span><span class=p>,</span> <span class=mi>10</span><span class=p>)</span>
+<span class=n>physics.addBody</span><span class=p>(</span><span class=n>object</span><span class=p>,</span> <span class=p>{</span><span class=p>}</span><span class=p>)</span>
+<span class=n>transition.to</span><span class=p>(</span><span class=n>object</span><span class=p>,</span> <span class=p>{</span><span class=n>x</span><span class=o>=</span><span class=mi>100</span><span class=p>,</span> <span class=n>time</span><span class=o>=</span><span class=mi>1000</span><span class=p>}</span><span class=p>)</span>
+</code></pre></td></tr></table></div></div><p>此時，假設我要取消漸變，就會出現「我該怎麼取消」的問題⋯⋯
+因此會需要改寫成這樣：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-lua data-lang=lua>
+<span class=n>object.transition</span> <span class=o>=</span> <span class=n>transition.to</span><span class=p>(</span><span class=n>object</span><span class=p>,</span> <span class=p>{</span><span class=n>x</span><span class=o>=</span><span class=mi>100</span><span class=p>,</span> <span class=n>time</span><span class=o>=</span><span class=mi>1000</span><span class=p>}</span><span class=p>)</span>
+
+<span class=c1>--- Some Event Trigger</span>
+<span class=n>transition.cancel</span><span class=p>(</span><span class=n>object.transition</span><span class=p>)</span>
+
+</code></pre></td></tr></table></div></div><p>需要另外儲存，不過幸好在 Lua 中物件基本是利用 Table 創造的，可以很輕易的加入屬性。
+不過另一方面也要小心，因為 <a href=https://coronalabs.com/>Corona</a> 在很多地方都不會提醒你有錯誤（也可能是 Lau 的關係）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-lua data-lang=lua><span class=kd>local</span> <span class=n>object</span> <span class=o>=</span> <span class=n>display.newRect</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>10</span><span class=p>,</span> <span class=mi>10</span><span class=p>)</span>
+<span class=kr>function</span> <span class=nc>object</span><span class=p>:</span><span class=nf>removeSelf</span><span class=p>(</span><span class=p>)</span>
+	<span class=c1>-- Do something ...</span>
+<span class=kr>end</span>
+</code></pre></td></tr></table></div></div><p>但實際上 removeSelf 是預設用來刪除物件的語法，現在被我們自己覆蓋掉，反而造成系統無法使用正確的方式移除物件，這部分需要很小心。</p><p>就目前的經驗來看，我能做得比較大致上就到這邊。</p><p>之後就等我有更深入地研究再來討論這些東西了～</p><p>如果文章有誤，也請大家指正。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/JavaScript/>JavaScript</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Lua/>Lua</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E9%81%8A%E6%88%B2/>遊戲</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/SDK/>SDK</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

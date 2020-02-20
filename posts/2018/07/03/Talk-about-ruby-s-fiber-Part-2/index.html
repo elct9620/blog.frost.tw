@@ -1,0 +1,70 @@
+<!doctype html><html lang=zh-tw><head><title>淺談 Ruby 的 Fiber（二） - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="第一篇我們已經大致上了解 Fiber 的運作原理，不過要能夠實際上的掌握跟應用，我認為是需要靠實作來熟悉的。
+所以，這一篇我們先來講學習 Socket 最常見的 TCP 伺服器實作吧！"><meta name=created content="2018-07-03T00:00:00+0000"><meta name=modified content="2018-07-03T19:26:44+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="淺談 Ruby 的 Fiber（二）"><meta property="og:url" content="https://blog.frost.tw/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2018-07-03-talk-about-ruby-s-fiber-part-2/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"淺談 Ruby 的 Fiber（二）","datePublished":"2018-07-03T00:00:00Z","dateModified":"2018-07-03T19:26:44Z","url":"https://blog.frost.tw/posts/2018/07/03/Talk-about-ruby-s-fiber-Part-2/","description":"第一篇我們已經大致上了解 Fiber 的運作原理，不過要能夠實際上的掌握跟應用，我認為是需要靠實作來熟悉的。\n所以，這一篇我們先來講學習 Socket 最常見的 TCP 伺服器實作吧！\n","keywords":["Ruby","Concurrency","Thread"],"image":"https://blog.frost.tw/images/2018-07-03-talk-about-ruby-s-fiber-part-2/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2018\/07\/03\/Talk-about-ruby-s-fiber-Part-2\/","name":"淺談 Ruby 的 Fiber（二）","image":"https:\/\/blog.frost.tw\/images\/2018-07-03-talk-about-ruby-s-fiber-part-2\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2018-07-03T19:26:44+0000 class=article__time--header>Feb.03</time><h1 class=article__title>淺談 Ruby 的 Fiber（二）</h1></header><div class=article__entry><nav class=translation></nav><p><a href=https://blog.frost.tw/posts/2018/06/26/Talk-about-ruby-s-fiber-Part-1/>第一篇</a>我們已經大致上了解 Fiber 的運作原理，不過要能夠實際上的掌握跟應用，我認為是需要靠實作來熟悉的。</p><p>所以，這一篇我們先來講學習 Socket 最常見的 TCP 伺服器實作吧！</p><p>為了要比較 Fiber 和 Thread 版，這次我們會先用 TCPServer 來實做一個簡易的 TCP 伺服器，並且用來比較兩者的差異。</p><h2 id=tcpserver>TCPServer</h2><p>首先，我們先用 Ruby 建立一個可以接收連線的 TCP 伺服器。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=nb>require</span> <span class=s1>&#39;socket&#39;</span>
+
+<span class=n>server</span> <span class=o>=</span> <span class=no>TCPServer</span><span class=o>.</span><span class=n>new</span> <span class=mi>3000</span>
+<span class=o></span><span class=kp>loop</span> <span class=k>do</span>
+  <span class=n>client</span> <span class=o>=</span> <span class=n>server</span><span class=o>.</span><span class=n>accept</span>
+  <span class=n>client</span><span class=o>.</span><span class=n>puts</span> <span class=s2>&#34;</span><span class=s2>HELLO WORLD</span><span class=s2>&#34;</span>
+  <span class=n>client</span><span class=o>.</span><span class=n>close</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>我們可以用 telnet 指令來做簡單的測試。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>telnet localhost <span class=m>3000</span>
+</code></pre></td></tr></table></div></div><p>目前的版本在連上之後就會馬上顯示 <code>HELLO WORLD</code> 然後關閉連線。</p><h2 id=blocking-io>Blocking I/O</h2><p>那麼，我們希望接收來自使用者的訊息，會像這樣修改。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=nb>require</span> <span class=s1>&#39;socket&#39;</span>
+
+<span class=n>server</span> <span class=o>=</span> <span class=no>TCPServer</span><span class=o>.</span><span class=n>new</span> <span class=mi>3000</span>
+<span class=o></span><span class=kp>loop</span> <span class=k>do</span>
+  <span class=n>client</span> <span class=o>=</span> <span class=n>server</span><span class=o>.</span><span class=n>accept</span>
+  <span class=n>client</span><span class=o>.</span><span class=n>puts</span> <span class=s2>&#34;</span><span class=s2>HELLO WORLD</span><span class=s2>&#34;</span>
+  <span class=nb>puts</span> <span class=n>client</span><span class=o>.</span><span class=n>gets</span>
+  <span class=n>client</span><span class=o>.</span><span class=n>close</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>這個時候，如過我們用像這樣的順序進行操作，就會發現無法正常運作。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 視窗一</span>
+telnet localhost <span class=m>3000</span> <span class=c1># =&gt; 顯示 HELLO WORLD</span>
+<span class=c1># 視窗二</span>
+telnet localhost <span class=m>3000</span> <span class=c1># =&gt; 沒有顯示</span>
+</code></pre></td></tr></table></div></div><p>這是因為在 <code>client.gets</code> 的時候發生了 Blocking I/O（I/O 阻塞）的情況，也就是操作因為 <code>#gets</code> 嘗試讀取，但是因為讀取不到而阻止接下來的程式執行。</p><h2 id=thread>Thread</h2><p>在這個時候，我們可以透過幾種方式解決。</p><ol><li>Process</li><li>Thread</li><li>Fiber</li></ol><p>第一個方案因為是記憶體完全獨立的，所以我們就無法知道其他連線的用戶存在，所以一般來說不會使用。而 Thread 則是把 Process 切割後，遇到了一些情境像是 <code>sleep</code> 和 <code>Blocking I/O</code> 等情況，就會先把執行權轉交給其他 Thread 繼續執行。</p><p>所以，我們可以將程式修改成這樣。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=nb>require</span> <span class=s1>&#39;socket&#39;</span>
+
+<span class=n>server</span> <span class=o>=</span> <span class=no>TCPServer</span><span class=o>.</span><span class=n>new</span> <span class=mi>3000</span>
+<span class=o></span><span class=kp>loop</span> <span class=k>do</span>
+  <span class=n>client</span> <span class=o>=</span> <span class=n>server</span><span class=o>.</span><span class=n>accept</span>
+  <span class=n>client</span><span class=o>.</span><span class=n>puts</span> <span class=s2>&#34;</span><span class=s2>HELLO WORLD</span><span class=s2>&#34;</span>
+  <span class=no>Thread</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+    <span class=nb>puts</span> <span class=n>client</span><span class=o>.</span><span class=n>gets</span>
+    <span class=n>client</span><span class=o>.</span><span class=n>close</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>如此一來，當我們碰到 Blocking I/O（<code>#gets</code>）的情況，就會先將目前佔用的 Thread 轉交給其他可以繼續執行的 Thread 身上，先執行任務。</p><h2 id=小結>小結</h2><p>這篇文章簡單的介紹了 Thread 的使用方式，以及該如何避免遇到 Blocking I/O 的處理方式，下一篇就來看看透過 Fiber 的流程控制機制，是怎樣迴避這個問題的。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Concurrency/>Concurrency</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Thread/>Thread</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

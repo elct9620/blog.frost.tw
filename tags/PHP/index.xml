@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PHP on 弦而時習之</title><link>https://blog.frost.tw/tags/PHP/</link><description>Recent content in PHP on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Sun, 30 Oct 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/PHP/index.xml" rel="self" type="application/rss+xml"/><item><title>Afte PHPConf 2016</title><link>https://blog.frost.tw/posts/2016/10/30/Afte-PHPConf-2016/</link><pubDate>Sun, 30 Oct 2016 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2016/10/30/Afte-PHPConf-2016/</guid><description>&lt;p>PHPConf 是退伍後參加的第三個研討會。雖然現在已經沒有什麼在寫 PHP 了，不過寫了好幾年的語言還是會想關注一下最近的狀況。&lt;/p>
+&lt;p>今年其實沒有聽到很多議程，只聽了三場議程而已。
+大部分的時間都用在跟講師聊天，不過另一方面也感受到這幾年很多活動都已經不是以前認識的人去參加。這大概就是對我們這群人來說，一個研討會的內容能帶給我們的東西已經不夠了。&lt;/p>
+&lt;p>雖然以前會覺得自己還能夠一直參加，不過實際上當研討會分享的東西大多能靠自己學會跟吸收的時候，就沒有那麼重要。有機會的話，去做分享也是繼續參與的一個階段，能力可及的話我也會盡可能多做分享。&lt;/p></description></item><item><title>PHPConf 2014 會後心得</title><link>https://blog.frost.tw/posts/2014/10/19/after-phpconf-2014-experience/</link><pubDate>Sun, 19 Oct 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/10/19/after-phpconf-2014-experience/</guid><description>&lt;p>這次參加 PHPConf 不是以會眾的身份，而是以講師的身份參加。回想起來，三年前左右因為朋友的推薦參加了 COSCUP 接著得知了 PHPConf 然後就開始陸陸續續的參加各種社群的活動。&lt;/p>
+&lt;p>三年前左右，剛好是我升上大學的時候。那時其實已經經歷過好幾次的瓶頸，光靠自學其實是很難學好一項技能的。除了老師之外，我想就是社群這種平行交流的地方可以獲取「書本」跟「文字資料」以外的知識，很多東西真的要靠交談、人與人之間的友情，才能夠得到一些「特別的經驗」或者「特別的方法」&lt;/p>
+&lt;p>當了三年多的聽眾，我在這短短的時間內透過每一個 Conference 獲得了各種不同的技能與技巧，在今年的 PHPConf 我了解到我已經從一個「接收者」變成一個「分享者」的角色，正好也是在我即將從大學畢業的這個階段。&lt;/p>
+&lt;p>正因為我是受到「社群的恩惠」而成長，所以我想在之後我還是會繼續投入社群的活動。以一個工作人員，或者是講師的角色來做這件事情，即使不是每一個人都能透過這種方式成長，但是在未來，讓 Conference 繼續經營下去、舉辦的更好，都有可能多幫助到一個像我這樣受到社群滋潤而成長的人，這也是我從 SITCON 擔任工作人員的經驗，還有從 COSCUP、PHPConf、RubyConf、JSDC、WebConf 這些活動所體會到的。&lt;/p>
+&lt;p>總而言之，我會盡可能以工作人員的身份來參與未來幾年的社群活動，是時候該回饋給社群了 XD&lt;/p>
+&lt;p>那麼，來談談今年 PHPConf 的議程吧！&lt;/p></description></item><item><title>Using Laravel and HHVM on Heroku</title><link>https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/</link><pubDate>Sun, 26 Jan 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/</guid><description>&lt;p>會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD
+那時身為專業的阿宅，一定要馬上裝來玩一下。&lt;/p>
+&lt;p>隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）
+我又再次回想起這神奇的東西⋯⋯
+&lt;!-- raw HTML omitted -->現實是 Composer 跑太慢被 HHVM 斷開魂結&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>當時我就想，既然我都搞了 &lt;a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon">Phalcon on Heroku&lt;/a> 這東西，不如再來搞一個 HHVM 版本吧！&lt;/p>
+&lt;p>沒想到&lt;a href="https://Github.com/hhvm/Heroku-buildpack-hhvm">官方&lt;/a>竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XD&lt;/p>
+&lt;blockquote>
+&lt;p>PaaS 入門指南還沒斷，不過人生總是需要調味一下，就先讓我寫些別的吧 XD&lt;/p>
+&lt;/blockquote></description></item><item><title>從學生的角度給學生學習程式的建議</title><link>https://blog.frost.tw/posts/2013/12/18/from-the-students-perspective-to-the-students-program-of-study-recommendations/</link><pubDate>Wed, 18 Dec 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/12/18/from-the-students-perspective-to-the-students-program-of-study-recommendations/</guid><description>&lt;p>雖然自己不是什麼高手，也沒什麼有建設性的建議，但是最近老爸公司來了實習生，我在跟實習生的互動過程中，發現了一些學生在學習程式上的一些要注意的部分，所以想來分享一下。&lt;/p>
+&lt;p>（先不討論我怎麼會在老爸公司寫扣，還有實習生怎麼出現的這些神秘問題了 XD）&lt;/p>
+&lt;hr>
+&lt;p>其實已經有很多前輩已經分享過非常多有用的技巧與方法，這邊就單純以我個人的經驗，還有與實習生接觸後，我在教導實習生使用 Rails 和融入老爸公司開發流程的過程。（雖然以前只有我自己寫扣拉，哭哭）&lt;/p></description></item><item><title>用 Zephir 寫自己的 PHP Extension</title><link>https://blog.frost.tw/posts/2013/10/05/zephir-write-your-own-php-extension/</link><pubDate>Sat, 05 Oct 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/10/05/zephir-write-your-own-php-extension/</guid><description>&lt;p>前一篇文章說到了 &lt;a href="https://zephir-lang.com/">Zephir&lt;/a> 於是這篇就要來研究一下摟～&lt;/p>
+&lt;p>關於這篇文章，會做以下幾件事情：&lt;/p>
+&lt;ul>
+&lt;li>安裝 &amp;amp; 設定&lt;/li>
+&lt;li>寫一個簡易的 Router&lt;/li>
+&lt;li>改寫成 Zephir 版本&lt;/li>
+&lt;li>安裝 Extension 以及測試&lt;/li>
+&lt;/ul>
+&lt;p>那麼，廢話不多說，馬上開始吧！&lt;/p></description></item></channel></rss>

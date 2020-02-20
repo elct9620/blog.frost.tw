@@ -1,0 +1,209 @@
+<!doctype html><html lang=zh-tw><head><title>利用 Ruby 的 Lambda 做條件判斷 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。
+1 2 3 4 5  fn = -&amp;gt;(other) { other == 1 } fn == 1 # =&amp;gt; false fn === 1 # =&amp;gt; true   剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。"><meta name=created content="2019-05-20T00:00:00+0000"><meta name=modified content="2019-05-20T21:59:53+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="利用 Ruby 的 Lambda 做條件判斷"><meta property="og:url" content="https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"利用 Ruby 的 Lambda 做條件判斷","datePublished":"2019-05-20T00:00:00Z","dateModified":"2019-05-20T21:59:53Z","url":"https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/","description":"週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。\n1 2 3 4 5  fn = -\u0026gt;(other) { other == 1 } fn == 1 # =\u0026gt; false fn === 1 # =\u0026gt; true   剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。\n","keywords":["Ruby","心得","Lambda"],"image":"https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/05\/20\/Use-Ruby-s-Lambda-as-case-when-condition\/","name":"利用 Ruby 的 Lambda 做條件判斷","image":"https:\/\/blog.frost.tw\/images\/2019-05-20-use-ruby-s-lambda-as-case-when-condition\/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2019-05-20T21:59:53+0000 class=article__time--header>Feb.20</time><h1 class=article__title>利用 Ruby 的 Lambda 做條件判斷</h1></header><div class=article__entry><nav class=translation></nav><p>週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>fn</span> <span class=o>=</span> <span class=o>-</span><span class=o>&gt;</span><span class=p>(</span><span class=n>other</span><span class=p>)</span> <span class=p>{</span> <span class=n>other</span> <span class=o>==</span> <span class=mi>1</span> <span class=o></span><span class=p>}</span>
+<span class=n>fn</span> <span class=o>==</span> <span class=mi>1</span>
+<span class=o></span><span class=c1># =&gt; false</span>
+<span class=n>fn</span> <span class=o>===</span> <span class=mi>1</span>
+<span class=o></span><span class=c1># =&gt; true</span>
+</code></pre></td></tr></table></div></div><p>剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。</p><h2 id=proc-物件的--方法>Proc 物件的 === 方法</h2><p>我們在 Proc 的原始碼可以看到，<code>Proc</code> 類別被特別定義了 <code>#===</code> 方法，但不包括了 <code>#==</code> 方法，而這個 <code>#===</code> 方法又剛好指定成呼叫方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=n>rb_add_method</span><span class=p>(</span><span class=n>rb_cProc</span><span class=p>,</span> <span class=n>rb_intern</span><span class=p>(</span><span class=sa></span><span class=s>&#34;</span><span class=s>===</span><span class=s>&#34;</span><span class=p>)</span><span class=p>,</span> <span class=n>VM_METHOD_TYPE_OPTIMIZED</span><span class=p>,</span>
+		  <span class=p>(</span><span class=kt>void</span> <span class=o>*</span><span class=p>)</span><span class=n>OPTIMIZED_METHOD_TYPE_CALL</span><span class=p>,</span> <span class=n>METHOD_VISI_PUBLIC</span><span class=p>)</span><span class=p>;</span>
+</code></pre></td></tr></table></div></div><p>同樣還有像是 <code>#[]</code> 也有類似的性質，簡單說就是 <code>#call</code> 方法的別名。這個使用方式也可以在 <a href=https://ruby-doc.org/core-2.6.2/Proc.html#method-i-3D-3D-3D>Ruby Doc</a> 上找到。
+因為這樣的特性，剛好有些情境就是不錯的應用情況。</p><h2 id=excel-的產生難題>Excel 的產生難題</h2><p>最近花了不少時間在幫客戶處理 Excel 報表的生成功能，中間就發現了一個問題，因為客戶的報表有很多種（十幾種）而且需要的欄位又不太一樣，每種都寫一次程式的話其實是很沒有效率的（而且未來還希望能自訂報表的呈現）所以用設定檔方式設計是最適合的，不過產生的 Excel 檔案卻無法指定格式（Ex. 文字、日期）尤其是「日期」客戶每張報表的要求又不太一樣，這讓生成就變成一個難題。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml>- <span class=k>name</span><span class=p>:</span><span class=w> </span>KPI<span class=w> </span>Report<span class=w>
+</span><span class=w>  </span><span class=k>columns</span><span class=p>:</span><span class=w>
+</span><span class=w></span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>user_id<span class=w>
+</span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>User<span class=w> </span>ID<span class=w>
+</span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>integer<span class=w>
+</span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>signup_at<span class=w>
+</span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>Signup<span class=w> </span>At<span class=w>
+</span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>datetime<span class=w>
+</span><span class=w>      </span><span class=k>datetime</span><span class=p>:</span><span class=w> </span><span class=p>:</span>customize<span class=w>
+</span><span class=w>      </span><span class=k>excel_format</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;[$-409]yyyy-MM-dd;@&#39;</span><span class=w>
+</span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>last_active_at<span class=w>
+</span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>Last<span class=w> </span>Active<span class=w> </span>At<span class=w>
+</span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>datetime<span class=w>
+</span><span class=w>      </span><span class=k>datetime</span><span class=p>:</span><span class=w> </span><span class=p>:</span>split<span class=w>
+</span></code></pre></td></tr></table></div></div><p>以上面這個 YAML 設定檔為例子，客戶可能會希望顯示 <code>yyyy-MM-dd</code> 或者 <code>yyyy-MM-dd</code> + <code>HH:mm</code> 之類的格式，所以在判斷 Excel 要提供怎樣的欄位的時候，就變得相對的複雜。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>formats</span>
+  <span class=vi>@columns</span><span class=o>.</span><span class=n>map</span> <span class=k>do</span> <span class=o>|</span><span class=n>column</span><span class=o>|</span>
+    <span class=k>next</span> <span class=k>unless</span> <span class=n>column</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span>
+    
+    <span class=k>case</span> <span class=n>column</span><span class=o>[</span><span class=ss>:datetime</span><span class=o>]</span>
+    <span class=k>when</span> <span class=ss>:split</span> <span class=k>then</span> <span class=o>[</span><span class=vi>@date_format</span><span class=p>,</span> <span class=vi>@time_format</span><span class=o>]</span>
+    <span class=k>when</span> <span class=ss>:customize</span> <span class=k>then</span> <span class=nb>format</span><span class=p>(</span><span class=n>column</span><span class=o>[</span><span class=ss>:excel_format</span><span class=o>]</span><span class=p>)</span>
+    <span class=k>else</span>
+      <span class=vi>@date_format</span>
+    <span class=k>end</span>
+  <span class=k>end</span><span class=o>.</span><span class=n>flatten</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>雖然上面的情況看起來還算單純，不過最後再加入其他不同類型的欄位判斷後，可能就會越來越複雜跟難以辨識。</p><p>在這個狀況下，利用 <code>Proc</code> 的 <code>#===</code> 特性就可能會是一個不錯的作法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>is_datetime</span> <span class=o>=</span> <span class=o>-</span><span class=o>&gt;</span><span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span> <span class=n>c</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span> <span class=p>}</span>
+<span class=n>is_split_datetime</span> <span class=o>=</span> <span class=o>-</span><span class=o>&gt;</span><span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span> <span class=n>c</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span> <span class=o>&amp;&amp;</span> <span class=n>c</span><span class=o>[</span><span class=ss>:datetime</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:split</span> <span class=p>}</span>
+<span class=c1># ...</span>
+
+<span class=k>case</span> <span class=n>column</span>
+<span class=k>when</span> <span class=n>is_split_datetime</span> <span class=k>then</span> <span class=o>[</span><span class=vi>@date_format</span><span class=p>,</span> <span class=vi>@time_format</span><span class=o>]</span>
+<span class=k>when</span> <span class=n>is_datetime</span> <span class=k>then</span> <span class=vi>@date_format</span>
+<span class=c1># ...</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>不過這實際上並無法解決有很多複雜情況的時候，不過既然我們已經知道了 <code>#===</code> 在 <code>case ... when</code> 上可以發揮作用，那麼是否可以進一步封裝呢？</p><h2 id=自訂物件>自訂物件</h2><p>假設我們有個可以把設定檔轉成 <code>ExcelColumn</code> 物件的設計，也許可以像這樣實作。</p><p>先定義 <code>ExcelColumn</code> 物件，而且可以被做 <code>Pattern Matching</code>（簡易版）然後在提供回傳對應的格式跟數值的機制。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>ExcelColumn</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=nb>format</span> <span class=o>=</span> <span class=kp>nil</span><span class=p>,</span> <span class=o>**</span><span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
+    <span class=vi>@name</span> <span class=o>=</span> <span class=nb>name</span>
+    <span class=vi>@format</span> <span class=o>=</span> <span class=nb>format</span>
+    <span class=vi>@pattern</span> <span class=o>=</span> <span class=n>pattern</span>
+    <span class=vi>@value_of</span> <span class=o>=</span> <span class=n>block</span>
+  <span class=k>end</span>
+  
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>===</span><span class=p>(</span><span class=n>other</span><span class=p>)</span>
+    <span class=vi>@pattern</span><span class=o>.</span><span class=n>reduce</span><span class=p>(</span><span class=kp>true</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>prev</span><span class=p>,</span> <span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>)</span><span class=o>|</span>
+      <span class=n>prev</span> <span class=o>&amp;</span> <span class=p>(</span><span class=n>other</span><span class=o>[</span><span class=n>key</span><span class=o>]</span> <span class=o>==</span> <span class=n>value</span><span class=p>)</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+  
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>format</span>
+    <span class=k>return</span> <span class=vi>@format</span> <span class=k>if</span> <span class=vi>@format</span><span class=o>.</span><span class=n>nil?</span> <span class=o>||</span> <span class=vi>@format</span><span class=o>.</span><span class=n>is_a?</span><span class=p>(</span><span class=no>Symbol</span><span class=p>)</span>
+    
+    <span class=nb>format</span><span class=p>(</span><span class=vi>@format</span><span class=p>)</span> <span class=c1># Customize Format</span>
+  <span class=k>end</span>
+  
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>value</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=p>)</span>
+    <span class=k>return</span> <span class=n>row</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=nb>name</span><span class=p>)</span> <span class=k>if</span> <span class=vi>@value_of</span><span class=o>.</span><span class=n>nil?</span>
+    
+    <span class=vi>@value_of</span><span class=o>.</span><span class=n>call</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=p>)</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>然後再設計 DSL 讓我們可以定義需要的格式。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>ExcelGenerator</span>
+  <span class=k>class</span> <span class=o>&lt;&lt;</span> <span class=nb>self</span>
+    <span class=kp>attr_reader</span> <span class=ss>:patterns</span>
+    
+    <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>pattern</span><span class=p>(</span><span class=nb>format</span><span class=p>,</span> <span class=o>**</span><span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
+      <span class=vi>@patterns</span> <span class=o>||</span><span class=o>=</span> <span class=o>[</span><span class=o>]</span>
+      <span class=vi>@patterns</span> <span class=o>&lt;&lt;</span> <span class=no>ExcelColumn</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=nb>format</span><span class=p>,</span> <span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+  
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>columns</span>
+    <span class=vi>@columns</span> <span class=o>||</span><span class=o>=</span>
+      <span class=vi>@config</span><span class=o>.</span><span class=n>columns</span><span class=o>.</span><span class=n>map</span> <span class=k>do</span> <span class=o>|</span><span class=n>column</span><span class=o>|</span>
+        <span class=o>[</span>
+         <span class=n>column</span><span class=p>,</span>
+         <span class=nb>self</span><span class=o>.</span><span class=n>patterns</span><span class=o>.</span><span class=n>find</span> <span class=p>{</span> <span class=o>|</span><span class=n>pattern</span><span class=o>|</span> <span class=n>pattern</span> <span class=o>===</span> <span class=n>column</span> <span class=p>}</span> <span class=o>||</span> <span class=no>ExcelColumn</span><span class=o>.</span><span class=n>new</span>
+        <span class=o>]</span>
+      <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>接下來就可以在實際使用時，像這樣去拓展 Excel 產生器，然後定義我們所需要的報表格式生成。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>ExcelReportGnerator</span> <span class=o>&lt;</span> <span class=no>ExcelGenerator</span>
+  <span class=n>pattern</span> <span class=nb>format</span><span class=p>(</span><span class=ss>:date</span><span class=p>)</span><span class=p>,</span> <span class=ss>datetime</span><span class=p>:</span> <span class=ss>:date</span> <span class=k>do</span> <span class=o>|</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=o>|</span>
+    <span class=n>row</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=nb>name</span><span class=p>)</span><span class=o>&amp;</span><span class=o>.</span><span class=n>to_datetime</span>
+  <span class=k>end</span>
+  
+  <span class=c1># ...</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>如此一來就能夠利用 DSL 跟 <code>#===</code> 的特性，針對我們需要有特殊格式的欄位挑選出來，然後給予特定的規則來產生對應的 Excel Cell 設定。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>insert_header</span><span class=p>(</span><span class=n>headers</span><span class=p>)</span>
+
+<span class=n>formats</span> <span class=o>=</span> <span class=n>columns</span><span class=o>.</span><span class=n>map</span><span class=p>(</span><span class=o>&amp;</span><span class=ss>:last</span><span class=p>)</span><span class=o>.</span><span class=n>map</span><span class=p>(</span><span class=o>&amp;</span><span class=ss>:format</span><span class=p>)</span>
+<span class=n>rows</span><span class=o>.</span><span class=n>each</span> <span class=k>do</span> <span class=o>|</span><span class=n>row</span><span class=o>|</span>
+  <span class=n>items</span> <span class=o>=</span> <span class=n>columns</span><span class=o>.</span><span class=n>map</span> <span class=p>{</span> <span class=o>|</span><span class=n>column</span><span class=p>,</span> <span class=n>pattern</span><span class=o>|</span> <span class=n>pattern</span><span class=o>.</span><span class=n>value_of</span><span class=p>(</span><span class=n>column</span><span class=o>[</span><span class=ss>:name</span><span class=o>]</span><span class=p>,</span> <span class=n>row</span><span class=p>)</span> <span class=p>}</span>
+  <span class=n>insert_row</span><span class=p>(</span><span class=n>items</span><span class=p>,</span> <span class=ss>formats</span><span class=p>:</span> <span class=n>formats</span><span class=p>)</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><h2 id=總結>總結</h2><p>最後實作的版本其實還是一個構想，畢竟這樣的情境是不常使用到的，不過在某些時候似乎又是個非常有用的小技巧。而這樣的構想是否適合這樣使用，以及能不能有更好的改進（例如一開始就直接定義好對應的欄位類型物件，而不要像這樣動態的定義）都還要再討論。</p><p>不過在 Ruby 中確實有不少有趣的應用技巧，多多挖掘的話其實能在不少不同的應用情況下用足夠簡單的方式實現，而不是繞一大圈去做。</p><p>更重要的是，這些技巧往往會是在時間緊迫下的輔助，有些功能透過這些技巧就可以很快地實現，而將時間投資在其他地方，而不是只能用一些折衷的方案暫時做好，之後再回來慢慢修改。</p><blockquote><p>這是最近做專案的心得，因為客戶是新成立的部門很需要有一個實績，所以開發上難免偏向以開發進度為主。很多其實花時間思考後能做更好的部分，就這樣變成技術債了⋯⋯</p></blockquote><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Lambda/>Lambda</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

@@ -1,0 +1,89 @@
+<!doctype html><html lang=zh-tw><head><title>探索 Ruby 的 each 方法（一） - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="原本是想討論 Enumerable 這個 Module 的機制跟運作原理，不過越寫越發現光是一篇文章很難講明白。
+所以就一邊查資料跟 Ruby 原始碼，慢慢的把 Enumerable / Enumerator 這兩個讓 #each 運作起來的機制討論清楚。
+在 Ruby 裡面我們已經很熟悉使用 #each 來對陣列相關的物件進行操作，不過 …"><meta name=created content="2019-02-13T00:00:00+0000"><meta name=modified content="2019-02-13T01:00:23+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="探索 Ruby 的 each 方法（一）"><meta property="og:url" content="https://blog.frost.tw/posts/2019/02/13/Deep-into-ruby-s-each-method-Part-1/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-02-13-deep-into-ruby-s-each-method-part-1/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2019/02/13/Deep-into-ruby-s-each-method-Part-1/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"探索 Ruby 的 each 方法（一）","datePublished":"2019-02-13T00:00:00Z","dateModified":"2019-02-13T01:00:23Z","url":"https://blog.frost.tw/posts/2019/02/13/Deep-into-ruby-s-each-method-Part-1/","description":"原本是想討論 Enumerable 這個 Module 的機制跟運作原理，不過越寫越發現光是一篇文章很難講明白。\n所以就一邊查資料跟 Ruby 原始碼，慢慢的把 Enumerable / Enumerator 這兩個讓 #each 運作起來的機制討論清楚。\n在 Ruby 裡面我們已經很熟悉使用 #each 來對陣列相關的物件進行操作，不過 …\n","keywords":["Ruby","心得","程式","Enumerable","Enumerator"],"image":"https://blog.frost.tw/images/2019-02-13-deep-into-ruby-s-each-method-part-1/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/02\/13\/Deep-into-ruby-s-each-method-Part-1\/","name":"探索 Ruby 的 each 方法（一）","image":"https:\/\/blog.frost.tw\/images\/2019-02-13-deep-into-ruby-s-each-method-part-1\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2019-02-13T01:00:23+0000 class=article__time--header>Feb.13</time><h1 class=article__title>探索 Ruby 的 each 方法（一）</h1></header><div class=article__entry><nav class=translation></nav><p>原本是想討論 Enumerable 這個 Module 的機制跟運作原理，不過越寫越發現光是一篇文章很難講明白。</p><p>所以就一邊查資料跟 Ruby 原始碼，慢慢的把 Enumerable / Enumerator 這兩個讓 <code>#each</code> 運作起來的機制討論清楚。</p><p>在 Ruby 裡面我們已經很熟悉使用 <code>#each</code> 來對陣列相關的物件進行操作，不過在大部分的語言我們都需要透過迴圈的方式來取出陣列的元素，那麼 <code>#each</code> 這個方法到底是怎麼讓我們用這麼方便的機制來操作陣列的呢？</p><h2 id=迭代器>迭代器</h2><p>在<a href=https://zh.wikipedia.org/wiki/%E8%BF%AD%E4%BB%A3%E5%99%A8>維基百科</a>裡面提到 Ruby 是隱式的將迭代器內建在語言裡面的。</p><p>我們可以先來看看迭代器通常是怎麼實現的：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Iterator</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>collection</span><span class=p>)</span>
+    <span class=vi>@collection</span> <span class=o>=</span> <span class=n>collection</span>
+    <span class=vi>@ptr</span> <span class=o>=</span> <span class=mi>0</span>
+  <span class=o></span><span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>next</span>
+   <span class=n>ret</span> <span class=o>=</span> <span class=vi>@collection</span><span class=o>[</span><span class=vi>@ptr</span><span class=o>]</span>
+   <span class=vi>@ptr</span> <span class=o>+=</span> <span class=mi>1</span>
+   <span class=o></span><span class=n>ret</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>rewind</span>
+    <span class=vi>@ptr</span> <span class=o>=</span> <span class=mi>0</span>
+  <span class=o></span><span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>那麼我們就可以用像下面這樣的方式來讀取陣列的內容</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>array</span> <span class=o>=</span> <span class=p>(</span><span class=mi>1</span><span class=o></span><span class=o>..</span><span class=mi>10</span><span class=o></span><span class=p>)</span><span class=o>.</span><span class=n>to_a</span>
+<span class=n>iter</span> <span class=o>=</span> <span class=no>Iterator</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=n>array</span><span class=p>)</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>next</span> <span class=c1># =&gt; 1</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>next</span> <span class=c1># =&gt; 2</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>rewind</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>next</span> <span class=c1># =&gt; 1</span>
+</code></pre></td></tr></table></div></div><p>實際上，在 Ruby 中已經有內建這樣的機制，那就是 <code>Enumerator</code> 類別。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>array</span> <span class=o>=</span> <span class=p>(</span><span class=mi>1</span><span class=o></span><span class=o>..</span><span class=mi>10</span><span class=o></span><span class=p>)</span><span class=o>.</span><span class=n>to_a</span>
+<span class=n>iter</span> <span class=o>=</span> <span class=no>Enumerator</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=n>array</span><span class=p>)</span>
+<span class=c1># warning: Enumerator.new without a block is deprecated; use Object#to_enum</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>next</span> <span class=c1># =&gt; 1</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>next</span> <span class=c1># =&gt; 2</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>rewind</span>
+<span class=n>iter</span><span class=o>.</span><span class=n>next</span> <span class=c1># =&gt; 1</span>
+</code></pre></td></tr></table></div></div><p>那麼，假設我們對陣列使用 <code>#each</code> 方法時，不傳入 Block 的話，會看到什麼呢？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>irb</span><span class=p>(</span><span class=n>main</span><span class=p>)</span><span class=p>:</span><span class=mo>067</span><span class=o></span><span class=p>:</span><span class=mi>0</span><span class=o></span><span class=o>&gt;</span> <span class=o>[</span><span class=mi>1</span><span class=o></span><span class=p>,</span> <span class=mi>2</span><span class=o></span><span class=p>,</span> <span class=mi>3</span><span class=o></span><span class=o>]</span><span class=o>.</span><span class=n>each</span>
+<span class=o>=</span><span class=o>&gt;</span> <span class=c1>#&lt;Enumerator: [1, 2, 3]:each&gt;</span>
+</code></pre></td></tr></table></div></div><p>我們會得到一個 <code>Enumerator</code> 物件，也就是說 <code>#each</code> 方法回傳的就是迭代器。</p><h2 id=使用-block-的情境>使用 Block 的情境</h2><p>不過，當我們提供了 Block 之後，回傳的卻是普通的陣列，又是怎麼一回事？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>irb</span><span class=p>(</span><span class=n>main</span><span class=p>)</span><span class=p>:</span><span class=mo>070</span><span class=o></span><span class=p>:</span><span class=mi>0</span><span class=o></span><span class=o>&gt;</span> <span class=o>[</span><span class=mi>1</span><span class=o></span><span class=p>,</span> <span class=mi>2</span><span class=o></span><span class=p>,</span> <span class=mi>3</span><span class=o></span><span class=o>]</span><span class=o>.</span><span class=n>each</span> <span class=p>{</span> <span class=o>|</span><span class=n>v</span><span class=o>|</span> <span class=nb>p</span> <span class=n>v</span> <span class=p>}</span><span class=o>.</span><span class=n>class</span>
+<span class=mi>1</span>
+<span class=o></span><span class=mi>2</span>
+<span class=o></span><span class=mi>3</span>
+<span class=o></span><span class=o>=</span><span class=o>&gt;</span> <span class=nb>Array</span>
+</code></pre></td></tr></table></div></div><p>而且，當我們使用不同類型的物件時，也會得到同樣的物件類型</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>irb</span><span class=p>(</span><span class=n>main</span><span class=p>)</span><span class=p>:</span><span class=mo>074</span><span class=o></span><span class=p>:</span><span class=mi>0</span><span class=o></span><span class=o>&gt;</span> <span class=p>(</span><span class=mi>1</span><span class=o></span><span class=o>..</span><span class=mi>2</span><span class=o></span><span class=p>)</span><span class=o>.</span><span class=n>each</span>
+<span class=o>=</span><span class=o>&gt;</span> <span class=c1>#&lt;Enumerator: 1..2:each&gt;</span>
+<span class=n>irb</span><span class=p>(</span><span class=n>main</span><span class=p>)</span><span class=p>:</span><span class=mo>075</span><span class=o></span><span class=p>:</span><span class=mi>0</span><span class=o></span><span class=o>&gt;</span> <span class=p>(</span><span class=mi>1</span><span class=o></span><span class=o>..</span><span class=mi>2</span><span class=o></span><span class=p>)</span><span class=o>.</span><span class=n>each</span> <span class=p>{</span> <span class=o>|</span><span class=n>v</span><span class=o>|</span> <span class=nb>p</span> <span class=n>v</span> <span class=p>}</span><span class=o>.</span><span class=n>class</span>
+<span class=mi>1</span>
+<span class=o></span><span class=mi>2</span>
+<span class=o></span><span class=o>=</span><span class=o>&gt;</span> <span class=no>Range</span>
+</code></pre></td></tr></table></div></div><p>這就表示在 Ruby 中 <code>#each</code> 的行為並不單純是我們所看到的這樣，不過這就要再跟 <code>Enumerator</code> 的實作有所關聯，所以就將它留到下一篇文章再討論吧！</p><h2 id=小結>小結</h2><p>在寫這篇文章之前其實都沒有認真思考過 <code>#each</code> 是怎麼運作的，雖然他是很常見而且很常使用的功能。但是從 Ruby 1.8 到現在的 Ruby 2.6 中間所出現的改變一些新的特性，其實是蠻值得去探討的。</p><p>會寫這系列文章主要是因為最近手邊的專案遇到了一個蠻有趣的問題，就是如果靠 ActiveRecord 的話，會產生多餘的 N+1 Query 而如果是直接針對讀取出來的資料進行普通的陣列操作，反而可以避開，又不會浪費太多的資源。</p><p>這就成為了一個盲點，也就是我們大多數時候已經習慣了 Rails 提供給我們的便利功能，而忘記應該評估使用情境去選擇適合的方案來處理。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%A8%8B%E5%BC%8F/>程式</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Enumerable/>Enumerable</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Enumerator/>Enumerator</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

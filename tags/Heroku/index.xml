@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Heroku on 弦而時習之</title><link>https://blog.frost.tw/tags/Heroku/</link><description>Recent content in Heroku on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Tue, 16 Jun 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/Heroku/index.xml" rel="self" type="application/rss+xml"/><item><title>Heroku Cedar 14 - 用 Docker 客製化環境</title><link>https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/</link><pubDate>Tue, 16 Jun 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/</guid><description>&lt;p>最近 Heroku 推出了 &lt;a href="https://blog.Heroku.com/archives/2015/5/5/introducing_heroku_Docker_release_build_deploy_heroku_apps_with_docker">Docker 支援&lt;/a>，也因此我馬上就去試玩了這個功能。&lt;/p>
+&lt;p>這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。&lt;/p>
+&lt;p>文章大致上會涵蓋這些內容：&lt;/p>
+&lt;ul>
+&lt;li>Heroku Docker Plugin 的運作&lt;/li>
+&lt;li>建構客製化環境的 Dockerfile&lt;/li>
+&lt;li>利用 Docker 製作 Buildpacks&lt;/li>
+&lt;/ul></description></item><item><title>Travis CI 的 Deploy 功能</title><link>https://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/</link><pubDate>Tue, 25 Feb 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/</guid><description>&lt;p>最近收到一個 Issue 是關於我製作的 &lt;a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon">Heroku Buildpacks&lt;/a> 有問題，沒辦法使用 Travis CI 的 Deploy 功能。&lt;/p>
+&lt;p>因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。&lt;/p>
+&lt;p>這算是一個很方便的功能，尤其是網站專案來說，如果在 Deploy 後馬上就發生問題，也是非常不方便。那麼，一般 Git 的專案來說，我們通常都是直接進行 Deploy 即使在本機事先做過一次測試，但是總是會有忘記的時候。&lt;/p>
+&lt;p>此時，透過持續整合服務的自動 Deploy 功能來協助，就可以在確保所有測試都沒問題的狀況下才進行 Deploy 也比較能夠自動化。&lt;/p></description></item><item><title>Using Laravel and HHVM on Heroku</title><link>https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/</link><pubDate>Sun, 26 Jan 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/01/26/using-laravel-and-hhvm-on-heroku/</guid><description>&lt;p>會寫這篇是前一陣子 HHVM 突然又被大家撈起來討論，看起來應該是有啥新進化吧 XD
+那時身為專業的阿宅，一定要馬上裝來玩一下。&lt;/p>
+&lt;p>隨著時間的流逝，又有人發現用 HHVM 可以讓 Composer 跑更快一點（超自然啊！）
+我又再次回想起這神奇的東西⋯⋯
+&lt;!-- raw HTML omitted -->現實是 Composer 跑太慢被 HHVM 斷開魂結&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>當時我就想，既然我都搞了 &lt;a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon">Phalcon on Heroku&lt;/a> 這東西，不如再來搞一個 HHVM 版本吧！&lt;/p>
+&lt;p>沒想到&lt;a href="https://Github.com/hhvm/Heroku-buildpack-hhvm">官方&lt;/a>竟然無情的已經做好了，於是我只好轉戰 Laravel 然後冒險就這樣開始了（才沒有 XD&lt;/p>
+&lt;blockquote>
+&lt;p>PaaS 入門指南還沒斷，不過人生總是需要調味一下，就先讓我寫些別的吧 XD&lt;/p>
+&lt;/blockquote></description></item></channel></rss>

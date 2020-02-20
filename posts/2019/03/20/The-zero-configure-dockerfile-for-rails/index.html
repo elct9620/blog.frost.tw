@@ -1,0 +1,108 @@
+<!doctype html><html lang=zh-tw><head><title>如何在沒有任何設定下產生 Rails 的 Docker Image - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="前陣子看到 Throughbot 這間在 Ruby 圈 算是蠻有名的公司做了一個叫做 Suspenders 的 Gem 主要是對 Rails 擴充，簡單說就是基於原本的 rails new 做了一個替代品，而這個替代品會自動幫你先做好一些原本要手動做的事情。
+像是安裝好常用的 Gem、套版之類的，想了一下覺得五倍其實也很需要，不少新專案也 …"><meta name=created content="2019-03-20T00:00:00+0000"><meta name=modified content="2019-03-20T23:37:22+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="如何在沒有任何設定下產生 Rails 的 Docker Image"><meta property="og:url" content="https://blog.frost.tw/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-03-20-the-zero-configure-dockerfile-for-rails/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"如何在沒有任何設定下產生 Rails 的 Docker Image","datePublished":"2019-03-20T00:00:00Z","dateModified":"2019-03-20T23:37:22Z","url":"https://blog.frost.tw/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/","description":"前陣子看到 Throughbot 這間在 Ruby 圈 算是蠻有名的公司做了一個叫做 Suspenders 的 Gem 主要是對 Rails 擴充，簡單說就是基於原本的 rails new 做了一個替代品，而這個替代品會自動幫你先做好一些原本要手動做的事情。\n像是安裝好常用的 Gem、套版之類的，想了一下覺得五倍其實也很需要，不少新專案也 …\n","keywords":["Ruby","Docker","Rails","Gem"],"image":"https://blog.frost.tw/images/2019-03-20-the-zero-configure-dockerfile-for-rails/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/03\/20\/The-zero-configure-dockerfile-for-rails\/","name":"如何在沒有任何設定下產生 Rails 的 Docker Image","image":"https:\/\/blog.frost.tw\/images\/2019-03-20-the-zero-configure-dockerfile-for-rails\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2019-03-20T23:37:22+0000 class=article__time--header>Feb.20</time><h1 class=article__title>如何在沒有任何設定下產生 Rails 的 Docker Image</h1></header><div class=article__entry><nav class=translation></nav><p>前陣子看到 <a href=https://thoughtbot.com/>Throughbot</a> 這間在 Ruby 圈 算是蠻有名的公司做了一個叫做 <a href=https://github.com/thoughtbot/suspenders>Suspenders</a> 的 Gem 主要是對 Rails 擴充，簡單說就是基於原本的 <code>rails new</code> 做了一個替代品，而這個替代品會自動幫你先做好一些原本要手動做的事情。</p><p>像是安裝好常用的 Gem、套版之類的，想了一下覺得<a href=https://5xruby.tw>五倍</a>其實也很需要，不少新專案也都是從我這邊經手初始化的，有一個這樣的工具會省下不少時間。</p><p>所以 <a href=https://github.com/5xRuby/bankai>Bankai</a> （卍解） 這個 Gem 就樣做出來了，裡面基本上就是設置好在五倍大多數時候用的標配 Ex. GitLab CI 設定、RSpec 等等</p><p>但是又發現好像不太夠用，有些時候有 Docker 會方便很多，但是 Bankai 現在做不到！</p><p>所以 Bankai Docker 這個外掛就這樣在一週左右完成原型的製作，作為 Bankai 的額外擴充被支援了！</p><h2 id=特色>特色</h2><p>Bankai Docker 目前功能還很陽春，不過對於大多數情況應該都是夠用的。</p><p>產生的 Docker Image 大小會落在 180MB 上下，主要是因為 Ruby + Node.js 約 80MB 剩下的則是安裝的 Gem 所佔用的，以一個 Docker Image 來說不算輕量，但也在可以接受的範圍內。</p><p>主要的特色是<strong>不用任何設定</strong>，也就是說在安裝好 Bankai Docker 後，直接執行 <code>rake docker:build</code> 你的專案就會自動被打包好，而且馬上可以使用。</p><h2 id=使用>使用</h2><p>目前還在考慮是否要能獨立運作，不過預設是相依 Bankai 的：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 安裝 Bankai</span>
+gem install bankai
+
+<span class=c1># 開啟新專案</span>
+bankai dockerize
+</code></pre></td></tr></table></div></div><p>這樣就能產生一個全新的 Rails 專案（五倍版）目前還沒有支援 <code>rails g bankai:docker</code> 的選項，所以先手動把 <code>bankai-docker</code> 加入到 Gemfile 裡面。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>group</span> <span class=ss>:development</span> <span class=k>do</span>
+ <span class=c1># ... 略</span>
+ <span class=n>gem</span> <span class=s1>&#39;bankai&#39;</span>
+ <span class=n>gem</span> <span class=s1>&#39;bankai-docker&#39;</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>接下來跑一下 <code>bundle install</code> 就安裝完畢了！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 安裝 Bankai Docker 到專案中</span>
+bundle install
+
+<span class=c1># 打包 Docker Image</span>
+rake docker:build
+</code></pre></td></tr></table></div></div><p>好像什麼事情都沒做就產生 Docker Image 對吧？我想要的就是這種感覺！！</p><h2 id=dsl>DSL</h2><p>自動化的設定總是會有限制，所以在設計的時候已經預先想好可以透過 <code>config/docker.rb</code> 這個設定檔來寫 DSL 用來修改原本的行為。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>rails g bankai:docker:install
+</code></pre></td></tr></table></div></div><p>這個指令可能會替換掉，跑完之後會把原本放在 Gem 裡面的 <code>docker.rb</code> 放到 <code>config/docker.rb</code> 裡面，然後我們就可以安心的來修改了！</p><p>像是預設的 Docker Image 會是 <code>$(whoami)/APP_NAME</code> 以剛剛的範例就會是 <code>elct9620/dockerize</code> 一般情況可能沒什麼問題，但是如果像我想要用五倍內部的 Registry 伺服器，這個命名就不適合了！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Bankai</span><span class=o>::</span><span class=no>Docker</span><span class=o>.</span><span class=n>setup</span> <span class=k>do</span>
+  <span class=nb>name</span> <span class=s1>&#39;registry.5xruby.tw/elct9620/dockerize&#39;</span>
+  
+  <span class=c1># 略</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>簡單來說，要在預設的 DSL 設定裡面補上這個 <code>name</code> 設定，就可以修改預設的 Docker Image 名稱，大致上就是這樣使用的。</p><p>因為新版本的 Docker 多了叫做 Multi Stage 的機制，所以我們可以把 <code>bundle install</code> 的步驟放到一個單獨的 <code>stage</code> 編譯好後再複製到主體，這樣就可以省下很多空間（因為不用安裝額外的套件）</p><p>所以 DSL 的結構就會像這樣：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Bankai</span><span class=o>::</span><span class=no>Docker</span><span class=o>.</span><span class=n>setup</span> <span class=k>do</span>
+  <span class=n>stage</span> <span class=ss>:gem</span> <span class=k>do</span>
+   <span class=c1># ...</span>
+  <span class=k>end</span>
+  
+  <span class=c1># ...</span>
+  
+  <span class=n>main</span> <span class=k>do</span>
+   <span class=c1># ...</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>在 Stage 中就可以使用對應 Docker 原本有的指令，像是 <code>RUN bundle install</code> 會對應成 <code>run 'bundle install</code> 目前大多數都支援，還有少部分之後會慢慢補齊。</p><p>如此一來，我們就可以很簡單的去修改原本 Docker 建置的過程。</p><blockquote><p>目前還不支援預設值，後續的改版會簡化為如果不修改 gem / node / main 三個預設設定，就不用寫出來去覆蓋。</p></blockquote><h2 id=auto-package>Auto Package</h2><p>有一些 Gem 會需要先安裝好一些套件才能使用，像是 <code>pg</code> 和 <code>mysql2</code> 這兩個大家常用的資料庫套件，為了可以無視這些設定，所以透過「工人智慧」我們可以用 DSL 去定義偵測條件，自動的安裝套件。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Bankai</span><span class=o>::</span><span class=no>Docker</span><span class=o>.</span><span class=n>setup</span> <span class=k>do</span>
+  <span class=n>detect_package</span> <span class=ss>:database</span><span class=p>,</span> <span class=ss>:gem</span> <span class=k>do</span> <span class=o>|</span><span class=n>package</span><span class=o>|</span>
+    <span class=k>if</span> <span class=n>pg?</span>
+      <span class=n>package</span><span class=o>.</span><span class=n>add_dependency</span> <span class=s1>&#39;postgresql-dev&#39;</span><span class=p>,</span> <span class=ss>runtime</span><span class=p>:</span> <span class=kp>false</span>
+      <span class=n>package</span><span class=o>.</span><span class=n>add_runtime_dependency</span> <span class=s1>&#39;postgresql-libs&#39;</span>
+    <span class=k>end</span>
+
+    <span class=k>if</span> <span class=n>mysql?</span>
+      <span class=n>package</span><span class=o>.</span><span class=n>add_dependency</span> <span class=s1>&#39;mariadb-dev&#39;</span><span class=p>,</span> <span class=ss>runtime</span><span class=p>:</span> <span class=kp>false</span>
+      <span class=n>package</span><span class=o>.</span><span class=n>add_runtime_dependency</span> <span class=s1>&#39;mariadb-client-libs&#39;</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>像是上面這樣，我們可以在 <code>gem</code> 這個階段增加 <code>postgresql-dev</code> 套件，而實際執行的時候只使用 <code>postgresql-libs</code> 如此一來就可以盡可能的縮小最後產出的檔案大小。</p><blockquote><p>上面是節錄自 <a href=https://github.com/5xRuby/bankai-docker/blob/master/templates/auto_package.rb>templates/auto_package.rb</a> 這個檔案，如果有一些常用的套件需要增加，可以送 PR 給我們。</p></blockquote><h2 id=copy-from>COPY FROM</h2><p>另外一個比較困擾的是 <code>COPY --from=gem</code> 這指令，如果要手動下在 <code>main</code> 的話其實有點麻煩，所以就提供了 <code>produce</code> 這個 DSL 來輔助。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby>  <span class=n>stage</span> <span class=ss>:node</span><span class=p>,</span> <span class=ss>from</span><span class=p>:</span> <span class=s1>&#39;node:10.15.2-alpine&#39;</span> <span class=k>do</span>
+    <span class=n>run</span> <span class=s1>&#39;mv /opt/yarn-v${YARN_VERSION} /opt/yarn&#39;</span>
+
+    <span class=n>produce</span> <span class=s1>&#39;/usr/local/bin/node&#39;</span>
+    <span class=n>produce</span> <span class=s1>&#39;/opt/yarn&#39;</span>
+  <span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>像是這邊我們處理好 Node.js 之後，要讓最後產出能有 <code>/usr/local/bin/node</code> 這個檔案和 <code>/opt/yarn</code> 目錄，我們就可以用 <code>produce</code> 告訴 Bankai Docker 要在最後產出時自動給這樣指令。</p><pre><code>COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /opt/yarn /opt/yarn
+</code></pre><p>如此一來就省事很多，在處理 Docker Image 生成的不少小細節都已經先在 Bankai Docker 做掉（像是 <code>.dockerignore</code> 的設定等等）使用起來就比自己寫 Dockerfile 快上非常多。</p><h2 id=總結>總結</h2><p>以前常想「資深工程師」有哪些特質，其中一個我認為有的特質就是能製作「順手」的工具，畢竟當你有自己的一套方法現有的預設做法或者一些設定，就不一定符合需求。雖然能製作自己使用的工具不代表有資深工程師的實力，不過開始有這樣的需求時，應該就是走在這條路上了吧！</p><p>當這個 Gem 成型之後，其實後面還有更厲害的組合應用還沒完成，下次有機會的話會再跟大家分享怎麼用這樣的特性做 DevOps 來改善開發流程。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Docker/>Docker</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Rails/>Rails</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Gem/>Gem</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>介紹 on 弦而時習之</title><link>https://blog.frost.tw/tags/%E4%BB%8B%E7%B4%B9/</link><description>Recent content in 介紹 on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Wed, 02 Apr 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/%E4%BB%8B%E7%B4%B9/index.xml" rel="self" type="application/rss+xml"/><item><title>PaaS 入門指南（四）</title><link>https://blog.frost.tw/posts/2014/04/02/getting-started-paas-4/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/04/02/getting-started-paas-4/</guid><description>&lt;p>終於，要到完結篇了（誤
+這篇介紹完 Heroku 之後，就會開始寫進階運用的部分。
+（其實已經冒出幾篇，基本上不會針對 PaaS 而是一些在 Heroku 上面的運用做討論。）&lt;/p>
+&lt;p>不過，寫這篇之前，其實我很想寫一下 Unreal Engine 4 collaboration with SVN 這篇，因為最近 UE4 推出，雖然台灣地區還沒開放購買（月費約台幣六百，買一次就可以拿到該月版本，可不續費更新）但是同學硬是找到原始碼（其實就在 Github 只不過付費用戶才能看到）&lt;/p>
+&lt;p>經過幾番波折，就這樣成功在 Windows / Mac 上跑起來，於是就開始了 UE4 研究之旅。
+總之，下一篇大概就是 UE4 的 SVN （各種雷，完全找不到「SVN update」的功能⋯⋯卻可以 commit 啊）&lt;/p></description></item><item><title>PaaS 入門指南（三）之二</title><link>https://blog.frost.tw/posts/2014/02/17/getting-started-paas-3-2/</link><pubDate>Mon, 17 Feb 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/02/17/getting-started-paas-3-2/</guid><description>&lt;p>據說&lt;a href="https://blog.frost.tw/posts/2014/02/04/getting-started-paas-3">PaaS 入門指南（三）&lt;/a>網址設錯，我要開始寫才發現 XD&lt;/p>
+&lt;p>這篇文章會來示範如何用 OpenShift 架設 WordPress 網誌，在此之前要先告知大家。
+最近 AppFog 決定改變方針，已經註冊的用戶免費方案降為 512MB 而之後不開放免費方案申請（假設經驗是對的，過幾年 AppFog 的免費用戶大概就會被停了吧 XD 上次是取消網址⋯⋯）&lt;/p>
+&lt;p>也因此，之後的文章講完基本運用後，就不會另外提 AppFog 的使用（畢竟我目標再讓大家先免費體驗，然後選擇喜歡的付費嘛～）
+當然，我主要還是討論 Heroku 的運用（不過那是進階了，需要有一定基礎知識的人才能夠玩起來～）&lt;/p>
+&lt;p>那麼，我們進入正題。&lt;/p></description></item><item><title>PaaS 入門指南（三）</title><link>https://blog.frost.tw/posts/2014/02/04/getting-started-paas-3/</link><pubDate>Tue, 04 Feb 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/02/04/getting-started-paas-3/</guid><description>&lt;p>過年我就淡定放假不寫文了（被拖走
+根據 Google Analytic 統計，週二的這篇文章會讓訪客增長 XD&lt;/p>
+&lt;p>上一篇極其混亂的 &lt;a href="https://blog.frost.tw/posts/2014/01/21/getting-started-paas-2">PaaS 入門指南（二）&lt;/a>已經簡易的向大家介紹相關工具的安裝（各種痛苦啊那個，感覺 AppFog 的對 Windows 比較友善⋯⋯）&lt;/p>
+&lt;p>這篇我們先休息一下，因為我發現字太多我寫很累看的人好像也很累 XD
+先來簡易介紹一下 AppFog / OpenShift 的快速安裝功能。&lt;/p></description></item><item><title>PaaS 入門指南（二）</title><link>https://blog.frost.tw/posts/2014/01/21/getting-started-paas-2/</link><pubDate>Tue, 21 Jan 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/01/21/getting-started-paas-2/</guid><description>&lt;p>在第一篇文章 &lt;a href="https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/">PaaS 入門指南（一）&lt;/a>已經簡單介紹了 PaaS 的基本概念，還有一些常見的 PaaS 服務。&lt;/p>
+&lt;p>這篇文章，則會介紹使用 PaaS 所需的基本技能以及軟體。雖然使用 PaaS 的方式大多在服務提供者的網站上會有簡易的介紹，但是如果想要體驗各式的 PaaS 最好還是能夠熟悉這些工具的基本操作。&lt;/p></description></item><item><title>PaaS 入門指南（一）</title><link>https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/</link><pubDate>Wed, 15 Jan 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/01/15/getting-started-paas-1/</guid><description>&lt;p>這一系列的文章是準備寫給對雲端有興趣，或者想嘗試架設網站的人。&lt;/p>
+&lt;p>內容的部分，這篇文章會對幾家常見的 PaaS 平台進行簡介。後續會以 Heroku 為主軸繼續介紹，從產生一個 Application 到發佈以及客製化都會一起介紹。文章中也會將我所理解的 PaaS 概念與架構一併說明，讓大家可以更加了解關於 PaaS 的使用，以及優缺點。&lt;/p>
+&lt;p>至於這一系列的文章，會以「免費、無負擔」的前提下撰寫，選用以及介紹的 PaaS 可能有付費也可能有免費，但是會讓大家在盡可能不花費的狀況下體驗與使用。&lt;/p>
+&lt;p>那麼，正文開始。&lt;/p></description></item></channel></rss>

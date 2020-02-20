@@ -1,0 +1,82 @@
+<!doctype html><html lang=zh-tw><head><title>部署你的第一個 Ruby on Rails 網站（八） - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="前面幾篇文章已經把所有關於 Ruby 和資料庫都設定完成，最後一個階段就是要把 Nginx 設定好，並且讓 Let&amp;rsquo;s Encrypt 可以正確的被設定，讓網站支援 SSL 功能。"><meta name=created content="2018-05-28T00:00:00+0000"><meta name=modified content="2018-05-28T14:54:19+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="部署你的第一個 Ruby on Rails 網站（八）"><meta property="og:url" content="https://blog.frost.tw/posts/2018/05/28/Getting-started-deploy-your-Ruby-on-Rails-Part-8/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-8/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2018/05/28/Getting-started-deploy-your-Ruby-on-Rails-Part-8/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"部署你的第一個 Ruby on Rails 網站（八）","datePublished":"2018-05-28T00:00:00Z","dateModified":"2018-05-28T14:54:19Z","url":"https://blog.frost.tw/posts/2018/05/28/Getting-started-deploy-your-Ruby-on-Rails-Part-8/","description":"前面幾篇文章已經把所有關於 Ruby 和資料庫都設定完成，最後一個階段就是要把 Nginx 設定好，並且讓 Let\u0026rsquo;s Encrypt 可以正確的被設定，讓網站支援 SSL 功能。\n","keywords":["教學","DevOps","Ruby on Rails"],"image":"https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-8/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2018\/05\/28\/Getting-started-deploy-your-Ruby-on-Rails-Part-8\/","name":"部署你的第一個 Ruby on Rails 網站（八）","image":"https:\/\/blog.frost.tw\/images\/getting-started-deploy-your-ruby-on-rails-part-8\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2018-05-28T14:54:19+0000 class=article__time--header>Feb.28</time><h1 class=article__title>部署你的第一個 Ruby on Rails 網站（八）</h1></header><div class=article__entry><nav class=translation></nav><p>前面幾篇文章已經把所有關於 Ruby 和資料庫都設定完成，最後一個階段就是要把 Nginx 設定好，並且讓 Let&rsquo;s Encrypt 可以正確的被設定，讓網站支援 SSL 功能。</p><p>在開始設定之前，因為 Let&rsquo;s Encrypt 針對非 Wildcard 類型可以使用檔案驗證，也是一般情況比較多使用的方式。但是第一次的驗證需要透過 HTTP 來進行，所以我們會先設定好 Let&rsquo;s Encrypt 後才繼續。</p><blockquote><p>Wildcard 需要用 DNS 驗證，這是第二代的 API 才新增的功能，過去第一代都是透過放置驗證檔案來認證。</p></blockquote><h2 id=lets-encrypt-設定>Let&rsquo;s Encrypt 設定</h2><p>目前最簡單的設定方式就是透過 Certbot 來驗證，可以到官網的 <a href=https://certbot.eff.org/lets-encrypt/centosrhel7-other>CentOS 7</a> 頁面獲取安裝的指令。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>sudo yum install certbot
+</code></pre></td></tr></table></div></div><blockquote><p>如果找不到 <code>certbot</code> 的套件，請先安裝 EPEL <code>yum install epel-release</code> 來獲得支援，不過在 PostgreSQL 安裝的步驟應該是已經安裝過了。</p></blockquote><blockquote><p>這邊不使用 <code>certbot-nginx</code> 版本的原因是我們自己 Compile 了 Nginx 可能會互相影響。</p></blockquote><p>接下來要對 Nginx 做設定，一般來說如果伺服器上預定要安裝多個網站，我們會在 <code>/opt/nginx/conf</code> 下面增加像是 <code>sites-enabled</code> 之類的資料夾放置。不過稍微複雜，這篇文章會以直接編輯 <code>nginx.conf</code> 的方式介紹。</p><p>我們先找到檔案中 <code>server {</code> 這一段，類似下面的地方。</p><pre><code class=language-conf data-lang=conf>  server {
+    listen 80;
+    server_name localhost;
+    
+    # ...
+  }
+</code></pre><p>然後加入 Let&rsquo;s Encrypt 需要的設定。</p><pre><code class=language-conf data-lang=conf>  server {
+    listen 80;
+    server_name localhost;
+    
+    location ~ /.well-known {
+      allow all;
+      root /opt/nginx/html;
+    }
+
+    # ...
+  }
+</code></pre><p>這個設定會讓遇到 <code>~/.well-known</code> 開頭的頁面，都使用 <code>/opt/nginx/html</code> 這個目錄，如此一來就能夠讓 Certbot 把驗證用的檔案放在這裡面，讓 Let&rsquo;s Encrypt 可以驗證到。</p><blockquote><p>如果有使用像是 OpenID 之類的，可能會互相干擾，需要調整設定值。</p></blockquote><p>完成設定後，我們用 Certbot 執行產生 SSL 憑證的指令，將網站需要的憑證生成。</p><pre><code>sudo certbot certonly --webroot -w /opt/nginx/html -d example.frost.tw
+</code></pre><blockquote><p>記得把 <code>-d</code> 後面的設定改為自己網站的網址。</p></blockquote><p>第一次執行的話會問一些基本的問題，像是信箱之類的用來之後通知快要過期跟一些重要訊息。</p><pre><code>Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator webroot, Installer None
+Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel):
+</code></pre><p>中間會有使用者條款，輸入 <code>A</code> 即可，至於要不要同意接收一些來自 EFF 組織的訊息，就看個人。</p><p>接下來如果沒有出現其他錯誤，應該會看到類似下面的訊息。</p><pre><code>IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/example.frost.tw/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/example.frost.tw/privkey.pem
+   Your cert will expire on 2018-08-26. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot
+   again. To non-interactively renew *all* of your certificates, run
+   &quot;certbot renew&quot;
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+
+</code></pre><h2 id=設定-nginx>設定 Nginx</h2><p>回到 <code>nginx.conf</code> 設定檔，因為我們只有監聽 80 埠，所以只能接受 HTTP 請求。所以現在我們要做幾個修改，讓網站隨時處於 HTTPS 的安全連線狀態。</p><ul><li>把 HTTP 轉到 HTTPS</li><li>啟用 HTTPS</li></ul><p>先在原本 <code>location ~/.well-known {</code> 區段的下面增加轉跳到 HTTPS 的設定，類似這樣。</p><pre><code class=language-conf data-lang=conf>  server {
+    listen 80;
+    server_name example.frost.tw;
+    
+    location ~ /.well-known {
+      allow all;
+      root /opt/nginx/html;
+    }
+
+    return 301 https://$server_name$request_uri;
+  }
+</code></pre><blockquote><p><code>server_name</code> 要記得改成你的網域名稱，不然在做轉跳時會因為跟申請的 SSL 憑證不符合而無法正常開啟。</p></blockquote><p>然後在這個區段下方，應該會看到一段被 <code>#</code> 註解的區塊，也就是預設的 HTTPS 設定範例。
+我們將註解取消，然後補上需要的設定。</p><pre><code class=language-conf data-lang=conf>server {
+  listen       443 ssl;
+  server_name  example.frost.tw;
+
+  ssl on;
+  ssl_certificate      /etc/letsencrypt/live/example.frost.tw/fullchain.pem;
+  ssl_certificate_key  /etc/letsencrypt/live/example.frost.tw/privkey.pem;
+}
+</code></pre><blockquote><p>以上是最基本的設定，有興趣的話可以參考 <a href=https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04>Digital Ocean 的教學</a>裡面有一些建議的 SSL 設定可以參考。</p></blockquote><p>然後我們要指定一下 Passenger 在這個網站啟用，以及程式碼所在的位置，所以修改成類似下面這樣的設定。</p><pre><code>server {
+  listen       443 ssl;
+  server_name  example.frost.tw;
+
+  ssl on;
+  ssl_certificate      /etc/letsencrypt/live/example.frost.tw/fullchain.pem;
+  ssl_certificate_key  /etc/letsencrypt/live/example.frost.tw/privkey.pem;
+  
+  location ~ /.well-known {
+    allow all;
+    root /opt/nginx/html;
+  }
+  
+  root /home/deploy/example.frost.tw/current/public;
+  passenger_enabled on;
+}
+</code></pre><p>最後我們用 Nginx 指令來檢查一下。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>sudo /opt/nginx/sbin/nginx -t
+</code></pre></td></tr></table></div></div><p>如果沒有發生錯誤，就可以用 <code>systemctl</code> 指令重開伺服器，並且看到正常運作的 Rails 網站摟！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>sudo systemctl restart nginx
+</code></pre></td></tr></table></div></div><h2 id=總結>總結</h2><p>這一次的系列文章就到這邊結束了，其實還有不少小細節沒辦法在文章中提到。而且這些都會隨著時間或者有更好的方法而改變，舉例來說 Linux 系統有一個 Cron Job 的功能可以定時的執行某些指令，而 Let&rsquo;s Encrypt 的憑證一般來說會在三個月左右過期。</p><p>如果不希望自己每次都手動操作的話，就會利用 Cron Job 功能自動執行 <code>certbot renew</code> 任務，並且重新啟動 Nginx 將可能被更新的憑證重新讀取進去。</p><p>部署網站除了使用現有雲端服務之外，更多的時候都會採取這樣的方式來執行，因為可以控制的部分相對的多。也比較能針對專案做適合的配置，畢竟以目前 VPS 收費一個月 $5 美金的價格來說，相比 Heroku 的性價比是高上不少的。</p><p>下次有機會的話應該會試著寫一系列使用 Chef 或 Ansible 的部署教學，這系列的方式只有個位數的伺服器需要管理可能還行得通，但是當有數十台以上的時候，就不會是什麼有效率的方法，更何況要服務客戶協助他們部署的時候。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E6%95%99%E5%AD%B8/>教學</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/DevOps/>DevOps</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

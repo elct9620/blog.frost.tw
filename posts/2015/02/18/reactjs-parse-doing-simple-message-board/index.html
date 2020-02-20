@@ -1,0 +1,496 @@
+<!doctype html><html lang=zh-tw><head><title>React.js + Parse 實做簡易留言板 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="前一陣子 SITCON 文創組冬季訓練最後一天，我安排了這個課程給我們的新成員。 雖然 SITCON 文創組看似是個需要「技術」的團隊，不過現實上我們倒是花很多時間在思考跟設計上，沒辦法找到設計相關科系的新成員稍稍遺憾。
+不過因為有製作網站的需求，因此安排了這個課程，透過學習 React.js 以及結合 Parse 去熟悉一些基本的前端技 …"><meta name=created content="2015-02-18T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="React.js + Parse 實做簡易留言板"><meta property="og:url" content="https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"React.js + Parse 實做簡易留言板","datePublished":"2015-02-18T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/","description":"前一陣子 SITCON 文創組冬季訓練最後一天，我安排了這個課程給我們的新成員。 雖然 SITCON 文創組看似是個需要「技術」的團隊，不過現實上我們倒是花很多時間在思考跟設計上，沒辦法找到設計相關科系的新成員稍稍遺憾。\n不過因為有製作網站的需求，因此安排了這個課程，透過學習 React.js 以及結合 Parse 去熟悉一些基本的前端技 …\n","keywords":["心得","SITCON","筆記","React.js"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2015\/02\/18\/reactjs-parse-doing-simple-message-board\/","name":"React.js \x2b Parse 實做簡易留言板"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.18</time><h1 class=article__title>React.js + Parse 實做簡易留言板</h1></header><div class=article__entry><nav class=translation></nav><p>前一陣子 SITCON 文創組冬季訓練最後一天，我安排了這個課程給我們的新成員。
+雖然 SITCON 文創組看似是個需要「技術」的團隊，不過現實上我們倒是花很多時間在思考跟設計上，沒辦法找到設計相關科系的新成員稍稍遺憾。</p><p>不過因為有製作網站的需求，因此安排了這個課程，透過學習 React.js 以及結合 Parse 去熟悉一些基本的前端技巧。</p><p>注意事項：</p><ol><li>文中的範例全部都以 CoffeeScript 撰寫</li><li>本文不會提及 Browserify 的配置與應用（當天有介紹過，練習時是使用我配置好的 gulp task）</li><li>這是在不考慮 UI/UX 以及美術的前提下製作的</li><li>文中不會解釋太多 React.js / Flux 的基本概念（請上官網 or ReactJS.tw 社團學習）</li></ol><p>那麼，就開始吧！</p><h3 id=拆分元件>拆分元件</h3><p>React.js 的 Component（元件）的概念，某種程度上是需要重新定義大家腦中 HTML / JS / CSS 配合的概念，而這個應用方式在很多時候其實能夠幫我們解決不少問題。
+（個人認為很像 <a href=https://w3c.Github.io/webcomponents/spec/shadow/>Shadow DOM</a> 的感覺）</p><p>而 Component 該怎麼拆分呢？簡單來說最小單位就像是一個 <code>&lt;button></code> 都可以視為一個 Component 只是要看需求。</p><blockquote><p>我們可以利用 Component 重新去定義一個 HTML 元素的效果 Ex. &lt;a> 的 onClick 事件重新定義，但是又可以重複利用</p></blockquote><p>建構一個留言板我們會需要幾個元件：</p><ul><li>留言板主體（通常會叫做 <code>Application</code> 或者 <code>App</code>）<ul><li>留言顯示區域<ul><li>單篇留言</li></ul></li><li>留言表單</li></ul></li></ul><p>以一個最低限度結構的留言板來說，至少需要這幾種元件才能夠構成。</p><p>其實仔細看，會發現基本上也就跟常見的 MVC 框架在拆分 View 的技巧感覺很類似。</p><blockquote><p>不過就如同前面所說的，有時候 Component 也用於「重新定義」某個 HTML 的元素效果。
+像是 <code>react-bootstrap</code> 就利用重新定制的 <code>&lt;Nav></code> <code>&lt;MenuItem></code> 等來表現 Navbar（像是實際上都只是反映單個 HTML 元素而已）</p></blockquote><h3 id=架構>架構</h3><p>以 React.js 本身來說，實際上是不足以製作一個完整的 WebApp 的，因此才加入了 Flux 這套理論（我想不適合視為 Library / Framework 而是跟 MVC 類似的理論比較恰當）</p><p>原本的 React.js 其實只有定義了 Component 以及來自外部的「屬性」表現內部的「狀態」而已，但是若要跟 API 溝通並且進行讀取與寫入資料該如何表現呢？</p><p>這時候透過 Flux 所定義的架構就可以很輕鬆的實踐。</p><blockquote><p>Flux 架構是一個單向的流程，不管如何一定會從 Actions 開始出發（有時候也會回到 Actions）但是絕不會有返回的狀況</p></blockquote><ul><li>Actions/<ul><li>通常是處理 API 的部分，會透過 Dispatcher 對 Store 做出操作</li></ul></li><li>Constants/<ul><li>定義 Action 類型的輔助套件（可以不實作，但是缺點會是很容易因為輸入錯誤的字串而無法正常運作）</li></ul></li><li>Components/<ul><li>React.js 所定義的元件，會監聽 Store 的變動更新自身</li></ul></li><li>Store/<ul><li>主要儲存資料的地方，透過從 Dispatcher 收到的變更進行處理</li></ul></li><li>Dispatcher<ul><li>負責指派工作（其中包含了 waitFor() 可以等待一連串的動作完成）</li></ul></li></ul><p>在開發 React.js/Flux 的 WebApp 時，只要注意自己的控制流程是否依循著 Action -> Dispatcher -> Store -> View (Component) 就可以知道自己是否在做正確的設計。</p><h3 id=建構元件>建構元件</h3><p>我個人的習慣是以 React.js 的元件開始做起，因為可以直接看到最終的成果（即使還沒有跟 API 連接上，但也能看到不少基本效果）</p><h4 id=主體application>主體（Application）</h4><p>因為是留言板，所以這邊我用了 <code>GuestBook.cjsx</code> 而非 <code>Application.cjsx</code> 作為檔名。</p><blockquote><p>大家可能會預設情況是「只能有一個 Application 存在頁面」但對於 React.js 來說只是把不同的 Virtual DOM 更新到實際的 DOM 上面，因此是可以在一個頁面做多次 <code>render</code> 動作混合 React.js 跟傳統網頁的</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=cm>###
+</span><span class=cm># GuestBook
+</span><span class=cm>#
+</span><span class=cm># @cjsx React.DOM
+</span><span class=cm>###</span>
+
+<span class=nv>React = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>react</span><span class=s>&#39;</span>
+
+<span class=nv>Comments = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>./Comments.cjsx</span><span class=s>&#39;</span> <span class=c1># 這之後會實作
+</span><span class=c1></span><span class=nv>CommentForm = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>./CommentForm.cjsx</span><span class=s>&#39;</span> <span class=c1># 同上
+</span><span class=c1></span>
+<span class=nv>module.exports = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+  <span class=nv>render: </span><span class=nf>-&gt;</span>
+    <span class=p>(</span>
+      <span class=o>&lt;</span><span class=nx>div</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=nx>CommentForm</span> <span class=o>/</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=nx>Comments</span> <span class=o>/</span><span class=o>&gt;</span>
+      <span class=o>&lt;</span><span class=o>/</span><span class=nx>div</span><span class=o>&gt;</span>
+    <span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>大多數時候主體框架只是用於把各種子元件讀取進來而已，因此看起來非常的簡單。</p><blockquote><p>要注意的是，因為 React.js 把一個原件視為一個 DOM 物件，因此回傳時務必不能同時傳回兩個元件（這邊就用 <code>div</code> 包起來）</p></blockquote><h4 id=留言表單commentform>留言表單（CommentForm）</h4><p>表單的實作上比較簡單，留言部份還包含了另一個子元件「單篇留言」因此就到下一階段再進行處理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=cm>###
+</span><span class=cm># Comment Form
+</span><span class=cm>#
+</span><span class=cm># @cjsx React.DOM
+</span><span class=cm>###</span>
+
+<span class=nv>React = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>react</span><span class=s>&#39;</span>
+
+<span class=nv>CommentAction = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>../actions/CommentAction.coffee</span><span class=s>&#39;</span> <span class=c1># 後面會實作 Comment Action
+</span><span class=c1></span>
+<span class=nv>module.exports = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+  <span class=nv>getInitialState: </span><span class=nf>-&gt;</span>
+  	<span class=c1># React.js 的 State 都需要「事先定義」才能夠使用
+</span><span class=c1></span>    <span class=p>{</span>
+      <span class=nv>content: </span><span class=s>&#34;</span><span class=s>&#34;</span>
+    <span class=p>}</span>
+
+  <span class=nv>_onSubmit: </span><span class=nf>(e) -&gt;</span> <span class=c1># 處理 Submit 的方法（收到的 e 就跟原生 JavaScript 拿到的 Event 是相同的）
+</span><span class=c1></span>    <span class=nx>CommentAction</span><span class=p>.</span><span class=nx>create</span><span class=p>(</span><span class=nx>@</span><span class=nx>state</span><span class=p>.</span><span class=nx>content</span><span class=p>)</span> <span class=c1># 呼叫 Action 執行某個任務（新增留言）
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>setState</span> <span class=p>{</span> <span class=nv>content: </span><span class=s>&#34;</span><span class=s>&#34;</span> <span class=p>}</span>
+
+    <span class=nx>e</span><span class=p>.</span><span class=nx>preventDefault</span><span class=p>(</span><span class=p>)</span> <span class=c1># 取消原有的表單送出動作
+</span><span class=c1></span>
+  <span class=nv>_onChange: </span><span class=nf>(e) -&gt;</span>
+    <span class=c1># 這算是一種小技巧，我們會發現在 _onSubmit 方法要取得 textarea 的內容是很困難的
+</span><span class=c1></span>    <span class=c1># 因此就隨時將表單內容存到狀態中（再次時做表單處理）用於送出時使用
+</span><span class=c1></span>    <span class=c1># 不過要注意的是後面的 textarea 設定了 value={@state.content} 可以確保使用者輸入的跟送出的結果是相同的
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>setState</span> <span class=p>{</span> <span class=nv>content: </span><span class=nx>e</span><span class=p>.</span><span class=nx>target</span><span class=p>.</span><span class=nx>value</span> <span class=p>}</span>
+
+  <span class=nv>render: </span><span class=nf>-&gt;</span>
+    <span class=p>(</span>
+      <span class=o>&lt;</span><span class=nx>div</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=nx>form</span> <span class=nx>onSubmit</span><span class=o>=</span><span class=p>{</span><span class=nx>@</span><span class=nx>_onSubmit</span><span class=p>}</span><span class=o>&gt;</span>
+          <span class=o>&lt;</span><span class=nx>textarea</span> <span class=nx>onChange</span><span class=o>=</span><span class=p>{</span><span class=nx>@</span><span class=nx>_onChange</span><span class=p>}</span> <span class=nx>placeholder</span><span class=o>=</span><span class=s>&#34;</span><span class=s>Messages...</span><span class=s>&#34;</span> <span class=nx>value</span><span class=o>=</span><span class=p>{</span><span class=nx>@</span><span class=nx>state</span><span class=p>.</span><span class=nx>content</span><span class=p>}</span><span class=o>&gt;</span><span class=o>&lt;</span><span class=o>/</span><span class=nx>textarea</span><span class=o>&gt;</span>
+          <span class=o>&lt;</span><span class=nx>button</span> <span class=nx>type</span><span class=o>=</span><span class=s>&#34;</span><span class=s>submit</span><span class=s>&#34;</span><span class=o>&gt;</span><span class=nx>Submit</span><span class=o>&lt;</span><span class=o>/</span><span class=nx>button</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=o>/</span><span class=nx>form</span><span class=o>&gt;</span>
+      <span class=o>&lt;</span><span class=o>/</span><span class=nx>div</span><span class=o>&gt;</span>
+    <span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>實際上，在 React.js 中的元件設計都是很簡單的，從目前的兩個例子就可以觀察到。</p><h4 id=留言區comments>留言區（Comments）</h4><p>前面的段落看到了 State （內部狀態）的使用，這邊則會看到 Props （外部傳入）的應用，以及動態產生元件時的運用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=cm>###
+</span><span class=cm># Comments
+</span><span class=cm>#
+</span><span class=cm># @cjsx React.DOM
+</span><span class=cm>###</span>
+
+<span class=nv>React = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>react</span><span class=s>&#39;</span>
+
+<span class=nv>CommentStore = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>../stores/CommentStore.coffee</span><span class=s>&#39;</span> <span class=c1># 後面也會實作 Store 的部分
+</span><span class=c1></span><span class=nv>CommentAction = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>../actions/CommentAction.coffee</span><span class=s>&#39;</span>
+
+<span class=nv>CommentItem = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>./CommentItem.cjsx</span><span class=s>&#39;</span>
+
+<span class=nv>module.exports = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+  <span class=nv>getInitialState: </span><span class=nf>-&gt;</span>
+    <span class=p>{</span>
+      <span class=nv>comments: </span><span class=nx>CommentStore</span><span class=p>.</span><span class=nx>getAll</span><span class=p>(</span><span class=p>)</span> <span class=c1># 初始化的時候從 Store 拿出目前儲存的資料
+</span><span class=c1></span>    <span class=p>}</span>
+
+  <span class=nv>_onChange: </span><span class=nf>-&gt;</span>
+    <span class=nx>@</span><span class=nx>setState</span> <span class=p>{</span> <span class=nv>comments: </span><span class=nx>CommentStore</span><span class=p>.</span><span class=nx>getAll</span><span class=p>(</span><span class=p>)</span> <span class=p>}</span> <span class=c1># 更新目前儲存的資料
+</span><span class=c1></span>
+  <span class=nv>componentDidMount: </span><span class=nf>-&gt;</span>
+    <span class=nx>CommentAction</span><span class=p>.</span><span class=nx>load</span><span class=p>(</span><span class=p>)</span> <span class=c1># 在元件被加入到頁面上時呼叫「讀取」動作進行 API 查詢
+</span><span class=c1></span>    <span class=nx>CommentStore</span><span class=p>.</span><span class=nx>addChangeListener</span> <span class=nx>@</span><span class=nx>_onChange</span> <span class=c1># 向 Store 登記「變更」事件以了解資料更新
+</span><span class=c1></span>
+  <span class=nv>componentWillUnmount: </span><span class=nf>-&gt;</span>
+    <span class=nx>CommentStore</span><span class=p>.</span><span class=nx>removeChangeListner</span> <span class=nx>@</span><span class=nx>_onChange</span> <span class=c1># 當元件即將被移除時也解除事件監聽
+</span><span class=c1></span>
+  <span class=nv>generateCommentsItem: </span><span class=nf>-&gt;</span>
+    <span class=c1># React.js 動態產生元件可以透過陣列的方式呈現，而每個元素則要給予一個 key 屬性
+</span><span class=c1></span>    <span class=c1># 這邊將狀態中儲存的留言資訊依序取出，然後放入對應的屬性
+</span><span class=c1></span>    <span class=c1># 這邊的 data.get() 用法是 Parse API 存取屬性的方式（一般情況使用 data.content 就可以了）
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>state</span><span class=p>.</span><span class=nx>comments</span><span class=p>.</span><span class=nx>map</span> <span class=nf>(data) -&gt;</span> 
+      <span class=o>&lt;</span><span class=nx>CommentItem</span> <span class=nx>key</span><span class=o>=</span><span class=p>{</span><span class=nx>data</span><span class=p>.</span><span class=nx>id</span><span class=p>}</span> <span class=nx>content</span><span class=o>=</span><span class=p>{</span><span class=nx>data</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s>&#39;</span><span class=s>content</span><span class=s>&#39;</span><span class=p>)</span><span class=p>}</span> <span class=nx>createTime</span><span class=o>=</span><span class=p>{</span><span class=nx>data</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s>&#39;</span><span class=s>time</span><span class=s>&#39;</span><span class=p>)</span><span class=p>.</span><span class=nx>toString</span><span class=p>(</span><span class=p>)</span><span class=p>}</span> <span class=o>/</span><span class=o>&gt;</span>
+
+  <span class=nv>render: </span><span class=nf>-&gt;</span>
+    <span class=p>(</span>
+      <span class=o>&lt;</span><span class=nx>div</span><span class=o>&gt;</span>
+        <span class=p>{</span><span class=nx>@</span><span class=nx>generateCommentsItem</span><span class=p>(</span><span class=p>)</span><span class=p>}</span>
+      <span class=o>&lt;</span><span class=o>/</span><span class=nx>div</span><span class=o>&gt;</span>
+    <span class=p>)</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><h4 id=留言內容commentitem>留言內容（CommentItem）</h4><p>這部分就沒有什麼好討論的，單純就是呈現上的應用（資料來自於屬性）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=cm>###
+</span><span class=cm># Comment Item
+</span><span class=cm>#
+</span><span class=cm># @cjsx React.DOM
+</span><span class=cm>###</span>
+
+<span class=nv>React = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>react</span><span class=s>&#39;</span>
+
+<span class=nv>module.exports = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+  <span class=nv>render: </span><span class=nf>-&gt;</span>
+    <span class=p>(</span>
+      <span class=o>&lt;</span><span class=nx>div</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=nx>p</span><span class=o>&gt;</span><span class=p>{</span><span class=nx>@</span><span class=nx>props</span><span class=p>.</span><span class=nx>content</span><span class=p>}</span><span class=o>&lt;</span><span class=o>/</span><span class=nx>p</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=nx>footer</span><span class=o>&gt;</span>
+          <span class=o>&lt;</span><span class=nx>span</span><span class=o>&gt;</span><span class=p>{</span><span class=nx>@</span><span class=nx>props</span><span class=p>.</span><span class=nx>createTime</span><span class=p>}</span><span class=o>&lt;</span><span class=o>/</span><span class=nx>span</span><span class=o>&gt;</span>
+        <span class=o>&lt;</span><span class=o>/</span><span class=nx>footer</span><span class=o>&gt;</span>
+      <span class=o>&lt;</span><span class=o>/</span><span class=nx>div</span><span class=o>&gt;</span>
+    <span class=p>)</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><blockquote><p>這邊可以這樣想像「State」是一個私有屬性，只有元件自己可以操作。而「Props」則是 State 的變化體，只接受外部傳入的數值（父元件才有編輯的權限）這樣就比較能區分出使用上的時機</p></blockquote><h3 id=dispatcher>Dispatcher</h3><p>這邊會先解釋 Dispatcher 是因為後面的 Action 與 Store 都會需要使用到，因此必須先完成才能夠繼續進行。</p><blockquote><p>其實在實作元件之前先製作 Dispatcher 也沒有關係</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee>
+<span class=cm>###
+</span><span class=cm># Dispatcher
+</span><span class=cm>###</span>
+
+<span class=nv>Dispatcher = </span><span class=nx>require</span><span class=p>(</span><span class=s>&#39;</span><span class=s>flux</span><span class=s>&#39;</span><span class=p>)</span><span class=p>.</span><span class=nx>Dispatcher</span>
+
+<span class=c1># 簡單說就是做物件的繼承，在 Facebook 的範例會看到使用 Object.assign 去輔助
+</span><span class=c1></span><span class=c1># 不過 Dispatcher 也可以利用 CoffeeScript 提供的 extends 來做擴充
+</span><span class=c1></span><span class=c1># 後面的 Store 會因為要從 EventEmitter 的 prototype 繼承而無法做這件事情
+</span><span class=c1></span><span class=c1># 關於 Object.assign 的用途，可以參考 ES6 相關文章的介紹
+</span><span class=c1></span>
+<span class=k>class</span> <span class=nx>AppDispatcher</span> <span class=k>extends</span> <span class=nx>Dispatcher</span>
+  <span class=nv>handleViewAction: </span><span class=nf>(action) -&gt;</span> <span class=c1># 擴充一個 handleViewAction 用來處理跟 View 相關的動作（大多數時候也只會有這一個）
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>dispatch</span> <span class=p>{</span> <span class=c1># 觸發某些動作
+</span><span class=c1></span>      <span class=nv>source: </span><span class=s>&#39;</span><span class=s>VIEW_ACTION</span><span class=s>&#39;</span> <span class=c1># 看到用全部大寫的物件，請合理猜測是使用 Constant 的時機（這邊文章都會用一般字串帶過）
+</span><span class=c1></span>      <span class=nv>action: </span><span class=nx>action</span> <span class=c1># 將收到的動作物件一併傳給 Store
+</span><span class=c1></span>    <span class=p>}</span>
+
+<span class=nv>module.exports = </span><span class=k>new</span> <span class=nx>AppDispatcher</span>
+
+</code></pre></td></tr></table></div></div><h3 id=store>Store</h3><p>接下來我們要實作一個 Store 來儲存資料，至於該怎麼實作基本上是沒有限制的 Ex. Hash, Array 都可以</p><p>這裏會是這篇文章程式碼最多的一個部分，不過並不是什麼複雜的程式，大多數都是在描述「處理」事件上。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee>
+<span class=cm>###
+</span><span class=cm># CommentStore
+</span><span class=cm>###</span>
+
+<span class=c1># 利用 browserify 的功能，讓我們可以將 EventEmitter 在瀏覽器上實作（這個非常好用）
+</span><span class=c1></span><span class=nv>EventEmitter = </span><span class=nx>require</span><span class=p>(</span><span class=s>&#39;</span><span class=s>events</span><span class=s>&#39;</span><span class=p>)</span><span class=p>.</span><span class=nx>EventEmitter</span> 
+<span class=c1># 如果是使用 ES6 就不需要這個輔助套件
+</span><span class=c1></span><span class=nv>assign = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>react/lib/Object.assign</span><span class=s>&#39;</span> 
+
+<span class=nv>AppDispatcher = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>../Dispatcher.coffee</span><span class=s>&#39;</span>
+
+<span class=nv>_comments = </span><span class=p>[</span><span class=p>]</span> <span class=c1># 這邊用一個 Array 實作陣列的儲存（大多數時候從 API 撈出來也都是陣列，排序上可以依靠 API 而不需要自己處理，反而是專注在容易呈現會更好）
+</span><span class=c1></span>
+<span class=nv>dispather = </span><span class=nf>(payload) -&gt;</span> <span class=c1># 向 Dispatcher 登記需要一個處理程序，這部分就是在定義當 Dispatcher 被觸發時應該做什麼動作
+</span><span class=c1></span>	<span class=c1># 取出 Action 物件
+</span><span class=c1></span>  <span class=c1># Action 物件包含什麼都是看開發者高興的，只是我們通常會給一個 actionType 屬性
+</span><span class=c1></span>  <span class=nv>action = </span><span class=nx>payload</span><span class=p>.</span><span class=nx>action</span> 
+
+  <span class=k>switch</span> <span class=nx>action</span><span class=p>.</span><span class=nx>actionType</span> <span class=c1># 透過 actionType 屬性判斷該做什麼動作
+</span><span class=c1></span>    <span class=k>when</span> <span class=s>&#39;</span><span class=s>COMMENT_CREATE</span><span class=s>&#39;</span> <span class=c1># 這邊就是該用 Constant 的時候（這個範例會略過這個步驟）
+</span><span class=c1></span>      <span class=nx>_comments</span><span class=p>.</span><span class=nx>unshift</span> <span class=nx>action</span><span class=p>.</span><span class=nx>comment</span> <span class=c1># 在留言資料的最前面插入一筆（預設是逆序排序）
+</span><span class=c1></span>      <span class=nx>CommentStore</span><span class=p>.</span><span class=nx>emitChange</span><span class=p>(</span><span class=p>)</span> <span class=c1># 讓 Store 觸發 Change 事件通知 View 重新讀取
+</span><span class=c1></span>
+    <span class=k>when</span> <span class=s>&#39;</span><span class=s>COMMENT_LOAD</span><span class=s>&#39;</span>
+      <span class=nv>_comments = </span><span class=nx>action</span><span class=p>.</span><span class=nx>comments</span> <span class=c1># 跟上面的 CREATE 不同，這次 action 包的是 comments （所有留言）
+</span><span class=c1></span>      <span class=nx>CommentStore</span><span class=p>.</span><span class=nx>emitChange</span><span class=p>(</span><span class=p>)</span> <span class=c1># 一樣要觸發 Change 事件讓 View 重新讀取
+</span><span class=c1></span>      
+  <span class=k>return</span> <span class=kc>true</span> <span class=c1># 這是非常重要的一行，如果沒有傳回 true 的話 Dispatcher 會判定任務失敗（Ex. 使用 waitFor 時造成中斷）
+</span><span class=c1></span>
+<span class=c1># 這邊是將 EventEmitter.prototype 複製到一個空物件（並且作為我們後來的 Store）另一部分複製的就是我們目前正準備定義的方法
+</span><span class=c1></span><span class=nv>CommentStore = </span><span class=nx>assign</span> <span class=p>{</span><span class=p>}</span><span class=p>,</span> <span class=nx>EventEmitter</span><span class=p>.</span><span class=nx>prototype</span><span class=p>,</span> <span class=p>{</span>
+  <span class=nv>getAll: </span><span class=nf>-&gt;</span>
+    <span class=nx>_comments</span>
+
+  <span class=nv>emitChange: </span><span class=nf>-&gt;</span>
+    <span class=nx>@</span><span class=nx>emit</span> <span class=s>&#39;</span><span class=s>CHANGE</span><span class=s>&#39;</span>
+
+  <span class=nv>addChangeListener: </span><span class=nf>(callback) -&gt;</span>
+    <span class=nx>@</span><span class=kc>on</span> <span class=s>&#39;</span><span class=s>CHANGE</span><span class=s>&#39;</span><span class=p>,</span> <span class=nx>callback</span>
+
+  <span class=nv>removeChangeListener: </span><span class=nf>(callback) -&gt;</span>
+    <span class=nx>@</span><span class=nx>removeListener</span> <span class=s>&#39;</span><span class=s>CHANGE</span><span class=s>&#39;</span><span class=p>,</span> <span class=nx>callback</span>
+
+  <span class=nv>dispatherIndex: </span><span class=nx>AppDispatcher</span><span class=p>.</span><span class=nx>register</span><span class=p>(</span> <span class=nx>dispather</span> <span class=p>)</span> <span class=c1># 向 Dispatcher 登記（會拿到一個 ID 之後可以用於 watiFor 的應用）
+</span><span class=c1></span><span class=p>}</span>
+
+<span class=nv>module.exports = </span><span class=nx>CommentStore</span>
+
+</code></pre></td></tr></table></div></div><p>表面上看起來似乎會覺得很複雜，不過稍微釐清思路之後其實也就是當 Dispatcher 送出一個 Callback 後做某些事情，再利用 Event 機制呼叫 View 上面的 Callback 而已。</p><blockquote><p>有沒有發現其實就是從 Action 開始呼叫 Dispatcher 然後再呼叫 Store 接著呼叫 View 呢？（而某些情況則會從 View 呼叫 Action 然後循環下去⋯⋯）</p></blockquote><h3 id=action>Action</h3><p>其實我一直在思考「Ajax 的非同步 Callback 該在哪處理呢？」這個問題，最後得出的得答案是在 Action 裡面。
+當收到 Response 之後，再決定對 Dispatcher 送些什麼 View Action 讓 Store 處理，最後反應在 View 上面。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=cm>###
+</span><span class=cm># Comment Action
+</span><span class=cm>###</span>
+
+<span class=nv>AppDispatcher = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>../Dispatcher.coffee</span><span class=s>&#39;</span>
+
+<span class=nv>Comment = </span><span class=nx>Parse</span><span class=p>.</span><span class=nb>Object</span><span class=p>.</span><span class=nx>extend</span><span class=p>(</span><span class=s>&#34;</span><span class=s>Comment</span><span class=s>&#34;</span><span class=p>)</span>
+
+<span class=nv>module.exports = </span><span class=p>{</span>
+  <span class=nv>load: </span><span class=nf>-&gt;</span>
+    <span class=nv>query = </span><span class=k>new</span> <span class=nx>Parse</span><span class=p>.</span><span class=nx>Query</span><span class=p>(</span><span class=nx>Comment</span><span class=p>)</span>
+
+    <span class=nx>query</span><span class=p>.</span><span class=nx>descending</span><span class=p>(</span><span class=s>&#39;</span><span class=s>time</span><span class=s>&#39;</span><span class=p>)</span><span class=p>.</span><span class=nx>find</span><span class=p>(</span><span class=p>{</span> <span class=c1># 排序上利用 Parse API 處理，而不是在 Store 中人工解決
+</span><span class=c1></span>      <span class=nv>success: </span><span class=nf>(results)-&gt;</span>
+        <span class=nx>AppDispatcher</span><span class=p>.</span><span class=nx>handleViewAction</span> <span class=p>{</span> <span class=c1># 讓 Dispatcher 送出一個任務
+</span><span class=c1></span>          <span class=nv>actionType: </span><span class=s>&#39;</span><span class=s>COMMENT_LOAD</span><span class=s>&#39;</span>
+          <span class=nv>comments: </span><span class=nx>results</span>
+        <span class=p>}</span>
+    <span class=p>}</span><span class=p>)</span>
+
+  <span class=nv>create: </span><span class=nf>(content) -&gt;</span>
+    <span class=nv>comment = </span><span class=k>new</span> <span class=nx>Comment</span>
+    <span class=nx>comment</span><span class=p>.</span><span class=nx>save</span> <span class=p>{</span>
+      <span class=nv>content: </span><span class=nx>content</span><span class=p>,</span>
+      <span class=nv>time: </span><span class=k>new</span> <span class=nb>Date</span><span class=p>(</span><span class=p>)</span>
+    <span class=p>}</span>
+    <span class=p>.</span><span class=nx>then</span> <span class=nf>(object) -&gt;</span>
+      <span class=nx>AppDispatcher</span><span class=p>.</span><span class=nx>handleViewAction</span> <span class=p>{</span>
+        <span class=nv>actionType: </span><span class=s>&#39;</span><span class=s>COMMENT_CREATE</span><span class=s>&#39;</span>
+        <span class=nv>comment: </span><span class=nx>object</span>
+      <span class=p>}</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>基本上就是 Parse API 的操作，官方文件都寫得很清楚，我就不多做討論了！</p><h3 id=render>Render</h3><p>最後就是呈現在網頁上，其實不難。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=cm>###
+</span><span class=cm># Application
+</span><span class=cm>#
+</span><span class=cm># @cjsx React.DOM
+</span><span class=cm>###</span>
+
+<span class=nv>React = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>react</span><span class=s>&#39;</span>
+
+<span class=nv>Guestbook = </span><span class=nx>require</span> <span class=s>&#39;</span><span class=s>./components/GuestBook.cjsx</span><span class=s>&#39;</span>
+
+<span class=nx>Parse</span><span class=p>.</span><span class=nx>initialize</span><span class=p>(</span><span class=s>&#34;</span><span class=s>Application ID</span><span class=s>&#34;</span><span class=p>,</span> <span class=s>&#34;</span><span class=s>JavaScript Key</span><span class=s>&#34;</span><span class=p>)</span><span class=p>;</span>
+
+<span class=nb>window</span><span class=p>.</span><span class=nv>onload = </span><span class=nf>-&gt;</span>
+  <span class=nx>React</span><span class=p>.</span><span class=nx>render</span> <span class=o>&lt;</span><span class=nx>Guestbook</span> <span class=o>/</span><span class=o>&gt;</span><span class=p>,</span> <span class=nb>document</span><span class=p>.</span><span class=nx>body</span>
+</code></pre></td></tr></table></div></div><p><code>React.render</code> 接收兩個參數，第一個是要 render 的元件，第二個是要放置的 DOM 元素。</p><p>簡單說，其實也可以這樣使用：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee><span class=nx>React</span><span class=p>.</span><span class=nx>render</span> <span class=o>&lt;</span><span class=nx>Header</span> <span class=o>/</span><span class=o>&gt;</span><span class=p>,</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s>&#34;</span><span class=s>header</span><span class=s>&#34;</span><span class=p>)</span>
+<span class=nx>React</span><span class=p>.</span><span class=nx>render</span> <span class=o>&lt;</span><span class=nx>Main</span> <span class=o>/</span><span class=o>&gt;</span><span class=p>,</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s>&#34;</span><span class=s>main</span><span class=s>&#34;</span><span class=p>)</span>
+<span class=nx>React</span><span class=p>.</span><span class=nx>render</span> <span class=o>&lt;</span><span class=nx>Footer</span> <span class=o>/</span><span class=o>&gt;</span><span class=p>,</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s>&#34;</span><span class=s>footer</span><span class=s>&#34;</span><span class=p>)</span>
+</code></pre></td></tr></table></div></div><p>至於該如何運用，就取決於實際上的情況。</p><blockquote><p>我認為上面這種運用可以在網站從傳統的 Server-Client 轉變為 WebApp + API 架構的過渡期去應用
+不用完整寫完 WebApp 就能開始套用，聽起來其實蠻不錯的。</p></blockquote><h3 id=小結>小結</h3><p>這是冬季訓練大約花三小時講解的內容，做法是 Step by Step 並且在每個步驟講解。
+如果是熟練的開發者，我想大概一個小時內就能夠做完或者更多的任務，至少就我的經驗來說，還沒有一個 WebApp Framework 可以讓我如此有彈性的開發（Ex. 可以用 <code>@getDOMNode()</code> 獲取原生的 DOM 做操作，在做整合 Library 時就很好用）</p><p>不過這幾年技術每天都在變化，像是當我熟悉 Flux 之後沒多久，又多了一個叫做 <a href=https://muut.com/riotjs/>Riot.js</a> 的套件，說比 React.js 更輕量化（不過實際看過文件覺得沒有 React.js 這麼討喜）</p><p>雖然 React.js 在某些應用上非常的方便，不過我還是建議多學幾種應對不同的情況（不要都學到同一種情境的就好 XD）</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/SITCON/>SITCON</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/>筆記</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/React.js/>React.js</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

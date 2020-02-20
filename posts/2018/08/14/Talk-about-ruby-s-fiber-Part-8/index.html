@@ -1,0 +1,197 @@
+<!doctype html><html lang=zh-tw><head><title>淺談 Ruby 的 Fiber（八） - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="到這篇為止，我們已經完成了將 Fiber 應用在程式中的基本雛型，現在只需要將上週未完成的錯誤處理，我們就能獲得一個可以正常發送訊息到伺服器的伺服器。"><meta name=created content="2018-08-14T00:00:00+0000"><meta name=modified content="2018-08-14T20:47:48+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="淺談 Ruby 的 Fiber（八）"><meta property="og:url" content="https://blog.frost.tw/posts/2018/08/14/Talk-about-ruby-s-fiber-Part-8/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2018-07-17-talk-about-ruby-s-fiber-part-4/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2018/08/14/Talk-about-ruby-s-fiber-Part-8/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"淺談 Ruby 的 Fiber（八）","datePublished":"2018-08-14T00:00:00Z","dateModified":"2018-08-14T20:47:48Z","url":"https://blog.frost.tw/posts/2018/08/14/Talk-about-ruby-s-fiber-Part-8/","description":"到這篇為止，我們已經完成了將 Fiber 應用在程式中的基本雛型，現在只需要將上週未完成的錯誤處理，我們就能獲得一個可以正常發送訊息到伺服器的伺服器。\n","keywords":["Concurrency","Thread","Ruby"],"image":"https://blog.frost.tw/images/2018-07-17-talk-about-ruby-s-fiber-part-4/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2018\/08\/14\/Talk-about-ruby-s-fiber-Part-8\/","name":"淺談 Ruby 的 Fiber（八）","image":"https:\/\/blog.frost.tw\/images\/2018-07-17-talk-about-ruby-s-fiber-part-4\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2018-08-14T20:47:48+0000 class=article__time--header>Feb.14</time><h1 class=article__title>淺談 Ruby 的 Fiber（八）</h1></header><div class=article__entry><nav class=translation></nav><p>到這篇為止，我們已經完成了將 Fiber 應用在程式中的基本雛型，現在只需要將上週未完成的錯誤處理，我們就能獲得一個可以正常發送訊息到伺服器的伺服器。</p><h2 id=觀察>觀察</h2><p>經過幾次的測試，我們會發現原本預期沒有正常運作的 <code>@fibers.delete(io)</code> 實際上是有在執行的，但是在使用者離開時，我們還在等待「讀取」所以就會觸發 <code>end of file reached (EOFError)</code> 這個錯誤，也就是使用者離開的瞬間，我們可以讀取。但是讀取到的是終止的訊息。</p><p>針對這個問題，我們只需要增加 <code>rescue EOFError</code> 讓他不要產生錯誤，就可以順利解決。</p><blockquote><p>不過以邏輯上來說，我們更這種由我們掌控的機制，不應該是一種例外，所以採取 <code>exception: false</code> 的做法也許是一個不錯的選擇。</p></blockquote><h2 id=重構>重構</h2><p>既然我們已經了解完整的運作原理，但是程式碼依舊還是處於混亂的狀態。因此我們最好先進行一次重構會比較適合。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Selector</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span>
+    <span class=vi>@readers</span> <span class=o>=</span> <span class=p>{</span><span class=p>}</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>wait_readable</span><span class=p>(</span><span class=n>io</span><span class=p>)</span>
+    <span class=no>Fiber</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+      <span class=vi>@readers</span><span class=o>[</span><span class=n>io</span><span class=o>]</span> <span class=o>=</span> <span class=no>Fiber</span><span class=o>.</span><span class=n>current</span>
+      <span class=no>Fiber</span><span class=o>.</span><span class=n>yield</span>
+      <span class=k>yield</span>
+    <span class=k>end</span><span class=o>.</span><span class=n>resume</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>resume</span>
+    <span class=n>readable</span><span class=p>,</span> <span class=o>=</span> <span class=no>IO</span><span class=o>.</span><span class=n>select</span><span class=p>(</span><span class=vi>@readers</span><span class=o>.</span><span class=n>keys</span><span class=p>)</span>
+    <span class=n>readable</span><span class=o>.</span><span class=n>each</span> <span class=k>do</span> <span class=o>|</span><span class=n>io</span><span class=o>|</span>
+      <span class=n>io</span> <span class=o>=</span> <span class=vi>@readers</span><span class=o>.</span><span class=n>delete</span><span class=p>(</span><span class=n>io</span><span class=p>)</span>
+      <span class=n>io</span><span class=o>.</span><span class=n>resume</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p><code>Selector</code> 的部分我們沒有做太多的修改，為了配合後面會有寫入的行為，我們先把原本的 <code>@fibers</code> 修改為 <code>@readers</code> 來對應。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Client</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>selector</span><span class=p>,</span> <span class=n>server</span><span class=p>,</span> <span class=n>socket</span><span class=p>)</span>
+    <span class=vi>@socket</span> <span class=o>=</span> <span class=n>socket</span>
+    <span class=vi>@selector</span> <span class=o>=</span> <span class=n>selector</span>
+    <span class=vi>@server</span> <span class=o>=</span> <span class=n>server</span>
+    <span class=vi>@buffer</span> <span class=o>=</span> <span class=s1>&#39;&#39;</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>listen</span>
+    <span class=n>buffer</span> <span class=o>=</span> <span class=vi>@socket</span><span class=o>.</span><span class=n>read_nonblock</span><span class=p>(</span><span class=mi>1</span><span class=o></span><span class=p>,</span> <span class=ss>exception</span><span class=p>:</span> <span class=kp>false</span><span class=p>)</span>
+    <span class=k>case</span> <span class=n>buffer</span>
+    <span class=k>when</span> <span class=ss>:wait_readable</span> <span class=k>then</span> <span class=n>wait</span>
+    <span class=k>when</span> <span class=kp>nil</span> <span class=k>then</span> <span class=n>close</span>
+    <span class=k>else</span>
+      <span class=vi>@buffer</span> <span class=o>&lt;&lt;</span> <span class=n>buffer</span>
+      <span class=n>show_message</span> <span class=k>if</span> <span class=vi>@buffer</span><span class=o>.</span><span class=n>include?</span><span class=p>(</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>&#34;</span><span class=p>)</span>
+      <span class=n>listen</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>wait</span>
+    <span class=vi>@selector</span><span class=o>.</span><span class=n>wait_readable</span><span class=p>(</span><span class=vi>@socket</span><span class=p>)</span> <span class=k>do</span>
+      <span class=n>listen</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>show_message</span>
+    <span class=nb>puts</span> <span class=n>last_message</span> <span class=k>while</span> <span class=vi>@buffer</span><span class=o>.</span><span class=n>include?</span><span class=p>(</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>&#34;</span><span class=p>)</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>last_message</span>
+    <span class=p>(</span><span class=n>_</span><span class=p>,</span> <span class=vi>@buffer</span> <span class=o>=</span> <span class=vi>@buffer</span><span class=o>.</span><span class=n>to_s</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>&#34;</span><span class=p>,</span> <span class=mi>2</span><span class=o></span><span class=p>)</span><span class=p>)</span><span class=o>.</span><span class=n>first</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>close</span>
+    <span class=vi>@server</span><span class=o>.</span><span class=n>close</span><span class=p>(</span><span class=nb>self</span><span class=p>)</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>這次增加了 <code>Client</code> 來針對客戶端的部分處理，當我們收到訊息時會不斷重試直到有 <code>\n</code> 符號出現，並且將它顯示出來。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Server</span> <span class=o>&lt;</span> <span class=no>TCPServer</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>port</span><span class=p>)</span>
+    <span class=k>super</span> <span class=n>port</span>
+    <span class=vi>@selector</span> <span class=o>=</span> <span class=no>Selector</span><span class=o>.</span><span class=n>new</span>
+    <span class=vi>@clients</span> <span class=o>=</span> <span class=o>[</span><span class=o>]</span>
+    <span class=n>async_accept</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>async_accept</span>
+    <span class=n>socket</span> <span class=o>=</span> <span class=n>accept_nonblock</span><span class=p>(</span><span class=ss>exception</span><span class=p>:</span> <span class=kp>false</span><span class=p>)</span>
+    <span class=k>case</span> <span class=n>socket</span>
+    <span class=k>when</span> <span class=ss>:wait_readable</span> <span class=k>then</span> <span class=n>wait_accept</span>
+    <span class=k>else</span>
+      <span class=n>client</span> <span class=o>=</span> <span class=p>(</span><span class=vi>@clients</span><span class=o>.</span><span class=n>push</span> <span class=no>Client</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=vi>@selector</span><span class=p>,</span> <span class=nb>self</span><span class=p>,</span> <span class=n>socket</span><span class=p>)</span><span class=p>)</span><span class=o>.</span><span class=n>last</span>
+      <span class=n>client</span><span class=o>.</span><span class=n>listen</span>
+      <span class=n>async_accept</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>wait_accept</span>
+    <span class=vi>@selector</span><span class=o>.</span><span class=n>wait_readable</span><span class=p>(</span><span class=nb>self</span><span class=p>)</span> <span class=k>do</span>
+      <span class=n>async_accept</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>close</span><span class=p>(</span><span class=n>client</span><span class=p>)</span>
+    <span class=vi>@clients</span><span class=o>.</span><span class=n>delete</span><span class=p>(</span><span class=n>client</span><span class=p>)</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>start</span>
+    <span class=kp>loop</span> <span class=k>do</span>
+      <span class=vi>@selector</span><span class=o>.</span><span class=n>resume</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=n>server</span> <span class=o>=</span> <span class=no>Server</span><span class=o>.</span><span class=n>new</span> <span class=mi>3000</span>
+<span class=o></span><span class=n>server</span><span class=o>.</span><span class=n>start</span>
+</code></pre></td></tr></table></div></div><p>最後伺服器部分跟客戶端的部分採取類似的邏輯，不過我們將大部分的行為封裝進去，統一進行處理。</p><h2 id=解析>解析</h2><p>這次比較特別的有兩個部分，第一個是伺服器的 <code>@clients</code> 陣列，會用來記錄在線上上的使用者，這會讓我們之後在實作發送聊天訊息的功能上方便不少。</p><p>另一個則是我們利用 Ruby 的 Block 特性，將產生 Fiber 的工作交給 Selector 來負責，如此一來其他部分的程式碼除了需要利用一些遞迴的特性之外，就不會看到 Fiber 也更崇義理解。</p><h2 id=小結>小結</h2><p>Fiber 在思考上跟我們以往習慣的方式不太一樣，不過隨著將程式碼整理之後，實際上會發現並沒有那麼複雜，但是需要特別注意程式的執行時機點可能會被稍微的改變。</p><p>下一篇文章我們可以嘗試加入廣播訊息的機制，讓這個 TCP 聊天室完成他的實作。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Concurrency/>Concurrency</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Thread/>Thread</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

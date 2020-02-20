@@ -1,0 +1,360 @@
+<!doctype html><html lang=zh-tw><head><title>Laravel 初次嘗試 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～
+一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。
+總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三 …"><meta name=created content="2012-07-14T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="Laravel 初次嘗試"><meta property="og:url" content="https://blog.frost.tw/posts/2012/07/14/the-laravel-first-try/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2012/07/14/the-laravel-first-try/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"Laravel 初次嘗試","datePublished":"2012-07-14T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2012/07/14/the-laravel-first-try/","description":"今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～\n一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。\n總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三 …\n","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2012\/07\/14\/the-laravel-first-try\/","name":"Laravel 初次嘗試"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.14</time><h1 class=article__title>Laravel 初次嘗試</h1></header><div class=article__entry><nav class=translation></nav><p>今天下午用 Laravel 試寫了一下留言板。雖然之前看過文件，但是沒有認真去讀，這次認真用一次之後，感想就是很讚～</p><p>一方面是跟 Rails 的設計真的都很類似，又有 Cli 可以使用，光這兩點就省下很多功夫。</p><p>總而言之，我要推一下這個 PHP Framework 拉！除了 Slim Framework 之外，這款是我有實際去用過的第三款，用起來也很不錯（蓋章）</p><h2 id=下載>下載</h2><hr><p>這步驟根本是湊字數的（被巴）</p><p>我超貼心幫各位把官網都做好超連結了喔～～</p><p>總之就是下載，解壓縮，然後放到可以跑 PHP 的地方，幫 storage 資料夾設定為可寫。
+大家可能會不太習慣，不過他是以 public 資料夾為瀏覽的目錄喔～</p><p>（所以用在 PagodaBox 這種可以設定根目錄的 PaaS 超爽的）</p><h2 id=事前設定>事前設定</h2><hr><p>我跟你們說我超懶的，連 MySQL 都不想設定拉～</p><p>所以請打開 application/config/database.PHP 把 &lsquo;default&rsquo; => &lsquo;mysql&rsquo; 改成 sqlite 吧～</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+  <span class=c1>//略
+</span><span class=c1></span>  <span class=cm>/*
+</span><span class=cm>   |--------------------------------------------------------------------------
+</span><span class=cm>   | Default Database Connection
+</span><span class=cm>   |--------------------------------------------------------------------------
+</span><span class=cm>   |
+</span><span class=cm>   | The name of your default database connection. This connection will used
+</span><span class=cm>   | as the default for all database operations unless a different name is
+</span><span class=cm>   | given when performing said operation. This connection name should be
+</span><span class=cm>   | listed in the array of connections below.
+</span><span class=cm>   |
+</span><span class=cm>   */</span>
+
+   <span class=s1>&#39;default&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;sqlite&#39;</span><span class=p>,</span>
+   <span class=c1>//略
+</span><span class=c1></span><span class=cp>?&gt;</span>
+</code></pre></td></tr></table></div></div><p>第 45 行左右，大概就是這樣喔～</p><p>如果你想用 Rewrite 的話，就把 application/config/applicatoin.PHP 裡面的 &lsquo;index&rsquo; => &lsquo;index.PHP&rsquo;, 改成 &lsquo;index&rsquo; => &lsquo;', 就可以了（至於 .htaccess 檔則是一開始就幫你弄好，超貼心～）</p><h2 id=路由>路由</h2><hr><p>接下來修改一下 applicatoin/routers.PHP 的設定</p><p>一開始大概 35 行會看到這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=c1>//略
+</span><span class=c1></span>
+<span class=nx>Route</span><span class=o>::</span><span class=na>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span>
+<span class=p>{</span>
+	<span class=k>return</span> <span class=nx>View</span><span class=o>::</span><span class=na>make</span><span class=p>(</span><span class=s1>&#39;home.index&#39;</span><span class=p>);</span>
+<span class=p>});</span>
+
+<span class=c1>//略
+</span><span class=c1></span><span class=cp>?&gt;</span>
+</code></pre></td></tr></table></div></div><p>然後我們只要有一個簡單的留言功能，所以直接丟給 Controller 就可以了～</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=c1>//略
+</span><span class=c1></span>
+<span class=nx>Route</span><span class=o>::</span><span class=na>controller</span><span class=p>(</span><span class=s1>&#39;home&#39;</span><span class=p>);</span>
+
+<span class=c1>//略
+</span><span class=c1></span><span class=cp>?&gt;</span>
+</code></pre></td></tr></table></div></div><h2 id=model>Model</h2><hr><p>我們會用到 Migrate 這個超方便的功能，不過要先用個指令～</p><blockquote><p>PHP artisan migrate:install</p></blockquote><p>這樣 Laravel 才會有 Migrate 紀錄的資料表，也才有辦法知道下次運行 Migrate 時是否要更動資料表</p><p>接著創建一個 Migrate 來新增我們留言資料</p><blockquote><p>PHP artisan migrate:make create_comments_table</p></blockquote><p>之後編輯 application/migrations/日期戳記_create_comments_table.PHP 來撰寫資料表的結構。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+
+<span class=k>class</span> <span class=nc>Create_Comments_Table</span> <span class=p>{</span>
+
+	<span class=sd>/**
+</span><span class=sd>	 * Make changes to the database.
+</span><span class=sd>	 *
+</span><span class=sd>	 * @return void
+</span><span class=sd>	 */</span>
+	<span class=k>public</span> <span class=k>function</span> <span class=nf>up</span><span class=p>()</span>
+	<span class=p>{</span>
+    <span class=nx>Schema</span><span class=o>::</span><span class=na>create</span><span class=p>(</span><span class=s1>&#39;comments&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>(</span><span class=nv>$table</span><span class=p>){</span> <span class=c1>//建立資料表
+</span><span class=c1></span>      <span class=nv>$table</span><span class=o>-&gt;</span><span class=na>increments</span><span class=p>(</span><span class=s1>&#39;ID&#39;</span><span class=p>);</span> <span class=c1>//設定 ID (遞增)
+</span><span class=c1></span>      <span class=nv>$table</span><span class=o>-&gt;</span><span class=na>string</span><span class=p>(</span><span class=s1>&#39;subject&#39;</span><span class=p>);</span> <span class=c1>//留言主旨
+</span><span class=c1></span>      <span class=nv>$table</span><span class=o>-&gt;</span><span class=na>text</span><span class=p>(</span><span class=s1>&#39;content&#39;</span><span class=p>);</span> <span class=c1>//留言內容
+</span><span class=c1></span>      <span class=nv>$table</span><span class=o>-&gt;</span><span class=na>timestamps</span><span class=p>();</span> <span class=c1>//時間戳記 created_at 跟 updated_at 兩個欄位
+</span><span class=c1></span>    <span class=p>});</span>
+	<span class=p>}</span>
+
+	<span class=sd>/**
+</span><span class=sd>	 * Revert the changes to the database.
+</span><span class=sd>	 *
+</span><span class=sd>	 * @return void
+</span><span class=sd>	 */</span>
+	<span class=k>public</span> <span class=k>function</span> <span class=nf>down</span><span class=p>()</span>
+	<span class=p>{</span>
+      <span class=nx>Schema</span><span class=o>::</span><span class=na>drop</span><span class=p>(</span><span class=s1>&#39;comments&#39;</span><span class=p>);</span> <span class=c1>//刪除資料表
+</span><span class=c1></span>	<span class=p>}</span>
+
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>接著 Migrate 讓 Laravel 產生 SQL 語法並且寫入資料庫</p><blockquote><p>PHP artisan migrate</p></blockquote><p>繼續建立 Model 來存取，新增一個檔案 application/models/Comment.PHP</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>
+<span class=cp>&lt;?PHP</span>
+
+  <span class=k>class</span> <span class=nc>Comment</span> <span class=k>extends</span> <span class=nx>Eloquent</span>
+  <span class=p>{</span>
+    <span class=k>public</span> <span class=k>static</span> <span class=nv>$table</span> <span class=o>=</span> <span class=s1>&#39;comments&#39;</span><span class=p>;</span> <span class=c1>// 指定對應的資料表
+</span><span class=c1></span>    <span class=k>public</span> <span class=k>static</span> <span class=nv>$per_page</span> <span class=o>=</span> <span class=mi>5</span><span class=p>;</span> <span class=c1>//設定分頁時每頁筆數（預設 20 筆）
+</span><span class=c1></span>  <span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>這樣一來 Model 就建立好了，因為只需要簡易的讀寫，所以就沒有在深入去撰寫更細節的部分。</p><h2 id=controller--view>Controller & View</h2><hr><p>接下來處理一下 Controller 的部分，編輯 application/controller/home.PHP</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>
+<span class=cp>&lt;?PHP</span>
+
+<span class=k>class</span> <span class=nc>Home_Controller</span> <span class=k>extends</span> <span class=nx>Base_Controller</span> <span class=p>{</span>
+
+  <span class=k>public</span> <span class=nv>$restful</span> <span class=o>=</span> <span class=k>true</span><span class=p>;</span> <span class=c1>//使用 RESTFUL (get_ post_ 開頭的 method)
+</span><span class=c1></span>
+  <span class=k>public</span> <span class=k>function</span> <span class=nf>get_index</span><span class=p>()</span>
+  <span class=p>{</span>
+
+    <span class=nv>$comments</span> <span class=o>=</span> <span class=nx>Comment</span><span class=o>::</span><span class=na>order_by</span><span class=p>(</span><span class=s1>&#39;created_at&#39;</span><span class=p>,</span> <span class=s1>&#39;desc&#39;</span><span class=p>)</span><span class=o>-&gt;</span><span class=na>paginate</span><span class=p>();</span> <span class=c1>//依照 created_at 排序，並且分頁
+</span><span class=c1></span>
+    <span class=k>return</span> <span class=nx>View</span><span class=o>::</span><span class=na>make</span><span class=p>(</span><span class=s1>&#39;home.index&#39;</span><span class=p>)</span>
+                 <span class=o>-&gt;</span><span class=na>with</span><span class=p>(</span><span class=s1>&#39;comments&#39;</span><span class=p>,</span> <span class=nv>$comments</span><span class=p>);</span> <span class=c1>//Render home/index 這個 view 並且附帶 comments 這個變數
+</span><span class=c1></span>  <span class=p>}</span>
+
+  <span class=k>public</span> <span class=k>function</span> <span class=nf>post_index</span><span class=p>()</span>
+  <span class=p>{</span>
+    <span class=nv>$inputs</span> <span class=o>=</span> <span class=nx>Input</span><span class=o>::</span><span class=na>all</span><span class=p>();</span> <span class=c1>//取得所有 POST/GET 的變數
+</span><span class=c1></span>    <span class=nv>$rules</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span> <span class=c1>//設定驗證規則
+</span><span class=c1></span>      <span class=s1>&#39;subject&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;required&#39;</span><span class=p>,</span> <span class=c1>//必填
+</span><span class=c1></span>      <span class=s1>&#39;content&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;required&#39;</span> <span class=c1>//必填
+</span><span class=c1></span>    <span class=p>);</span>
+
+    <span class=nv>$validation</span> <span class=o>=</span> <span class=nx>Validator</span><span class=o>::</span><span class=na>make</span><span class=p>(</span><span class=nv>$input</span><span class=p>,</span> <span class=nv>$rules</span><span class=p>);</span> <span class=c1>//進行驗證
+</span><span class=c1></span>
+    <span class=k>if</span><span class=p>(</span> <span class=nv>$validation</span><span class=o>-&gt;</span><span class=na>fails</span><span class=p>()</span> <span class=p>)</span> <span class=p>{</span> <span class=c1>//假設驗證失敗
+</span><span class=c1></span>      <span class=k>return</span> <span class=nx>Redirect</span><span class=o>::</span><span class=na>home</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>with_errors</span><span class=p>(</span><span class=nv>$validation</span><span class=p>);</span> <span class=c1>//回到首頁並且帶著錯誤資訊
+</span><span class=c1></span>    <span class=p>}</span>
+
+    <span class=nx>Comment</span><span class=o>::</span><span class=na>create</span><span class=p>(</span><span class=k>array</span><span class=p>(</span> <span class=c1>//插入資料
+</span><span class=c1></span>      <span class=s1>&#39;subject&#39;</span> <span class=o>=&gt;</span> <span class=nv>$inputs</span><span class=p>[</span><span class=s1>&#39;subject&#39;</span><span class=p>],</span>
+      <span class=s1>&#39;content&#39;</span> <span class=o>=&gt;</span> <span class=nv>$inputs</span><span class=p>[</span><span class=s1>&#39;content&#39;</span><span class=p>]</span>
+    <span class=p>));</span>
+
+    <span class=k>return</span> <span class=nx>Redirect</span><span class=o>::</span><span class=na>home</span><span class=p>();</span>
+  <span class=p>}</span>
+
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>基本上我們就不改動 Laravel 的 CSS 直接借用一下（因為是練習，所以實際使用請改正喔～）</p><p>編輯 application/views/home/index.blade.PHP</p><p>附註：blade 是 Laravel 的樣板引擎，要加在檔名才會運作～</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html>{% raw %}
+<span class=cp>&lt;!doctype html&gt;</span>
+<span class=p>&lt;</span><span class=nt>html</span> <span class=na>lang</span><span class=o>=</span><span class=s>&#34;zh_TW&#34;</span><span class=p></span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>head</span><span class=p></span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>charset</span><span class=o>=</span><span class=s>&#34;utf-8&#34;</span><span class=p></span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>http-equiv</span><span class=o>=</span><span class=s>&#34;X-UA-Compatible&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;IE=edge,chrome=1&#34;</span><span class=p></span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>title</span><span class=p></span><span class=p>&gt;</span>Simple Guestbook<span class=p>&lt;</span><span class=p>/</span><span class=nt>title</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;viewport&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;width=device-width&#34;</span><span class=p></span><span class=p>&gt;</span>
+	{{ HTML::style(&#39;laravel/CSS/style.css&#39;) }}
+  <span class=p>&lt;</span><span class=nt>style</span><span class=p></span><span class=p>&gt;</span>
+    <span class=nt>input</span><span class=o>,</span><span class=nt>textarea</span> <span class=p>{</span>
+      <span class=k>background</span><span class=p>:</span> <span class=mh>#FFF</span><span class=p>;</span>
+      <span class=k>border</span><span class=p>:</span> <span class=mi>1</span><span class=kt>px</span> <span class=kc>solid</span> <span class=mh>#EFEFEF</span><span class=p>;</span>
+      <span class=k>margin</span><span class=p>:</span> <span class=mi>10</span><span class=kt>px</span><span class=p>;</span>
+      <span class=k>padding</span><span class=p>:</span> <span class=mi>5</span><span class=kt>px</span><span class=p>;</span>
+    <span class=p>}</span>
+  <span class=p>&lt;</span><span class=p>/</span><span class=nt>style</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=p>/</span><span class=nt>head</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>body</span><span class=p></span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;wrapper&#34;</span><span class=p></span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=nt>header</span><span class=p></span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=nt>h1</span><span class=p></span><span class=p>&gt;</span>Guestbook<span class=p>&lt;</span><span class=p>/</span><span class=nt>h1</span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=nt>h2</span><span class=p></span><span class=p>&gt;</span>A simple guestbook<span class=p>&lt;</span><span class=p>/</span><span class=nt>h2</span><span class=p>&gt;</span>
+
+			<span class=p>&lt;</span><span class=nt>p</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;intro-text&#34;</span> <span class=na>style</span><span class=o>=</span><span class=s>&#34;margin-top: 45px;&#34;</span><span class=p></span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=p>/</span><span class=nt>p</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=p>/</span><span class=nt>header</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=nt>div</span> <span class=na>role</span><span class=o>=</span><span class=s>&#34;main&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;main&#34;</span><span class=p></span><span class=p>&gt;</span>
+      <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;new&#34;</span><span class=p></span><span class=p>&gt;</span>
+      	<span class=cp>&lt;?PHP $errorMessages = $errors-&gt;all(&#39;&lt;pre&gt;:message&lt;/pre&gt;&#39;); ?&gt;</span>
+        @foreach ($errorMessages as $message)
+          { { $message }}
+        @endforeach
+        {{ Form::open() }}
+
+        {{ Form::open() }}
+        <span class=p>&lt;</span><span class=nt>p</span><span class=p></span><span class=p>&gt;</span>
+          {{ Form::label(&#39;subject&#39;, &#39;Subject&#39;) }}
+          {{ Form::text(&#39;subject&#39;) }}
+        <span class=p>&lt;</span><span class=p>/</span><span class=nt>p</span><span class=p>&gt;</span>
+        <span class=p>&lt;</span><span class=nt>p</span><span class=p></span><span class=p>&gt;</span>
+          {{ Form::label(&#39;content&#39;, &#39;Content&#39;) }}
+          {{ Form::textarea(&#39;content&#39;) }}
+        <span class=p>&lt;</span><span class=p>/</span><span class=nt>p</span><span class=p>&gt;</span>
+        <span class=p>&lt;</span><span class=nt>p</span><span class=p></span><span class=p>&gt;</span>
+          { { Form::submit(&#39;Comment&#39;) }}
+        <span class=p>&lt;</span><span class=p>/</span><span class=nt>p</span><span class=p>&gt;</span>
+        {{ Form::close() }}
+      <span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+      <span class=p>&lt;</span><span class=nt>hr</span> <span class=p>/</span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;home&#34;</span><span class=p></span><span class=p>&gt;</span>
+        @forelse ($comments-&gt;results as $comment)
+          <span class=p>&lt;</span><span class=nt>h2</span><span class=p></span><span class=p>&gt;</span>{{ e($comment-&gt;subject) }}<span class=p>&lt;</span><span class=p>/</span><span class=nt>h2</span><span class=p>&gt;</span>
+          <span class=p>&lt;</span><span class=nt>pre</span><span class=p></span><span class=p>&gt;</span>{{ e($comment-&gt;content) }}<span class=p>&lt;</span><span class=p>/</span><span class=nt>pre</span><span class=p>&gt;</span>
+        @empty
+          <span class=p>&lt;</span><span class=nt>pre</span><span class=p></span><span class=p>&gt;</span> No comment be found! <span class=p>&lt;</span><span class=p>/</span><span class=nt>pre</span><span class=p>&gt;</span>
+        @endforelse
+			<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=p>/</span><span class=nt>body</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=p>/</span><span class=nt>html</span><span class=p>&gt;</span>
+{% endraw %}
+</code></pre></td></tr></table></div></div><p><strong>不知道為什麼我用 { { }} 包起來就會消失，所以我在 { 跟 { 中間多加了空白</strong></p><p>Form Class 是 Laravel 的表單物件，可以輔助產生表單。</p><p>$errors 是 Laravel 有錯誤時會附加到 View 的變數（可以用 Session::get(&lsquo;errors&rsquo;) 在 Controller 取得，這邊為了方便就直接在 View 設定）</p><p>而 e() 是 Laravel 的脫跳，可以把 HTML 等有危險的資變成一般字串顯示。類似於 htmlspecialchars() 的功能。</p><p>{% raw %}
+至於 Crsf 的部分我並沒有寫進去，因為我還不清楚 Laravel 的 Controller 中使用 Filter 如何使用，不然可以加上 {{ Form::token() }} 以及幫 Controller 加入 brefore filter 並且設定 crsf 來避免跨域的攻擊。
+{% endraw %}</p><p>好了，這篇文章就到這邊告一段落摟～</p><p>至於 Laravel 本身內建分頁跟使用者認證，是很方便的部分。也支援數種資料庫跟記憶體快取的實踐，除了 Cli 沒辦法幫忙產生 Controller/Model/View 的基本檔案有點可惜，不然其實很接近 Rails 的方便了～</p><p>（之前看到有人引用，說我的文章沒啥參考性但是可以不用看英文，超傷心，只好認真一點寫 XDD）</p><p>如果噴錯誤，請檢查一下是不是 :: 少打一個，我常常這樣噴錯誤又看不到錯誤訊息 XDD</p><p>Github Repo: <a href=https://github.com/elct9620/laravel-guestbook-example>https://Github.com/elct9620/laravel-guestbook-example</a></p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

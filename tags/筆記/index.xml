@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>筆記 on 弦而時習之</title><link>https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/</link><description>Recent content in 筆記 on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Sun, 04 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/index.xml" rel="self" type="application/rss+xml"/><item><title>快速閱讀頁遊 Unlight 開源後的原始碼</title><link>https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/</link><pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/</guid><description>&lt;p>最近一款有點年紀的頁遊 &lt;a href="https://zh.wikipedia.org/zh-tw/Unlight">Unlight&lt;/a> 在停止營運後幾年，突然公佈說要開放原始碼跟圖片素材。&lt;/p>
+&lt;p>這款遊戲嚴格說起來並沒有像我們熟悉的端遊、手遊之類的那樣華麗，但是非常有特色的人物設計跟對戰系統倒是讓很多玩家即使在好幾年後仍然在期待他能復活。&lt;/p>
+&lt;p>作為一個曾經的玩家，其實也是非常期待的，不過這次的開放原始碼路線大概是復活無望。不過從這幾天公開的資料來看，圖片、音效到客戶端和伺服端都公開的狀況下，還是很有希望被熱血的玩家復活的。&lt;/p>
+&lt;p>另一方面，既然伺服器是透過 Ruby 撰寫的，身為使用 Ruby 的開發者在遊戲類應用不常見的狀況下，能可以作為學習素材肯定是要看過一遍的。&lt;/p></description></item><item><title>Ruby 中 Constant 和 Class 的關係</title><link>https://blog.frost.tw/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/</link><pubDate>Tue, 18 Jun 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/</guid><description>&lt;p>下班前&lt;a href="https://kaochenlong.com/">龍哥&lt;/a>說在 Mailing List 看到了一段 Code 很有趣。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>
+&lt;span class="nb">p&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="c1">#=&amp;gt; #&amp;lt;Class:0x0000558d34f68b48&amp;gt;&lt;/span>
+&lt;span class="nb">p&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="c1">#=&amp;gt; nil&lt;/span>
+&lt;span class="n">B&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">a&lt;/span>
+&lt;span class="nb">p&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="c1">#=&amp;gt; &amp;#39;B&amp;#39;&lt;/span>
+&lt;span class="n">C&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">a&lt;/span>
+&lt;span class="nb">p&lt;/span> &lt;span class="n">C&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="c1">#=&amp;gt; &amp;#39;B&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>裡面 &lt;code>C = a&lt;/code> 到底發生了什麼事情，是很值得討論的，因為有了線索是 &lt;code>rb_const_set&lt;/code> 可以找到原因，所以就利用下班時間來讀看看這段。&lt;/p>
+&lt;blockquote>
+&lt;p>關於前面的用法可以參考之前寫過的&lt;a href="https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/">自由的 Ruby 類別&lt;/a>來了解原因。&lt;/p>
+&lt;/blockquote></description></item><item><title>你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？</title><link>https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/</link><pubDate>Mon, 14 Jan 2019 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/</guid><description>&lt;p>最近「台灣共識」很熱門，公司的粉專也分享了 Ruby 版的台灣共識。&lt;/p>
+&lt;p>我們在公司內部的群組大家其實討論了蠻久，如果只是單純的去實作跟其他語言一樣的內容，不就沒有意義了嗎？&lt;/p>
+&lt;p>我們之所以會選擇用 Ruby 來當作工作上的工具，就表示他有一些特別的地方吸引我們。&lt;/p>
+&lt;p>所以，上面用了哪些 Ruby 技巧讓我們一起來分析看看！&lt;/p></description></item><item><title>客製化你樹莓派上運行的 Linux</title><link>https://blog.frost.tw/posts/2018/10/09/Customize-a-linux-for-your-raspberrypi/</link><pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/10/09/Customize-a-linux-for-your-raspberrypi/</guid><description>&lt;p>最近因為手邊有一個工作以外的專案需要搭配硬體做一些 IoT 類型的應用，雖然之前在五倍紅寶石開發的 Tamashii 系列應用已經足以應對在這個專案上開發所需的解決方案，但是依舊缺少了一些功能。&lt;/p>
+&lt;p>也就是我們過去並沒有考慮到的，如果裝置是交給一般使用者的狀況下，如何在透過網路的前提將裝置更新。&lt;/p>
+&lt;p>這是很多硬體都會有的功能，但是就目前而言 Tamashii 並不支援。&lt;/p></description></item><item><title>我的 Chrome 會說話</title><link>https://blog.frost.tw/posts/2018/05/30/My-Chrome-can-speak/</link><pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/05/30/My-Chrome-can-speak/</guid><description>&lt;p>這是很多年前的事情了，當時看到別人的 Chrome 竟然會說話，讓我震驚了很久。但是花了很多年都沒有找到要怎麼做，不過最近因為一些關係，我終於知道了他的秘密！&lt;/p></description></item><item><title>如何在 2018 年被詐騙</title><link>https://blog.frost.tw/posts/2018/04/24/How-to-be-scammed-in-2018/</link><pubDate>Tue, 24 Apr 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/04/24/How-to-be-scammed-in-2018/</guid><description>&lt;p>這是關於某天晚上接到詐騙電話的分析，因為過程中太多細節的東西讓人掉入陷阱，跟同事聊過之後覺得還是寫一篇文章記錄會比較好，至少不會有人又踩到這樣的坑。&lt;/p>
+&lt;p>這篇文章重點也很簡單，&lt;strong>「不要以為你不會被騙」&lt;/strong>&lt;/p></description></item><item><title>使用 Turbolinks 時 Google Analytics 並沒有正確運作</title><link>https://blog.frost.tw/posts/2018/03/24/Google-Analytics-not-correct-when-using-turbolinks/</link><pubDate>Sat, 24 Mar 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/03/24/Google-Analytics-not-correct-when-using-turbolinks/</guid><description>&lt;p>最近因為在&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>配合同事做官網的 SEO 優化，比較常見的行銷工具像是 Google Analytics 之類的就一起拿出來玩。&lt;/p>
+&lt;p>實驗的對象首選當然是自己的網站，不過在調整的時候卻發現有一些情況有點異常。&lt;/p></description></item><item><title>Apartment 與 Globalize 隱藏在方便背後的陷阱</title><link>https://blog.frost.tw/posts/2018/03/18/The-easy-way-not-best-way-learn-from-Apartment-and-Globalize/</link><pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/03/18/The-easy-way-not-best-way-learn-from-Apartment-and-Globalize/</guid><description>&lt;p>手邊有一個專案剛好是需要滿足「多網站」並且每個網站都能夠「多語言切換」這兩個條件，在這兩個解決方案中最好處理的就是 Apartment 和 Globalize 這兩個 Ruby Gem 了。&lt;/p>
+&lt;p>不過，在某些情況卻變成了問題。幸好運氣不錯的是還在開發階段，還有辦法將這個問題透過替換 Gem 進行修正。&lt;/p></description></item><item><title>管理 Ruby on Rails 外部 Assets 的小技巧</title><link>https://blog.frost.tw/posts/2018/03/18/A-tips-for-manage-ruby-on-rails-s-vendor-assets/</link><pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/03/18/A-tips-for-manage-ruby-on-rails-s-vendor-assets/</guid><description>&lt;p>在工作的時候經常會需要套用一些佈景主題，主要大多是因為客戶還在 MVP (最小可行產品) 的階段，只需要可以表現其商業價值運作的系統即可。不過，如果我們依照 Ruby on Rails 預設的方式把外部的佈景相關檔案分類後放到 &lt;code>vendor/assets&lt;/code> 目錄下，反而會變得難以管理。&lt;/p></description></item><item><title>Ruby 中該如何 Raise 一個錯誤</title><link>https://blog.frost.tw/posts/2018/01/09/How-ruby-raise-an-error/</link><pubDate>Tue, 09 Jan 2018 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2018/01/09/How-ruby-raise-an-error/</guid><description>&lt;p>前幾天的晚上朋友在 Facebook 上問了一個問題。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">raise&lt;/span> &lt;span class="no">HTTPError&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Not Found&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>和&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">raise&lt;/span> &lt;span class="no">HTTPError&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Not Found&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>哪個比較快？也因為這樣，我們意外的發現 Ruby 對上面兩段程式碼的定義上其實是不太一樣的。&lt;/p></description></item><item><title>在 PostgreSQL 中使用遞迴查詢來找尋父節點</title><link>https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</link><pubDate>Mon, 23 Oct 2017 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2017/10/23/Use-PostgreSQL-s-recursive-query-to-find-ancestors/</guid><description>&lt;p>老爸的公司在去年設計了一個紅利積點的消費回饋機制，裡面採用了樹狀的結構。用來改善傳統多層次傳銷造成的下線提供好處給上線，而下線卻需要去找更多下線來獲取回饋的異常機制。&lt;/p>
+&lt;p>不過這個設計有一個問題，就是他比傳統的樹成長的速度還會再更快些。也就表示在 Rails 裡面現有用來解決樹狀結構的一些套件並不適合使用。&lt;/p></description></item><item><title>Deis 架構分析（二）</title><link>https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/</link><pubDate>Wed, 03 Feb 2016 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/</guid><description>&lt;p>延續&lt;a href="https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/">上一篇&lt;/a>的內容，這篇文章要先來討論比較好懂的 &lt;code>Router&lt;/code> 部分。&lt;/p>
+&lt;p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 &lt;code>Router&lt;/code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。&lt;/p>
+&lt;p>Deis 的原始碼都放在一起，其中 &lt;a href="https://github.com/deis/deis/tree/master/router">Router&lt;/a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！&lt;/p></description></item><item><title>微妙的 Unreal Engine 4 語言偵測機制</title><link>https://blog.frost.tw/posts/2016/02/02/unreal-engine-4-locale-detect-make-me-confuse/</link><pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2016/02/02/unreal-engine-4-locale-detect-make-me-confuse/</guid><description>&lt;p>最近因為我們團隊將&lt;a href="https://make.moe">遠古神話&lt;/a>上架到 Steam 上面的關係，收到不少歐美玩家表示需要英文語言的支援。
+其實這方面也是當初考慮不周的問題，也剛好碰到了國軍的過年年假有比較多的時間可以處理。&lt;/p>
+&lt;p>原本預期是一天之內就解決這個問題，不過現實上倒是花了不少額外的功夫去處理。
+這也是我們使用 Unreal Engine 4 一直以來的問題，雖然承襲了 UDK 眾多強大的功能，但是卻還未完全的成熟。
+從約兩到三個月就會改版一次，而且加入大量功能的情況來看，還有許多需要解決的問題。&lt;/p>
+&lt;blockquote>
+&lt;p>過去 Epic Games 自己使用也許沒什麼問題，但是當發布成一個工具的時候，就多了非常多細節要處理。&lt;/p>
+&lt;/blockquote></description></item><item><title>Deis 架構分析（一）</title><link>https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/</link><pubDate>Sun, 31 Jan 2016 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/</guid><description>&lt;p>最近隨著 Container 技術的成熟，以及 CoreOS 等工具的出現。開始有一些 PaaS 的工具出現，而 &lt;a href="https://deis.io">Deis&lt;/a> 就是其中一個。&lt;/p>
+&lt;p>Deis 本身是受到 &lt;a href="https://heroku.com">Heroku&lt;/a> 所啟發的開源 PaaS 專案，透過 Deis 可以輕鬆的建構 Heroku-like 的 PaaS 環境，若是有能夠管理伺服器的人員，其實可以考慮以這種方式部屬網站。相對 Heroku 來說，基本的 CoreOS Cluster 只要三台機器，以 Linode 2GB 的方案來看，甚至還比 Heroku 單個 2x dyno 還便宜呢！&lt;/p>
+&lt;p>關於 Deis 的架構，在官方的&lt;a href="https://docs.deis.io/en/latest/understanding_deis/architecture/">文件&lt;/a>已經有做出說明，所以這系列的文章著重在閱讀原始碼以及探討關於 Deis 是如何實踐 Heroku-like 的 PaaS 環境。&lt;/p>
+&lt;blockquote>
+&lt;p>我本身是 Heroku 的重度使用者，因為透過 git 管理以及豐富的 Addon 在開發時其實是非常方便的。
+不過有時候還是會受到一些限制，這時候 Deis 就提供了很大的幫助。不過這類 PaaS 工具其實還不能說非常成熟，使用上還是會有不少問題，透過了解底層的機制來建構一個自己的版本，在某些情境反而更加容易控制跟維護。&lt;/p>
+&lt;/blockquote></description></item><item><title>Heroku Cedar 14 - 用 Docker 客製化環境</title><link>https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/</link><pubDate>Tue, 16 Jun 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/</guid><description>&lt;p>最近 Heroku 推出了 &lt;a href="https://blog.Heroku.com/archives/2015/5/5/introducing_heroku_Docker_release_build_deploy_heroku_apps_with_docker">Docker 支援&lt;/a>，也因此我馬上就去試玩了這個功能。&lt;/p>
+&lt;p>這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。&lt;/p>
+&lt;p>文章大致上會涵蓋這些內容：&lt;/p>
+&lt;ul>
+&lt;li>Heroku Docker Plugin 的運作&lt;/li>
+&lt;li>建構客製化環境的 Dockerfile&lt;/li>
+&lt;li>利用 Docker 製作 Buildpacks&lt;/li>
+&lt;/ul></description></item><item><title>Unreal Engine 4 的自動化測試</title><link>https://blog.frost.tw/posts/2015/06/12/unreal-engine-4-automation-testing/</link><pubDate>Fri, 12 Jun 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/06/12/unreal-engine-4-automation-testing/</guid><description>&lt;p>最近幾年做測試似乎變成一個非常熱門的議題，而且也逐漸的被大多開發者了解到做測試的優點。不過，一般的軟體可以做測試倒是沒有什麼問題，那麼遊戲該怎麼做測試呢？&lt;/p>
+&lt;p>我自己認為這是一個很難探討的問題，大部份的遊戲就基於不確定性而變得有趣。在充滿不確定的情境下，要做測試就變得非常困難了。&lt;/p>
+&lt;p>不過，還是有像是基本的公式計算、數值檢查等等可以做基本的檢查，雖然無法完全的對遊玩上做完整的測試。但是至少可以確保功能上與數值上是以正確的數值做計算。&lt;/p>
+&lt;p>那麼，就來談談 Unreal Engien 4 的自動化測試工具 &lt;code>Automation Tools&lt;/code> 吧！&lt;/p></description></item><item><title>SDL 筆記：產生視窗與繪製圖像</title><link>https://blog.frost.tw/posts/2015/05/29/sdl-notes-create-window-and-draws-the-image/</link><pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/05/29/sdl-notes-create-window-and-draws-the-image/</guid><description>&lt;p>沒有想到最後還是走上了遊戲開發這條路，同學給我的影響真的很大，而且大家都有一個共同的目標和夢想的感覺很不錯。
+雖然讓我下定決心的是因為和同學在合作上太過於順利，讓我們不禁懷疑「正常的團隊運作是這樣嗎？」才讓我決定要跟他們一起做遊戲。&lt;/p>
+&lt;p>雖然現在有 Unity3D 跟我們團隊使用的 Unreal Engine 4 但是程式自學，又是受設計教育的我在技術上總是會差人一截，最好的方法莫過於從一些基礎的東西去練習，然後了解底層的運作方式。&lt;/p>
+&lt;blockquote>
+&lt;p>做 Web 的時候常常會有人在爭辯到底該先學 Framework 還是先學手刻網站這個問題，我認為是「成就感」跟「個人特質」的問題，以我自己來說我建立成就感的個人特質是「先有成果」所以就很適合從 Framework (Game Engine) 學起，當我熟練之後自然會想補足之前缺漏的知識（因此要看個性，有些人就是要 Hardcode 才能有成就感啊！）&lt;/p>
+&lt;/blockquote>
+&lt;p>知道 SDL 的時間點已經忘記了，印象中只記得國中的時候買過幾本遊戲開發的書卻因為讀不來而沒有繼續學下去。&lt;/p>
+&lt;blockquote>
+&lt;p>印象中 SDL 應該就是當時在書上看到的，不過書名實在想不起來。只知道是一本綠色封面的書，日本人寫的。&lt;/p>
+&lt;/blockquote>
+&lt;p>關於入門的學習 &lt;a href="https://www.willusher.io/pages/sdl2/">Willusher&lt;/a> 這個網站的 SDL 入門教學來開始學習，畢竟 SDL2 的文字教學（個人不是很喜歡看影片）似乎不好找，又充斥著 SDL(SDL1) 的教學有時候還挺混亂的！&lt;/p></description></item><item><title>mRuby on Web</title><link>https://blog.frost.tw/posts/2015/04/10/mruby-on-web/</link><pubDate>Fri, 10 Apr 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/04/10/mruby-on-web/</guid><description>&lt;p>忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。&lt;/p>
+&lt;p>最初是看到 &lt;a href="https://Github.com/xxuejie/webruby">WebRuby&lt;/a> 這個專案的應用 &lt;a href="https://joshnuss.github.io/mruby-web-irb/">Webirb&lt;/a> 才決定要挑戰將 mruby 丟到 Web 上面跑。&lt;/p>
+&lt;blockquote>
+&lt;p>其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。&lt;/p>
+&lt;/blockquote></description></item><item><title>Open Frameworks 與 MRuby</title><link>https://blog.frost.tw/posts/2015/02/18/open-frameworks-and-mruby/</link><pubDate>Wed, 18 Feb 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/02/18/open-frameworks-and-mruby/</guid><description>&lt;p>自從畢製開始與同學開發遊戲後，我就開始喜歡嘗試運用一些工具如 HTML5、Mono、Processing 等來製作一些屬於自己的「遊戲框架」&lt;/p>
+&lt;p>自從上次嘗試使用 Mono 與 MRuby 結合後，這次在與朋友的閒聊中回想起了 Open Frameworks 這套工具。
+Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來說比 Processing 改進不少，至少就我這幾天的體驗來看，以我目前的實力已經可以純熟運用了！&lt;/p>
+&lt;blockquote>
+&lt;p>過去曾有一段時間嘗試玩過，但是因為沒有 Project Generator 輔助建構專案，再加上與 C++ 其實不是那麼的熟悉，因而放棄。這次透過 Unreal Engine 的經驗，以及上次 MRuby 的整合讓我順利的開始使用 Open Frameworks。&lt;/p>
+&lt;/blockquote>
+&lt;p>這篇文章主要會分享我使用 Open Frameworks 開啟一個 Ruby 檔案，並且執行裡面的方法在介面中繪製圖像的做法。
+目前我認為這個方法其實還不太完善，不過作為初次的嘗試可以算是一個不錯的成果。&lt;/p></description></item><item><title>React.js + Parse 實做簡易留言板</title><link>https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/</link><pubDate>Wed, 18 Feb 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/</guid><description>&lt;p>前一陣子 SITCON 文創組冬季訓練最後一天，我安排了這個課程給我們的新成員。
+雖然 SITCON 文創組看似是個需要「技術」的團隊，不過現實上我們倒是花很多時間在思考跟設計上，沒辦法找到設計相關科系的新成員稍稍遺憾。&lt;/p>
+&lt;p>不過因為有製作網站的需求，因此安排了這個課程，透過學習 React.js 以及結合 Parse 去熟悉一些基本的前端技巧。&lt;/p>
+&lt;p>注意事項：&lt;/p>
+&lt;ol>
+&lt;li>文中的範例全部都以 CoffeeScript 撰寫&lt;/li>
+&lt;li>本文不會提及 Browserify 的配置與應用（當天有介紹過，練習時是使用我配置好的 gulp task）&lt;/li>
+&lt;li>這是在不考慮 UI/UX 以及美術的前提下製作的&lt;/li>
+&lt;li>文中不會解釋太多 React.js / Flux 的基本概念（請上官網 or ReactJS.tw 社團學習）&lt;/li>
+&lt;/ol>
+&lt;p>那麼，就開始吧！&lt;/p></description></item><item><title>Unreal Engine 4 - 用 C++ 自訂 Pawn 物件</title><link>https://blog.frost.tw/posts/2014/10/05/unreal-engine-4-using-cpp-customize-pawn-object/</link><pubDate>Sun, 05 Oct 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/10/05/unreal-engine-4-using-cpp-customize-pawn-object/</guid><description>&lt;p>雖然 MRuby in C# 系列暫時沒辦法繼續撰寫，但是 Unreal Engine 4 系列大概會在畢業製作完成之前，陸陸續續地以筆記的形式更新出來。&lt;/p>
+&lt;p>實際上，用 Unreal Engine 4 開發遊戲是不太需要用 C++ 來處理的，內建的 Blueprints 功能就具備非常優質的設計，也算是整個引擎中不論美術、程式都會經常接觸的功能。其特色就是人人都能懂，美術可以用來控制動畫、程式可以用來設計 AI 跟遊戲，上手的難度也非常低。&lt;/p>
+&lt;p>那麼，會遭遇使用 C++ 來處理的情況是什麼呢？&lt;/p>
+&lt;p>基本上可以分成兩種，第一種就是效能問題，目前還沒有碰過，不過以 C++ 撰寫的程式碼肯定會比較順暢（雖然我很懷疑 Blueprints 所編譯的成品就能產生接近 C++ 等級的效能）&lt;/p>
+&lt;p>第二種則是 Unreal Engine 初期沒有考慮到，或者還未支援的的部分。像是在 4.5 的 UMG (Unreal Motion Graphics) 功能推出之前，需要用到 Slate UI 來輔助建構遊戲界面，就勢必得用 C++ 才能解決。&lt;/p>
+&lt;p>總而言之，這篇文章在討論的就是第二種情況，我們需要的功能還未在 Unreal Engine 4 上面「好好的」運作。&lt;/p>
+&lt;p>註：程式結構太複雜這點，原本想算進去。不過因為 Blueprints 不論註解還是開 Functions 都能做到，很難用這點來說是一種缺點⋯⋯&lt;/p></description></item><item><title>MRuby in C# - 因 RPG Maker 的慘劇（二）</title><link>https://blog.frost.tw/posts/2014/09/28/mruby-in-csharp-the-tragedy-of-rpg-maker-2/</link><pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/09/28/mruby-in-csharp-the-tragedy-of-rpg-maker-2/</guid><description>&lt;p>前一篇文章討論了關於 C# 執行一段 Ruby 程式碼並且取得執行結果（字串）的做法。
+不過，光是這樣在 C# 使用 MRuby 的意義並不大，我們需要結合 Ruby 的 DSL 特性，讓自製的 RPG Maker 可以更加簡單的被用於製作遊戲（最終目的）&lt;/p>
+&lt;p>也因此，我們需要能夠讓 C# 中的一些 API 可以在 Ruby 中被呼叫以及使用。
+那麼，能夠從 C# 定義 Ruby 的 Module / Class 和 Method 就非常的重要，因為如果無法這樣做，那麼就無法讓 Ruby 執行 C# 的程式碼。&lt;/p></description></item><item><title>MRuby in C# - 因 RPG Maker 的慘劇（一）</title><link>https://blog.frost.tw/posts/2014/09/04/mruby-in-csharp-the-tragedy-of-rpg-maker-1/</link><pubDate>Thu, 04 Sep 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/09/04/mruby-in-csharp-the-tragedy-of-rpg-maker-1/</guid><description>&lt;p>最近看到朋友提起 RPG Maker 又勾起我在 Mac 上使用 RPG Maker 的野心，雖然之前用 Wine 順利跑了起來，不過既然能寫 Ruby 當然要用各種奇怪的方式去玩弄。&lt;/p>
+&lt;p>結果，當我發現內建的 Library 要做到我想做的事情很困難的時候，腦抽的我決定自己做一個！&lt;/p>
+&lt;p>不過，這年頭不跨平台其實還蠻空虛的，所以就從能夠跨平台來做選擇，至於為何會選 Mono 和 C# 大概就是受到 Unity3D 跟 Unreal Engine 4 兩個目前都是非常有名的遊戲引擎影響吧！
+（上述兩個引擎都有使用 Mono 來協助實踐跨平台的功能）&lt;/p></description></item><item><title>Capistrano to Vagrant 自動部署心得</title><link>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</link><pubDate>Mon, 24 Mar 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/</guid><description>&lt;p>之前寫過一篇關於 &lt;a href="https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/">Vagrant + Capistrano + GitLab&lt;/a> 的自動化部署介紹。&lt;/p>
+&lt;p>不過當時因為一些問題，卡著沒有繼續完成測試。
+最近因為某些原因，需要一個 Nightly-like (不一定會每日更新，取決于 commit) 的環境，所以只好硬著頭皮把全部的問題解決了⋯⋯&lt;/p></description></item><item><title>Travis CI 的 Deploy 功能</title><link>https://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/</link><pubDate>Tue, 25 Feb 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/02/25/travis-ci-the-deploy-features/</guid><description>&lt;p>最近收到一個 Issue 是關於我製作的 &lt;a href="https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon">Heroku Buildpacks&lt;/a> 有問題，沒辦法使用 Travis CI 的 Deploy 功能。&lt;/p>
+&lt;p>因為寫 Test 的習慣養成挺困難的，再加上獨自開發與大多是半遊玩性質的關係，其實幾乎沒有使用 Travis CI 的習慣，不過這次因為這個 Issue 我稍微研究了 Travis CI 的功能以及 Deploy 功能。&lt;/p>
+&lt;p>這算是一個很方便的功能，尤其是網站專案來說，如果在 Deploy 後馬上就發生問題，也是非常不方便。那麼，一般 Git 的專案來說，我們通常都是直接進行 Deploy 即使在本機事先做過一次測試，但是總是會有忘記的時候。&lt;/p>
+&lt;p>此時，透過持續整合服務的自動 Deploy 功能來協助，就可以在確保所有測試都沒問題的狀況下才進行 Deploy 也比較能夠自動化。&lt;/p></description></item><item><title>用 Vagrant 整合 GitLab 與 Capistrano 做 Staging 環境自動部署</title><link>https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/</link><pubDate>Sun, 03 Nov 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/</guid><description>&lt;p>&lt;!-- raw HTML omitted -->這標題超級長的說（崩潰&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>最近因為有實習生要來，所以把老爸公司設定好 GitLab 和 Gitlba-CI 來作為內部的版本本控制和自動化測試環境。
+不過原本規劃的 Staging 環境也是在這檯主機上（當初就很淡定把記憶體和處理器加高，因為我會狂開 VM XD）但是會有 SSH 權限上的問題，原本想利用 Git 的 Hook 之類的來處理，但是感覺似乎不太好。&lt;/p>
+&lt;p>剛好這次看到 GitLab / GitLab-CI 的介紹文，我又再次嘗試安裝，過程上順利、簡單很多。
+不過上次不順利肯定是我把整個環境裝在 NAS 裡面的關係 XDD&lt;/p>
+&lt;p>從我建好 GitLab / GitLab-CI 到設定 Capistrano 到自動部署，其實花費不少時間，而且有很多「差點忘記」的部分，因此決定來寫一篇文章做筆記！&lt;/p></description></item></channel></rss>

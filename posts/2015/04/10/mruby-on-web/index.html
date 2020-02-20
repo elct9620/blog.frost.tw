@@ -1,0 +1,167 @@
+<!doctype html><html lang=zh-tw><head><title>mRuby on Web - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。
+最初是看到 WebRuby 這個專案的應用 Webirb 才決定要挑戰將 mruby 丟到 Web 上面跑。
+ 其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。"><meta name=created content="2015-04-10T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="mRuby on Web"><meta property="og:url" content="https://blog.frost.tw/posts/2015/04/10/mruby-on-web/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2015/04/10/mruby-on-web/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"mRuby on Web","datePublished":"2015-04-10T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2015/04/10/mruby-on-web/","description":"忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。\n最初是看到 WebRuby 這個專案的應用 Webirb 才決定要挑戰將 mruby 丟到 Web 上面跑。\n 其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。\n","keywords":["Ruby","心得","筆記","MRuby"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2015\/04\/10\/mruby-on-web\/","name":"mRuby on Web"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.10</time><h1 class=article__title>mRuby on Web</h1></header><div class=article__entry><nav class=translation></nav><p>忙裡偷閒玩了一下 Emscripten 將 mRuby 拉到 Web 上面運行。</p><p>最初是看到 <a href=https://Github.com/xxuejie/webruby>WebRuby</a> 這個專案的應用 <a href=https://joshnuss.github.io/mruby-web-irb/>Webirb</a> 才決定要挑戰將 mruby 丟到 Web 上面跑。</p><blockquote><p>其實這個過程中 WebRuby 給我很多參考方向，才讓我得以順利完成 mruby on Web 的挑戰。</p></blockquote><p>在兩年前（2013）的 JSDC 上，我首次得知了 <a href=https://asmjs.org>ASM.js</a> 跟 <a href=https://emscripten.org>Emscripten</a> 這兩個專案，當時只知道是一個可以把 C/C++ 的運行效能帶到 Web 上的專案，卻不得其門而入。</p><p>不過最近再次回想起來，重新閱讀了一次 Emscripten 的文件後終於瞭解到入門的基礎用法。</p><blockquote><p>也許是兩年前的英文程度不好吧，或者當時因為沒有接觸太多 C/C++ 因此無法理解其深意。</p></blockquote><p>總而言之，在學會使用 Emscripten 的同時，我最想拉到網頁上的就是 mRuby 了（作為第一次跟 C/C++ 整合的語言，讓我很興奮，另外 Ruby 也是我目前最喜歡的語言 XD）</p><h4 id=安裝-emscripten>安裝 Emscripten</h4><p>基本上依照官網的<a href=https://kripken.Github.io/emscripten-site/docs/getting_started/downloads.html>安裝教學</a>應該就可以很順利的完成安裝。</p><p>我自己是放在 <code>~/Workspace/Emscripten</code> 下面，要使用的時候就先跑一次 <code>source ./emSDK_env.sh</code> 來讓 <code>emcc</code> 等指令可以使用。</p><blockquote><p>SDK 的設計並不是很好，所以一定得在 SDK 目錄下跑 <code>source</code> 指令</p></blockquote><h4 id=目錄結構>目錄結構</h4><p>單純是我習慣的配置，如果大家有自己的習慣可以修改。</p><ul><li>mRuby.js<ul><li>mRuby/ - 原始碼</li><li>build/ - 輸出檔案<ul><li>src/ - mRuby 的 <code>.o</code> 檔案<ul><li>gems/ Gem 的 <code>.o</code> 檔案</li></ul></li><li>dest/ 輸出的 <code>.html</code> <code>.js</code> 檔案</li></ul></li><li>mrbjs.c - 應用 mRuby 的 c 檔案（ main ）</li><li>Makefile</li></ul></li></ul><h4 id=取得-mruby>取得 mRuby</h4><p>mRuby 是輕量的 ruby 套件，編譯完成的 <code>mruby.js</code> 加上一些預設的 gems （像是 <code>puts</code> 等支援）大約才 1.3 MB 左右，算是還在接受的範圍內。</p><p>首先，先把 mRuby 的原始碼下載下來。</p><blockquote><p>git clone <a href=mailto:git@Github.com>git@Github.com</a>:mRuby/mruby.git</p></blockquote><p>獲得原始碼後，我們需要配置一下 <code>build_config.rb</code> 這個檔案，加入名為 <code>emscripten</code> 的編譯器 toolchain 來產生可供網頁使用的版本。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># 略</span>
+
+<span class=c1># 以下配置是參考 WebRuby 的配置</span>
+<span class=no>MRuby</span><span class=o>::</span><span class=no>Toolchain</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=ss>:emscripten</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>conf</span><span class=o>|</span> <span class=c1># 定義 Toolchain: emscripten</span>
+  <span class=n>toolchain</span> <span class=ss>:clang</span> <span class=c1># 從 clang 的 toolchain 繼承配置</span>
+
+  <span class=n>conf</span><span class=o>.</span><span class=n>cc</span> <span class=k>do</span> <span class=o>|</span><span class=n>cc</span><span class=o>|</span> <span class=c1># 修改編譯設定</span>
+    <span class=n>cc</span><span class=o>.</span><span class=n>command</span> <span class=o>=</span> <span class=s2>&#34;</span><span class=s2>emcc</span><span class=s2>&#34;</span> <span class=c1># 將原本的 cc 改為 emscripten 的 emcc</span>
+    <span class=n>cc</span><span class=o>.</span><span class=n>flags</span><span class=o>.</span><span class=n>push</span><span class=p>(</span><span class=sx>%w(</span><span class=sx>-Wall -Werror-implicit-function-declaration -Wno-warn-absolute-paths -O0</span><span class=sx>)</span><span class=p>)</span> <span class=c1># 增加編譯的 flag</span>
+  <span class=k>end</span>
+
+	<span class=c1># 其他編譯選項的配置</span>
+  <span class=n>conf</span><span class=o>.</span><span class=n>cxx</span><span class=o>.</span><span class=n>command</span> <span class=o>=</span> <span class=s2>&#34;</span><span class=s2>emcc</span><span class=s2>&#34;</span>
+  <span class=n>conf</span><span class=o>.</span><span class=n>linker</span><span class=o>.</span><span class=n>command</span> <span class=o>=</span> <span class=s2>&#34;</span><span class=s2>emcc</span><span class=s2>&#34;</span>
+  <span class=n>conf</span><span class=o>.</span><span class=n>archiver</span><span class=o>.</span><span class=n>command</span> <span class=o>=</span> <span class=s2>&#34;</span><span class=s2>emar</span><span class=s2>&#34;</span>
+<span class=k>end</span>
+
+<span class=no>MRuby</span><span class=o>::</span><span class=no>CrossBuild</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>emscripten</span><span class=s2>&#34;</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>conf</span><span class=o>|</span> <span class=c1># 增加 MRuby 編譯任務（跨平台類型的編譯）</span>
+  <span class=n>toolchain</span> <span class=ss>:emscripten</span> <span class=c1># 使用 Emscripten 編譯</span>
+
+  <span class=n>conf</span><span class=o>.</span><span class=n>build_dir</span> <span class=o>=</span> <span class=no>File</span><span class=o>.</span><span class=n>expand_path</span><span class=p>(</span><span class=s1>&#39;build/emscripten&#39;</span><span class=p>)</span> <span class=c1># 設定編譯完成後檔案輸出位置</span>
+  <span class=n>conf</span><span class=o>.</span><span class=n>gembox</span> <span class=s1>&#39;default&#39;</span> <span class=c1># 選擇要一同編譯的 gem （Default 會包括 Ruby 預設的基本 Class 和 Method 在裡面）</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>完成之後運行 <code>rake</code> 指令就會自動編譯完成，此時理論上要在 <code>build/emscripten</code> 目錄看到編譯完成的 static library 等檔案。</p><blockquote><p>這邊要注意的是 <code>cc.flags.push</code> 項目加入了 <code>-O0</code> 這個 flag 之後會說明為什麼會使用 <code>-O0</code></p></blockquote><h4 id=mrbjsc>mrbjs.c</h4><p>這邊寫一個簡單的 C 去呼叫 mRuby 執行一段 Ruby Code 後續的應用就交給大家想像了～</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=cp>#</span><span class=cp>include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span><span class=cp></span>
+<span class=cp>#</span><span class=cp>ifdef __EMSCRIPTEN__</span><span class=cp>
+</span><span class=cp></span><span class=cp>#</span><span class=cp>include</span> <span class=cpf>&lt;emscripten.h&gt;</span><span class=cp>
+</span><span class=cp></span><span class=cp>#</span><span class=cp>endif</span><span class=cp>
+</span><span class=cp></span>
+<span class=cp>#</span><span class=cp>include</span> <span class=cpf>&#34;mRuby.h&#34;</span><span class=cp>
+</span><span class=cp></span><span class=cp>#</span><span class=cp>include</span> <span class=cpf>&#34;mRuby/compile.h&#34;</span><span class=cp>
+</span><span class=cp></span><span class=cp>#</span><span class=cp>include</span> <span class=cpf>&#34;mRuby/string.h&#34;</span><span class=cp>
+</span><span class=cp></span>
+<span class=kt>void</span> <span class=nf>run</span><span class=p>(</span><span class=n>mrb_state</span><span class=o>*</span> <span class=n>mrb</span><span class=p>,</span> <span class=k>const</span> <span class=kt>char</span><span class=o>*</span> <span class=n>code</span><span class=p>)</span> <span class=p>{</span>
+
+  <span class=n>mrb_value</span> <span class=n>result</span> <span class=o>=</span> <span class=n>mrb_load_string</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=n>code</span><span class=p>)</span><span class=p>;</span>
+
+  <span class=k>const</span> <span class=kt>char</span><span class=o>*</span> <span class=n>return_str</span><span class=p>;</span>
+
+  <span class=k>if</span><span class=p>(</span><span class=n>mrb</span><span class=o>-</span><span class=o>&gt;</span><span class=n>exc</span><span class=p>)</span> <span class=p>{</span>
+    <span class=n>return_str</span> <span class=o>=</span> <span class=n>mrb_string_value_ptr</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=n>mrb_obj_as_string</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=n>mrb_obj_value</span><span class=p>(</span><span class=n>mrb</span><span class=o>-</span><span class=o>&gt;</span><span class=n>exc</span><span class=p>)</span><span class=p>)</span><span class=p>)</span><span class=p>;</span>
+    <span class=n>printf</span><span class=p>(</span><span class=sa></span><span class=s>&#34;</span><span class=s>%s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>return_str</span><span class=p>)</span><span class=p>;</span>
+  <span class=p>}</span>
+
+<span class=p>}</span>
+
+<span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=kt>char</span><span class=o>*</span><span class=o>*</span> <span class=n>argv</span><span class=p>)</span> <span class=p>{</span>
+  <span class=n>mrb_state</span><span class=o>*</span> <span class=n>mrb</span> <span class=o>=</span> <span class=n>mrb_open</span><span class=p>(</span><span class=p>)</span><span class=p>;</span>
+  <span class=n>webmrb_run</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=sa></span><span class=s>&#34;</span><span class=s>puts </span><span class=se>\&#34;</span><span class=s>Hello World</span><span class=se>\&#34;</span><span class=s>&#34;</span><span class=p>)</span><span class=p>;</span>
+  <span class=n>mrb_close</span><span class=p>(</span><span class=n>mrb</span><span class=p>)</span><span class=p>;</span>
+  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=makefile>Makefile</h4><p>因為指令挺繁瑣的，所以就臨時抱佛腳看了一下 <a href=https://www.ruanyifeng.com/blog/2015/02/make.html>Make 命令教程</a>這篇讓我印象深刻的教學（清楚簡單的說明用法，個人很喜歡）學了基本的 Makefile 撰寫方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-makefile data-lang=makefile><span class=nv>MRB_SRC</span><span class=o>=</span>mRuby/build/emscripten
+<span class=nv>MRB_O</span><span class=o>=</span><span class=k>$(</span>MRB_SRC<span class=k>)</span>/src/*.o
+<span class=nv>MRBLIB_O</span><span class=o>=</span><span class=k>$(</span>MRB_SRC<span class=k>)</span>/mrblib/*.o
+<span class=nv>GEMS</span><span class=o>=</span><span class=k>$(</span>MRB_SRC<span class=k>)</span>/mrbgems <span class=c1># Gems 比較特別，另外就是我找不到好方法可以 Nested 的複製 .o 檔案（有人知道請告訴我）</span>
+
+<span class=nf>.PONHY</span><span class=o>:</span> <span class=n>build</span> <span class=n>mrbsrc</span> <span class=n>clean</span> <span class=n>gems</span> <span class=n>init</span>
+
+<span class=nf>init</span><span class=o>:</span>
+  mkdir build
+  mkdir build/src
+  mkdir build/dest
+
+<span class=nf>build</span><span class=o>:</span> <span class=n>init</span> <span class=n>mrbsrc</span> <span class=n>gems</span> <span class=n>mrbjs</span>.<span class=n>o</span>
+	emcc ./build/src/*.o ./build/src/gems/*.o ./build/src/gems/**/*.o ./build/src/gems/**/src/*.o -o build/dest/mrbjs.html -O2 --memory-init-file 0
+
+<span class=nf>mrbjs.o</span><span class=o>:</span> <span class=n>mrbjs</span>.<span class=n>c</span>
+  emcc mrbjs.c -I mRuby/include -o ./build/src/mrbjs.o -O2  -Wall -Werror-implicit-function-declaration  -Wno-warn-absolute-paths
+
+<span class=nf>mrbsrc</span><span class=o>:</span>
+  cp <span class=k>$(</span>MRB_O<span class=k>)</span> build/src
+  cp <span class=k>$(</span>MRBLIB_O<span class=k>)</span> build/src
+
+<span class=nf>gems</span><span class=o>:</span>
+  cp -r <span class=k>$(</span>GEMS<span class=k>)</span> build/src/gems
+
+<span class=nf>clean</span><span class=o>:</span>
+  rm -rf build/*
+
+</code></pre></td></tr></table></div></div><p>之後運行 <code>make build</code> 就可以在 <code>build/dest</code> 目錄看到 <code>mrbjs.html</code> 這個檔案，開啟後如果正常運作就會看到出現 <code>Hello World</code> 的字樣在畫面上。</p><blockquote><p>我想大家可能會發現 <code>-O2</code> 這個 flag，跟前面的 <code>-O0</code> 又有什麼關係呢？後面的 FAQ 會解釋這個問題。</p></blockquote><h4 id=faq>FAQ</h4><p><strong>Q: <code>-O0</code> 跟 <code>-O2</code> 到底是什麼？</strong></p><p>這是 Emscripten 的 Optimize 設定項目，詳細可以參考 <a href=https://kripken.Github.io/emscripten-site/docs/optimizing/Optimizing-Code.html>Emscripten - Optimizing Code</a> 這個頁面。</p><p>前面在編譯 mRuby 的時候會使用 <code>-O0</code> （不優化）是因為 <code>nested structs</code> 的<a href=https://Github.com/kripken/emscripten/issues/2238>展開問題</a>。不過我去追 Google 的 PNaCI 關於這個的討論串，似乎已經在去年年底解決了（Emscripten 專案何時支援還不確定）</p><p>簡單說用了 <code>-O2</code> (release suggest) 的優化，在編譯的時候（產生 html/js）就會發生錯誤。</p><blockquote><p>個人認為這是 mRuby on Web 的效能貧頸，經過我自己簡單的 Benchmark ( <code>(1...10000).each { |i| i }</code> ) 在網頁上跑大概需要花 29ms ~ 33ms 但是一般的 Ruby 可以在 0.5ms 內完成，速度上差了快一百倍。
+不過我也很樂見在 <code>-O2</code> 支援的同時這個問題理論上會被解決掉，因為能使用 <code>asm.js</code> 的加速，還有 Emscripten 的優化，照理說不應該慢到哪裡去（目前的問題應該在 libmRuby 太慢）</p></blockquote><p><strong>Q: <code>--memory-file-init</code> 是什麼？</strong></p><p>個人推測是預先將一些靜態的結果先產生好，在執行時直接運行結果而非動態執行的設定，在這邊會設定為 0（關閉）是因為在 <code>WebRuby</code> 中有註解提及這會讓網站卡住，如果有興趣的話可以取消這個設定運行看看是否能正常運行。</p><h4 id=小結>小結</h4><p>我距離土炮 RPG Maker 又更進一步了，雖然試了很多方法果然還是在 Web 上覺得最舒適啊 XD
+（Emscripten 已經做好 SDL 的 Port 可以說是一大福音啊～～）</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/>筆記</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/MRuby/>MRuby</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

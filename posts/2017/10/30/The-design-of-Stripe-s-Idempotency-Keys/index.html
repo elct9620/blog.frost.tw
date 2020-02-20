@@ -1,0 +1,115 @@
+<!doctype html><html lang=zh-tw><head><title>Stripe 的 Idempotency Key 設計機制 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="週末看到一篇 Stripe 工程師所寫的文章，是一篇關於 Idempotency Key （幂等鍵）的設計機制。因為是一篇非常棒的文章，而且裡面的概念除了可以應用在 API 設計之外，很多程式設計上需要解決的問題都可以透過這個概念來處理。
+原文非常的長而且很詳細，這篇文章只會做簡單的重點整理。
+有興趣的話可以打開原文來讀，是一篇很有用的文 …"><meta name=created content="2017-10-30T00:00:00+0000"><meta name=modified content="2017-10-30T22:46:43+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="Stripe 的 Idempotency Key 設計機制"><meta property="og:url" content="https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"Stripe 的 Idempotency Key 設計機制","datePublished":"2017-10-30T00:00:00Z","dateModified":"2017-10-30T22:46:43Z","url":"https://blog.frost.tw/posts/2017/10/30/The-design-of-Stripe-s-Idempotency-Keys/","description":"週末看到一篇 Stripe 工程師所寫的文章，是一篇關於 Idempotency Key （幂等鍵）的設計機制。因為是一篇非常棒的文章，而且裡面的概念除了可以應用在 API 設計之外，很多程式設計上需要解決的問題都可以透過這個概念來處理。\n原文非常的長而且很詳細，這篇文章只會做簡單的重點整理。\n有興趣的話可以打開原文來讀，是一篇很有用的文 …\n","keywords":["Ruby","API","心得"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2017\/10\/30\/The-design-of-Stripe-s-Idempotency-Keys\/","name":"Stripe 的 Idempotency Key 設計機制"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2017-10-30T22:46:43+0000 class=article__time--header>Feb.30</time><h1 class=article__title>Stripe 的 Idempotency Key 設計機制</h1></header><div class=article__entry><nav class=translation></nav><p>週末看到一篇 Stripe 工程師所寫的文章，是一篇關於 Idempotency Key （幂等鍵）的設計機制。因為是一篇非常棒的文章，而且裡面的概念除了可以應用在 API 設計之外，很多程式設計上需要解決的問題都可以透過這個概念來處理。</p><p>原文非常的長而且很詳細，這篇文章只會做簡單的重點整理。</p><p>有興趣的話可以打開<a href=https://brandur.org/idempotency-keys>原文</a>來讀，是一篇很有用的文章。</p><blockquote><p>作者是很厲害的工程師，部落格上的文章都是非常精實的技術文。</p></blockquote><p>在 API 的設計中，我們可能會遭遇到一些問題而讓操作失敗。像是<code>網路連線中斷</code>、<code>第三方服務異常</code>等等情況，此時就會需要客戶端進行重新嘗試的動作。</p><p>不過，如果是類似於 Stripe 這類金流服務，我們就不得不重視「重新呼叫」的問題，也就是「如果重複扣款」該怎麼處理，這就是 Idempotency Key 機制的由來。</p><blockquote><p>目前中文對「Idempotency Key 」是叫做幂等鍵，而 Stripe 表示這是他們自己發明的詞，所以後面都以原文稱呼。</p></blockquote><h2 id=idempotency-key--是什麼>Idempotency Key 是什麼？</h2><p>所以 Idempotency Key 到底是什麼？簡單來說就是一種類似於 ID 的機制，用來區分某個 API 請求是同一個。</p><p>像是下面這個 API 請求，就會帶有 Idempotency Key 的 Header 來表示是哪個請求。</p><blockquote><p>POST /api/chargs
+&mldr;
+Idempotency-Key: 0ccb7813-e63d-4377-93c5-476cb93038f3
+&mldr;
+amount=100&currency=TWD</p></blockquote><p>同時，也會透過驗證傳入的 <code>amount</code> 和 <code>currency</code> 等「參數」來確保同一個 API 請求的內容是完全相同的。</p><h2 id=實際應用>實際應用</h2><p><a href=https://brandur.org/idempotency-keys>原文</a>中用「火箭背包版 Uber」的範例專案來實作，在 Stripe 的 Github 上面可以找到原始碼。</p><p>這個 App 會在你發射火箭後向你收費，中間會有幾個步驟。</p><ul><li>產生駕駛紀錄</li><li>向 Stripe 呼叫收費 API</li><li>更新駕駛紀錄</li><li>透過 Mailgun 發送收據</li></ul><p>加入 Idempotency Key 機制之後，則會轉變成這樣。</p><ul><li>產生 Idempotency Key</li><li>產生駕駛紀錄</li><li>產生「駕駛紀錄產生」的操作記錄</li><li>向 Stripe 呼叫收費 API</li><li>更新駕駛紀錄</li><li>透過 Mailgun 發送收據</li><li>更新 Idempotency Keys</li></ul><p>看起來多了一些東西，但是這些的影響是怎樣的呢？</p><blockquote><p>原文有繪製成圖片，對照的時候會比較方便。</p></blockquote><h3 id=idempotency-key>Idempotency Key</h3><p>首先，我們需要一個 Idempotency Keys 表來紀錄最近的 API 操作。</p><table><thead><tr><th>Column</th><th>Type</th></tr></thead><tbody><tr><td><strong>idempotency_key</strong></td><td>TEXT (max length &lt;= 100)</td></tr><tr><td><strong>locked_at</strong></td><td>datetime</td></tr><tr><td></td><td></td></tr><tr><td><strong>request_method</strong></td><td>TEXT (max length &lt;= 100)</td></tr><tr><td><strong>request_params</strong></td><td>JSONB</td></tr><tr><td><strong>request_path</strong></td><td>TEXT (max length &lt;= 100)</td></tr><tr><td></td><td></td></tr><tr><td><strong>response_code</strong></td><td>INTEGER</td></tr><tr><td><strong>response_body</strong></td><td>JSONB</td></tr><tr><td><strong>recovery_point</strong></td><td>TEXT (max length &lt;= 100)</td></tr><tr><td><strong>user_id</strong></td><td>BIGINT</td></tr></tbody></table><blockquote><p>UNIQUE INDEX (idempotency_key, user_ud)</p></blockquote><p>PS. 上面只列了比較重要的欄位。</p><p>首先，我們要確定我們有一組 Key 他可能是 UUID 或者其他形式，因為是跟 <code>user_id</code> 綁定在一起的，所以實際上交給 Client 生成似乎也不影響 API 的操作。</p><p>接下來我們要儲存這次 API 操作的完整資訊，這是用來<strong>確認是相同 API 操作</strong>的保護機制。</p><p>最後是在這個 API 操作完成後，不論成功失敗都紀錄操作的結果。如果再次收到相同的 API 查詢時，我們可以回復完全樣的結果給這個呼叫者，達到快取的效果。</p><p>比較特別的是 <code>recovery_point</code> 這個欄位，為什麼會有這個欄位呢？</p><p>因為在前面我們可能會在 Stripe 扣款或者 Mailgun 發信時發生錯誤，此時就可以讓 API 從這一個操作步驟重新開始，而不會影響到原本已經成功地操作。</p><blockquote><p>原文裡面有提到資料庫的原子性，而這個就是為了讓我們的 API 也擁有原子性。</p></blockquote><h3 id=其他資料表>其他資料表</h3><p>主角 Idempotency Keys 介紹完之後，還有像是騎乘資料表、操作紀錄等等，就不另外介紹。</p><p>只是需要注意的是，被操作的「騎乘紀錄」表中，會對應某一個 Idempotency Key 來提供查詢，畢竟不一定是每一次的 API 操作都是一次性成功的，此時就要透過這個 Idempotency Key 來找回正在操作的騎乘紀錄。</p><blockquote><p>反過來說，如果資料表上的 Idempotency Key 是有值得狀況下，就代表有其他人正在操作。也可以被視為一種「上鎖」的機制。</p></blockquote><h2 id=原子操作>原子操作</h2><p>原作提供了一個方法的實作，來輔助每一個原子操作。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>atomic_phase</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
+  <span class=n>error</span> <span class=o>=</span> <span class=kp>false</span>
+  <span class=k>begin</span>
+    <span class=no>DB</span><span class=o>.</span><span class=n>transaction</span><span class=p>(</span><span class=ss>isolation</span><span class=p>:</span> <span class=ss>:serializable</span><span class=p>)</span> <span class=k>do</span>
+      <span class=n>ret</span> <span class=o>=</span> <span class=n>block</span><span class=o>.</span><span class=n>call</span>
+      <span class=c1># 根據 block 傳回值產生回應</span>
+    <span class=k>end</span>
+  <span class=k>rescue</span>
+     <span class=n>error</span> <span class=o>=</span> <span class=kp>true</span>
+    <span class=c1># 處理各種錯誤</span>
+  <span class=k>ensure</span>
+      <span class=k>if</span> <span class=n>error</span> <span class=o>&amp;&amp;</span> <span class=n>key</span><span class=o>.</span><span class=n>present?</span>
+        <span class=k>begin</span>
+          <span class=n>key</span><span class=o>.</span><span class=n>update</span><span class=p>(</span><span class=ss>locked_at</span><span class=p>:</span> <span class=kp>nil</span><span class=p>)</span>
+          <span class=c1># 操作失敗，解鎖</span>
+        <span class=k>rescue</span>
+          <span class=c1># 無法解鎖（記錄到 Log 中）</span>
+        <span class=k>end</span> 
+      <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>原文中定義了三種回應：</p><ul><li>NoOp - 不做事（初次產生）</li><li>RecoveryPoint - 更新紀錄點（原子操作成功）</li><li>Response - 回應（API 操作完全成功）</li></ul><h3 id=idempotency-key-初始化>Idempotency Key 初始化</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>key</span> <span class=o>=</span> <span class=kp>nil</span>
+<span class=n>atomic_phase</span><span class=p>(</span><span class=n>key</span><span class=p>)</span> <span class=k>do</span>
+  <span class=n>key</span> <span class=o>=</span> <span class=no>IdempotencyKey</span><span class=o>.</span><span class=n>find_by</span><span class=p>(</span><span class=ss>user_id</span><span class=p>:</span> <span class=n>current_user</span><span class=o>.</span><span class=n>id</span><span class=p>,</span> <span class=ss>idempotency_key</span><span class=p>:</span> <span class=n>params</span><span class=o>[</span><span class=ss>:key</span><span class=o>]</span><span class=p>)</span>
+  
+  <span class=k>if</span> <span class=n>key</span>
+    <span class=c1># 1. 檢查 params 是否一致</span>
+    <span class=c1># 2. 檢查上鎖時間是否超時（時間內回傳操作中錯誤）</span>
+    <span class=c1># 3. 操作如果未完成，更新上鎖時間</span>
+  <span class=k>else</span>
+    <span class=c1># 產生新的 Idempotency Key</span>
+    <span class=c1># `locked_at` 是現在時間（因為是馬上開始操作，所以立刻上鎖）</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>透過上述的程式碼，我們可以產生出一把需要使用的 key 供我們使用。並且在每次 API 呼叫時，確保上一次的 API 操作不會被影響，而運行過久的時候又可以透過從客戶端的 API 重新請求延續原本的操作直到完成。</p><h3 id=後續操作>後續操作</h3><p>有了初始的 Idempotency Key 之後，就可以繼續把後面的 API 行為完成。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=kp>loop</span> <span class=k>do</span>
+  <span class=k>case</span> <span class=n>key</span><span class=o>.</span><span class=n>recovery_point</span>
+  <span class=k>when</span> <span class=no>RECOVER_POINT_START</span>
+    <span class=n>atomic_phase</span><span class=p>(</span><span class=n>key</span><span class=p>)</span> <span class=k>do</span>
+      <span class=c1># ...</span>
+    <span class=k>end</span>
+  <span class=k>when</span> <span class=no>RECOVERY_POINT_RIDE_CREATED</span>
+    <span class=n>atomic_phase</span><span class=p>(</span><span class=n>key</span><span class=p>)</span> <span class=k>do</span>
+      <span class=c1># ...</span>
+    <span class=k>end</span>
+  <span class=k>when</span> <span class=no>RECOVERY_POINT_FINISHED</span>
+    <span class=k>break</span>
+  <span class=c1>#...</span>
+  <span class=k>else</span>
+    <span class=c1># 未知的 RecoveryPoint 丟出錯誤</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=c1># 回傳結果</span>
+</code></pre></td></tr></table></div></div><p>如此一來，我們就可以將每一個 API 的細部操作都切割成一個「原子」並且建構一個可恢復並且繼續運行的 API 了。</p><h2 id=總結>總結</h2><p>這篇文章省略了不少細節，指把重點的部分拉出來討論，可以的話還是希望大家能去閱讀原文（雖然很長）</p><p>簡單來說，這個機制讓我們可以得到：</p><ul><li>不怕重複呼叫的 API 服務</li><li>呼叫失敗也可以恢復運作</li><li>能夠有效的定位 API 運作問題發生的時機點</li></ul><p>除此之外，文章最後還有提到一些像是「完成器」的技巧。</p><blockquote><p>完成器是因為有些用戶端達到重試最大次數後，就會放棄運行。此時這些「即將完成」的操作就會變得無法完成，所以由伺服器定時拉出來重現 API 操作讓這個 API 操作得以完全完成。</p></blockquote><p>另一方面，這個機制可以應用在很多地方。像是表單送出的時候，用來檢查是不是重複表單的送出等等，雖然是以 API 設計的方式呈現，但是背後的概念卻非常值得思考，我們如何讓程式能夠更加的健壯。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/API/>API</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

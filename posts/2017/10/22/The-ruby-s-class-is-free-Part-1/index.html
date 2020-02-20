@@ -1,0 +1,99 @@
+<!doctype html><html lang=zh-tw><head><title>自由的 Ruby 類別（一） - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="以前還在讀書的時候，常常會思考所謂的「自由」是什麼，想著以後一定要過著自由的生活。不過現實就是到了社會，依舊還是有許多限制讓你無法自由自在。
+不過，在 Ruby 中的類別卻是非常自由的。
+有稍微接觸過 Ruby 的人應該都知道幾個特性：
+ 物件導向語言 一切都是物件"><meta name=created content="2017-10-22T00:00:00+0000"><meta name=modified content="2017-10-22T23:15:03+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="自由的 Ruby 類別（一）"><meta property="og:url" content="https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"自由的 Ruby 類別（一）","datePublished":"2017-10-22T00:00:00Z","dateModified":"2017-10-22T23:15:03Z","url":"https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/","description":"以前還在讀書的時候，常常會思考所謂的「自由」是什麼，想著以後一定要過著自由的生活。不過現實就是到了社會，依舊還是有許多限制讓你無法自由自在。\n不過，在 Ruby 中的類別卻是非常自由的。\n有稍微接觸過 Ruby 的人應該都知道幾個特性：\n 物件導向語言 一切都是物件 ","keywords":["Ruby","心得"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2017\/10\/22\/The-ruby-s-class-is-free-Part-1\/","name":"自由的 Ruby 類別（一）"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2017-10-22T23:15:03+0000 class=article__time--header>Feb.22</time><h1 class=article__title>自由的 Ruby 類別（一）</h1></header><div class=article__entry><nav class=translation></nav><p>以前還在讀書的時候，常常會思考所謂的「自由」是什麼，想著以後一定要過著自由的生活。不過現實就是到了社會，依舊還是有許多限制讓你無法自由自在。</p><p>不過，在 Ruby 中的類別卻是非常自由的。</p><p>有稍微接觸過 Ruby 的人應該都知道幾個特性：</p><ul><li>物件導向語言</li><li>一切都是物件</li></ul><h2 id=class>Class</h2><p>在 Ruby 裡面，所有的類別的類別都是 <code>Class</code> 這個類別。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Object</span><span class=o>.</span><span class=n>class</span>
+<span class=c1># =&gt; Class</span>
+
+<span class=no>Kernel</span><span class=o>.</span><span class=n>class</span>
+<span class=c1># =&gt; Module</span>
+<span class=no>Module</span><span class=o>.</span><span class=n>class</span>
+<span class=c1># =&gt; Class</span>
+</code></pre></td></tr></table></div></div><p>即使是 <code>Module</code> (模組) 也是屬於類別的一種，也就是說萬物都源自於 <code>Class</code> 這個類別。</p><blockquote><p>至於 <code>Class.class</code> 還是會得到 <code>Class</code> 自己本身</p></blockquote><h2 id=anonymous-class>Anonymous Class</h2><p>至於一個類別是怎樣出生的呢？我們可以先從沒有名字的類別來看。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Class</span><span class=o>.</span><span class=n>new</span>
+<span class=c1># =&gt; #&lt;Class:0x007f85fc30ea88&gt;</span>
+</code></pre></td></tr></table></div></div><p>現在我們得到了一個新的類別（物件）而且也可以對他進行一個產生實例的動作。</p><pre><code>klass = Class.new
+klass.new
+# =&gt; &lt;#&lt;Class:0x007f85fc30ea88&gt;:0x007f85fc2efa98&gt;
+</code></pre><p>因為這種類別很可憐，他連名字都沒有，所以他的名字就是物件本身的 <code>#&lt;Class:0x007f85fc30ea88></code></p><p>那麼，該怎麼讓他們獲得名字呢？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Klass</span> <span class=o>=</span> <span class=no>Class</span><span class=o>.</span><span class=n>new</span>
+<span class=no>Klass</span><span class=o>.</span><span class=n>new</span>
+<span class=c1># =&gt; #&lt;Klass:0x007f85fc2d7510&gt;</span>
+</code></pre></td></tr></table></div></div><p>實際上，所有類別的名字都是一個常數。
+所以才會在撰寫類別名稱的時候，必須以大寫開頭（定義為常數）才能運作。</p><p>不過，類別的繼承跟方法該怎麼辦呢？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Klass</span> <span class=o>=</span> <span class=no>Class</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=no>Object</span><span class=p>)</span> <span class=k>do</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>echo</span><span class=p>(</span><span class=n>text</span><span class=p>)</span>
+    <span class=nb>puts</span> <span class=n>text</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=no>Klass</span><span class=o>.</span><span class=n>new</span><span class=o>.</span><span class=n>echo</span> <span class=s1>&#39;Hello World&#39;</span>
+<span class=c1># =&gt; Hello World</span>
+</code></pre></td></tr></table></div></div><p>實際上就是把一個 Block 在初始化類別的時候傳進去，讓他做一些事情。</p><p>上面的類別定義等價於下面的程式碼：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Klass</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>echo</span><span class=p>(</span><span class=n>text</span><span class=p>)</span>
+    <span class=nb>puts</span> <span class=n>text</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>所以，我們在這邊發現我們在 <code>class</code> 到 <code>end</code> 所寫的，可能是一個 Block。</p><h2 id=class-methods>Class Methods</h2><p>這個段落會討論的是 <code>Class</code> 類別的方法，有趣的是他剛好也是其他類別的類別方法。</p><p>物件導向中，我們知道有兩種方法的定義。</p><ul><li>類別方法 <code>Klass.instance</code></li><li>實例方法 <code>Klass.new.echo</code></li></ul><p>差別在於實例方法需要先把類別用 <code>.new</code> 初始化之後，才能存取到這些方法。</p><p>首先，我們可以先看看 <code>Class</code> 類別有哪些類別方法可以使用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Class</span><span class=o>.</span><span class=n>methods</span>
+<span class=c1># =&gt; [:include, ...,:instance_exec, :__id__]</span>
+</code></pre></td></tr></table></div></div><p>省略了一些方法，不過看到了 <code>include</code> 這個熟悉的關鍵字。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Klass</span>
+  <span class=kp>include</span> <span class=no>Mod</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>沒錯，我們所看到的 <code>include</code> 就是我們在 <code>include</code> 某個模組的那一個。</p><p>所以，下面的這些動作其實是等價的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=no>Klass</span> <span class=o>=</span> <span class=no>Class</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+  <span class=kp>include</span> <span class=no>Mod</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Klass</span>
+  <span class=kp>include</span> <span class=no>Mod</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># class Klass; end</span>
+<span class=c1># or</span>
+<span class=c1># Klass = Class.new</span>
+
+<span class=no>Klass</span><span class=o>.</span><span class=n>include</span> <span class=no>Mod</span>
+</code></pre></td></tr></table></div></div><p>透過以上的探索，是不是發現大多數 Rubyist 都可能接觸過的 Rails 中，有很多這樣的應用方式呢？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>User</span> <span class=o>&lt;</span> <span class=no>ApplicationRecord</span>
+  <span class=n>has_many</span> <span class=ss>:posts</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>從上面的例子來看 <code>has_many</code> 是一個類別方法，並且可能是屬於 <code>ApplicationRecord</code> 或者其上層的某一個物件。</p><h2 id=總結>總結</h2><p>在 Ruby 的世界中，所有的類別其實都是 <code>Class</code> 這個類別的實體表現而已。
+而父類別的的類別方法，則可以作為在定義新類別時的 Block 中使用，用來拓展一個類別的多樣性。</p><p>下一篇文章會來討論 <code>has_many</code> 的實際應用是怎樣的。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

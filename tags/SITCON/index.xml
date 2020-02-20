@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SITCON on 弦而時習之</title><link>https://blog.frost.tw/tags/SITCON/</link><description>Recent content in SITCON on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Sun, 08 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/SITCON/index.xml" rel="self" type="application/rss+xml"/><item><title>在 SITCON 2015 之後</title><link>https://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/</link><pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/03/08/after-the-sitcon-2015/</guid><description>&lt;p>昨天（03/07）是 SITCON 2015 也是我在 SITCON 擔任工作人員的最後一年。
+明年就要畢業了，算是終於退休了⋯⋯（大概會被自動升級成顧問）&lt;/p>
+&lt;p>這篇文章應該不會寫太長，我還要去填坑 XD&lt;/p></description></item><item><title>React.js + Parse 實做簡易留言板</title><link>https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/</link><pubDate>Wed, 18 Feb 2015 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2015/02/18/reactjs-parse-doing-simple-message-board/</guid><description>&lt;p>前一陣子 SITCON 文創組冬季訓練最後一天，我安排了這個課程給我們的新成員。
+雖然 SITCON 文創組看似是個需要「技術」的團隊，不過現實上我們倒是花很多時間在思考跟設計上，沒辦法找到設計相關科系的新成員稍稍遺憾。&lt;/p>
+&lt;p>不過因為有製作網站的需求，因此安排了這個課程，透過學習 React.js 以及結合 Parse 去熟悉一些基本的前端技巧。&lt;/p>
+&lt;p>注意事項：&lt;/p>
+&lt;ol>
+&lt;li>文中的範例全部都以 CoffeeScript 撰寫&lt;/li>
+&lt;li>本文不會提及 Browserify 的配置與應用（當天有介紹過，練習時是使用我配置好的 gulp task）&lt;/li>
+&lt;li>這是在不考慮 UI/UX 以及美術的前提下製作的&lt;/li>
+&lt;li>文中不會解釋太多 React.js / Flux 的基本概念（請上官網 or ReactJS.tw 社團學習）&lt;/li>
+&lt;/ol>
+&lt;p>那麼，就開始吧！&lt;/p></description></item><item><title>COSCUP 2014 會後心得不能吃</title><link>https://blog.frost.tw/posts/2014/07/20/coscup-after-2014-experience/</link><pubDate>Sun, 20 Jul 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/07/20/coscup-after-2014-experience/</guid><description>&lt;p>「當會眾的資歷到了某個程度，就只能交朋友了⋯⋯」&lt;/p>
+&lt;p>其實今年我不知道我要幹嘛，可能是超級累的關係所以就只聽了一部分有趣的。
+（從人社館跑去活動中心超累的，尤其是你收到中獎通知要跑回來領獎品的那一個瞬間 XDDDD）&lt;/p>
+&lt;p>今年 COSCUP 到底在幹嘛呢？&lt;/p>
+&lt;p>「推你 SITCON 坑！」「推你 SITCON 坑！」
+「推你 SITCON 坑！」「推你 SITCON 坑！」&lt;/p></description></item><item><title>SITCON 2014 會後心得</title><link>https://blog.frost.tw/posts/2014/03/17/sitcon2014/</link><pubDate>Mon, 17 Mar 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/03/17/sitcon2014/</guid><description>&lt;p>分心了一整天，趕緊補一下 SITCON 2014 的心得啊（趴地&lt;/p>
+&lt;p>今年依舊是工作人員，各種意義上就是還是學生的時候就都奉獻給 SITCON 這樣的感覺拉～
+只是今年同時也成為了講師，扣掉 Lightning Talk 之外，這是第一次上台講。&lt;/p>
+&lt;p>去年 COSCUP 在台上的時候，整個人是發抖狀態不能好好講完內容（面對可能有快千人的壓迫感可能真的不一樣）
+這次一上台就是很淡定，只是速度很快，快到遭到會眾反映 XD&lt;/p>
+&lt;p>不過今年超累，所以除了主持之外幾乎沒有去聽其他議程（下午講完就累癱了 XD）
+所以只好來補充一下我的 Talk 跟分享一下感想拉～&lt;/p></description></item><item><title>HackGen 2013 政大場</title><link>https://blog.frost.tw/posts/2013/10/13/hackgen-2013-nccu/</link><pubDate>Sun, 13 Oct 2013 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2013/10/13/hackgen-2013-nccu/</guid><description>&lt;p>昨晚莫名分心就沒寫完了（牆角&lt;/p>
+&lt;p>在今年 2013 年的 HackGen 主要就是政大、大同這兩場。
+在昨天，政大場終於結束了！&lt;/p>
+&lt;p>雖然報名情況不如我們最初所期待的熱烈，但是就如同強哥所說，這是一個開始。&lt;/p>
+&lt;p>這邊文章會簡單說一下我的心得和感想。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,194 @@
+<!doctype html><html lang=zh-tw><head><title>Unity3D - 元件化的遊戲製作 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="這篇文章一部份是寫給同學看的，在做遊戲中似乎挺常使用到的，而這個「特性」如果能夠理解的話，未來同學在製作遊戲應該也是會順利很多，另一方面就是 SITCON 的投稿，大概就是以這個為主軸來討論。
+依照網路上的說法，這個概念應該是在 Unity3D 熱門之後，才比較被大眾所熟悉。而我個人是在 2013 年的 COSCUP 在半路大的演講第一次 …"><meta name=created content="2014-01-03T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="Unity3D - 元件化的遊戲製作"><meta property="og:url" content="https://blog.frost.tw/posts/2014/01/03/unity3d-component-of-game-production/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2014/01/03/unity3d-component-of-game-production/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"Unity3D - 元件化的遊戲製作","datePublished":"2014-01-03T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2014/01/03/unity3d-component-of-game-production/","description":"這篇文章一部份是寫給同學看的，在做遊戲中似乎挺常使用到的，而這個「特性」如果能夠理解的話，未來同學在製作遊戲應該也是會順利很多，另一方面就是 SITCON 的投稿，大概就是以這個為主軸來討論。\n依照網路上的說法，這個概念應該是在 Unity3D 熱門之後，才比較被大眾所熟悉。而我個人是在 2013 年的 COSCUP 在半路大的演講第一次 …\n","keywords":["JavaScript","遊戲","心得","程式","Unity3D"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2014\/01\/03\/unity3d-component-of-game-production\/","name":"Unity3D - 元件化的遊戲製作"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.03</time><h1 class=article__title>Unity3D - 元件化的遊戲製作</h1></header><div class=article__entry><nav class=translation></nav><p>這篇文章一部份是寫給同學看的，在做遊戲中似乎挺常使用到的，而這個「特性」如果能夠理解的話，未來同學在製作遊戲應該也是會順利很多，另一方面就是 SITCON 的投稿，大概就是以這個為主軸來討論。</p><p>依照網路上的說法，這個概念應該是在 Unity3D 熱門之後，才比較被大眾所熟悉。而我個人是在 2013 年的 COSCUP 在半路大的<a href=https://speakerdeck.com/halflucifer/using-lua-to-build-a-component-based-architecture-for-game-apps>演講</a>第一次獲得「元件化」的關鍵字，這確實也是一個不一樣的概念。</p><p>至於後續如何呢？讓我們一起看下去。
+（關於非遊戲的討論，我之後會另外寫文章，這邊以 Unity3D 的 Component 概念為主。）</p><h2 id=元件化程式設計>元件化程式設計</h2><p>為了要投稿 SITCON 所以我做了不少準備，至少是把 Component Based Programing 整個概念都稍微研究過了一遍。</p><p>首先，我們可以從<a href=https://en.wikipedia.org/wiki/Component-based_software_engineering>維基百科</a>上面看到一些關於 Component Based Programing 的介紹與相關知識。</p><p>最另外意外的是像是 Laravel (PHP Framework) 使用到的 IoC （單純是因為我以這個框架為契機了解 IoC 的概念）亦或是這幾年 Web Service 最常使用的 REST API 都屬於 Component Based Programing 的運用。</p><p>也就是說，若要討論其實是很多可以討論的。</p><p>這邊簡述一下我的理解。</p><p>「某一個物件因為經常需要擴充或者調整功能，或者是某一個物件類型因為需要應對不同的變化，所以從原本較為固定的方式衍生出一種相對彈性的方式。」</p><p>好像敘述的有點不太好，昨晚稍微努力想了些比較適當的「實例」也許大家會比較好理解。</p><ul><li>WordPress 為了應對使用者不同的需求，提供了 Plugin 機制，讓使用者可以選擇對應的 Plugin 來使用。 > WordPress (物件) 可以透過 Plugin (元件) 來增減功能</li><li>電腦可以透過安插各種零件來強化或者調整硬體應各種用途 > 電腦（物件）透過零件（元件）來調整硬體</li></ul><p>不知道有沒有比較具象一點，大致上來說就是某個東西可以利用類似 Solt (插槽) 去擴充或者減少功能，然後調整成適當的狀態這樣的概念。
+（從一些 Open Source 的遊戲引擎來看，其實有點像是 USB 插槽跟 USB 裝置的感覺，大多是實作一個 Interface 去讓物件繼承，從而相容這樣。）</p><h2 id=unity3d-的元件化設計>Unity3D 的元件化設計</h2><p>開始之前，我在 Google 找到了一篇關於遊戲的 Component Based Programing 的<a href=https://disp.cc/b/38-13mE>翻譯文章</a>，大家可以先看看，個人感覺有點類似歷史簡介的東西，其實不管哪種做法都是有缺點（Ex. 關於 CPU 消耗的問題）不過在適當的情況使用，改善開發我想還是最主要的目標。</p><p>關於如何在 Unity3D 正確使用 Component 也有一份<a href=https://www.slideshare.net/lucifuges/unity-13737954>簡報</a>非常不錯，裡面提到了正確拆解元件的方法以及概念。</p><p>在讀完這些資料後，其實大家應該都對 Component-Based Programing 這個概念有所了解。下面就開始來討論 Unity3D 的 Component 吧！</p><h2 id=unity3d-的-gameobject-與-component>Unity3D 的 GameObject 與 Component</h2><p>打開 Unity3D 產生一個 Cube (GameObject) 然後看看 Inspector 上的設定。</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/167832/CuK42JfRkyjT8XlK4GFg_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8810.50.34.png alt="螢幕快照 2014-01-03 上午10.50.34.png"></p><p>在 Unity3D 官網的 <a href=https://docs.unity3d.com/Documentation/ScriptReference/Component.html>Component</a> 解釋中，提到「所有可以附加在 GameObject 的基礎類別」</p><h3 id=gameobject-上的-component>GameObject 上的 Component</h3><p>那麼，我們試著對這個 Cube 加上一個 Script 並且嘗試用 <code>GetComponents</code> 來看看這個 Cube 上有哪些 Component 在上面。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=err>#</span><span class=nx>pragma</span> <span class=nx>strict</span>
+
+<span class=kd>var</span> <span class=nx>components</span><span class=o>:</span><span class=nx>Component</span><span class=p>[</span><span class=p>]</span><span class=p>;</span>
+
+<span class=kd>function</span> <span class=nx>Start</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>components</span> <span class=o>=</span> <span class=nx>GetComponents</span><span class=p>(</span><span class=nx>Component</span><span class=p>)</span><span class=p>;</span>
+	<span class=kd>var</span> <span class=nx>i</span><span class=o>:</span><span class=kr>int</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+	<span class=k>for</span><span class=p>(</span><span class=nx>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=o>&lt;</span> <span class=nx>components</span><span class=p>.</span><span class=nx>Length</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+		<span class=nx>Debug</span><span class=p>.</span><span class=nx>Log</span><span class=p>(</span><span class=nx>components</span><span class=p>.</span><span class=nx>GetValue</span><span class=p>(</span><span class=nx>i</span><span class=p>)</span><span class=p>)</span><span class=p>;</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>Update</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p><img src=https://user-image.logdown.io/user/52/blog/52/post/167832/ZSSpuuoTSCc4YQ3JIJm0_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8811.05.21.png alt="螢幕快照 2014-01-03 上午11.05.21.png"></p><p>從結果來看，我們觀察到第一個： <strong>Inspector 上的都是 Component，一個 GameObject 的表現由 Component 決定</strong></p><p>也就是說，對 Unity3D 來說，一個 GameObject 該如何呈現在場景中，是由元件所決定的。
+如：Cube 透過 MeshFilter 決定外形，由 MeshRenderer 決定色彩、外觀、材質以及被繪圖引擎繪製。</p><h3 id=元件的複製>元件的複製</h3><p>接著稍微修改剛剛的程式，我們將物件的 ID 印出來，並且複製一次這個物件，來觀察當我們使用 <code>Instantiate</code> 方法時，元件會怎麼變化。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=err>#</span><span class=nx>pragma</span> <span class=nx>strict</span>
+
+<span class=kd>var</span> <span class=nx>components</span><span class=o>:</span><span class=nx>Component</span><span class=p>[</span><span class=p>]</span><span class=p>;</span>
+<span class=kr>static</span> <span class=kd>var</span> <span class=nx>clone</span><span class=o>:</span><span class=nx>GameObject</span><span class=p>;</span>
+
+<span class=kd>function</span> <span class=nx>Start</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>Debug</span><span class=p>.</span><span class=nx>Log</span><span class=p>(</span><span class=s2>&#34;Object Name: &#34;</span> <span class=o>+</span> <span class=nx>name</span><span class=p>)</span><span class=p>;</span>
+
+	<span class=nx>components</span> <span class=o>=</span> <span class=nx>GetComponents</span><span class=p>(</span><span class=nx>Component</span><span class=p>)</span><span class=p>;</span>
+	<span class=kd>var</span> <span class=nx>i</span><span class=o>:</span><span class=kr>int</span><span class=p>;</span>
+	<span class=kd>var</span> <span class=nx>currentComponent</span><span class=o>:</span><span class=nx>Component</span><span class=p>;</span>
+	<span class=nx>Debug</span><span class=p>.</span><span class=nx>Log</span><span class=p>(</span><span class=s2>&#34;Total Component: &#34;</span> <span class=o>+</span> <span class=nx>components</span><span class=p>.</span><span class=nx>Length</span><span class=p>)</span><span class=p>;</span>
+	<span class=k>for</span><span class=p>(</span><span class=nx>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=o>&lt;</span> <span class=nx>components</span><span class=p>.</span><span class=nx>Length</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+  	<span class=err>#</span> <span class=nx>NOTICE</span><span class=o>:</span> <span class=nx>Unity3D</span> <span class=nx>will</span> <span class=nx>warning</span> <span class=nx>you</span>
+		<span class=nx>currentComponent</span> <span class=o>=</span> <span class=nx>components</span><span class=p>.</span><span class=nx>GetValue</span><span class=p>(</span><span class=nx>i</span><span class=p>)</span><span class=p>;</span>
+		<span class=nx>Debug</span><span class=p>.</span><span class=nx>Log</span><span class=p>(</span><span class=nx>currentComponent</span><span class=p>.</span><span class=nx>GetType</span><span class=p>(</span><span class=p>)</span> <span class=o>+</span> <span class=s2>&#34; - ID: &#34;</span> <span class=o>+</span> <span class=nx>currentComponent</span><span class=p>.</span><span class=nx>GetHashCode</span><span class=p>(</span><span class=p>)</span><span class=p>)</span><span class=p>;</span>
+	<span class=p>}</span>
+	
+	<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nx>clone</span><span class=p>)</span> <span class=p>{</span>
+		<span class=nx>clone</span> <span class=o>=</span> <span class=nx>GameObject</span><span class=p>.</span><span class=nx>Instantiate</span><span class=p>(</span><span class=nx>gameObject</span><span class=p>)</span><span class=p>;</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>Update</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p><img src=https://user-image.logdown.io/user/52/blog/52/post/167832/GBaDJWZKQI3t2jZmCFfn_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-01-03%20%E4%B8%8A%E5%8D%8811.27.05.png alt="螢幕快照 2014-01-03 上午11.27.05.png"></p><p>看起來每次 <code>Instanticate</code> 出來的 GameObject 都是一個「獨立的物件」並不會參照到原本的物件上。</p><p>關於這點，如果認真看官網的 <a href=https://docs.unity3d.com/Documentation/ScriptReference/Object.Instantiate.html>Instanticate</a> 解釋，裡面這樣說「這類似於編輯器的複製動作，當你克隆一個元件時所有子物件以及元件都會被克隆一遍」</p><p>其實這邊會有關於物件複製的疑問，全體克隆的行為其實仔細思考就會想通。至於大量的物件複製不會很慢的問題，就比較難想，目前我也想不到。不過，有時候必要的花費是必須的，這樣理解也許會比較好。</p><p>那麼關於 <code>Instantiate</code> 和 <code>Destroy</code> 的使用，就會很重要，畢竟要盡可能減少大量產生物件。</p><p>在製作 Unity3D 的作業時，我就碰到複製怪卻讓遊戲會卡住一瞬間的問題。
+經過搜集資料後，發現 <code>Instantiate</code> 和 <code>Destory</code> 其實算是蠻昂貴的動作（從的解釋來看，假設現在我這是一個非常複雜上面有數百個元件的物件，那我複製一次要花多久去拷貝這個物件？）也因此，會建議大家使用 <code>GameObjectPool</code> 的方式管理，也就是產生後不刪除，而是先 Deactive 直到下次需要被使用才再次 Active。
+（Asset Store 上有販賣 GameObjectPool 的套件，網路上也有不少語法，但是建議仔細看討論跟分析程式碼來選擇適合的。）</p><h2 id=了解-component-化的設計>了解 Component 化的設計</h2><p>據說這邊卡很久，因為我在研究簡報跟運用</p><p>前面有提到一個介紹 Unity3D 的元件簡報，裡面的「Component 化」的含義，我反覆閱讀之後才終於頓悟，原來是這麼個一回事。</p><p>首先，我們要再次複習 GameObject 和 Component 可以做的事情才行，還有再次釐清特性。</p><h3 id=gameobject>GameObject</h3><ul><li>可以附加 Component</li><li>可以有 Child Object</li></ul><h4 id=component>Component</h4><ul><li>不能附加 Component</li><li>不能有 Child Object</li><li>從 MonoBehaviour 類別繼承 （Component 類別的子類）</li><li>可以重複疊加到 GameObject 上</li></ul><p>我先說明一下為什麼要搞清楚特性，最初我希望在 Component 下增加 Component 但是不能，於是我改為 GameObject 下增加，但是我的測試語法是一個透過 frame 數來切換 Buffer 的 Component (更改顏色) 但是我卻發現 Component 會無限制地被疊加上去，這並不是我所期望的。</p><p>並且我對「簡報」中的「階層」感到疑惑，難道我的做法有問題嗎？透過一段時間的檢查思考方式，我得出了一個結論。</p><p>在較複雜的遊戲物件（如：玩家、敵人）我們應該適當的增加 GameObject 的階層，來分離與釐清一個物件的行為。
+（約簡報 45 頁，大致上就是最終的目標）</p><p>註：動態的為物件增加元件(<code>AddComponent</code>)不一定是好的做法，因為可能不小心附加過多的元件到物件上，透過 Prefab （類似物件版模的東西）與階層化的物件處理，會比較恰當。</p><h2 id=實作-component-化的設計>實作 Component 化的設計</h2><p>這部分我會實作一個 Player 物件，然後擁有 Collider 可以處理滑鼠點擊，並且用這個方式控制粒子特效的開啟或者關閉。
+（範例檔案：<a href=https://www.mediafire.com/download/9a0nl3mgoz8g8b8/Example.unitypackage>下載</a>）</p><p>為了將物件的任務個別分離，我這樣設計了我的物件階層。</p><ul><li><strong>Player</strong> - 控制、狀態 (Empty GameObject)<ul><li><strong>Model</strong> - 外觀 (Cube)<ul><li><strong>BufferFx</strong> - 粒子特效 (Particle System)</li></ul></li></ul></li></ul><p>並且寫了三個 Script (Component) 去控制開啟與關閉粒子特效。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=err>#</span><span class=nx>pragma</span> <span class=nx>strict</span>
+
+<span class=kr>private</span> <span class=kd>var</span> <span class=nx>bufferFx</span><span class=o>:</span><span class=nx>GameObject</span><span class=p>;</span>
+<span class=kr>protected</span> <span class=kd>var</span> <span class=nx>bufferActive</span><span class=o>:</span><span class=kr>boolean</span> <span class=o>=</span> <span class=kc>false</span><span class=p>;</span>
+
+<span class=kd>function</span> <span class=nx>Start</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>bufferFx</span> <span class=o>=</span> <span class=nx>transform</span><span class=p>.</span><span class=nx>FindChild</span><span class=p>(</span><span class=s2>&#34;Model/BufferFx&#34;</span><span class=p>)</span><span class=p>.</span><span class=nx>gameObject</span><span class=p>;</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>Update</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>ActiveBuffer</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=k>if</span><span class=p>(</span><span class=nx>bufferActive</span><span class=p>)</span> <span class=p>{</span>
+		<span class=nx>bufferFx</span><span class=p>.</span><span class=nx>SendMessage</span><span class=p>(</span><span class=s2>&#34;DeactiveBuffer&#34;</span><span class=p>,</span> <span class=nx>SendMessageOptions</span><span class=p>.</span><span class=nx>DontRequireReceiver</span><span class=p>)</span><span class=p>;</span>
+	<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+		<span class=nx>bufferFx</span><span class=p>.</span><span class=nx>SendMessage</span><span class=p>(</span><span class=s2>&#34;ActiveBuffer&#34;</span><span class=p>,</span> <span class=nx>SendMessageOptions</span><span class=p>.</span><span class=nx>DontRequireReceiver</span><span class=p>)</span><span class=p>;</span>
+	<span class=p>}</span>
+	<span class=nx>bufferActive</span> <span class=o>=</span> <span class=o>!</span><span class=nx>bufferActive</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>在 Unity3D 中似乎沒有提供直接取得 GameObject Child 的方法，因此需要從 Transform 中取得下階層的 GameObject 物件（是否有更好的做法不確定，另外父子階層在 Unity3D 是由 Transform 控制的）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=err>#</span><span class=nx>pragma</span> <span class=nx>strict</span>
+
+<span class=kd>function</span> <span class=nx>Start</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>Update</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>OnMouseDown</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>SendMessageUpwards</span><span class=p>(</span><span class=s2>&#34;ActiveBuffer&#34;</span><span class=p>,</span> <span class=nx>SendMessageOptions</span><span class=p>.</span><span class=nx>DontRequireReceiver</span><span class=p>)</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>這部分就比較簡單，當物件被按下去時觸發 Buffer 動作（也許可以把 Collider 改到 Player 階層，讓 Player 來處理）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=err>#</span><span class=nx>pragma</span> <span class=nx>strict</span>
+
+<span class=kd>function</span> <span class=nx>Start</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>Update</span> <span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>ActiveBuffer</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>particleSystem</span><span class=p>.</span><span class=nx>Play</span><span class=p>(</span><span class=p>)</span><span class=p>;</span>
+<span class=p>}</span>
+
+<span class=kd>function</span> <span class=nx>DeactiveBuffer</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+	<span class=nx>particleSystem</span><span class=p>.</span><span class=nx>Stop</span><span class=p>(</span><span class=p>)</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>最後是播放粒子特效與停止粒子特效的處理，透過從 Buffer.js 用 SendMessage 收到的訊息來處理。
+（據說使用 SendMessage 也是較為昂貴的操作，不過那也是後話了～）</p><p>註：如果粒子系統一開始就播放，那很可能是 <code>Play on Awake</code> 被勾選了，似乎 Unity3D 預設會幫音效、粒子特效等可播放的元件勾選起來。</p><h2 id=後記>後記</h2><p>其實到後來發現有一點「考察」的感覺，不過實際上簡單體驗使用 Component-Based Programing 後，真的會發現相對物件導向的繼承式做法來設計遊戲，更為容易理解。</p><p>這篇文章應該還有不少部分寫得不好，有高人知道改進的方法希望可以留言提醒一下。</p><h2 id=參考資料>參考資料</h2><ul><li><a href=https://speakerdeck.com/halflucifer/using-lua-to-build-a-component-based-architecture-for-game-apps>https://speakerdeck.com/halflucifer/using-lua-to-build-a-component-based-architecture-for-game-apps</a></li><li><a href=https://www.slideshare.net/lucifuges/unity-13737954>https://www.slideshare.net/lucifuges/unity-13737954</a></li><li><a href=https://disp.cc/b/38-13mE>https://disp.cc/b/38-13mE</a></li><li><a href=https://en.wikipedia.org/wiki/Component-based_software_engineering>https://en.wikipedia.org/wiki/Component-based_software_engineering</a></li><li><a href=https://www.cnblogs.com/ybgame/archive/2012/12/09/2810278.html>https://www.cnblogs.com/ybgame/archive/2012/12/09/2810278.html</a> (系列文)</li></ul><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/JavaScript/>JavaScript</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E9%81%8A%E6%88%B2/>遊戲</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%A8%8B%E5%BC%8F/>程式</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Unity3D/>Unity3D</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

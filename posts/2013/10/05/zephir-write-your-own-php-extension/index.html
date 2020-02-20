@@ -1,0 +1,421 @@
+<!doctype html><html lang=zh-tw><head><title>用 Zephir 寫自己的 PHP Extension - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="前一篇文章說到了 Zephir 於是這篇就要來研究一下摟～
+關於這篇文章，會做以下幾件事情：
+ 安裝 &amp;amp; 設定 寫一個簡易的 Router 改寫成 Zephir 版本 安裝 Extension 以及測試  那麼，廢話不多說，馬上開始吧！"><meta name=created content="2013-10-05T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="用 Zephir 寫自己的 PHP Extension"><meta property="og:url" content="https://blog.frost.tw/posts/2013/10/05/zephir-write-your-own-php-extension/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2013/10/05/zephir-write-your-own-php-extension/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"用 Zephir 寫自己的 PHP Extension","datePublished":"2013-10-05T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2013/10/05/zephir-write-your-own-php-extension/","description":"前一篇文章說到了 Zephir 於是這篇就要來研究一下摟～\n關於這篇文章，會做以下幾件事情：\n 安裝 \u0026amp; 設定 寫一個簡易的 Router 改寫成 Zephir 版本 安裝 Extension 以及測試  那麼，廢話不多說，馬上開始吧！\n","keywords":["PHP","C","Zephir","網站開發"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2013\/10\/05\/zephir-write-your-own-php-extension\/","name":"用 Zephir 寫自己的 PHP Extension"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.05</time><h1 class=article__title>用 Zephir 寫自己的 PHP Extension</h1></header><div class=article__entry><nav class=translation></nav><p>前一篇文章說到了 <a href=https://zephir-lang.com/>Zephir</a> 於是這篇就要來研究一下摟～</p><p>關於這篇文章，會做以下幾件事情：</p><ul><li>安裝 & 設定</li><li>寫一個簡易的 Router</li><li>改寫成 Zephir 版本</li><li>安裝 Extension 以及測試</li></ul><p>那麼，廢話不多說，馬上開始吧！</p><p>因為我習慣使用 Mac 所以是用 Mac 的方式安裝，不過 Zephir 並沒有表明支援 Mac 使用上需要多加小心。
+如果你懶得安裝或者希望使用 Linux 環境，可以考慮使用 <strong>阿土伯</strong> 大大在 PHPConf 2013 時 Demo 用的 Vagrant Box - <a href=https://Github.com/racklin/phalcon-dev-box>Phalcon Dev Box</a> 裡面已經配置好 Zephir 可以直接使用。</p><h3 id=安裝>安裝</h3><p>首先，我們要安裝相依套件。</p><blockquote><p>brew install re2c
+brew install json-c</p></blockquote><p>不過 re2c 似乎在安裝 XCode 時已經有了，而且我系統內的版本還比 Homebrew 的還新（基本上跳出有安裝過之類的訊息就不用再次安裝了⋯⋯）</p><p>因為 Zephir 似乎沒有單一個執行檔的功能，因此我個人是習慣放到 <code>~/.tools</code> 資料夾裡面，與一般工具區分開來。</p><blockquote><p>cd ~/.tools
+git clone <a href=https://Github.com/phalcon/zephir>https://Github.com/phalcon/zephir</a>
+cd zephir</p></blockquote><p>因為 Mac 中沒有 /opt/local/lib 這個目錄，我們要編輯 install 這個檔案。
+把 <code>-L/opt/local/lib</code> 這段刪除（讓編譯時不要在這個目錄找相關的 Library）</p><p>修改後的 install 裡面的 gcc 指令大概會長這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh>gcc -Wl,-rpath /usr/local/lib -I/usr/local/lib -L/usr/local/lib -g3 parser.c scanner.c -ljson -ljson-c -o ../bin/zephir-parser
+</code></pre></td></tr></table></div></div><p>之後執行 install 即可</p><blockquote><p>./install</p></blockquote><p>接著可以修改 <code>~/.bashrc</code> 或者相關檔案，加入以下這行</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=nb>export</span> <span class=nv>PATH</span><span class=o>=</span><span class=nv>$PATH</span>:~/.tools/zephir/bin
+</code></pre></td></tr></table></div></div><p>重開 Terminal 或者輸入 <code>source ~/.bashrc</code> 之後，就可以直接使用 zephir 指令了！</p><h3 id=寫一個簡單的-router>寫一個簡單的 Router</h3><p>為了可以觀察到改變，我們先來用 PHP 做一個簡單的 Router 測試。
+基本上就是會將 <code>https://localhost/myApp/index</code> 轉成 <code>$controller = new MyApp(); $controller->index()</code> 的語法。</p><p>這邊基本上就不多敘述實作，以下是這次範例用的 Router 原始碼。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+
+<span class=k>namespace</span> <span class=nx>MyRouter</span><span class=p>;</span>
+
+<span class=k>class</span> <span class=nc>Router</span> <span class=p>{</span>
+	<span class=k>protected</span> <span class=nv>$basePath</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span><span class=p>;</span>
+  <span class=k>protected</span> <span class=nv>$currentPath</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span><span class=p>;</span>
+  <span class=k>protected</span> <span class=nv>$defaultMethod</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span><span class=p>;</span>
+  <span class=k>public</span> <span class=nv>$notFound</span> <span class=o>=</span> <span class=k>null</span><span class=p>;</span>
+
+  <span class=k>public</span> <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$basePath</span> <span class=o>=</span> <span class=s2>&#34;&#34;</span><span class=p>)</span> <span class=p>{</span>
+    <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>basePath</span> <span class=o>=</span> <span class=nv>$basePath</span><span class=p>;</span>
+    <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>defaultMethod</span> <span class=o>=</span> <span class=s2>&#34;index&#34;</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=sd>/**
+</span><span class=sd>   * Dispatch
+</span><span class=sd>   *
+</span><span class=sd>   * Create class instance and call method
+</span><span class=sd>   */</span>
+  <span class=k>public</span> <span class=k>function</span> <span class=nf>dispatch</span><span class=p>()</span>
+  <span class=p>{</span>
+    <span class=nv>$parseURI</span> <span class=o>=</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>parseURI</span><span class=p>();</span>
+    <span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=k>empty</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>basePath</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>basePath</span> <span class=o>==</span> <span class=nv>$parseURI</span><span class=p>[</span><span class=mi>0</span><span class=p>])</span> <span class=p>{</span>
+      <span class=nv>$parseURI</span> <span class=o>=</span> <span class=nx>array_slice</span><span class=p>(</span><span class=nv>$parseURI</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+    <span class=p>}</span>
+
+    <span class=nv>$class</span> <span class=o>=</span> <span class=k>null</span><span class=p>;</span>
+    <span class=nv>$method</span> <span class=o>=</span> <span class=k>null</span><span class=p>;</span>
+    <span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$parseURI</span><span class=p>[</span><span class=mi>0</span><span class=p>]))</span> <span class=p>{</span>
+      <span class=nv>$class</span> <span class=o>=</span> <span class=nv>$parseURI</span><span class=p>[</span><span class=mi>0</span><span class=p>];</span>
+      <span class=nv>$class</span> <span class=o>=</span> <span class=nx>ucwords</span><span class=p>(</span><span class=nv>$class</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$parseURI</span><span class=p>[</span><span class=mi>1</span><span class=p>]))</span> <span class=p>{</span>
+      <span class=nv>$method</span> <span class=o>=</span> <span class=nv>$parseURI</span><span class=p>[</span><span class=mi>1</span><span class=p>];</span>
+    <span class=p>}</span>
+
+    <span class=k>if</span><span class=p>(</span><span class=nx>is_null</span><span class=p>(</span><span class=nv>$class</span><span class=p>)</span> <span class=o>||</span> <span class=o>!</span><span class=nx>class_exists</span><span class=p>(</span><span class=nv>$class</span><span class=p>))</span> <span class=p>{</span>
+      <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>error</span><span class=p>(</span><span class=mi>404</span><span class=p>);</span>
+      <span class=k>return</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nv>$classInstance</span> <span class=o>=</span> <span class=k>new</span> <span class=nv>$class</span><span class=p>;</span>
+
+    <span class=k>if</span><span class=p>(</span><span class=nx>is_null</span><span class=p>(</span><span class=nv>$method</span><span class=p>))</span> <span class=p>{</span>
+      <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>callMethod</span><span class=p>(</span><span class=nv>$classInstance</span><span class=p>,</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>defaultMethod</span><span class=p>);</span>
+      <span class=k>return</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>callMethod</span><span class=p>(</span><span class=nv>$classInstance</span><span class=p>,</span> <span class=nv>$method</span><span class=p>);</span>
+
+  <span class=p>}</span>
+
+  <span class=sd>/**
+</span><span class=sd>   * Call Method
+</span><span class=sd>   *
+</span><span class=sd>   * @param object $class
+</span><span class=sd>   * @param string $method
+</span><span class=sd>   */</span>
+
+  <span class=k>private</span> <span class=k>function</span> <span class=nf>callMethod</span><span class=p>(</span><span class=nv>$class</span><span class=p>,</span> <span class=nv>$method</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span><span class=p>(</span><span class=nx>is_callable</span><span class=p>(</span><span class=k>array</span><span class=p>(</span><span class=nv>$class</span><span class=p>,</span> <span class=nv>$method</span><span class=p>)))</span> <span class=p>{</span>
+      <span class=nx>call_user_func</span><span class=p>(</span><span class=k>array</span><span class=p>(</span><span class=nv>$class</span><span class=p>,</span> <span class=nv>$method</span><span class=p>));</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+      <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>error</span><span class=p>(</span><span class=mi>404</span><span class=p>);</span>
+    <span class=p>}</span>
+  <span class=p>}</span>
+
+  <span class=sd>/**
+</span><span class=sd>   * Error
+</span><span class=sd>   *
+</span><span class=sd>   * @param int $code
+</span><span class=sd>   */</span>
+
+  <span class=k>public</span> <span class=k>function</span> <span class=nf>error</span><span class=p>(</span><span class=nv>$code</span> <span class=o>=</span> <span class=mi>500</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span><span class=p>(</span><span class=nv>$code</span> <span class=o>==</span> <span class=mi>404</span><span class=p>)</span> <span class=p>{</span>
+      <span class=k>if</span><span class=p>(</span><span class=nx>is_callable</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>notFound</span><span class=p>))</span> <span class=p>{</span>
+        <span class=nx>call_user_func</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>notFound</span><span class=p>);</span>
+      <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+        <span class=k>echo</span> <span class=s2>&#34;404 Not Found&#34;</span><span class=p>;</span>
+      <span class=p>}</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+      <span class=k>echo</span> <span class=s2>&#34;Error </span><span class=si>{</span>$code<span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+    <span class=p>}</span>
+  <span class=p>}</span>
+
+  <span class=sd>/**
+</span><span class=sd>   * Parse URI
+</span><span class=sd>   *
+</span><span class=sd>   * Analytic URL and turn into class and method
+</span><span class=sd>   *
+</span><span class=sd>   * return array [$class, $method]
+</span><span class=sd>   */</span>
+
+  <span class=k>protected</span> <span class=k>function</span> <span class=nf>parseURI</span><span class=p>()</span>
+  <span class=p>{</span>
+    <span class=nv>$currentURI</span> <span class=o>=</span> <span class=nv>$_SERVER</span><span class=p>[</span><span class=s1>&#39;REQUEST_URI&#39;</span><span class=p>];</span>
+    <span class=nv>$pattern</span> <span class=o>=</span> <span class=s2>&#34;/\/([a-z][a-z0-9-]*)/i&#34;</span><span class=p>;</span>
+
+    <span class=nv>$matches</span> <span class=o>=</span> <span class=k>array</span><span class=p>();</span>
+    <span class=nx>preg_match_all</span><span class=p>(</span><span class=nv>$pattern</span><span class=p>,</span> <span class=nv>$currentURI</span><span class=p>,</span> <span class=nv>$matches</span><span class=p>);</span>
+
+    <span class=k>return</span> <span class=nx>array_slice</span><span class=p>(</span><span class=nv>$matches</span><span class=p>,</span> <span class=mi>1</span><span class=p>)[</span><span class=mi>0</span><span class=p>];</span>
+  <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>使用方式（index.PHP 為例）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+
+<span class=k>require</span><span class=p>(</span><span class=s2>&#34;Router.PHP&#34;</span><span class=p>);</span>
+<span class=c1>// require some class for dispath
+</span><span class=c1></span>
+<span class=nv>$router</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>MyRouter\Router</span><span class=p>();</span>
+<span class=nv>$router</span><span class=o>-&gt;</span><span class=na>dispatch</span><span class=p>();</span>
+
+</code></pre></td></tr></table></div></div><p>另外還需要一個 Rewrite Rule 來轉換（這邊使用 Laravel 的 .htaccess）</p><pre><code>&lt;IFModule mod_rewrite.c&gt;
+  Options -MultiViews
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.PHP [L]
+&lt;/IfModule&gt;
+</code></pre><p>基本上會運作後，就來改寫成 Zephir 的版本吧！</p><h3 id=改寫為-zephir-版本>改寫為 Zephir 版本</h3><p>雖然基本上都和 PHP 類似，不過仍有不少 <a href=https://zephir-lang.com/language.html>Syntax</a> 上的差異，建議大家先稍微讀過（不會很難，比新學語言簡單多了！）</p><p>一開始要初始化專案，我先建立一個 myExtension 放置我的 PHP Extension 專案，然後這邊建立一個 MyRouter 的專案。</p><blockquote><p>mkdir -p ~/myExtension/MyRouter
+cd ~/myExtension/MyRouter
+zephir init</p></blockquote><p>完成後，目錄下應該會多出一些檔案。</p><ul><li>config.json - 設定檔，裡面應該會寫著 namepsace 是什麼</li><li>ext/ - 最後生成的 PHP Extension 會在這個資料夾找到</li><li>myrouter/ - 放置 .zep 檔案的目錄（類似 PSR-0 的 Class 目錄規則，不過都是小寫）</li></ul><p>接著把剛剛的 Router.PHP 複製進去，重新命名為 router.zep 然後著手改寫。</p><p>以下有不少地雷（我找 Syntax, Compile Error 超久，都用註解說明）</p><pre><code class=language-zep data-lang=zep>namespace MyRouter;
+
+class Router {
+	// 單純去掉 $ 即可（雖然有 $ 似乎不會被當成錯誤）
+  protected basePath = &quot;&quot;;
+  protected currentPath = &quot;&quot;;
+  protected defaultMethod = &quot;&quot;;
+  public notFound = null;
+
+  public function __construct(string basePath = null) {
+    let this-&gt;basePath = basePath; // 所有 Assign 的動作都要用 let
+    let this-&gt;defaultMethod = &quot;index&quot;;
+  }
+
+  /**
+   * Dispatch
+   *
+   * Create class instance and call method
+   */
+  public function dispatch()
+  {
+    var parseURI; // 像是 Array 之類的都分類在 Dynamic Variable 裡面，用 var 賦值（分不清楚用 var 比較保險）
+    let parseURI = []; // 做這個動作讓他判定為 Array (官方 Blog 有另一種做法，沒測試過)
+    let parseURI = this-&gt;parseURI(); // 從 parseURI 方法取得分析好的 Array
+    if !empty(this-&gt;basePath) &amp;&amp; this-&gt;basePath == parseURI[0] {
+      let parseURI = array_slice(parseURI, 1); // 所有 PHP 的 Function / Class 基本上都可以直接取用
+    }
+
+    var className;
+    var method;
+    var value; // 下面會用 fetch 來替代 isset (官方部落格表示必須這樣用) 所以要先定義變數給他用
+
+    let className = null; // 給予初始值，如果沒有做這個動作後面的 is_null() 檢查都會讓變成 PHP Process 直接死掉
+    // --- 以下為推測，因為碰到問題點在這，但是詳細關係有待釐清 ---
+    // 關於這部分 阿土伯大大 也給出解釋，因為底層還是 C 所以離開 Scope 記憶體清除，就會 segfault
+    // 關於 Segmentation fault (segfault) 因為沒有碰過，所以暫時先搜集資料，代理解後在分享詳細的資訊
+    let method = null;
+
+    if fetch value, parseURI[0] { // 這個寫法跟 isset 效果相同，這邊比較不一樣
+      let className = value;
+      let className = ucwords(className);
+    }
+
+    if fetch value, parseURI[1] {
+      let method = parseURI[1];
+    }
+
+    if is_null(className) || !class_exists(className) {
+      this-&gt;error(404);
+      return;
+    }
+
+		/**
+     * 這邊是因為 PHP 可以用 new $someClass; 的方式產生新物件（物件名稱用變數代替）
+     * 但是 Zephir 會把你的變數當成 Class Name 所以無法正常產生，那麼就藉由 class_alias 方法處理
+     * class_alias 要傳入兩個參數（字串）第一個是原始類別，第二個是他的匿名類別名稱
+     * 所以透過這個方法，所有 Router 傳入的 Class Name 都被轉成統一的 ProxyClass 來產生實例使用
+     */
+    
+    // class_alias(className, &quot;ProxyClass&quot;); // 注意，字串一律使用雙引號，單引號被視為 char
+    var classInstance;
+    //let classInstance = new ProxyClass;
+		var classInstance = create_instance(className); // 阿土伯大大提供了正確的用法，也不會被編譯器警告了！
+    // create_instance_params(className, params) 是有參數的用法
+    
+    if method == null {
+      this-&gt;callMethod(classInstance, this-&gt;defaultMethod);
+      return;
+    }
+
+    this-&gt;callMethod(classInstance, method);
+
+  }
+
+  /**
+   * Call Method
+   *
+   * @param object $class
+   * @param string $method
+   */
+
+  private function callMethod(var instance, string method) {
+    if is_callable([instance, method]) { // 用 [] 直接產生 Array 是被接受的（也許是跟進 PHP 5.4 的新功能）
+      call_user_func([instance, method]);
+    } else {
+      this-&gt;error(404);
+    }
+  }
+
+  /**
+   * Error
+   *
+   * @param int $code
+   */
+
+  public function error(int code = 500) {
+    if(code == 404) {
+      if(is_callable(this-&gt;notFound)) {
+        call_user_func(this-&gt;notFound);
+      } else {
+        echo &quot;404 Not Found&quot;;
+      }
+    } else {
+      echo &quot;Error {code}&quot;;
+    }
+  }
+
+  /**
+   * Parse URI
+   *
+   * Analytic URL and turn into class and method
+   *
+   * return array [$class, $method]
+   */
+
+  protected function parseURI()
+  {
+    var currentURI;
+    let currentURI = _SERVER[&quot;REQUEST_URI&quot;];
+    var pattern = &quot;@/([a-z][a-z0-9-]*)@i&quot;; // 這邊用 \/ 去脫跳不知道為什麼會出錯，只好改用其他界定符號
+
+    var matches;
+    let matches = [];
+    preg_match_all(pattern, currentURI, matches);
+
+    var schema;
+    let schema = array_slice(matches, 1);
+    return schema[0];
+  }
+}
+
+</code></pre><p>完成之後，在目錄下執行指令</p><blockquote><p>zephir [compile]</p></blockquote><p>compile 可以省略，但是我似乎找不到 help 的 command 來看支援什麼，目前已知 init 和 compile 兩個（遠望）</p><h3 id=安裝與測試>安裝與測試</h3><p>因為我平常使用 <a href=https://Github.com/c9s/PHPbrew>PHPBrew</a> 來建構 PHP 的測試環境，因此以下範例是複製到 PHPBrew 的 Extension 目錄。</p><blockquote><p>sudo cp ext/modules/myrouter.so ~/path/to/your/PHP/extensions/
+PHPbrew ext enable myrouter
+sudo apachectl graceful</p></blockquote><p>PHPBrew 提供很方便的 command 來啓用 extension 基本上就是到 PHP.ini 加上 <code>extension=myrouter.so</code> 就能使用了！</p><p>最後，我們重新修改 <code>index.PHP</code> 來改用 Extension</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=nv>$router</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>MyRouter\Router</span><span class=p>();</span>
+<span class=nv>$router</span><span class=o>-&gt;</span><span class=na>dispatch</span><span class=p>();</span>
+</code></pre></td></tr></table></div></div><p>重新打開後，如果正常運作就是成功了！</p><p>註：上文都沒有產生任何 Router 可以讀取到的 Class 大家可以自己嘗試加入，以下為範例程式碼</p><p>https://localhost/app/home</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+
+<span class=k>class</span> <span class=nc>App</span> <span class=p>{</span>
+	<span class=k>public</span> <span class=k>function</span> <span class=nf>index</span><span class=p>()</span> <span class=p>{</span>
+  	<span class=k>echo</span> <span class=s2>&#34;Hello, this index&#34;</span><span class=p>;</span>
+  <span class=p>}</span>
+  
+  <span class=k>public</span> <span class=k>function</span> <span class=nf>home</span><span class=p>()</span> <span class=p>{</span>
+  	<span class=k>echo</span> <span class=s2>&#34;Hello, you should see this when open /app/home&#34;</span><span class=p>;</span>
+  <span class=p>}</span>
+<span class=p>}</span>
+
+<span class=nv>$router</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>MyRouter\Router</span><span class=p>();</span>
+<span class=nv>$router</span><span class=o>-&gt;</span><span class=na>dispatch</span><span class=p>();</span>
+
+</code></pre></td></tr></table></div></div><hr><p>那麼，用 Zephir 可以做些什麼呢？</p><ul><li>改善原本程式的效能瓶頸（可能是在無法改變語言的狀況下）</li><li>商業使用（加密程式碼）</li><li>在極端的環境下使用（記憶體不足之類的情況）</li><li>純粹好玩</li><li>開發一套大型 PHP 框架，嘗試改變些什麼 ( Phalcon )</li><li>其它也許你能想到的⋯⋯</li></ul><p>至少我認為 PHP 藉此開拓了一條新道路，而 Phaclon 團隊的 Zephir 我想一定能夠改變很多東西。</p><p>目前我推薦他人學習 PHP 的理由，我會用這兩個：</p><ul><li>容易取得運行環境、較少權限需求問題</li><li>容易入門學習，建構成就感</li></ul><p>多了 Zephir 我想還可以加上一個「簡單寫超高速 PHP 網站」之類的吧 XDD
+（寫許用來寫 PHP Rebot 非常好用啊，高效的機器人，用來分析資料是非常方便的！）</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/PHP/>PHP</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/C/>C</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Zephir/>Zephir</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%B6%B2%E7%AB%99%E9%96%8B%E7%99%BC/>網站開發</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

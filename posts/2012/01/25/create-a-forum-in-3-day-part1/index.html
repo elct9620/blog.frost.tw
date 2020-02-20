@@ -1,0 +1,541 @@
+<!doctype html><html lang=zh-tw><head><title>三天做一個論壇 - Part 1 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="###前言 上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。
+不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。"><meta name=created content="2012-01-25T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="三天做一個論壇 - Part 1"><meta property="og:url" content="https://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"三天做一個論壇 - Part 1","datePublished":"2012-01-25T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2012/01/25/create-a-forum-in-3-day-part1/","description":"###前言 上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。\n不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。\n","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2012\/01\/25\/create-a-forum-in-3-day-part1\/","name":"三天做一個論壇 - Part 1"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.25</time><h1 class=article__title>三天做一個論壇 - Part 1</h1></header><div class=article__entry><nav class=translation></nav><h2 id=前言>###前言</h2><p>上次挑戰三十分鐘完成留言板雖然不幸（？）失敗，不過這次我成功的在三天的限制內完成了（簡易）論壇。</p><p>不過，大概也是時間放的比較寬鬆，所以也比較順利在時間內完成。這次跟上次留言板一樣，是使用 PHP + MongoDB 進行開發。</p><h3 id=規劃結構>規劃結構</h3><hr><p>其實和上次大致上沒有什麼變化，不過架構稍微又更加的細分了一些。
+<a href=https://www.flickr.com/photos/elct9620/6760280007/><img src=https://farm8.staticflickr.com/7024/6760280007_4e2d76c2bb.jpg alt="螢幕快照 2012\-01\-25 下午10\.25\.44"></a></p><h3 id=初始化系統>初始化系統</h3><hr><p>首先先建立 index.PHP 檔案在根目錄，而其他一些Library檔案就請各位自己複製摟（參考上次的 30 分鐘留言板）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=sd>/**
+</span><span class=sd> * 3Day Fourum
+</span><span class=sd> * 
+</span><span class=sd> * @package 3day-fourm
+</span><span class=sd> * @author Aotoki
+</span><span class=sd> * @version 1.0
+</span><span class=sd> */</span>
+
+<span class=cm>/* 載入設定檔 */</span>
+ 
+<span class=k>require_once</span><span class=p>(</span><span class=s1>&#39;config.inc.PHP&#39;</span><span class=p>);</span>
+ 
+<span class=sd>/**
+</span><span class=sd> * 載入必要函式庫 
+</span><span class=sd> */</span>
+
+<span class=c1>//Slim Framework 
+</span><span class=c1></span><span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;lib/Slim/Slim.PHP&#39;</span><span class=p>);</span>
+ 
+<span class=c1>//ActiveMongo
+</span><span class=c1></span><span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;lib/ActiveMongo/ActiveMongo.PHP&#39;</span><span class=p>);</span>
+
+<span class=c1>//Facebook API
+</span><span class=c1></span><span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;lib/Facebook/facebook.PHP&#39;</span><span class=p>);</span>
+
+<span class=cm>/* 載入起動器 */</span>
+<span class=k>require_once</span><span class=p>(</span><span class=s1>&#39;bootstrap.PHP&#39;</span><span class=p>);</span>
+
+<span class=cp>?&gt;</span>
+</code></pre></td></tr></table></div></div><p>這次的 index.PHP 我們只針對設定檔、函式庫載入，並且呼叫 bootstrap.PHP 這個檔案初始畫整個網站。</p><p>接下來，我們來看看 bootstrap.PHP 檔案</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=sd>/**
+</span><span class=sd> * Bootstrap
+</span><span class=sd> * 
+</span><span class=sd> * @package 3day-forum
+</span><span class=sd> * @author Aotoki
+</span><span class=sd> * @version 1.0
+</span><span class=sd> */</span>
+
+<span class=cm>/* 修正時區 */</span>
+<span class=nx>date_default_timezone_set</span><span class=p>(</span><span class=s2>&#34;Asia/Taipei&#34;</span><span class=p>);</span>
+ 
+<span class=cm>/* 初始化 Slim Framework */</span>
+<span class=nv>$app</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Slim</span><span class=p>(</span><span class=k>array</span><span class=p>(</span>
+	<span class=s1>&#39;mode&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;development&#39;</span><span class=p>,</span>
+	<span class=s1>&#39;http.version&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;1.1&#39;</span><span class=p>,</span>
+	<span class=s1>&#39;debug&#39;</span> <span class=o>=&gt;</span> <span class=nx>DEBUG</span><span class=p>,</span>
+	<span class=s1>&#39;templates.path&#39;</span> <span class=o>=&gt;</span> <span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;vendor/themes&#39;</span><span class=p>,</span>
+	<span class=s1>&#39;cookies.secret_key&#39;</span> <span class=o>=&gt;</span> <span class=nx>COOKIE_SECRET_KEY</span><span class=p>,</span>
+<span class=p>));</span>
+
+<span class=cm>/* 初始化資料庫 */</span>
+<span class=k>if</span><span class=p>(</span><span class=nx>DB_USER</span> <span class=o>||</span> <span class=nx>DB_PASS</span><span class=p>){</span>
+	<span class=nx>ActiveMongo</span><span class=o>::</span><span class=na>connect</span><span class=p>(</span><span class=nx>DB_NAME</span><span class=p>,</span> <span class=nx>DB_HOST</span><span class=p>,</span> <span class=nx>DB_USER</span><span class=p>,</span> <span class=nx>DB_PASS</span><span class=p>);</span>
+<span class=p>}</span><span class=k>else</span><span class=p>{</span>
+	<span class=nx>ActiveMongo</span><span class=o>::</span><span class=na>connect</span><span class=p>(</span><span class=nx>DB_NAME</span><span class=p>,</span> <span class=nx>DB_HOST</span><span class=p>);</span>
+<span class=p>}</span>
+
+<span class=cm>/* 載入基本資訊 */</span>
+<span class=nv>$basePath</span> <span class=o>=</span> <span class=nx>str_replace</span><span class=p>(</span><span class=s1>&#39;/index.PHP&#39;</span><span class=p>,</span> <span class=s1>&#39;&#39;</span><span class=p>,</span> <span class=nv>$app</span><span class=o>-&gt;</span><span class=na>request</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>getRootUri</span><span class=p>())</span> <span class=o>.</span> <span class=s1>&#39;/&#39;</span><span class=p>;</span>
+<span class=nv>$baseURL</span> <span class=o>=</span> <span class=s2>&#34;https://</span><span class=si>{</span>$_SERVER[&#39;HTTP_HOST&#39;]<span class=si>}</span><span class=s2>/</span><span class=si>{</span>$basePath<span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+
+<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>view</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>setData</span><span class=p>(</span><span class=s1>&#39;basePath&#39;</span><span class=p>,</span> <span class=nv>$basePath</span><span class=p>);</span>
+<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>view</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>setData</span><span class=p>(</span><span class=s1>&#39;baseURL&#39;</span><span class=p>,</span> <span class=nv>$baseURL</span><span class=p>);</span>
+<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>view</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>setData</span><span class=p>(</span><span class=s1>&#39;app&#39;</span><span class=p>,</span> <span class=nv>$app</span><span class=p>);</span>
+
+<span class=cm>/* 讀取  App 邏輯 */</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/Template.PHP&#39;</span><span class=p>);</span>
+
+<span class=cm>/* 讀取 App 模型 */</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/models/Users.PHP&#39;</span><span class=p>);</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/models/Forums.PHP&#39;</span><span class=p>);</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/models/Thread.PHP&#39;</span><span class=p>);</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/models/Posts.PHP&#39;</span><span class=p>);</span>
+
+<span class=cm>/* 讀取 App 介面 */</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/web/Post.PHP&#39;</span><span class=p>);</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/web/User.PHP&#39;</span><span class=p>);</span>
+<span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;app/web/Home.PHP&#39;</span><span class=p>);</span>
+
+<span class=cm>/* 運行 */</span>
+<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>run</span><span class=p>();</span>
+
+</code></pre></td></tr></table></div></div><p>首先，為了避免時間顯示不正確，先將時區設定為 亞洲/台北 （各位可以依照自己的需求設定時區）</p><p>接下來，就是初始化 Slim Framework 以及 ActiveMongo 了！
+基本上和上一次無異，不過在 Slim Framework 的 Mode 部分，因為弦也忘記定義一個常數，所以各位務必記得在 Deploy 的時候將其改為 production 以免錯誤訊息露出來了！</p><blockquote><p>在 Slim Framework 會統一處理錯誤訊息，所以會有統一錯誤頁面。而 DEBUG + Development 的狀況下，則可以看到詳細的錯誤訊息，但在 Production 下，則只會顯示 Error 以及一段訊息說明發生錯誤了！</p></blockquote><p>不過，在這之外，還是要注意「在非 Slim Framework 作用區外的錯誤還是會被顯示」</p><p>接下來，我稍微設定了幾個常用的數值，並且以 $app->view()->setData() 的方式設定，往後所有使用 render() 方法的佈景都可以使用這些預置的變數。</p><p>接著，我們依序載入 App, Model, Web App 的部份。</p><blockquote><p>APP 這邊是指原生屬於系統，而非之後以 Plugin 加入的部份。</p></blockquote><p>另外，我們要注意 app/web/Home.PHP 是最後一個，一開始可能不會發現有什麼問題，不過當我們製作 Profile 頁面讓使用者修改 暱稱 時，就會發現 Router 在處理網址時發生了判斷問題。</p><h2 id=建立model>###建立Model</h2><p>因為 MongoDB 不需要另外建立資料表，所以我們就安心的直接建立 Model 檔案。</p><p>因為是論壇，所以會需要有記錄會員用的Model(Users.PHP)還有討論版（Forums.PHP）以及主題(Thread.php)跟文章(Posts.php)</p><p>首先，我們先來看會員的 Model 長怎樣。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=sd>/**
+</span><span class=sd> * User Model
+</span><span class=sd> * 
+</span><span class=sd> * @package 3day-forum
+</span><span class=sd> * @author Aotoki
+</span><span class=sd> * @version 1.0
+</span><span class=sd> */</span>
+
+<span class=k>class</span> <span class=nc>Users</span> <span class=k>extends</span> <span class=nx>ActiveMongo</span>
+<span class=p>{</span>
+	<span class=c1>//資料表欄位
+</span><span class=c1></span>	<span class=k>public</span> <span class=nv>$userID</span><span class=p>;</span> <span class=c1>//使用者編號(Facebook ID)
+</span><span class=c1></span>	<span class=k>public</span> <span class=nv>$Nickname</span><span class=p>;</span> <span class=c1>//使用者膩稱
+</span><span class=c1></span>	<span class=k>public</span> <span class=nv>$Type</span><span class=p>;</span> <span class=c1>//使用者類型（1 = Admin, 0 = User）
+</span><span class=c1></span>	
+	<span class=sd>/**
+</span><span class=sd>	 * Get User
+</span><span class=sd>	 * 
+</span><span class=sd>	 * @author Aotoki
+</span><span class=sd>	 * @return object|bool 成功傳回 User 物件，失敗則傳回 FALSE
+</span><span class=sd>	 */</span>
+	
+	<span class=k>static</span> <span class=k>public</span> <span class=k>function</span> <span class=nf>getUser</span><span class=p>(</span> <span class=nv>$fromUserID</span> <span class=o>=</span> <span class=k>NULL</span> <span class=p>)</span>
+	<span class=p>{</span>
+		<span class=nv>$userID</span> <span class=o>=</span> <span class=nv>$fromUserID</span><span class=p>;</span>
+		<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nv>$userID</span><span class=p>){</span>
+			<span class=nv>$FB</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Facebook</span><span class=p>(</span><span class=k>array</span><span class=p>(</span>
+				<span class=s1>&#39;appId&#39;</span> <span class=o>=&gt;</span> <span class=nx>FB_APP_ID</span><span class=p>,</span>
+				<span class=s1>&#39;secret&#39;</span> <span class=o>=&gt;</span> <span class=nx>FB_SECRET</span><span class=p>,</span>
+			<span class=p>));</span>
+			
+			<span class=nv>$userID</span> <span class=o>=</span> <span class=nv>$FB</span><span class=o>-&gt;</span><span class=na>getUser</span><span class=p>();</span>
+		<span class=p>}</span>
+		
+		<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nv>$userID</span><span class=p>){</span>
+			<span class=nv>$app</span> <span class=o>=</span> <span class=nx>Slim</span><span class=o>::</span><span class=na>getInstance</span><span class=p>();</span>
+			<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>redirect</span><span class=p>(</span><span class=nv>$FB</span><span class=o>-&gt;</span><span class=na>getLoginUrl</span><span class=p>());</span>
+		<span class=p>}</span><span class=k>else</span><span class=p>{</span>
+			<span class=nv>$user</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Users</span><span class=p>;</span>
+			<span class=nv>$user</span><span class=o>-&gt;</span><span class=na>findOne</span><span class=p>(</span><span class=k>array</span><span class=p>(</span><span class=s1>&#39;userID&#39;</span> <span class=o>=&gt;</span> <span class=nv>$userID</span><span class=p>));</span>
+			<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nv>$user</span><span class=o>-&gt;</span><span class=na>valid</span><span class=p>()){</span>
+				<span class=nv>$user</span><span class=o>-&gt;</span><span class=na>userID</span> <span class=o>=</span> <span class=nv>$userID</span><span class=p>;</span>
+				<span class=nv>$user</span><span class=o>-&gt;</span><span class=na>save</span><span class=p>();</span>
+			<span class=p>}</span>
+			
+			<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nv>$fromUserID</span><span class=p>){</span>
+				<span class=nv>$app</span> <span class=o>=</span> <span class=nx>Slim</span><span class=o>::</span><span class=na>getInstance</span><span class=p>();</span>
+				<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>view</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>setData</span><span class=p>(</span><span class=s1>&#39;user&#39;</span><span class=p>,</span> <span class=nv>$user</span><span class=p>);</span>
+			<span class=p>}</span>
+			<span class=k>return</span> <span class=nv>$user</span><span class=p>;</span>
+		<span class=p>}</span>	
+	<span class=p>}</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>欄位很簡單，只有 會員編號、暱稱、類型 三個。而類型部分，因為並沒有安裝論壇的部份，需要手動操作資料庫去設定會員類型，該如何初始化，以及如何處理，就交給各位發揮創意摟！某人超懶所以就變成這樣</p><p>接下來，會看到一個 static 的方法叫做 getUser() 這是用於取得使用者的方法。</p><blockquote><p>為什麼要用 static 方法呢？因為弦也認為這些方法都是直接產生一個實例傳回，而非改動物件設定值後一併傳回，所以決定以 static 的方法來做處理。</p></blockquote><p>這個 getUser 的方法也非常簡單，如果有指定 userID 那麼就跳過 Facebook 登入並且繼續執行，反之則進行 Facebook 登入，取得 Facebook 的使用者編號，並且查詢系統內使用者，如果無使用者，則新建一個。</p><p>最後，再將使用者物件傳回。</p><p>接下來是 Forums.PHP 這個檔案，我想是全部 Model 中最為複雜的部份，也是整個論壇最複雜的檔案。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+<span class=sd>/**
+</span><span class=sd> * Fourums
+</span><span class=sd> * 
+</span><span class=sd> * @package 3day-forum
+</span><span class=sd> * @author Aotoki
+</span><span class=sd> * @version 1.0
+</span><span class=sd> */</span>
+
+<span class=k>class</span> <span class=nc>Forums</span> <span class=k>extends</span> <span class=nx>ActiveMongo</span>
+<span class=p>{</span>
+	<span class=c1>//資料表欄位
+</span><span class=c1></span>	<span class=k>public</span> <span class=nv>$Name</span><span class=p>;</span> <span class=c1>//論壇名稱
+</span><span class=c1></span>	<span class=k>public</span> <span class=nv>$Parent</span><span class=p>;</span> <span class=c1>//父論壇
+</span><span class=c1></span>	
+	<span class=sd>/**
+</span><span class=sd>	 * Get Forum
+</span><span class=sd>	 * 
+</span><span class=sd>	 * @author Aotoki
+</span><span class=sd>	 * @param string 論壇ID
+</span><span class=sd>	 * @return object|bool
+</span><span class=sd>	 */</span>
+	
+	<span class=k>static</span> <span class=k>public</span> <span class=k>function</span> <span class=nf>getForum</span><span class=p>(</span> <span class=nv>$ID</span><span class=p>,</span> <span class=nv>$forumArgs</span> <span class=o>=</span> <span class=k>array</span><span class=p>()</span> <span class=p>)</span>
+	<span class=p>{</span>
+		<span class=nv>$forum</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Forums</span><span class=p>;</span>
+		<span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>findOne</span><span class=p>(</span><span class=k>new</span> <span class=nx>MongoId</span><span class=p>(</span><span class=nv>$ID</span><span class=p>));</span>
+		
+		<span class=nx>array_push</span><span class=p>(</span><span class=nv>$forumArgs</span><span class=p>,</span> <span class=nv>$forum</span><span class=p>);</span>
+		<span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>Parent</span><span class=p>)){</span>
+			<span class=nv>$forumArgs</span> <span class=o>=</span> <span class=nx>self</span><span class=o>::</span><span class=na>getForum</span><span class=p>(</span><span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>Parent</span><span class=p>,</span> <span class=nv>$forumArgs</span><span class=p>);</span>
+		<span class=p>}</span>
+		<span class=nx>sort</span><span class=p>(</span><span class=nv>$forumArgs</span><span class=p>,</span> <span class=nx>SORT_DESC</span><span class=p>);</span>
+		<span class=k>return</span> <span class=nv>$forumArgs</span><span class=p>;</span>
+	<span class=p>}</span>
+	
+	<span class=sd>/**
+</span><span class=sd>	 * Get Forums
+</span><span class=sd>	 * 
+</span><span class=sd>	 * @author Aotoki
+</span><span class=sd>	 * @param string 父論壇ID
+</span><span class=sd>	 * @return object|bool 成功傳回 Forum 物件，失敗傳回 FALSE
+</span><span class=sd>	 */</span>
+	
+	<span class=k>static</span> <span class=k>public</span> <span class=k>function</span> <span class=nf>getForums</span><span class=p>(</span> <span class=nv>$parentID</span> <span class=o>=</span> <span class=k>NULL</span><span class=p>)</span>
+	<span class=p>{</span>
+		<span class=nv>$forums</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Forums</span><span class=p>;</span>
+		<span class=nv>$forums</span><span class=o>-&gt;</span><span class=na>find</span><span class=p>(</span><span class=k>array</span><span class=p>(</span><span class=s1>&#39;Parent&#39;</span> <span class=o>=&gt;</span> <span class=nv>$parentID</span><span class=p>));</span>
+		
+		<span class=nv>$result</span> <span class=o>=</span> <span class=k>array</span><span class=p>();</span>
+		
+		<span class=k>foreach</span> <span class=p>(</span><span class=nv>$forums</span> <span class=k>as</span> <span class=nv>$ID</span> <span class=o>=&gt;</span> <span class=nv>$forum</span><span class=p>)</span> <span class=p>{</span>
+			<span class=nv>$lastPost</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Thread</span><span class=p>;</span>
+			<span class=nv>$lastPost</span><span class=o>-&gt;</span><span class=na>sort</span><span class=p>(</span><span class=s1>&#39;timestamp DESC&#39;</span><span class=p>);</span>
+			<span class=nv>$lastPost</span><span class=o>-&gt;</span><span class=na>where</span><span class=p>(</span><span class=s1>&#39;forumID&#39;</span><span class=p>,(</span><span class=nx>string</span><span class=p>)</span> <span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>getID</span><span class=p>());</span>
+			<span class=nv>$lastPost</span><span class=o>-&gt;</span><span class=na>limit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+			
+			<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nv>$lastPost</span><span class=o>-&gt;</span><span class=na>valid</span><span class=p>()){</span>
+				<span class=nv>$lastPost</span> <span class=o>=</span> <span class=k>array</span><span class=p>();</span>
+			<span class=p>}</span><span class=k>else</span><span class=p>{</span>
+				<span class=nv>$lastPost</span> <span class=o>=</span> <span class=nv>$lastPost</span><span class=o>-&gt;</span><span class=na>getArray</span><span class=p>();</span>
+			<span class=p>}</span>
+			
+			<span class=nv>$result</span><span class=p>[]</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span>
+				<span class=s1>&#39;forum&#39;</span> <span class=o>=&gt;</span> <span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>getArray</span><span class=p>(),</span>
+				<span class=s1>&#39;lastPost&#39;</span> <span class=o>=&gt;</span> <span class=nv>$lastPost</span><span class=p>,</span>
+			<span class=p>);</span>
+			
+			<span class=nx>unset</span><span class=p>(</span><span class=nv>$lastPost</span><span class=p>);</span>
+		<span class=p>}</span>
+		
+		<span class=k>return</span> <span class=nv>$result</span><span class=p>;</span>
+	<span class=p>}</span>
+	
+	<span class=sd>/**
+</span><span class=sd>	 * Create Forum
+</span><span class=sd>	 * 
+</span><span class=sd>	 * @author Aotoki
+</span><span class=sd>	 * @param string 論壇名稱
+</span><span class=sd>	 */</span>
+	
+	<span class=k>static</span> <span class=k>public</span> <span class=k>function</span> <span class=nf>createForum</span><span class=p>(</span><span class=nv>$Name</span><span class=p>,</span> <span class=nv>$Parent</span> <span class=o>=</span> <span class=k>NULL</span><span class=p>)</span>
+	<span class=p>{</span>
+		<span class=nv>$forum</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Forums</span><span class=p>;</span>
+		<span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>Name</span> <span class=o>=</span> <span class=nv>$Name</span><span class=p>;</span>
+		<span class=k>if</span><span class=p>(</span><span class=nv>$Parent</span><span class=p>){</span>
+			<span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>Parent</span> <span class=o>=</span> <span class=nv>$Parent</span><span class=p>;</span>
+		<span class=p>}</span>
+		<span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>save</span><span class=p>();</span>
+		<span class=nx>unset</span><span class=p>(</span><span class=nv>$forum</span><span class=p>);</span>
+	<span class=p>}</span>
+	
+	<span class=sd>/**
+</span><span class=sd>	 * Delete Forum
+</span><span class=sd>	 * 
+</span><span class=sd>	 * @author Aotoki
+</span><span class=sd>	 * @param string 論壇ID
+</span><span class=sd>	 */</span>
+	
+	<span class=k>static</span> <span class=k>public</span> <span class=k>function</span> <span class=nf>deleteForum</span><span class=p>(</span><span class=nv>$forumID</span><span class=p>)</span>
+	<span class=p>{</span>
+		
+		<span class=nv>$parentID</span> <span class=o>=</span> <span class=k>NULL</span><span class=p>;</span>
+		
+		<span class=nv>$forum</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Forums</span><span class=p>;</span>
+		<span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>findOne</span><span class=p>(</span><span class=k>new</span> <span class=nx>MongoId</span><span class=p>(</span><span class=nv>$forumID</span><span class=p>));</span>
+		<span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>Parent</span><span class=p>)){</span>
+			<span class=nv>$parentID</span> <span class=o>=</span> <span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>Parent</span><span class=p>;</span>
+		<span class=p>}</span>
+		<span class=nv>$forum</span><span class=o>-&gt;</span><span class=na>delete</span><span class=p>();</span>
+		
+		<span class=nv>$subForums</span> <span class=o>=</span> <span class=nx>self</span><span class=o>::</span><span class=na>getForums</span><span class=p>(</span><span class=nv>$forumID</span><span class=p>);</span>
+		<span class=k>foreach</span><span class=p>(</span><span class=nv>$subForums</span> <span class=k>as</span> <span class=nv>$ID</span> <span class=o>=&gt;</span> <span class=nv>$forum</span><span class=p>){</span>
+			<span class=nx>self</span><span class=o>::</span><span class=na>deleteForum</span><span class=p>(</span><span class=nv>$ID</span><span class=p>);</span>
+		<span class=p>}</span>
+		
+		<span class=nv>$topics</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Thread</span><span class=p>;</span>
+		<span class=nv>$topics</span><span class=o>-&gt;</span><span class=na>find</span><span class=p>(</span><span class=k>array</span><span class=p>(</span><span class=s1>&#39;forumID&#39;</span> <span class=o>=&gt;</span> <span class=nv>$forumID</span><span class=p>));</span>
+		<span class=k>foreach</span><span class=p>(</span><span class=nv>$topics</span> <span class=k>as</span> <span class=nv>$ID</span> <span class=o>=&gt;</span> <span class=nv>$topic</span><span class=p>){</span>
+			<span class=nx>Thread</span><span class=o>::</span><span class=na>deleteTopic</span><span class=p>(</span><span class=nv>$ID</span><span class=p>);</span>
+		<span class=p>}</span>
+		
+		<span class=k>return</span> <span class=nv>$parentID</span><span class=p>;</span>
+	<span class=p>}</span>
+	
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>欄位非常簡單，就只有 Name 以及 Parent 兩個值。代表的意義就是 討論版 的名字，以及其父討論版的 ID (如果沒有父討論版則是 NULL)</p><p>接下來，就是本次最複雜的部分，論壇的各個方法。選用 static 的理由已經說明了，因此先從 getForum() 開始介紹起。</p><p>####getForum
+從原始碼可以得知，這是一個遞迴函式，每當所在論壇層級越低，遞迴次數就會越多（不斷的追溯父論壇）</p><p>首先，我們要先找出目前論壇，與 MySQL 這類關聯式資料庫不同，在 MongoDB 下沒有可以自動遞增的欄位屬性，所以我們只好借用每個物件都會存在的 _id 欄位，來當做識別標準。</p><blockquote><p>在 MongoDB 內儲存的是名為 ObjectId 物件的格式，無法直接以字串方式查詢，但是 ActiveMongo 也沒有自動轉換的方式，所以我們使用 Mongo 的 PHP Driver 內建的 MongoId 物件來轉換（不過直接輸出他，是會自動轉換回字串格式的）因為操作中有兩種查詢方式（字串跟物件）希望大家不會搞混。</p></blockquote><p>找到論壇後，則塞入 $forumArgs 變數，並且檢查是否有父論壇，如果有，那麼就繼續遞迴，反之則傳回整理好的 $forumArgs 函式。</p><blockquote><p>傳回前做 sort(排序) 處理的原因主要是因為 FIFO (First Input First Output) 會讓原本是最低層級的論壇出現在第一個，違反常理，應該是要 Parent > Child 才會正確，所以才這樣處理。</p></blockquote><p>說實在的，把這個函式叫做 getForumTree() 搞不好會比較貼切。</p><p>####getForums
+接著，是 getForums 這個方法。邏輯上就比起前面的還簡單多了！</p><p>假設沒有 Parent 的傳入，那麼就單純查詢論壇（無 Parent 的論壇，也就是最頂層的論壇）假設有，則查詢 Parent 與之相符的論壇。</p><blockquote><p>這邊的 Parent 因為在儲存時已經以 string(字串) 方式儲存，所以不需要用 MongoId 物件來轉換成 ObjectId</p></blockquote><p>實際上，其實只要這樣就足夠了！不過我們還希望得知這個討論版最後一次有新文章是什麼時候，所以決定對 Thread 查詢。</p><blockquote><p>後面會提到 Thread 這個 Model 我們用來儲存每篇主題與討論版的關聯性，以及這篇主題是什麼時候被建立的。</p></blockquote><p>因為不單純只有一個討論版，所以放入迴圈，依序取出每個討論版後，在做查詢。首先，我們先用 sort 這個方法指定依照時間排序，接著用 where 方法找出在該討論版的主題，最後用 limit 限制只傳回一筆資料。</p><blockquote><p>扣除 sort 方法，其實可以直接用 findOne() 方法，但是我們需要排序，所以改用這樣的方式查詢（也許我們可以用關聯式的查詢，不過弦也對這部份操作還不清楚，所以土法煉鋼一下～）</p></blockquote><p>接著，我們將其放入 $result 陣列中，傳回。</p><blockquote><p>$result[] = array() 是讓陣列自動產生 Key 和 array_psuh() 類似，而為什麼要對 $forum 進行 getArray() 指令產出陣列呢？這是因為弦也開發時發現如果直接傳入物件，取出時會變回空的 Forums 物件而非一個指定某個討論版的物件，為了保持資料，所以就這樣做處理。</p></blockquote><p>####createForum
+這個方法相較之下，就筆其他簡單許多。</p><p>僅是單純的建立一個 Forums 物件，並且將 Name 以及 Parent 存入而已。最後的 unset() 動作是釋放記憶體，雖然函式呼叫完應該也會自動釋放，不過還是手動釋放避免該擾吧！</p><blockquote><p>其實 getForums 的迴圈釋放 $lastPost 用意也一樣，但是這個動作可以確保下次迴圈運行時不會不小心用到上一筆資料。</p></blockquote><p>####deleteForum
+終於，我們到了最後一個方法，這個方法可以視為 getForum 跟 getForums 混合後的修改版。</p><p>首先找出應該刪除的討論版，並且加以刪除（順便記錄其父討論版）
+接著找出子討論版，並且刪除（使用遞迴方式，確保子討論版下的子討論版也都會被刪除）</p><p>接著刪除討論版下的所有主題（這邊使用 Thread 的 deleteTopic 方法，是為了一併刪除相關的文章）
+最後傳回父論壇的 ID 以方便重新定向時可以轉跳到其父討論版，而不會跳回首頁。</p><h2 id=總結>###總結</h2><p>我想一次吸收這麼多資訊應該很難消化，所以先在這邊做一個段落。
+（不是因為我想偷懶喔，因為之後的 Thread Model 也有不少於 Forums Model 的方法要解釋）</p><p>下一篇文章除了將剩下的 Model 解釋完之外，還會繼續解說其餘的 Web App 部分。</p><ul><li>Github 原始碼：<a href=https://github.com/elct9620/3Day-Forum/zipball/1.0>https://Github.com/elct9620/3Day-Forum/zipball/1.0</a></li><li>線上範例 ：<a href=https://the-3day-forum.herokuapp.com/>https://the-3day-forum.Herokuapp.com/</a></li></ul><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

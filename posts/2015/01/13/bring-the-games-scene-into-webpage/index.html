@@ -1,0 +1,275 @@
+<!doctype html><html lang=zh-tw><head><title>將遊戲場景帶入網頁 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="昨晚公開了畢業製作的官網「遠古神話 - The Lost Mythologies」並且使用了「全景攝影技術」在網站上。
+ 喜歡我們的話請到粉絲專頁幫我們按個讚 XD
+ 沒想到反應還蠻熱烈的，雖然官網目前也只有全景預覽以及 LOGO 而已，不過似乎造成了一點點話題。
+那麼，這個效果到底是如何做出來的呢？這篇文章就會簡單的說明。
+主要的目標大 …"><meta name=created content="2015-01-13T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="將遊戲場景帶入網頁"><meta property="og:url" content="https://blog.frost.tw/posts/2015/01/13/bring-the-games-scene-into-webpage/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2015/01/13/bring-the-games-scene-into-webpage/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"將遊戲場景帶入網頁","datePublished":"2015-01-13T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2015/01/13/bring-the-games-scene-into-webpage/","description":"昨晚公開了畢業製作的官網「遠古神話 - The Lost Mythologies」並且使用了「全景攝影技術」在網站上。\n 喜歡我們的話請到粉絲專頁幫我們按個讚 XD\n 沒想到反應還蠻熱烈的，雖然官網目前也只有全景預覽以及 LOGO 而已，不過似乎造成了一點點話題。\n那麼，這個效果到底是如何做出來的呢？這篇文章就會簡單的說明。\n主要的目標大 …\n","keywords":["前端","心得"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2015\/01\/13\/bring-the-games-scene-into-webpage\/","name":"將遊戲場景帶入網頁"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.13</time><h1 class=article__title>將遊戲場景帶入網頁</h1></header><div class=article__entry><nav class=translation></nav><p>昨晚公開了畢業製作的官網「<a href=https://www.make.moe>遠古神話 - The Lost Mythologies</a>」並且使用了「全景攝影技術」在網站上。</p><blockquote><p>喜歡我們的話請到<a href="https://www.facebook.com/Basaltic.Studio?fref=nf">粉絲專頁</a>幫我們按個讚 XD</p></blockquote><p>沒想到反應還蠻熱烈的，雖然官網目前也只有全景預覽以及 LOGO 而已，不過似乎造成了一點點話題。</p><p>那麼，這個效果到底是如何做出來的呢？這篇文章就會簡單的說明。</p><p>主要的目標大致上有：</p><ul><li>順暢的瀏覽</li><li>清晰的畫面</li><li>全景圖片的製作</li></ul><p>事實上，這個技術其實不是很新的技術。像是 Google 街景就是運用的範例之一，而實做的效果則是源自於 othree 大大的 <a href=https://Github.com/othree/360-panorama>360-panorama</a> 這個範例（約兩年前的 Happy Designer Mini 活動分享）</p><h3 id=全景圖製作>全景圖製作</h3><p>要做出全景效果，我們必須先有全景圖才能夠開始。</p><p>在遊戲中通常只有 Perspective / Orthographic 兩種攝影機可以使用，我們第一個目標就是要把它當作「相機」來進行操作。
+跟一般相機比較接近的是 Perspective Camera 因此我們選擇利用這個 Camera 來做攝影的動作。</p><p>那麼，該怎麼截圖才對呢？可以參考網路上非常多的「<a href=https://www.lazybox.com.tw/forum/fancystuff/photodiary/10335-87-lightroom--15->全景攝影教學</a>」的做法，利用拼接數張相片來達成這個效果。</p><blockquote><p>在 Prespective Camera 中，可以設定 Field of View (FOV) 這個設定值，最大可以達到 170 ~ 180 左右，簡單說就是廣角鏡頭的效果，能夠讓視野變得非常大，但是同時也讓畫面變形到無法辨識，因此這種方式是不可行的。</p></blockquote><p>為了取得比較沒有變形的遊戲畫面，一般依照預設值使用 FOV = 90 / Aspect = 1.7778 即可（Aspect 為長寬比，而 1.7778 是目前較常見的 16:9 螢幕大小，不過實際上拼接後無影響）</p><blockquote><p>在 Unreal Engine 中 Aspect 的大小會影響輸出檔案的解析度，當 Aspect 越小，解析度低也因次需要利用 HighResoultion Screenshot 工具的 Scale 功能去放大，但是放大次數太多會讓你的顯卡暴斃，因此設定 1.7778 的 Aspect 會比較恰當，大致上只需要做到 2 ~ 3 的 Scale 就足夠了！</p></blockquote><h4 id=unreal-engine-的攝影機架設與設定>Unreal Engine 的攝影機架設與設定</h4><p>因為是使用 Unreal Engine 來製作的，所以這邊就用 Unreal Engine 來示範架設攝影機的處理。</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/09DVxMSTT6YJgZCgrXiw_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.43.46.png alt="螢幕快照 2015-01-13 上午11.43.46.png"></p><p>首先我們先加入一個拍攝用的攝影機在希望拍攝全景圖場景的位置（之後可以刪掉，如果用不上的話⋯⋯）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/4V6cxZEJTrGvnTy9wip4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.46.15.png alt="螢幕快照 2015-01-13 上午11.46.15.png"></p><p>接下來調整攝影機位置到正確的點，這邊最重要的地方是把 (X, Y, Z) 三軸的旋轉都歸零，以免待會拍攝的時候發生問題。</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/0HCJoRfFTNKHA54pvWCi_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.47.21.png alt="螢幕快照 2015-01-13 上午11.47.21.png"></p><p>Unreal Engine 中有「Lock Viewport to Actor」的功能，利用這個功能將編輯器畫面對應到用來拍攝全景圖的攝影機上（主要是因為 Unreal Engine 的 Screenshot 功能是以編輯器的視窗為主）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/roHN3olCQWbT0BVORWMP_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.50.38.png alt="螢幕快照 2015-01-13 上午11.50.38.png"></p><p>接下來隱藏掉一些不想出現在畫面上的物件（Ex. 小怪、遮蔽視線的物體）然後將 Realtime 功能關閉，開啟 Gameview 狀態讓編輯器畫面呈現「接近遊戲畫面」的狀態方便拍攝（過程不要點到場景物件，以免被拍到控制項）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/6WjH80jJQwSog6ENHhyd_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.51.08.png alt="螢幕快照 2015-01-13 上午11.51.08.png"></p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/rKN3lddTj61hyg7UfIhY_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8A%E5%8D%8811.51.21.png alt="螢幕快照 2015-01-13 上午11.51.21.png"></p><p>接下來開啟 High Resloution Screenshot 功能拍攝高畫質的全景圖吧！關於 Screenshot Size Multipler 的設定，就看大家的需求調整摟！（以我的解析度設定為 3 大概可以拿到約 600 萬畫素的截圖）</p><p>至於要拍攝幾張呢？以我的經驗來說約 26 張差不多就足夠了！</p><p>大約是以下幾個組合：</p><ul><li>8 張 (X=0, Y=0, Z=n) n = i * 45</li><li>8 張 (X=0, Y=45, Z=n) n = i * 45</li><li>8 張 (X=0, Y=-45, Z=n) n = i * 45</li><li>2 張 (X=0, Y=n, Z=0) n = (i - 1) * 90 (+90 跟 -90)</li></ul><p>我們會使用「正射投影法」貼到一顆球體上，之後再轉為「等距圓柱投影」的圖片作為輸出。</p><blockquote><p>最後兩張是用來填補天空和地板的洞，而 Y = +/-45 也是類似，都是補足 FOV=90 視野不夠廣闊問題的輔助圖
+突然發現地理課學的投影法在神秘的情況下竟然用到了，雖然用軟體完全沒差啊～～～</p></blockquote><p>注意：重點在於每張圖片都要跟其他圖片有「重複且可辨識」的部分</p><h4 id=拼接全景圖>拼接全景圖</h4><p>因為 Lightroom 有點大，所以就用了 OpenSource 的軟體 <a href=https://hugin.sourceforge.net>Hugin</a> 來製作（其實非常好用）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/MK3J09cTyeuF42BImv5y_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.01.22.png alt="螢幕快照 2015-01-13 下午12.01.22.png"></p><p>Mac 上打開會出現錯誤，按取消之後一樣可以正常使用（意義不明 XDD）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/lGA9IJjjTS9FMywSRslr_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.02.08.png alt="螢幕快照 2015-01-13 下午12.02.08.png"></p><p>開啟後選擇左上角的「載入圖片」一次選取剛剛全部拍攝的 26 張圖片後，會先詢問鏡頭的數據。</p><blockquote><p>這邊先填寫「焦距比」的設定值，也就是 Aspect 設定的 1.7778 然後再輸入水平視角的角度 FOV=90 度，最後會自動計算出焦距
+據說教學文章上說用 15mm ~ 25mm 的鏡頭會比較有透視感，但是遊戲攝影機拍出來隨便都 15mm 以下，到底是多有透視感啊 XDDD</p></blockquote><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/kVa7Kq2dRDuY4dt1NLX2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.04.55.png alt="螢幕快照 2015-01-13 下午12.04.55.png"></p><p>設定完畢後會發現畫面非常的奇怪，感覺只是單純地把圖片貼到球體上而已。不過這是正常情況（正射投影預設就是這樣啊 XD）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/Uxog8yFLQs4n6cesVf67_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.06.14.png alt="螢幕快照 2015-01-13 下午12.06.14.png"></p><p>點選「對準」按鈕之後，會開始計算這 26 張圖片的「重複」部分，並且以此為基準作為「對齊」的基準點。</p><p>註：也因此，前面一個步驟視野 90 度卻用 45 度旋轉的理由就出現了（不然手動對齊可是會崩潰的）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/diIjA5SnRUmMfc7v9lBN_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.08.33.png alt="螢幕快照 2015-01-13 下午12.08.33.png"></p><p>在預覽模式下可以看到軟體基本上算出了近百個對齊點才抓到正確的拼接參考，因此拍攝時多花點時間讓重複的部分夠多才能讓軟體自動的拼接。</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/DJ7mYBFPTgedqzDMput4_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.10.07.png alt="螢幕快照 2015-01-13 下午12.10.07.png"></p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/9R8GP1HWRJexI8sTDlLi_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.11.36.png alt="螢幕快照 2015-01-13 下午12.11.36.png"></p><p>不過這時候可能會發現場景是上下顛倒的（不一定）這時候就利用移動/拖曳的功能，矯正場景到正確的位置。
+（這會影響到一開始的全景預覽位置是否正確，以及是否會有強烈的傾斜感）</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/m5R9U3BBQfiXJy5Ah7u2_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.13.21.png alt="螢幕快照 2015-01-13 下午12.13.21.png"></p><p>最後到投影設定檢查是否為「等距長方圓柱」這個設定值，確認無誤之後就可以進行輸出了！</p><p><img src=https://user-image.logdown.io/user/52/blog/52/post/249663/8Js5Lw5RS6qWA3W62N1z_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-01-13%20%E4%B8%8B%E5%8D%8812.14.27.png alt="螢幕快照 2015-01-13 下午12.14.27.png"></p><p>存好等距長方圓柱投影的貼圖後，就可以開始來製作 3D 的投影網頁場景摟！</p><h3 id=threejs--webgl-全景預覽>Three.js + WebGL 全景預覽</h3><p>基本上參考文章一開始提到 othree 大大所寫的全景預覽 three.js 版本即可（其實裡面有提到用 Cube 模式會比較好，其實那就是 Skybox 的方式，不過一切看個人喜好，至少圓柱投影的版本效果就很不錯了！）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>div</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;container&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+</code></pre></td></tr></table></div></div><p>基本上很簡單，給予一個 HTML 容器用來放置 Three.js 的 Canvas 即可。</p><p>然後就是寫 Three.js 的控制項（基本上都參照 othree 大大的寫法～～）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffee data-lang=coffee>
+<span class=nb>window</span><span class=p>.</span><span class=nv>onload = </span><span class=nf>(e) -&gt;</span>
+  <span class=c1># 網頁讀取完畢後產生場景
+</span><span class=c1></span>  <span class=k>new</span> <span class=nx>Scene</span><span class=p>(</span><span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s>&#39;</span><span class=s>container</span><span class=s>&#39;</span><span class=p>)</span><span class=p>)</span>
+
+<span class=k>class</span> <span class=nx>Scene</span>
+  <span class=nv>constructor: </span><span class=nf>(container) -&gt;</span>
+    <span class=c1># 初始化變數
+</span><span class=c1></span>    <span class=vi>@_isInteracting = </span><span class=kc>false</span>
+    <span class=vi>@_onMouseDownX = </span><span class=mi>0</span>
+    <span class=vi>@_onMouseDownY = </span><span class=mi>0</span>
+    <span class=vi>@_lon= </span><span class=mi>0</span>
+    <span class=vi>@_lat = </span><span class=mi>0</span>
+    <span class=vi>@_phi = </span><span class=mi>0</span>
+    <span class=vi>@_onMouseDownLon = </span><span class=mi>0</span>
+    <span class=vi>@_onMouseDownLat = </span><span class=mi>0</span>
+    <span class=vi>@_theta = </span><span class=mi>0</span>
+
+    <span class=vi>@container = </span><span class=nx>container</span>
+    
+    <span class=c1># 創建攝影機（FOV=70 左右比較感覺不出變形）
+</span><span class=c1></span>    <span class=c1># window.innerWidth / window.innerHeight 是計算 Aspect 的公式（因為是佔滿畫面所以直接這樣使用）
+</span><span class=c1></span>    <span class=vi>@camera = </span><span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>PerspectiveCamera</span> <span class=mi>70</span><span class=p>,</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerWidth</span> <span class=o>/</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerHeight</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1100</span>
+    <span class=vi>@camera.target = </span><span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>Vector3</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span>
+    
+    <span class=c1># 產生場景
+</span><span class=c1></span>    <span class=vi>@scene = </span><span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>Scene</span><span class=p>(</span><span class=p>)</span>
+
+    <span class=c1># 產生物件
+</span><span class=c1></span>    <span class=vi>@mesh = </span><span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>Mesh</span><span class=p>(</span>
+      <span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>SphereGeometry</span><span class=p>(</span> <span class=mi>500</span><span class=p>,</span> <span class=mi>60</span><span class=p>,</span> <span class=mi>40</span> <span class=p>)</span><span class=p>,</span> <span class=c1># 產生球體（半徑、寬分段、高分段）
+</span><span class=c1></span>      <span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>MeshBasicMaterial</span> <span class=p>(</span> <span class=p>{</span> <span class=c1># 設定材質
+</span><span class=c1></span>        <span class=nv>map: </span><span class=nx>THREE</span><span class=p>.</span><span class=nx>ImageUtils</span><span class=p>.</span><span class=nx>loadTexture</span><span class=p>(</span> <span class=s>&#39;</span><span class=s> /img/temple.jpg</span><span class=s>&#39;</span> <span class=p>)</span> <span class=c1># 貼圖為剛剛輸出的全景圖
+</span><span class=c1></span>      <span class=p>}</span> <span class=p>)</span>
+    <span class=p>)</span>
+    <span class=vi>@mesh.scale.x = </span><span class=o>-</span><span class=mi>1</span> <span class=c1># 反轉 Normal （讓原本顯示在外表的材質變到內部）
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>scene</span><span class=p>.</span><span class=nx>add</span> <span class=nx>@</span><span class=nx>mesh</span> <span class=c1># 在場景加入這個物件
+</span><span class=c1></span>
+    <span class=c1># 產生繪圖器，這邊是用 WebGL 的版本（似乎有些人的電腦不支援看不到，還需要做支援性修正）
+</span><span class=c1></span>    <span class=vi>@renderer = </span><span class=k>new</span> <span class=nx>THREE</span><span class=p>.</span><span class=nx>WebGLRenderer</span><span class=p>(</span><span class=p>)</span>
+    <span class=nx>@</span><span class=nx>renderer</span><span class=p>.</span><span class=nx>setSize</span><span class=p>(</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerWidth</span><span class=p>,</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerHeight</span> <span class=p>)</span> <span class=c1># 畫面大小等於網頁畫面
+</span><span class=c1></span>
+		<span class=c1># 加到網頁中
+</span><span class=c1></span>    <span class=nx>container</span><span class=p>.</span><span class=nx>appendChild</span> <span class=nx>@</span><span class=nx>renderer</span><span class=p>.</span><span class=nx>domElement</span>
+
+    <span class=nx>@</span><span class=nx>bindEvents</span><span class=p>(</span><span class=p>)</span>
+    <span class=nx>@</span><span class=nx>animate</span><span class=p>(</span><span class=p>)</span> <span class=c1># 開始播放動畫
+</span><span class=c1></span>
+  <span class=nv>bindEvents: </span><span class=nf>=&gt;</span>
+  	<span class=c1># 處理滑鼠事件
+</span><span class=c1></span>    <span class=nb>document</span><span class=p>.</span><span class=nx>addEventListener</span> <span class=s>&#39;</span><span class=s>mousedown</span><span class=s>&#39;</span><span class=p>,</span> <span class=nx>@</span><span class=nx>onMouseDown</span><span class=p>,</span> <span class=kc>false</span>
+    <span class=nb>document</span><span class=p>.</span><span class=nx>addEventListener</span> <span class=s>&#39;</span><span class=s>mousemove</span><span class=s>&#39;</span><span class=p>,</span> <span class=nx>@</span><span class=nx>onMouseMove</span><span class=p>,</span> <span class=kc>false</span>
+    <span class=nb>document</span><span class=p>.</span><span class=nx>addEventListener</span> <span class=s>&#39;</span><span class=s>mouseup</span><span class=s>&#39;</span><span class=p>,</span> <span class=nx>@</span><span class=nx>onMouseUp</span><span class=p>,</span> <span class=kc>false</span>
+
+		<span class=c1># 處理縮放事件（不過我用 addEventListener 卻收不到，很奇怪）
+</span><span class=c1></span>    <span class=nb>window</span><span class=p>.</span><span class=nv>onresize = </span><span class=nx>@</span><span class=nx>onWindowResize</span>
+    <span class=c1># window.addEventListener &#39;resize&#39;, @onWinodwResize, false
+</span><span class=c1></span>
+  <span class=nv>animate: </span><span class=nf>=&gt;</span>
+    <span class=c1># HTML5 的動畫處理函示（ 其實要 Fallback 回去 setTimeout ）
+</span><span class=c1></span>    <span class=nx>requestAnimationFrame</span><span class=p>(</span> <span class=nx>@</span><span class=nx>animate</span> <span class=p>)</span>
+    
+    <span class=c1># 如果沒有在「拖曳」場景的話，自動旋轉 Lon ( Lon / Lat 應該是用經緯度表示法 )
+</span><span class=c1></span>    <span class=k>if</span> <span class=nx>@</span><span class=nx>_isInteracting</span> <span class=o>is</span> <span class=kc>false</span>
+      <span class=k>if</span> <span class=nx>@</span><span class=nx>_lon</span> <span class=o>&lt;</span> <span class=mi>360</span>
+        <span class=vi>@_lon = </span><span class=nx>@</span><span class=nx>_lon</span> <span class=o>+</span> <span class=mf>0.015</span>
+      <span class=k>else</span>
+        <span class=vi>@_lon = </span><span class=mi>0</span>
+
+    <span class=nx>@</span><span class=nx>render</span><span class=p>(</span><span class=p>)</span>
+
+  <span class=nv>render: </span><span class=nf>-&gt;</span>
+
+    <span class=vi>@_lat = </span><span class=nb>Math</span><span class=p>.</span><span class=nx>max</span><span class=p>(</span> <span class=o>-</span> <span class=mi>85</span><span class=p>,</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>min</span><span class=p>(</span> <span class=mi>85</span><span class=p>,</span> <span class=nx>@</span><span class=nx>_lat</span> <span class=p>)</span> <span class=p>)</span> <span class=c1># 限制仰角只能在 +/- 85 度以內（其實就是地板跟天花板的洞讓你看不到）
+</span><span class=c1></span>    <span class=vi>@_phi = </span><span class=nx>THREE</span><span class=p>.</span><span class=nb>Math</span><span class=p>.</span><span class=nx>degToRad</span><span class=p>(</span> <span class=mi>90</span> <span class=o>-</span> <span class=nx>@</span><span class=nx>_lat</span> <span class=p>)</span> <span class=c1># 將角度轉為弧度
+</span><span class=c1></span>    <span class=vi>@_theta = </span><span class=nx>THREE</span><span class=p>.</span><span class=nb>Math</span><span class=p>.</span><span class=nx>degToRad</span><span class=p>(</span> <span class=nx>@</span><span class=nx>_lon</span> <span class=p>)</span>
+
+		<span class=c1># 下面是計算攝影機面向的位置
+</span><span class=c1></span>    <span class=c1># 
+</span><span class=c1></span>    <span class=c1># 因為數學不好，看了很多資料覺得很崩潰（以下是利用公式計算，解釋會盡力表達）
+</span><span class=c1></span>    <span class=c1># 資料：球座標系統 - https://zh.wikipedia.org/wiki/%E7%90%83%E5%9D%90%E6%A8%99%E7%B3%BB
+</span><span class=c1></span>    <span class=c1># 資料：弧度 - https://zh.wikipedia.org/wiki/%E5%BC%A7%E5%BA%A6
+</span><span class=c1></span>    <span class=c1># 資料：反三角函數 - https://zh.wikipedia.org/wiki/%E5%8F%8D%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0
+</span><span class=c1></span>    <span class=c1># 資料：JavaScript Math - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sin
+</span><span class=c1></span>    <span class=c1>#
+</span><span class=c1></span>    <span class=c1># 1. 首先將 deg 轉 rad 是因為程式中接收的都是 radius （耍笨想很久沒想通 XD）
+</span><span class=c1></span>    <span class=c1># 2. 球體座標系統定義了 （距離, 仰角, 方位角) 三個數值
+</span><span class=c1></span>    <span class=c1># 3. 所以 500 = r (距離)
+</span><span class=c1></span>    <span class=c1># 4. 3D 中通常是 Y-up 軸向設計，因此與球體座標系統的 Z-up 不同，將 Y &amp; Z 軸的對調
+</span><span class=c1></span>    <span class=c1># 5. 中間推算的過程不好寫，大家自己慢慢推吧（上面幾個資料加上三角函數的資料總有一天可以推出來的⋯⋯我推不出來 XD）
+</span><span class=c1></span>    
+    <span class=vi>@camera.target.x = </span><span class=mi>500</span> <span class=o>*</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>sin</span><span class=p>(</span> <span class=nx>@</span><span class=nx>_phi</span> <span class=p>)</span> <span class=o>*</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>cos</span><span class=p>(</span> <span class=nx>@</span><span class=nx>_theta</span> <span class=p>)</span>
+    <span class=vi>@camera.target.y = </span><span class=mi>500</span> <span class=o>*</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>cos</span><span class=p>(</span> <span class=nx>@</span><span class=nx>_phi</span> <span class=p>)</span>
+    <span class=vi>@camera.target.z = </span><span class=mi>500</span> <span class=o>*</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>sin</span><span class=p>(</span> <span class=nx>@</span><span class=nx>_phi</span> <span class=p>)</span> <span class=o>*</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>sin</span><span class=p>(</span> <span class=nx>@</span><span class=nx>_theta</span> <span class=p>)</span>
+
+		<span class=c1># 讓攝影機注視這個點（面向）
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>camera</span><span class=p>.</span><span class=nx>lookAt</span> <span class=nx>@</span><span class=nx>camera</span><span class=p>.</span><span class=nx>target</span>
+
+		<span class=c1># 重新繪製畫面
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>renderer</span><span class=p>.</span><span class=nx>render</span> <span class=nx>@</span><span class=nx>scene</span><span class=p>,</span> <span class=nx>@</span><span class=nx>camera</span>
+
+  <span class=nv>onMouseDown: </span><span class=nf>(e) =&gt;</span>
+    <span class=nx>e</span><span class=p>.</span><span class=nx>preventDefault</span><span class=p>(</span><span class=p>)</span>
+
+    <span class=vi>@_isInteracting = </span><span class=kc>true</span>
+
+    <span class=vi>@_onMouseDownX = </span><span class=nx>e</span><span class=p>.</span><span class=nx>clientX</span>
+    <span class=vi>@_onMouseDownY = </span><span class=nx>e</span><span class=p>.</span><span class=nx>clientY</span>
+
+    <span class=vi>@_onMouseDownLon = </span><span class=nx>@</span><span class=nx>_lon</span>
+    <span class=vi>@_onMouseDownLat = </span><span class=nx>@</span><span class=nx>_lat</span>
+
+  <span class=nv>onMouseMove: </span><span class=nf>(e) =&gt;</span>
+    <span class=nx>e</span><span class=p>.</span><span class=nx>preventDefault</span><span class=p>(</span><span class=p>)</span>
+
+    <span class=k>if</span> <span class=nx>@</span><span class=nx>_isInteracting</span>
+    	<span class=c1># 計算經緯度的差距，讓之後可以轉換為座標
+</span><span class=c1></span>      <span class=vi>@_lon = </span><span class=p>(</span><span class=nx>@</span><span class=nx>_onMouseDownX</span> <span class=o>-</span> <span class=nx>e</span><span class=p>.</span><span class=nx>clientX</span><span class=p>)</span> <span class=o>*</span> <span class=mf>0.1</span> <span class=o>+</span> <span class=nx>@</span><span class=nx>_onMouseDownLon</span>
+      <span class=vi>@_lat = </span><span class=p>(</span><span class=nx>@</span><span class=nx>_onMouseDownY</span> <span class=o>-</span> <span class=nx>e</span><span class=p>.</span><span class=nx>clientY</span><span class=p>)</span> <span class=o>*</span> <span class=mf>0.1</span> <span class=o>+</span> <span class=nx>@</span><span class=nx>_onMouseDownLat</span>
+
+  <span class=nv>onMouseUp: </span><span class=nf>(e) =&gt;</span>
+    <span class=nx>e</span><span class=p>.</span><span class=nx>preventDefault</span><span class=p>(</span><span class=p>)</span>
+
+    <span class=vi>@_isInteracting = </span><span class=kc>false</span>
+
+  <span class=nv>onWindowResize: </span><span class=nf>=&gt;</span>
+    <span class=vi>@camera.aspect = </span><span class=nb>window</span><span class=p>.</span><span class=nx>innerWidth</span> <span class=o>/</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerHeight</span>
+    <span class=nx>@</span><span class=nx>camera</span><span class=p>.</span><span class=nx>updateProjectionMatrix</span><span class=p>(</span><span class=p>)</span>
+
+    <span class=nx>@</span><span class=nx>renderer</span><span class=p>.</span><span class=nx>setSize</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerWidth</span><span class=p>,</span> <span class=nb>window</span><span class=p>.</span><span class=nx>innerHeight</span>
+
+</code></pre></td></tr></table></div></div><p>到此為止，就可以順利地做出遊戲的全景預覽拉！</p><blockquote><p>所以我到底為什麼要花一個下午研究「球座標系統」轉為「直角座標系統」的算式呢？</p></blockquote><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%89%8D%E7%AB%AF/>前端</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

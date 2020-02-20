@@ -1,0 +1,257 @@
+<!doctype html><html lang=zh-tw><head><title>用 React.js 實作拖曳與元件容器 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="「很久很久以前，有一個叫做 OwaBin (芋冰) 的食物，可以讓設計師用拖拉就做出 Launcher 這真是太神奇了！」
+原本想說可以很歡樂的再 HanGee 幫忙設計跟網站，但是畢製的不可逆性質，讓我得把事情先推掉。 （也包括 SITCON 的任務，現在也在培養新人了⋯⋯）
+半個月前討論這個計劃時，我非常有興趣，所以馬上做了一個簡易的 …"><meta name=created content="2014-05-04T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="用 React.js 實作拖曳與元件容器"><meta property="og:url" content="https://blog.frost.tw/posts/2014/05/04/reactjs-implementation-of-the-drag-component-containers/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2014/05/04/reactjs-implementation-of-the-drag-component-containers/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"用 React.js 實作拖曳與元件容器","datePublished":"2014-05-04T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2014/05/04/reactjs-implementation-of-the-drag-component-containers/","description":"「很久很久以前，有一個叫做 OwaBin (芋冰) 的食物，可以讓設計師用拖拉就做出 Launcher 這真是太神奇了！」\n原本想說可以很歡樂的再 HanGee 幫忙設計跟網站，但是畢製的不可逆性質，讓我得把事情先推掉。 （也包括 SITCON 的任務，現在也在培養新人了⋯⋯）\n半個月前討論這個計劃時，我非常有興趣，所以馬上做了一個簡易的 …\n","keywords":["CoffeeScript","Web","心得","程式語言"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2014\/05\/04\/reactjs-implementation-of-the-drag-component-containers\/","name":"用 React.js 實作拖曳與元件容器"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.04</time><h1 class=article__title>用 React.js 實作拖曳與元件容器</h1></header><div class=article__entry><nav class=translation></nav><p>「很久很久以前，有一個叫做 OwaBin (芋冰) 的食物，可以讓設計師用拖拉就做出 Launcher 這真是太神奇了！」</p><p>原本想說可以很歡樂的再 HanGee 幫忙設計跟網站，但是畢製的不可逆性質，讓我得把事情先推掉。
+（也包括 SITCON 的任務，現在也在培養新人了⋯⋯）</p><p>半個月前討論這個計劃時，我非常有興趣，所以馬上做了一個簡易的測試版。
+這篇文章會來說明這個功能。</p><p>預期完成的功能如下：</p><p>首先，我們要來了解 React.js Mixins 的神奇限制。
+Mixin 的概念我認為跟 Ruby 的 module 非常接近，但是 Ruby 中可以 override module 的方法，但是 React.js 卻不行。</p><p>以下的範例都用CoffeeScript 解說。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>DefaultBlock = </span><span class=p>{</span>
+  <span class=nv>getDefaultProps: </span><span class=nf>-&gt;</span>
+  	<span class=p>{</span>
+  		<span class=nv>width: </span><span class=mi>100</span>
+    	<span class=nv>height: </span><span class=mi>100</span>
+  	<span class=p>}</span>
+  <span class=nv>render: </span><span class=nf>-&gt;</span>
+  	<span class=c1># Do something
+</span><span class=c1></span><span class=p>}</span>
+
+<span class=nv>Block = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+  <span class=nv>mixins: </span><span class=p>[</span><span class=nx>DefaultBlock</span><span class=p>]</span>
+  <span class=nv>getDefaultProps: </span><span class=nf>-&gt;</span>
+  	<span class=p>{</span>
+  		<span class=nv>width: </span><span class=mi>100</span> <span class=c1># 發生錯誤，已經定義了預設屬性
+</span><span class=c1></span>	  <span class=p>}</span>
+  <span class=nv>render: </span><span class=nf>-&gt;</span> <span class=c1># 發生錯誤，已經定義了 render
+</span><span class=c1></span>  	<span class=c1>#Do customize render
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>這是關於 Mixin 的神秘限制，也就是說無法進行 override 的動作，實作的時候並不會把 Mixin 的方法、預先定義的預設屬性覆蓋掉。</p><p>不過有例外，像是 <code>componentWillMount</code> 這類，在原始碼中有特殊定義，而不會發生錯誤（則是合併起來執行）</p><p>另一個要注意的點，就是所有的 Event 是無法直接 Bind 在 Component 上的，必須借助 Component 所 <code>render</code> 的 DOM 元素（但是 Component 依舊可以監聽事件，透過汽泡事件一樣可以拿到事件。）</p><p>下面的程式碼說明了事件的情況。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>OnDragBlock = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+	<span class=nv>getDefaultProps: </span><span class=nf>-&gt;</span>
+  	<span class=p>{</span>
+  		<span class=nv>onDrag: </span><span class=nx>@</span><span class=nx>handleDrag</span> <span class=c1># 並不會產生反應
+</span><span class=c1></span>  	<span class=p>}</span>
+    
+  <span class=nv>handleDrag: </span><span class=nf>(event)-&gt;</span>
+  	<span class=c1># Some drag handler
+</span><span class=c1></span>    <span class=nx>event</span><span class=p>.</span><span class=nx>stopPropagation</span><span class=p>(</span><span class=p>)</span> <span class=c1># 停止汽泡事件
+</span><span class=c1></span>    
+   <span class=nv>render: </span><span class=nf>-&gt;</span>
+   		<span class=nx>React</span><span class=p>.</span><span class=nx>DOM</span><span class=p>.</span><span class=nx>div</span> <span class=p>{</span>
+      	<span class=nv>onDrag: </span><span class=nx>@</span><span class=nx>handleDrag</span> <span class=c1># 產生反應
+</span><span class=c1></span>      <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>了解這兩個限制後，就可以開始來製作我們的拖曳元件功能。
+（至於未來是否會修正，或者有更好的方法，就不得而知了。當然，如果我想到更好的方法，也會告訴大家。）</p><h3 id=實作-container-mixin>實作 Container Mixin</h3><p>首先，我們需要一個可以放置任何元件進入的「容器」並且是可以被「重複產生」的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>mixins = </span><span class=vi>@mixins = </span><span class=nx>@</span><span class=nx>mixins</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span> <span class=c1># Register global variable mixins
+</span><span class=c1></span><span class=nv>components = </span><span class=vi>@components = </span><span class=nx>@</span><span class=nx>components</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+
+<span class=nv>ContainerMixin = </span><span class=p>{</span>
+	<span class=nv>getInitialState: </span><span class=nf>-&gt;</span>
+  	<span class=p>{</span>
+    	<span class=nv>style: </span><span class=p>{</span><span class=p>}</span> <span class=c1># 用於元件拖曳到上方時產生反饋
+</span><span class=c1></span>    <span class=p>}</span>
+  <span class=nv>_defaultView: </span><span class=nf>-&gt;</span>
+  	<span class=nx>@</span><span class=nx>childComponents</span> <span class=c1># 預設將子元件全部顯示
+</span><span class=c1></span>  <span class=nv>onDragOver: </span><span class=nf>(event)-&gt;</span>
+  	<span class=nx>event</span><span class=p>.</span><span class=nx>preventDefault</span><span class=p>(</span><span class=p>)</span> <span class=c1># 阻止預設事件，讓原件可以被 &#34;Drop&#34;
+</span><span class=c1></span>    <span class=nx>event</span><span class=p>.</span><span class=nx>stopPropagation</span><span class=p>(</span><span class=p>)</span> <span class=c1># 阻止汽泡事件，避免高亮狀態套用到上層容器
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>setState</span> <span class=p>{</span>
+    	<span class=nv>style: </span><span class=p>{</span>
+      	<span class=s>&#34;</span><span class=s>box-shadow</span><span class=s>&#34;</span><span class=o>:</span> <span class=s>&#34;</span><span class=s>inset 0 0 0 3px red</span><span class=s>&#34;</span> <span class=c1># 透過 box-shadow 製作高亮狀態
+</span><span class=c1></span>      <span class=p>}</span>
+    <span class=p>}</span>
+  <span class=nv>onDragLeave: </span><span class=nf>-&gt;</span>
+  	<span class=nx>@</span><span class=nx>setState</span> <span class=p>{</span>
+    	<span class=nv>style: </span><span class=p>{</span>
+      	<span class=s>&#34;</span><span class=s>box-shadow</span><span class=s>&#34;</span><span class=o>:</span> <span class=s>&#34;</span><span class=s>none</span><span class=s>&#34;</span>
+      <span class=p>}</span>
+    <span class=p>}</span>
+  <span class=nv>onDrop: </span><span class=nf>-&gt;</span>
+		<span class=nx>@</span><span class=nx>onDragLeave</span><span class=p>(</span><span class=p>)</span>
+    
+    <span class=nv>componentToAdd = </span><span class=nx>event</span><span class=p>.</span><span class=nx>dataTransfer</span><span class=p>.</span><span class=nx>getData</span><span class=p>(</span><span class=s>&#34;</span><span class=s>ComponentType</span><span class=s>&#34;</span><span class=p>)</span> <span class=o>+</span> <span class=s>&#34;</span><span class=s>Component</span><span class=s>&#34;</span> <span class=c1># 取得元件
+</span><span class=c1></span>    <span class=nx>@</span><span class=nx>childComponents</span><span class=p>.</span><span class=nx>push</span> <span class=nx>components</span><span class=p>[</span><span class=nx>componentToAdd</span><span class=p>]</span><span class=p>(</span><span class=nv>key: </span><span class=nb>Date</span><span class=p>.</span><span class=nx>now</span><span class=p>(</span><span class=p>)</span><span class=p>.</span><span class=nx>toString</span><span class=p>(</span><span class=mi>32</span><span class=p>)</span><span class=p>)</span> <span class=c1># 產生元件
+</span><span class=c1></span>
+    <span class=nx>event</span><span class=p>.</span><span class=nx>stopPropagation</span><span class=p>(</span><span class=p>)</span><span class=p>;</span> <span class=c1># 阻止汽泡事件，避免加到上層容器
+</span><span class=c1></span>	<span class=nv>componentWillMount: </span><span class=nf>-&gt;</span>
+  	<span class=vi>@childComponents = </span><span class=p>[</span><span class=p>]</span> <span class=c1># 初始化子元件容器
+</span><span class=c1></span>  <span class=nv>render: </span><span class=nf>-&gt;</span>
+  	<span class=vi>@viewRender = </span><span class=nx>@</span><span class=nx>viewRender</span> <span class=o>?</span> <span class=nx>@</span><span class=nx>_defaultView</span> <span class=c1># 產生自定義的 &#34;Render&#34; 讓使用者仍可以改變 Render 方式
+</span><span class=c1></span>    <span class=nx>React</span><span class=p>.</span><span class=nx>DOM</span><span class=p>.</span><span class=nx>div</span> <span class=p>{</span>
+      <span class=nv>onDragOver: </span><span class=nx>@</span><span class=nx>onDragOver</span>
+      <span class=nv>onDragLeave: </span><span class=nx>@</span><span class=nx>onDragLeave</span>
+      <span class=nv>onDrop: </span><span class=nx>@</span><span class=nx>onDrop</span>
+      <span class=nv>className: </span><span class=s>&#34;</span><span class=s>component-container</span><span class=s>&#34;</span> <span class=c1># .component-container 定義了容器為 min-width: 100% 與 min-height: 100%
+</span><span class=c1></span>      <span class=nv>style: </span><span class=nx>@</span><span class=nx>state</span><span class=p>.</span><span class=nx>style</span>
+    <span class=p>}</span><span class=p>,</span> <span class=nx>@</span><span class=nx>viewRender</span><span class=p>(</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=nv>mixins.Container = </span><span class=nx>ContainerMixin</span>
+</code></pre></td></tr></table></div></div><p>那麼現在，我們可以用下面的語法產生各種類型的 Container （雖然範例還不完善）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>components = </span><span class=vi>@components = </span><span class=nx>@</span><span class=nx>components</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+<span class=nv>mixins = </span><span class=vi>@mixins = </span><span class=nx>@</span><span class=nx>mixins</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+
+<span class=nv>BasicContainer = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+	<span class=nv>mixins: </span><span class=p>[</span><span class=nx>mixins</span><span class=p>.</span><span class=nx>Container</span><span class=p>]</span>
+<span class=p>}</span>
+
+<span class=nv>components.BasicContainer = </span><span class=nx>BasicContainer</span>
+</code></pre></td></tr></table></div></div><h3 id=實作-toolicon-mixin>實作 ToolIcon Mixin</h3><p>接下來，我們需要一組可以拖曳的 Icon 並且依照 Icon 類型讓容器加入對應的原件。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>mixins = </span><span class=vi>@mixins = </span><span class=nx>@</span><span class=nx>mixins</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+
+<span class=nv>ToolIcon = </span><span class=p>{</span>
+	<span class=nv>onDragStart: </span><span class=nf>(event) -&gt;</span>
+  	<span class=nx>event</span><span class=p>.</span><span class=nx>dataTransfer</span><span class=p>.</span><span class=nx>setData</span> <span class=s>&#34;</span><span class=s>ComponentType</span><span class=s>&#34;</span><span class=p>,</span> <span class=nx>@</span><span class=nx>componentType</span> <span class=c1># 開始拖曳時儲存目前拖曳的元件類型
+</span><span class=c1></span>	<span class=nv>componentWillMount: </span><span class=nf>-&gt;</span>
+  	<span class=vi>@icon = </span><span class=nx>@</span><span class=nx>icon</span> <span class=o>?</span> <span class=s>&#34;</span><span class=s>https://placehold.it/50</span><span class=s>&#34;</span> <span class=c1># ICON 圖檔
+</span><span class=c1></span>    <span class=vi>@componentType = </span><span class=nx>@</span><span class=nx>componentType</span> <span class=o>?</span> <span class=s>&#34;</span><span class=s>Unknown</span><span class=s>&#34;</span> <span class=c1># ICON 類型
+</span><span class=c1></span>  <span class=nv>render: </span><span class=nf>-&gt;</span>
+  	<span class=nx>React</span><span class=p>.</span><span class=nx>DOM</span><span class=p>.</span><span class=nx>img</span> <span class=p>{</span>
+      <span class=nv>src: </span><span class=nx>@</span><span class=nx>icon</span>
+      <span class=nv>draggable: </span><span class=kc>true</span> <span class=c1># 設定為可拖曳
+</span><span class=c1></span>      <span class=nv>onDragStart: </span><span class=nx>@</span><span class=nx>onDragStart</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+
+<span class=nv>mixins.ToolIcon = </span><span class=nx>ToolIcon</span>
+
+</code></pre></td></tr></table></div></div><p>相較于容器簡單很多，現在可以透過以下的語法產生任何工具按鈕元件。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>components = </span><span class=vi>@components = </span><span class=nx>@</span><span class=nx>components</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+<span class=nv>mixins = </span><span class=vi>@mixins = </span><span class=nx>@</span><span class=nx>mixins</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+
+<span class=nv>ImageToolIcon = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+	<span class=nv>mixins: </span><span class=p>[</span><span class=nx>mixins</span><span class=p>.</span><span class=nx>ToolIcon</span><span class=p>]</span>
+  <span class=nv>icon: </span><span class=s>&#34;</span><span class=s>icon/image.png</span><span class=s>&#34;</span>
+  <span class=nv>componentType: </span><span class=s>&#34;</span><span class=s>Image</span><span class=s>&#34;</span>
+<span class=p>}</span>
+
+<span class=nv>components.ImageToolIcon = </span><span class=nx>ImageToolIcon</span>
+</code></pre></td></tr></table></div></div><h3 id=實作-image-component>實作 Image Component</h3><p>接下來就是針對要放入容器的元件來實作，不過基本上跟一般的 React.js 實作大同小異。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-coffeescript data-lang=coffeescript><span class=nv>components = </span><span class=vi>@components = </span><span class=nx>@</span><span class=nx>components</span> <span class=o>?</span> <span class=p>{</span><span class=p>}</span>
+
+<span class=nv>ImageComponent = </span><span class=nx>React</span><span class=p>.</span><span class=nx>createClass</span> <span class=p>{</span>
+	<span class=nv>render: </span><span class=nf>-&gt;</span>
+  	<span class=nx>React</span><span class=p>.</span><span class=nx>DOM</span><span class=p>.</span><span class=nx>img</span> <span class=p>{</span>
+    	<span class=nv>src: </span><span class=s>&#34;</span><span class=s>images/sample.jpg</span><span class=s>&#34;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=make-it-running>Make it running!</h3><p>最後，就是用 <code>React.renderComponent</code> 分別 render 容器與工具箱，就完成了！
+（因為蒼時很想睡，所以偷懶沒寫這樣～～）</p><p>有任何問題歡迎討論，這一切都還有很大的改進空間，希望之後能順利完成 OwaBin 這套工具。
+（雖然我可能幾乎沒機會參與了 QAQ）</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/CoffeeScript/>CoffeeScript</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Web/>Web</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/>程式語言</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

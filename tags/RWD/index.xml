@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>RWD on 弦而時習之</title><link>https://blog.frost.tw/tags/RWD/</link><description>Recent content in RWD on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Thu, 13 Feb 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/tags/RWD/index.xml" rel="self" type="application/rss+xml"/><item><title>概觀響應式網頁設計</title><link>https://blog.frost.tw/posts/2014/02/13/overview-of-responsive-web-design/</link><pubDate>Thu, 13 Feb 2014 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/posts/2014/02/13/overview-of-responsive-web-design/</guid><description>&lt;p>這周都在忙 SITCON 的網站，結果就錯過週二寫 PaaS 入門指南的時間了（剛剛看 GA 還發現大家都已經習慣週二來晃～）
+這篇文章其實是順便當寒假作業（雖然老師沒強制，不過剛好可以複習跟檢視我對 RWD 的熟悉度）&lt;/p>
+&lt;p>其實我一直對 W3C 標準跟歷史不太熟，所以沒辦法像許多高手根據標準跟歷史來討論這些網頁技術上的問題。
+不過還好，我多少算是有經驗跟實作，以下就從我所「知道」的 Responsive Web Design 來談談吧！&lt;/p>
+&lt;p>這邊文章大致上會從這些方向去討論：&lt;/p>
+&lt;ul>
+&lt;li>Responsive Web Design 的過去&lt;/li>
+&lt;li>Responsive Web Design 的現在&lt;/li>
+&lt;li>Responsive Web Design 的工具&lt;/li>
+&lt;li>Responsive Web Design 的運用&lt;/li>
+&lt;/ul>
+&lt;p>我想又會是篇很長的文章，大家就泡個茶慢慢讀吧 XD&lt;/p></description></item></channel></rss>

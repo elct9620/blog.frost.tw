@@ -1,0 +1,296 @@
+<!doctype html><html lang=zh-tw><head><title>Deis 架構分析（二） - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="延續上一篇的內容，這篇文章要先來討論比較好懂的 Router 部分。
+首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 Router 除 …"><meta name=created content="2016-02-03T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="Deis 架構分析（二）"><meta property="og:url" content="https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"Deis 架構分析（二）","datePublished":"2016-02-03T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2016/02/03/how-deis-architecture-design-part-2/","description":"延續上一篇的內容，這篇文章要先來討論比較好懂的 Router 部分。\n首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 Router 除 …\n","keywords":["Deis","PaaS","筆記","雲端","CoreOS"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2016\/02\/03\/how-deis-architecture-design-part-2\/","name":"Deis 架構分析（二）"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.03</time><h1 class=article__title>Deis 架構分析（二）</h1></header><div class=article__entry><nav class=translation></nav><p>延續<a href=https://blog.frost.tw/posts/2016/01/31/how-deis-architecture-design-part-1/>上一篇</a>的內容，這篇文章要先來討論比較好懂的 <code>Router</code> 部分。</p><p>首先，在 Deis 的設計裡面，基本上所有的服務都是包成一個 Image 作為 Continaer 在 CoreOS 運行的。就這點來看，其實是非常符合 Mircoservice 架構的設計。同時我們也可以很輕鬆地將這些服務獨立出來使用，這篇文章討論的 <code>Router</code> 除了原本的用途外，也很適合用來學習透過 etcd 部署自動化更新設定檔的環境。</p><p>Deis 的原始碼都放在一起，其中 <a href=https://github.com/deis/deis/tree/master/router>Router</a> 部分是裡面的一個子目錄，那麼就讓我們開始了解運行的架構吧！</p><h3 id=dockerfile>Dockerfile</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=k>FROM</span><span class=s> alpine:3.2</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># install common packages</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> apk add --update-cache <span class=se>\</span><span class=err>
+</span><span class=err></span>  bash <span class=se>\</span><span class=err>
+</span><span class=err></span>  curl <span class=se>\</span><span class=err>
+</span><span class=err></span>  geoip <span class=se>\</span><span class=err>
+</span><span class=err></span>  libssl1.0 <span class=se>\</span><span class=err>
+</span><span class=err></span>  openssl <span class=se>\</span><span class=err>
+</span><span class=err></span>  pcre <span class=se>\</span><span class=err>
+</span><span class=err></span>  sudo <span class=se>\</span><span class=err>
+</span><span class=err></span>  <span class=o>&amp;&amp;</span> rm -rf /var/cache/apk/*<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># install confd</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> curl -sSL -o /usr/local/bin/confd https://s3-us-west-2.amazonaws.com/opdemand/confd-git-73f7489 <span class=se>\</span><span class=err>
+</span><span class=err></span>  <span class=o>&amp;&amp;</span> chmod +x /usr/local/bin/confd<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># add nginx user</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> addgroup -S nginx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>  adduser -S -G nginx -H -h /opt/nginx -s /sbin/nologin -D nginx<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>COPY</span> rootfs /<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># compile nginx from source</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> build<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;boot&#34;</span><span class=p>]</span><span class=err>
+</span><span class=err></span><span class=k>EXPOSE</span><span class=s> 80 2222 9090</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> DEIS_RELEASE 1.13.0-dev<span class=err>
+</span></code></pre></td></tr></table></div></div><p>透過 Dockerfile 可以簡單了解到這個服務是怎麼啟動的，整體上來說非常簡單，除了安裝 confd 之外。就是把名為 <code>rootfs</code> 的目錄加進去，並且編譯客製化的 Nginx 接著啟動伺服器。</p><blockquote><p>這邊比較特別的地方是客製化編譯 Nginx 的部份，主要是因為 Deis 除了基本的 Nginx 功能外，也增加了防火牆模組（<a href=https://github.com/nbs-system/naxsi>NAXSI</a>）跟一些模組在裡面，有興趣的可以自行閱讀 <code>rootfs/bin/build</code> 這個檔案的內容。</p></blockquote><h3 id=boot>boot</h3><p>我想大家會覺得奇怪，為什麼不是直接執行 Nginx 而是執行一個名為 <code>boot</code> 的指令呢？
+這是因為 Deis 除了啟動 Nginx 之外，還要將像是 confd 之類的服務也一併啟動。</p><blockquote><p>這邊比較有趣的是，一般會用 Shell Script 來處理。但是 Deis 使用 Golang 來做處理。</p></blockquote><p>從 Makefile 可以看出 <code>boot</code> 這個檔案是透過 Golang 的 Cross-compile 功能所編譯後，再構出 Docker 的 Image 來使用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-makefile data-lang=makefile><span class=nf>build</span><span class=o>:</span> <span class=n>check</span>-<span class=n>docker</span>
+  <span class=nv>GOOS</span><span class=o>=</span>linux <span class=nv>GOARCH</span><span class=o>=</span>amd64 <span class=nv>CGO_ENABLED</span><span class=o>=</span><span class=m>0</span> godep go build -a -installsuffix -v -ldflags <span class=s1>&#39;-s&#39;</span> -o <span class=k>$(</span>BINARY_DEST_DIR<span class=k>)</span>/boot cmd/boot/boot.go <span class=o>||</span> <span class=nb>exit</span> 1
+  @<span class=k>$(</span>call check-static-binary,rootfs/bin/boot<span class=k>)</span>
+  docker build -t <span class=k>$(</span>IMAGE<span class=k>)</span> .
+  rm rootfs/bin/boot
+</code></pre></td></tr></table></div></div><blockquote><p>所以如果要自己封裝，記得要用 <code>make build</code> 的指令，而不是直接 <code>docker build</code> 否則是會包出無法執行的 Image。</p></blockquote><p>從 <code>cmd/boot/boot.go</code> 可以發現引用了 <code>logger/stdout_formatter.go</code> 這個檔案，基本上就是統一格式化 Deis 輸出的紀錄檔訊息，因此這邊就不多做討論。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>func</span> <span class=nf>main</span><span class=p>(</span><span class=p>)</span> <span class=p>{</span>
+  <span class=c1>// 略
+</span><span class=c1></span>
+  <span class=nx>log</span><span class=p>.</span><span class=nf>Debug</span><span class=p>(</span><span class=s>&#34;reading environment variables...&#34;</span><span class=p>)</span>
+  <span class=nx>host</span> <span class=o>:=</span> <span class=nf>getopt</span><span class=p>(</span><span class=s>&#34;HOST&#34;</span><span class=p>,</span> <span class=s>&#34;127.0.0.1&#34;</span><span class=p>)</span>
+
+  <span class=nx>etcdPort</span> <span class=o>:=</span> <span class=nf>getopt</span><span class=p>(</span><span class=s>&#34;ETCD_PORT&#34;</span><span class=p>,</span> <span class=s>&#34;4001&#34;</span><span class=p>)</span>
+
+  <span class=nx>etcdPath</span> <span class=o>:=</span> <span class=nf>getopt</span><span class=p>(</span><span class=s>&#34;ETCD_PATH&#34;</span><span class=p>,</span> <span class=s>&#34;/deis/router&#34;</span><span class=p>)</span>
+
+  <span class=nx>hostEtcdPath</span> <span class=o>:=</span> <span class=nf>getopt</span><span class=p>(</span><span class=s>&#34;HOST_ETCD_PATH&#34;</span><span class=p>,</span> <span class=s>&#34;/deis/router/hosts/&#34;</span><span class=o>+</span><span class=nx>host</span><span class=p>)</span>
+
+  <span class=nx>externalPort</span> <span class=o>:=</span> <span class=nf>getopt</span><span class=p>(</span><span class=s>&#34;EXTERNAL_PORT&#34;</span><span class=p>,</span> <span class=s>&#34;80&#34;</span><span class=p>)</span>
+
+  <span class=nx>client</span> <span class=o>:=</span> <span class=nx>etcd</span><span class=p>.</span><span class=nf>NewClient</span><span class=p>(</span><span class=p>[</span><span class=p>]</span><span class=kt>string</span><span class=p>{</span><span class=s>&#34;https://&#34;</span> <span class=o>+</span> <span class=nx>host</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=nx>etcdPort</span><span class=p>}</span><span class=p>)</span>
+
+  <span class=c1>// wait until etcd has discarded potentially stale values
+</span><span class=c1></span>  <span class=nx>time</span><span class=p>.</span><span class=nf>Sleep</span><span class=p>(</span><span class=nx>timeout</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span>
+
+  <span class=nx>log</span><span class=p>.</span><span class=nf>Debug</span><span class=p>(</span><span class=s>&#34;creating required defaults in etcd...&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/config&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/controller&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/services&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/domains&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/builder&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/certs&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/router/hosts&#34;</span><span class=p>)</span>
+  <span class=nf>mkdirEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=s>&#34;/deis/router/hsts&#34;</span><span class=p>)</span>
+
+  <span class=nf>setDefaultEtcd</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=nx>etcdPath</span><span class=o>+</span><span class=s>&#34;/gzip&#34;</span><span class=p>,</span> <span class=s>&#34;on&#34;</span><span class=p>)</span>
+
+  <span class=nx>log</span><span class=p>.</span><span class=nf>Info</span><span class=p>(</span><span class=s>&#34;Starting Nginx...&#34;</span><span class=p>)</span>
+
+  <span class=k>go</span> <span class=nf>tailFile</span><span class=p>(</span><span class=nx>nginxAccessLog</span><span class=p>)</span>
+  <span class=k>go</span> <span class=nf>tailFile</span><span class=p>(</span><span class=nx>nginxErrorLog</span><span class=p>)</span>
+
+  <span class=nx>nginxChan</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>bool</span><span class=p>)</span>
+  <span class=k>go</span> <span class=nf>launchNginx</span><span class=p>(</span><span class=nx>nginxChan</span><span class=p>)</span>
+  <span class=o>&lt;-</span><span class=nx>nginxChan</span>
+
+  <span class=c1>// FIXME: have to launch cron first so generate-certs will generate the files nginx requires
+</span><span class=c1></span>  <span class=k>go</span> <span class=nf>launchCron</span><span class=p>(</span><span class=p>)</span>
+
+  <span class=nf>waitForInitialConfd</span><span class=p>(</span><span class=nx>host</span><span class=o>+</span><span class=s>&#34;:&#34;</span><span class=o>+</span><span class=nx>etcdPort</span><span class=p>,</span> <span class=nx>timeout</span><span class=p>)</span>
+
+  <span class=k>go</span> <span class=nf>launchConfd</span><span class=p>(</span><span class=nx>host</span> <span class=o>+</span> <span class=s>&#34;:&#34;</span> <span class=o>+</span> <span class=nx>etcdPort</span><span class=p>)</span>
+
+  <span class=k>go</span> <span class=nf>publishService</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=nx>hostEtcdPath</span><span class=p>,</span> <span class=nx>host</span><span class=p>,</span> <span class=nx>externalPort</span><span class=p>,</span> <span class=nb>uint64</span><span class=p>(</span><span class=nx>ttl</span><span class=p>.</span><span class=nf>Seconds</span><span class=p>(</span><span class=p>)</span><span class=p>)</span><span class=p>)</span>
+
+  <span class=nx>log</span><span class=p>.</span><span class=nf>Info</span><span class=p>(</span><span class=s>&#34;deis-router running...&#34;</span><span class=p>)</span>
+
+  <span class=nx>exitChan</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=nx>os</span><span class=p>.</span><span class=nx>Signal</span><span class=p>,</span> <span class=mi>2</span><span class=p>)</span>
+  <span class=nx>signal</span><span class=p>.</span><span class=nf>Notify</span><span class=p>(</span><span class=nx>exitChan</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>SIGTERM</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>SIGINT</span><span class=p>)</span>
+  <span class=o>&lt;-</span><span class=nx>exitChan</span>
+  <span class=nx>tail</span><span class=p>.</span><span class=nf>Cleanup</span><span class=p>(</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>基本上，整個 <code>main()</code> 分為兩個部分。</p><p>第一個部分是讀取環境變數的部份（透過 <code>getopt()</code> 方法），第二個部分則是啟動各項服務的部份。這邊比較特別的是利用 Golang 的 Channel 功能，做出依序啟動服務的效果。</p><blockquote><p>Golang 的 Channel 在做 <code>receive</code> 動作時，會阻止程式繼續運作。</p></blockquote><p>最後的 <code>signal.Notify</code> 可以設定當接收到一些 Signal 時要做出什麼對應的處理。</p><blockquote><p>這邊接受的是常見的中斷訊號，一般就是 Ctrl + C 會送過去的訊號。</p></blockquote><p>另外，這邊透過 <a href=https://github.com/hpcloud/tail>tail</a> 這個函式庫將 Nginx 的記錄檔讀取出來，並且格式化後輸出到 stdout 顯示。</p><blockquote><p>使用 Docker 的好習慣就是要將當前運行的程式輸出一律導向 stdout / stderr 讓 Docker 來幫忙做記錄，否則所有的 Log 都會被存在 Container 裡面反而難以除錯。</p></blockquote><h3 id=confd>confd</h3><p>confd 會監聽 etcd 的 key-value 變動情況，然後動態的執行一些指令。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-toml data-lang=toml><span class=p>[</span><span class=nx>template</span><span class=p>]</span>
+<span class=nx>src</span>   <span class=p>=</span> <span class=s2>&#34;nginx.conf&#34;</span>
+<span class=nx>dest</span>  <span class=p>=</span> <span class=s2>&#34;/opt/nginx/conf/nginx.conf&#34;</span>
+<span class=nx>uid</span> <span class=p>=</span> <span class=mi>0</span>
+<span class=nx>gid</span> <span class=p>=</span> <span class=mi>0</span>
+<span class=nx>mode</span>  <span class=p>=</span> <span class=s2>&#34;0644&#34;</span>
+<span class=nx>keys</span> <span class=p>=</span> <span class=p>[</span>
+   <span class=s2>&#34;/deis/config&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/services&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/router&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/domains&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/controller&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/builder&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/store/gateway&#34;</span><span class=p>,</span>
+   <span class=s2>&#34;/deis/certs&#34;</span><span class=p>,</span>
+<span class=p>]</span>
+<span class=nx>check_cmd</span>  <span class=p>=</span> <span class=s2>&#34;check {{ .src }}&#34;</span>
+<span class=nx>reload_cmd</span> <span class=p>=</span> <span class=s2>&#34;/opt/nginx/sbin/nginx -s reload&#34;</span>
+</code></pre></td></tr></table></div></div><p>以 Nginx 的重起來說，當上述指定的 Key （如 <code>/deis/domains</code>）有更動，那麼就會先從樣板檔案產生新的設定檔，並且重新啟動 Nginx。</p><p>有興趣的話可以去看看 <code>rootfs/etc/confd</code> 的設定檔是如何撰寫的。</p><p>比較有趣的是 <code>/bin/generate-certs</code> 這個指令，他也是透過 confd 去產生的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=cp>#!/usr/bin/env bash
+</span><span class=cp></span>
+<span class=c1># create or truncate the file</span>
+&gt; /etc/ssl/deis_certs
+
+<span class=o>{</span><span class=o>{</span> range <span class=nv>$cert</span> :<span class=o>=</span> ls <span class=s2>&#34;/deis/certs&#34;</span> <span class=o>}</span><span class=o>}</span>
+<span class=nb>echo</span> <span class=o>{</span><span class=o>{</span> <span class=nv>$cert</span> <span class=o>}</span><span class=o>}</span> &gt;&gt; /etc/ssl/deis_certs
+<span class=o>{</span><span class=o>{</span> end <span class=o>}</span><span class=o>}</span>
+
+<span class=nv>CERT_PATH</span><span class=o>=</span>/etc/ssl/deis/certs
+<span class=nv>KEY_PATH</span><span class=o>=</span>/etc/ssl/deis/keys
+
+<span class=c1># clean up all certs</span>
+rm -rf <span class=nv>$CERT_PATH</span>
+rm -rf <span class=nv>$KEY_PATH</span>
+
+<span class=c1># ...then re-create the paths</span>
+mkdir -p <span class=nv>$CERT_PATH</span>
+mkdir -p <span class=nv>$KEY_PATH</span>
+
+<span class=o>{</span><span class=o>{</span> <span class=k>if</span> gt <span class=o>(</span>len <span class=o>(</span>lsdir <span class=s2>&#34;/deis/certs&#34;</span><span class=o>)</span><span class=o>)</span> <span class=m>0</span> <span class=o>}</span><span class=o>}</span>
+<span class=k>while</span> <span class=nb>read</span> etcd_path<span class=p>;</span> <span class=k>do</span>
+   <span class=o>{</span><span class=o>{</span> range <span class=nv>$cert</span> :<span class=o>=</span> ls <span class=s2>&#34;/deis/certs&#34;</span> <span class=o>}</span><span class=o>}</span>
+   <span class=k>if</span> <span class=o>[</span><span class=o>[</span> <span class=s2>&#34;</span><span class=nv>$etcd_path</span><span class=s2>&#34;</span> <span class=o>=</span><span class=o>=</span> <span class=s2>&#34;</span><span class=s2>{{ </span><span class=nv>$cert</span><span class=s2> }}</span><span class=s2>&#34;</span> <span class=o>]</span><span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+     cat <span class=s>&lt;&lt; EOF &gt; &#34;$CERT_PATH/$etcd_path.cert&#34;
+</span><span class=s>{{ getv (printf &#34;/deis/certs/%s/cert&#34; $cert) }}
+</span><span class=s>EOF</span>
+     cat <span class=s>&lt;&lt; EOF &gt; &#34;$KEY_PATH/$etcd_path.key&#34;
+</span><span class=s>{{ getv (printf &#34;/deis/certs/%s/key&#34; $cert) }}
+</span><span class=s>EOF</span>
+   <span class=k>fi</span><span class=o>{</span><span class=o>{</span> end <span class=o>}</span><span class=o>}</span>
+<span class=k>done</span> &lt; /etc/ssl/deis_certs
+<span class=o>{</span><span class=o>{</span> <span class=k>else</span> <span class=o>}</span><span class=o>}</span>
+<span class=c1># there is no certificates to generate</span>
+<span class=o>{</span><span class=o>{</span> end <span class=o>}</span><span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>這邊很有趣的是，他會從 etcd 裡面讀取每一組 SSL 的 Private Key / Certificates 並且依照 Key 產生一組檔案來寫入檔案。</p><blockquote><p>如此一來每一個不同 Domain 所需的 SSL 設定就可以透過 etcd 來做管理。不過其實另一方面來看，這個檔案其實會不斷地增長⋯⋯
+在 <code>/bin/boot</code> 中，初次執行會設定一個 Cron Job 去執行這個指令，理由還不清楚不過應該是為了修正檔案沒有順利產生之類的問題吧（就註解來看是一個修正）</p></blockquote><hr><p>到此為止，基本上一個簡單的 Router 就算是設定完成了。
+如果對防火牆設定有興趣的話，可以參考 <code>rootfs/opt/nginx</code> 裡面的設定是如何撰寫的。</p><p>大致上剩下的都是設定檔的部份，稍微詳讀之後就可以瞭解其背後運作的原理。
+若要建構自己的簡易 Router 參考這樣的方式設計，其實也沒有想像中的困難。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Deis/>Deis</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/PaaS/>PaaS</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/>筆記</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E9%9B%B2%E7%AB%AF/>雲端</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/CoreOS/>CoreOS</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

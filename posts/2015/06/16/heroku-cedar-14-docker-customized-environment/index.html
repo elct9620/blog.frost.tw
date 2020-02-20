@@ -1,0 +1,220 @@
+<!doctype html><html lang=zh-tw><head><title>Heroku Cedar 14 - 用 Docker 客製化環境 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="最近 Heroku 推出了 Docker 支援，也因此我馬上就去試玩了這個功能。
+這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。
+文章大致上會涵蓋這些內容：
+ Heroku Docker Plugin 的運作 建構客製化環境的 Dockerfile 利用 Docker 製作 Buildpacks"><meta name=created content="2015-06-16T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="Heroku Cedar 14 - 用 Docker 客製化環境"><meta property="og:url" content="https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"Heroku Cedar 14 - 用 Docker 客製化環境","datePublished":"2015-06-16T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2015/06/16/heroku-cedar-14-docker-customized-environment/","description":"最近 Heroku 推出了 Docker 支援，也因此我馬上就去試玩了這個功能。\n這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。\n文章大致上會涵蓋這些內容：\n Heroku Docker Plugin 的運作 建構客製化環境的 Dockerfile 利用 Docker 製作 Buildpacks ","keywords":["Heroku","Docker","筆記"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2015\/06\/16\/heroku-cedar-14-docker-customized-environment\/","name":"Heroku Cedar 14 - 用 Docker 客製化環境"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header>Feb.16</time><h1 class=article__title>Heroku Cedar 14 - 用 Docker 客製化環境</h1></header><div class=article__entry><nav class=translation></nav><p>最近 Heroku 推出了 <a href=https://blog.Heroku.com/archives/2015/5/5/introducing_heroku_Docker_release_build_deploy_heroku_apps_with_docker>Docker 支援</a>，也因此我馬上就去試玩了這個功能。</p><p>這篇文章會簡單介紹 Heroku Docker 的運作，以及可以運用的方式。</p><p>文章大致上會涵蓋這些內容：</p><ul><li>Heroku Docker Plugin 的運作</li><li>建構客製化環境的 Dockerfile</li><li>利用 Docker 製作 Buildpacks</li></ul><h3 id=docker-plugin>Docker Plugin</h3><p>這是一個 Open Source 的專案，放在 Heroku 官方的 <a href=https://Github.com/Heroku/heroku-Docker>Github</a> 上面，任何人都可以進行 Pull Request 對其新增語言支援。</p><p>目前支援的語言只有 Scala, Ruby, Node.js, Python 這幾種，細看 Dockerfile 的撰寫其實就可以推測出大多是不相依於 Apache/Nginx 的類型。</p><blockquote><p>因為我自己在維護 PHP 的 Phalcon Buildpacks 這篇文章正好是我支援 Docker 後才寫的，在撰寫 Dockerfile 時就碰到了「設定檔」問題</p></blockquote><p>基本使用很簡單，使用下面的指令安裝 Heroku Command Line Tool 的擴出：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>Heroku plugins:install heroku-Docker
+</code></pre></td></tr></table></div></div><p>之後就可以使用 <code>Heroku Docker:[action]</code> 去做一些應用。</p><h4 id=init>init</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>Heroku Docker:init
+</code></pre></td></tr></table></div></div><p>一開始要對自己原本的專案加上 Docker 支援，只要運行這個指令就可以了！
+他會自動產生一個 Dockerfile 並且在裡面配置好「所需」的環境（其實就是把 Buildpacks 複製進去）</p><p>這邊簡單把 Heroku Docker 跟 Buildpacks 的流程做比較：</p><table><thead><tr><th></th><th>Docker</th><th>Buildpacks</th></tr></thead><tbody><tr><td>偵測環境</td><td>Docker:init</td><td>bin/detect</td></tr><tr><td>建構環境</td><td>Dockerfile 運行</td><td>bin/compile</td></tr><tr><td>執行應用</td><td>Procfile 定義（必要）</td><td>Procfile (建構時有預設值)</td></tr></tbody></table><p>其實會發現基本上就是把 Buildpacks 的任務本地化而已。</p><blockquote><p><code>bin/detech</code> 是 Shell Script 用來檢查有沒有必要的檔案，而 <code>Docker:init</code> 則是掃描目錄有沒有對應的檔案 Ex. Gemfile
+<code>bin/compile</code> 跟 Dockerfile 在建構 Ruby 環境都是下載相同的檔案解壓縮（這是為了加速，直接寫入編譯程式也是可以的）</p></blockquote><p>唯一的不同點在於 Docker 版本預設不會自動生成 Procfile 所以必須自行指定像是 <code>Rails server</code> 之類的指令。</p><blockquote><p>原始碼中有指出： Procfile 必要，並且要有一個 web node 存在</p></blockquote><h4 id=exec>exec</h4><p>用途跟 <code>Heroku run</code> 一樣，不過要注意的是 Dockerfile 裡面所寫的 <code>ONBUILD</code> 是不會執行的。</p><blockquote><p>他是直接跑你的 image 而不是產生新的 image 去執行（下一段的 <code>start</code> 會提到）</p></blockquote><h4 id=start>start</h4><p>可以在本機測試 Deploy 後的情況，相對過去要 Deploy 到 Heroku 上測試比起來，真的好太多了！</p><blockquote><p>執行的時候可以看一下目錄，會發現多出一個 <code>Dockerfile-(一段應該是 SHA1 的字串)</code> 的檔案，內容就是 <code>FROM 剛剛的 Image</code> 也因此會觸發 <code>ONBUILD</code> 去設定環境</p></blockquote><p>這樣做的原因大概可以推測是為了避免在跑 <code>exec</code> 的時候還要先裝完相依這些執行時用不到的檔案吧 XD</p><h4 id=release>release</h4><p>跟 <code>git push Heroku master</code> 差不多的意思，他會把剛剛的環境壓縮成一個 Gzip 檔然後上傳到 Heroku。
+這個 Gzip 檔就是過去用 Buildpacks 跑完後產生的 <code>slug</code> 也就是說，如果專案加上相依有 100MB 那就得上傳 100MB 的相依上去。</p><blockquote><p>我自己維護的 PHP + Phalcon 專案壓縮後就有 49MB 非常的大，這也是我後來沒有改用 Docker 的原因。</p></blockquote><h3 id=clean>clean</h3><p>這個指令會把產生的 image 跟 container 清除，以確保環境是乾淨的（超貼心 XD）</p><hr><p>那麼這有什麼用呢？大致上可以歸類為以下幾點：</p><ol><li>私有的 Source Code 需要 Compile 後 Deploy</li><li>高度客製化的環境（而且無法製成 Buildpacks）或者不希望其他人使用這個環境</li><li>需要自行安裝 Heroku 的 <code>cedar</code> 不支援的相依</li><li>用來輔助本地測試</li><li>用來製作 Buildpacks</li></ol><h3 id=dockerfile-的撰寫>Dockerfile 的撰寫</h3><p>假設我需要編譯一些檔案好 Deploy 到 Heroku 上面，只要改寫 Dockerfile 就可以了！</p><p>這邊就以我自己維護的 Buildpacks 所用的 Dockerfile 作為範例來講解。</p><blockquote><p>在撰寫 Dockerfile 的時候以方便為主，不需要優化 Docker Image 的大小（我寫完 Buildpacks 才發現）
+主要是 Heroku 不會跑任何 Dockerfile 所以壓縮的再小也沒有意義，也不會節省任何時間。</p></blockquote><p>首先要引用 Heroku 預先準備好的 <code>cedar</code> image 來當作基底（跟 Heroku 實際環境一樣，不用再猜了 XD）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Docker data-lang=Docker><span class=k>FROM</span><span class=s> Heroku/cedar:14</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>之後就是很淡定的開始跑各種指令拉（節錄部分 Dockerfile）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=k>RUN</span> useradd -d /app -m app<span class=err>
+</span><span class=err></span><span class=k>USER</span><span class=s> app</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> mkdir /app/build<span class=err>
+</span><span class=err></span><span class=k>RUN</span> mkdir /app/src<span class=err>
+</span><span class=err></span><span class=k>WORKDIR</span><span class=s> /app/src</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># Environment</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> HOME /app<span class=err>
+</span><span class=err></span><span class=k>ENV</span> BUILD_HOME /app/build<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_ROOT <span class=si>${</span><span class=nv>HOME</span><span class=si>}</span>/apache<span class=err>
+</span><span class=err></span><span class=k>ENV</span> PCRE_ROOT <span class=si>${</span><span class=nv>HOME</span><span class=si>}</span>/libs/pcre<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_VERSION 2.4.12<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_VERSION 1.5.2<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_UTIL_VERSION 1.5.4<span class=err>
+</span><span class=err></span><span class=k>ENV</span> LIBPCRE_VERSION 8.37<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_URL https://www.us.apache.org/dist/httpd/httpd-<span class=si>${</span><span class=nv>APACHE_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_URL https://www.us.apache.org/dist/apr/apr-<span class=si>${</span><span class=nv>APR_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_UTIL_URL https://www.us.apache.org/dist/apr/apr-util-<span class=si>${</span><span class=nv>APR_UTIL_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=k>ENV</span> PCRE_URL ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-<span class=si>${</span><span class=nv>LIBPCRE_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_DIR httpd-<span class=si>${</span><span class=nv>APACHE_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_DIR apr-<span class=si>${</span><span class=nv>APR_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_UTIL_DIR apr-util-<span class=si>${</span><span class=nv>APR_UTIL_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> PCRE_DIR pcre-<span class=si>${</span><span class=nv>LIBPCRE_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> CURL_FLAGS --location --silent<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># Compile</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>			 curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APACHE_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APR_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APR_UTIL_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$PCRE_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx<span class=err>
+</span><span class=err></span>       <span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span>/<span class=nv>$PCRE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    ./configure --prefix<span class=o>=</span><span class=nv>$PCRE_ROOT</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
+</span><span class=err></span>    <span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>		mv <span class=nv>$APR_DIR</span> <span class=nv>$APACHE_DIR</span>/srclib/apr <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    mv <span class=nv>$APR_UTIL_DIR</span> <span class=nv>$APACHE_DIR</span>/srclib/apr-util <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    <span class=nb>cd</span> <span class=nv>$APACHE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    ./configure --prefix<span class=o>=</span><span class=nv>$APACHE_ROOT</span> --with-pcre<span class=o>=</span><span class=nv>$PCRE_ROOT</span> --enable-rewrite <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
+</span></code></pre></td></tr></table></div></div><p>這邊很重要的訣竅就是 Compile 的時候可以分開為單獨的 <code>RUN</code> 因為 Docker 在 Build 的時候會把一個指令當成一個 <code>layer</code> 也就是說，中間如果失敗（寫 Script 總是會失誤）就不用整個重新 Compile 過，而是只需要重新跑部分的指令而已。</p><blockquote><p>這會節省非常多時間，我自己的 Macbook Pro Retina 15&rdquo; 就要花上十幾分鐘完整編譯。
+這邊最重要的是自行編譯的檔案都要放到 <code>/app</code> 目錄，因為包成 Slug 的時候是不會壓縮這個目錄以外的檔案。</p></blockquote><p>至於設定檔的部分，我則是這樣設定的（利用 <code>sed</code> 去置換預設的設定檔）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=c># Configure</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> sed -ire <span class=s1>&#39;s/^Listen.*$/Listen \${PORT}/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    sed -ire <span class=s1>&#39;s/^DocumentRoot.*$/DocumentRoot\ &#34;\/app\/src&#34;/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    sed -ire <span class=s1>&#39;s/&lt;Directory &#34;\/app\/apache\/htdocs&#34;&gt;/&lt;Directory &#34;\/app\/src&#34;&gt;/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    sed -ire <span class=s1>&#39;s/AllowOverride\ None/AllowOverride\ All/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf<span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;&lt;IfModule dir_module&gt;\nDirectoryIndex index.html index.PHP\n&lt;/IfModule&gt;&#34;</span> &gt;&gt; <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;</span><span class=s2>&lt;FilesMatch \.PHP</span>$<span class=s2>&gt;\nSetHandler application/x-httpd-PHP\n&lt;/FilesMatch&gt;</span><span class=s2>&#34;</span> &gt;&gt; <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf<span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;zend_extension=opcache.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=phalcon.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=mongo.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=redis.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini<span class=err>
+</span></code></pre></td></tr></table></div></div><p>這樣做的原因是如果未來要相容在 Docker Plugin 時，就可以省去問題（Plugin 只會把 Template 丟出來，並不支援 ADD 之類的增加檔案）</p><blockquote><p>不過後來想想，包個 Buildpacks 給 Plugin 下載比較實在 XD</p></blockquote><p>最後是 Deploy 的時候會用到的 <code>ONBUILD</code> 部分（其實就是把 Source Code 複製進去而已）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=c># Copy SourceCode</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>COPY</span> . /app/src<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> root</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> chown -R app /app<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> app</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># Setup Dependency</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=k>if</span> <span class=o>[</span> -f /app/src/composer.json <span class=o>]</span><span class=p>;</span> <span class=k>then</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>            curl --silent --max-time <span class=m>60</span> --location <span class=s2>&#34;</span><span class=nv>$COMPOSER_URL</span><span class=s2>&#34;</span> &gt; <span class=nv>$HOME</span>/src/composer.phar<span class=p>;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>            PHP <span class=nv>$HOME</span>/src/composer.phar install --prefer-dist<span class=p>;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>            rm <span class=nv>$HOME</span>/src/composer.phar<span class=p>;</span> <span class=se>\</span><span class=err>
+</span><span class=err></span>            <span class=k>fi</span><span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=c># Configure Profile</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> app</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> mkdir -p /app/.profile.d<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;</span><span class=s2>export PATH=\&#34;</span><span class=nv>$PATH</span><span class=s2>:</span><span class=nv>$PHP_ROOT</span><span class=s2>/bin:</span><span class=nv>$APACHE_ROOT</span><span class=s2>/bin\&#34;</span><span class=s2>&#34;</span> &gt; /app/.profile.d/PHP.sh<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;cd /app/src&#34;</span> &gt;&gt; /app/.profile.d/PHP.sh<span class=err>
+</span><span class=err></span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>EXPOSE</span><span class=s> 3000</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>裡面跑了 <code>composer install</code> 至於需不需要跑就看專案摟～
+（像是 PHP/Node.js 的相依都會被一起複製到，其實也不用這麼在意拉⋯⋯）</p><p>至於 Port 一律都是 3000 所以 <code>EXPOSE</code> 到 3000 就沒問題了。</p><h3 id=輔助-buildpacks-製作>輔助 Buildpacks 製作</h3><p>稍微修改一下 Dockerfile 放點輔助的 Script 進去就可以了。</p><p>我是寫了一個叫做 <code>package.sh</code> 的 Shell Script 幫我把 <code>/app</code> 的環境包出來。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh>mkdir /tmp/package
+<span class=nb>cd</span> /app
+tar cfvz /tmp/package/libs.tar.gz libs
+tar cfvz /tmp/package/PHP.tar.gz PHP
+tar cfvz /tmp/package/apache.tar.gz apache
+
+<span class=nb>cd</span> /tmp/package
+tar cvfz /tmp/slug.tar.gz libs.tar.gz PHP.tar.gz apache.tar.gz
+</code></pre></td></tr></table></div></div><p>做了些什麼呢？其實就是包 <code>slug</code> 但是跳過原始碼部分。</p><p>另外因為 Docker Plugin 不能幫我做把包好的 <code>slug</code> 拉出來，所以我另外寫了 <code>build_Docker.sh</code> 幫我複製出來。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=cp>#!/bin/bash
+</span><span class=cp></span>
+<span class=k>if</span> <span class=o>[</span> -f slug.tar.gz <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+  rm slug.tar.gz
+<span class=k>fi</span>
+
+<span class=c1># Build Image</span>
+Docker build -t PHP-with-phalcon .  <span class=c1># Run docker</span>
+<span class=nv>CONTAINER_ID</span><span class=o>=</span><span class=k>$(</span>Docker run -d PHP-with-phalcon /app/package.sh<span class=k>)</span>
+Docker <span class=nb>wait</span> <span class=nv>$CONTAINER_ID</span>
+Docker cp <span class=nv>$CONTAINER_ID</span>:/tmp/slug.tar.gz .
+Docker rm -f <span class=nv>$CONTAINER_ID</span>
+
+<span class=c1># Remove image</span>
+Docker rmi PHP-with-phalcon
+</code></pre></td></tr></table></div></div><p>因為會產生額外的 Image 跟 Container 所以在執行玩的時候都清理掉，確保乾淨。</p><blockquote><p>不過目前還在想該怎麼解決 Image Tag 的問題（怕重複到）</p></blockquote><p>這個 Buildpacks 的原始碼在 <a href=https://Github.com/elct9620/Heroku-buildpacks-PHP-with-phalcon>Github</a> 上面，歡迎大家協助改進跟維護。</p><blockquote><p>我有預裝好 Mongodb / Redis Extension 但是 Memcached 因為相依的 <code>libmemcached</code> 放在 Ubuntu 的版本管理系統上，卻很難判斷原始碼下載網址，因此我放棄了⋯⋯</p></blockquote><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Heroku/>Heroku</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Docker/>Docker</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/>筆記</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

@@ -1,0 +1,308 @@
+<!doctype html><html lang=zh-tw><head><title>你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？ - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="最近「台灣共識」很熱門，公司的粉專也分享了 Ruby 版的台灣共識。
+我們在公司內部的群組大家其實討論了蠻久，如果只是單純的去實作跟其他語言一樣的內容，不就沒有意義了嗎？
+我們之所以會選擇用 Ruby 來當作工作上的工具，就表示他有一些特別的地方吸引我們。
+所以，上面用了哪些 Ruby 技巧讓我們一起來分析看看！"><meta name=created content="2019-01-14T00:00:00+0000"><meta name=modified content="2019-01-14T22:00:39+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？"><meta property="og:url" content="https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-01-14-do-you-understand-the-ruby-version-taiwan-consensus-on-5xruby-s-fanpage/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？","datePublished":"2019-01-14T00:00:00Z","dateModified":"2019-01-14T22:00:39Z","url":"https://blog.frost.tw/posts/2019/01/14/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage/","description":"最近「台灣共識」很熱門，公司的粉專也分享了 Ruby 版的台灣共識。\n我們在公司內部的群組大家其實討論了蠻久，如果只是單純的去實作跟其他語言一樣的內容，不就沒有意義了嗎？\n我們之所以會選擇用 Ruby 來當作工作上的工具，就表示他有一些特別的地方吸引我們。\n所以，上面用了哪些 Ruby 技巧讓我們一起來分析看看！\n","keywords":["Ruby","筆記","台灣共識"],"image":"https://blog.frost.tw/images/2019-01-14-do-you-understand-the-ruby-version-taiwan-consensus-on-5xruby-s-fanpage/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/01\/14\/Do-you-understand-the-Ruby-version-Taiwan-Consensus-on-5xruby-s-fanpage\/","name":"你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？","image":"https:\/\/blog.frost.tw\/images\/2019-01-14-do-you-understand-the-ruby-version-taiwan-consensus-on-5xruby-s-fanpage\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2019-01-14T22:00:39+0000 class=article__time--header>Feb.14</time><h1 class=article__title>你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？</h1></header><div class=article__entry><nav class=translation></nav><p>最近「台灣共識」很熱門，公司的粉專也分享了 Ruby 版的台灣共識。</p><p>我們在公司內部的群組大家其實討論了蠻久，如果只是單純的去實作跟其他語言一樣的內容，不就沒有意義了嗎？</p><p>我們之所以會選擇用 Ruby 來當作工作上的工具，就表示他有一些特別的地方吸引我們。</p><p>所以，上面用了哪些 Ruby 技巧讓我們一起來分析看看！</p><p>先來看一下原始的版本，這是一個可以實際執行的 Ruby 語法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>Consensus92</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span><span class=p>,</span> <span class=nb>system</span><span class=p>:</span><span class=p>)</span>
+  <span class=no>Module</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+    <span class=n>define_method</span> <span class=s1>&#39;definition&#39;</span> <span class=k>do</span>
+      <span class=p>{</span> <span class=ss>countries</span><span class=p>:</span> <span class=n>countries</span><span class=p>,</span> <span class=nb>system</span><span class=p>:</span> <span class=nb>system</span> <span class=p>}</span>
+    <span class=k>end</span>
+    
+    <span class=n>define_method</span> <span class=s1>&#39;build_consensus_with?&#39;</span> <span class=k>do</span> <span class=o>|</span><span class=n>other</span><span class=o>|</span>
+      <span class=k>return</span> <span class=kp>true</span> <span class=k>if</span> <span class=n>definition</span> <span class=o>==</span> <span class=n>other</span><span class=o>.</span><span class=n>definition</span>
+      <span class=k>raise</span> <span class=s2>&#34;</span><span class=s2>This is not </span><span class=si>#{</span><span class=n>other</span><span class=si>}</span><span class=s2> consensus</span><span class=s2>&#34;</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>Taiwan</span>
+  <span class=kp>extend</span> <span class=no>Consensus92</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>,</span> <span class=nb>system</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>)</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>China</span>
+  <span class=kp>extend</span> <span class=no>Consensus92</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span> <span class=mi>1</span><span class=o></span><span class=p>,</span> <span class=nb>system</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>)</span>
+<span class=k>end</span>
+
+<span class=no>China</span><span class=o>.</span><span class=n>build_consensus_with?</span><span class=p>(</span><span class=no>Taiwan</span><span class=p>)</span>
+</code></pre></td></tr></table></div></div><h2 id=include-與-extend>include 與 extend</h2><p>大多數時候我們都是對 <code>include</code> 比較熟悉，因為它可以把一些方法切割到一個 Module 裡面，然後在物件中呼叫。</p><p>我們先來看一下這段程式碼：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>module</span> <span class=nn>Extension</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>echo</span>
+    <span class=nb>puts</span> <span class=s1>&#39;ECHO&#39;</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>A</span>
+  <span class=kp>include</span> <span class=no>Extension</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>B</span>
+  <span class=kp>extend</span> <span class=no>Extension</span>
+<span class=k>end</span>
+
+<span class=nb>p</span> <span class=n>A</span><span class=o>.</span><span class=n>ancestors</span>
+<span class=c1># =&gt; [A, Extension, Object, Kernel, BasicObject]</span>
+<span class=n>A</span><span class=o>.</span><span class=n>new</span><span class=o>.</span><span class=n>echo</span>
+<span class=nb>p</span> <span class=n>B</span><span class=o>.</span><span class=n>ancestors</span>
+<span class=c1># =&gt; [B, Object, Kernel, BasicObject]</span>
+<span class=n>B</span><span class=o>.</span><span class=n>echo</span>
+</code></pre></td></tr></table></div></div><p>我們會發現在 <code>B</code> 上面的繼承上，是沒有 <code>Extension</code> 模組的，所以兩者的差異在哪邊呢？</p><blockquote><p>因為我們希望是 <code>China.build_consensus_with?(Taiwan)</code> 而不是 <code>China.new.build_consensus_with?(Taiwan.new)</code> 的寫法，才選擇用 <code>extend</code></p></blockquote><h3 id=線索一>線索一</h3><p>調查了 Ruby 的文件會發現 <code>include</code> 屬於 <code>Module</code> 物件的行為，而 <code>extend</code> 則是屬於 <code>Object</code> 物件的行為。</p><p>簡單說就表示 <code>include</code> 只能作用在 <code>Class</code> 上，物件的實例是不行的，像是下面這樣：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>A</span><span class=o>.</span><span class=n>new</span><span class=o>.</span><span class=n>include</span> <span class=no>Extension</span>
+</code></pre></td></tr></table></div></div><p>但是 <code>extend</code> 是屬於 <code>Object</code> 的行為，所以原本我們預期是這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>B</span><span class=o>.</span><span class=n>new</span><span class=o>.</span><span class=n>extend</span> <span class=no>Extension</span>
+</code></pre></td></tr></table></div></div><p>但是同時 Ruby 的所有東西都是物件的一種，所以同理可以證明 <code>Module</code> 也是一種物件（而 <code>Class</code> 物件繼承於 <code>Module</code>）所以下面的用法也會成立：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>B</span><span class=o>.</span><span class=n>extend</span> <span class=no>Extension</span>
+</code></pre></td></tr></table></div></div><h3 id=線索二>線索二</h3><p>根據 Ruby 文件提供的 <code>extend</code> 實作，大概是長這樣的，意外的很簡單。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=k>static</span> <span class=n>VALUE</span>
+<span class=nf>rb_obj_extend</span><span class=p>(</span><span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=n>VALUE</span> <span class=o>*</span><span class=n>argv</span><span class=p>,</span> <span class=n>VALUE</span> <span class=n>obj</span><span class=p>)</span>
+<span class=p>{</span>
+    <span class=kt>int</span> <span class=n>i</span><span class=p>;</span>
+    <span class=n>ID</span> <span class=n>id_extend_object</span><span class=p>,</span> <span class=n>id_extended</span><span class=p>;</span>
+
+    <span class=n>CONST_ID</span><span class=p>(</span><span class=n>id_extend_object</span><span class=p>,</span> <span class=sa></span><span class=s>&#34;</span><span class=s>extend_object</span><span class=s>&#34;</span><span class=p>)</span><span class=p>;</span>
+    <span class=n>CONST_ID</span><span class=p>(</span><span class=n>id_extended</span><span class=p>,</span> <span class=sa></span><span class=s>&#34;</span><span class=s>extended</span><span class=s>&#34;</span><span class=p>)</span><span class=p>;</span>
+
+    <span class=n>rb_check_arity</span><span class=p>(</span><span class=n>argc</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=n>UNLIMITED_ARGUMENTS</span><span class=p>)</span><span class=p>;</span>
+    <span class=k>for</span> <span class=p>(</span><span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>argc</span><span class=p>;</span> <span class=n>i</span><span class=o>+</span><span class=o>+</span><span class=p>)</span>
+        <span class=n>Check_Type</span><span class=p>(</span><span class=n>argv</span><span class=p>[</span><span class=n>i</span><span class=p>]</span><span class=p>,</span> <span class=n>T_MODULE</span><span class=p>)</span><span class=p>;</span>
+    <span class=k>while</span> <span class=p>(</span><span class=n>argc</span><span class=o>-</span><span class=o>-</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>rb_funcall</span><span class=p>(</span><span class=n>argv</span><span class=p>[</span><span class=n>argc</span><span class=p>]</span><span class=p>,</span> <span class=n>id_extend_object</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=n>obj</span><span class=p>)</span><span class=p>;</span>
+        <span class=n>rb_funcall</span><span class=p>(</span><span class=n>argv</span><span class=p>[</span><span class=n>argc</span><span class=p>]</span><span class=p>,</span> <span class=n>id_extended</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=n>obj</span><span class=p>)</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=k>return</span> <span class=n>obj</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>裡面其實就只是把 <code>extend</code> 傳入的 Module 都帶入，並且呼叫 <code>extended</code> 和 <code>extend_object</code> 兩個方法。</p><p>經過簡單的測試，像下面這樣的修改就能阻止 <code>extend</code> 複製方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>module</span> <span class=nn>Extension</span>
+  <span class=k>def</span> <span class=nc>self</span><span class=o>.</span><span class=nf>extend_object</span><span class=p>(</span><span class=n>obj</span><span class=p>)</span>
+    <span class=c1># Do Nothing</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>echo</span>
+    <span class=nb>puts</span> <span class=s1>&#39;ECHO&#39;</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>B</span>
+  <span class=kp>extend</span> <span class=no>Extension</span>
+<span class=k>end</span>
+
+<span class=n>B</span><span class=o>.</span><span class=n>echo</span>
+<span class=c1># =&gt; undefine method</span>
+</code></pre></td></tr></table></div></div><p>也就是說，在 <code>extend</code> 的行為下，我們會透過 <code>extend_object</code> 方法做某些處理後，才得以「複製」方法，而不是像 <code>include</code> 一樣把整個 Module 放入物件的繼承體系之中。</p><blockquote><p>因為文章篇幅限制，我們先不去追 <code>extend_object</code> 的源頭。</p></blockquote><h2 id=consensus92-的用法>Consensus92 的用法</h2><p>首先，大家可能會有點疑惑為什麼可以用 <code>extend Consensus92()</code> 這樣的寫法，我們先釐清一下「方法」和「常數」的差異。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>Consensus92</span><span class=p>;</span> <span class=k>end</span>
+<span class=nb>p</span> <span class=no>Consensus92</span><span class=p>(</span><span class=p>)</span>
+<span class=nb>p</span> <span class=no>Consensus92</span> <span class=c1># =&gt; uninitialized constant Consensus92</span>
+</code></pre></td></tr></table></div></div><p>從上面這段程式碼我們可以發現，實際上「方法」和「常數」的命名空間是不同的，也就是說他們兩者並不衝突可以並存。而 Ruby 在這個情況下是透過有沒有 <code>()</code> 來判斷到底是個方法，還是一個常數。</p><blockquote><p>這邊省略 Ruby 的 Keyword Arguments 解釋，這部分雖然不常見但還是屬於日常使用的一部分。</p></blockquote><p>那麼，為什麼 <code>Consensus92()</code> 的回傳結果可以被 <code>extend</code> 呢？</p><p>這個問題大家可能很快就猜到了，因為我們使用了「匿名模組」的技巧，雖然不確定是否真的有這個詞，不過大多數我們都用「匿名 XX」來稱呼一些沒有取名的定義，所以這邊也就這樣使用吧！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>Consensus92</span>
+  <span class=no>Module</span><span class=o>.</span><span class=n>new</span><span class=p>;</span> <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>Taiwan</span>
+  <span class=kp>extend</span> <span class=no>Consensus92</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>因為不論 <code>include</code> 還是 <code>extend</code> 都只會確認對象是不是一個 Module 所以在這邊我們「即時」產生一個新的 Module 是符合 Ruby 在運作上的判定，也因此會被視為合法的行為。</p><p>所以實際上我們在 <code>Taiwan</code> 和 <code>China</code> 擴充的模組是不一樣的，這樣在程式的意義上，剛好也跟「九二共識沒有共識」的意思重疊在一起，畢竟從一開始「拓展（extend）」的共識就是不同的。</p><blockquote><p>如果有在使用 Rails 的話，可能會注意到像是 <code>Association_User_CollectionProxy</code> 之類的類別名稱，其實就是運用這種技巧去動態產生的 Class 喔！</p></blockquote><h2 id=define_method-的理由>define_method 的理由</h2><p>實際上，我們使用 <code>Module.new do; end</code> 和 <code>module Extension; end</code> 的效果是相同的，從下面的程式碼可以得到驗證：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>A</span> <span class=o>=</span> <span class=no>Module</span><span class=o>.</span><span class=n>new</span>
+  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>echo</span>
+    <span class=nb>puts</span> <span class=s1>&#39;ECHO&#39;</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>B</span>
+  <span class=kp>extend</span> <span class=n>A</span>
+<span class=k>end</span>
+
+<span class=n>B</span><span class=o>.</span><span class=n>echo</span>
+</code></pre></td></tr></table></div></div><p>既然這樣也會運作，那麼我們為什麼還需要用 <code>define_method</code> 呢？</p><p>這是因為我們希望達到類似 Closure 的技巧，看看下面這段程式就會注意到一個有趣的問題：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>Consensus92</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span><span class=p>)</span>
+  <span class=no>Module</span><span class=o>.</span><span class=n>new</span>
+    <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>definition</span>
+      <span class=p>{</span> <span class=ss>countries</span><span class=p>:</span> <span class=n>countries</span> <span class=p>}</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>Taiwan</span>
+  <span class=kp>extend</span> <span class=no>Consensus</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>)</span>
+<span class=k>end</span>
+
+<span class=no>Taiwan</span><span class=o>.</span><span class=n>definition</span>
+<span class=c1># =&gt; undefine variable countries</span>
+</code></pre></td></tr></table></div></div><p>為什麼會這樣，因為對 <code>def</code> 來說 <code>countries</code> 已經是屬於在執行階段的一部分，所以我們在呼叫 <code>definition</code> 的時候才會嘗試去尋找 <code>countries</code> 這個東西，但是他已經無法被找到。</p><p>但是 <code>define_method</code> 就不太一樣了！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>Consensus92</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span><span class=p>)</span>
+  <span class=no>Module</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+    <span class=n>define_method</span> <span class=s1>&#39;definition&#39;</span> <span class=k>do</span>
+      <span class=p>{</span> <span class=ss>countries</span><span class=p>:</span> <span class=n>countries</span> <span class=p>}</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>Taiwan</span>
+  <span class=kp>extend</span> <span class=no>Consensus92</span><span class=p>(</span><span class=ss>countries</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>)</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>實際上 <code>define_method</code> 在被呼叫的當下，會被轉成像這樣的樣子</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>definition</span>
+  <span class=p>{</span> <span class=ss>countries</span><span class=p>:</span> <span class=mi>2</span> <span class=o></span><span class=p>}</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>這是因為對於 <code>define_method</code> 所傳入的 Block 是用來定義方法的內容，但是因為我們是在呼叫一個方法，所以 <code>countries</code> 變數就被視為是處於 <code>Consensus92</code> 方法的環境下，而不是呼叫的當下。</p><blockquote><p>稍微有點難懂，不過是不是很像 Closure 的感覺呢？</p></blockquote><h2 id=總結>總結</h2><p>這段程式碼其實算是有不少巧思在裡面，把程式碼換成中文讀起來意思也是很容易懂的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=err>九</span><span class=err>二</span><span class=err>共</span><span class=err>識</span><span class=p>(</span><span class=err>國</span><span class=err>家</span><span class=p>:</span><span class=p>,</span> <span class=err>制</span><span class=err>度</span><span class=p>:</span><span class=p>)</span>
+  <span class=no>Module</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+    <span class=n>define_method</span> <span class=s1>&#39;定義&#39;</span> <span class=k>do</span>
+      <span class=p>{</span> <span class=err>國</span><span class=err>家</span><span class=p>:</span> <span class=err>國</span><span class=err>家</span><span class=p>,</span> <span class=err>制</span><span class=err>度</span><span class=p>:</span> <span class=err>制</span><span class=err>度</span> <span class=p>}</span>
+    <span class=k>end</span>
+    
+    <span class=n>define_method</span> <span class=s1>&#39;建立共識？&#39;</span> <span class=k>do</span> <span class=o>|</span><span class=err>定</span><span class=err>義</span><span class=o>|</span>
+      <span class=k>return</span> <span class=err>是</span> <span class=err>如</span><span class=err>果</span> <span class=err>定</span><span class=err>義</span> <span class=o>==</span> <span class=err>對</span><span class=err>方</span><span class=o>.</span><span class=err>定</span><span class=err>義</span>
+      <span class=k>raise</span> <span class=s2>&#34;</span><span class=s2>這不是</span><span class=si>#{</span><span class=err>對</span><span class=err>方</span><span class=si>}</span><span class=s2>共識</span><span class=s2>&#34;</span>
+    <span class=k>end</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=err>台</span><span class=err>灣</span>
+  <span class=err>擴</span><span class=err>充</span> <span class=err>九</span><span class=err>二</span><span class=err>共</span><span class=err>識</span><span class=p>(</span><span class=err>國</span><span class=err>家</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>,</span> <span class=err>制</span><span class=err>度</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>)</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=err>中</span><span class=err>國</span>
+  <span class=err>擴</span><span class=err>充</span> <span class=err>九</span><span class=err>二</span><span class=err>共</span><span class=err>識</span><span class=p>(</span><span class=err>國</span><span class=err>家</span><span class=p>:</span> <span class=mi>1</span><span class=o></span><span class=p>,</span> <span class=err>制</span><span class=err>度</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>)</span>
+<span class=k>end</span>
+
+<span class=err>中</span><span class=err>國</span><span class=o>.</span><span class=err>建</span><span class=err>立</span><span class=err>共</span><span class=err>識</span><span class=p>?</span><span class=err>（</span><span class=err>台</span><span class=err>灣</span><span class=err>）</span>
+<span class=c1># =&gt; 錯誤「這不是台灣共識」</span>
+</code></pre></td></tr></table></div></div><p>這也是 Ruby 在 DSL 表現優異上的原因之一，我們可以透過許多動態定義或者語法上的特殊技巧，製作出非常接近我們習慣的語言跟用法。</p><p>這篇文章提到關於 Ruby 類別上的應用，可以參考之前寫過的<a href=https://blog.frost.tw/posts/2017/10/22/The-ruby-s-class-is-free-Part-1/>自由的 Ruby 類別</a>來了解背後的機制。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E7%AD%86%E8%A8%98/>筆記</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%8F%B0%E7%81%A3%E5%85%B1%E8%AD%98/>台灣共識</a></li></ul></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>

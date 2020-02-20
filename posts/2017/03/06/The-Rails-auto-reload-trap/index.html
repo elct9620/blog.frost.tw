@@ -1,0 +1,117 @@
+<!doctype html><html lang=zh-tw><head><title>Rails 的 Auto Reload 機制所產生的錯誤 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="最近公司的專案使用到了 ActiveType 這套 Gem 用來輔助在專案逐漸複雜下 Model 會出現的問題。這是由 Growing Rails Application in Practice 這本書的作者在書中介紹中的技巧，不過卻意外的讓我們遇到了關於 Auto Reload 機制所產生的問題。"><meta name=created content="2017-03-06T00:00:00+0000"><meta name=modified content="2017-03-06T23:09:31+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="Rails 的 Auto Reload 機制所產生的錯誤"><meta property="og:url" content="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link rel=canonical href=https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"Rails 的 Auto Reload 機制所產生的錯誤","datePublished":"2017-03-06T00:00:00Z","dateModified":"2017-03-06T23:09:31Z","url":"https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/","description":"最近公司的專案使用到了 ActiveType 這套 Gem 用來輔助在專案逐漸複雜下 Model 會出現的問題。這是由 Growing Rails Application in Practice 這本書的作者在書中介紹中的技巧，不過卻意外的讓我們遇到了關於 Auto Reload 機制所產生的問題。\n","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2017\/03\/06\/The-Rails-auto-reload-trap\/","name":"Rails 的 Auto Reload 機制所產生的錯誤"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article"><header class=article__header><time datetime=2017-03-06T23:09:31+0000 class=article__time--header>Feb.06</time><h1 class=article__title>Rails 的 Auto Reload 機制所產生的錯誤</h1></header><div class=article__entry><nav class=translation></nav><p>最近公司的專案使用到了 <a href=https://github.com/makandra/active_type>ActiveType</a> 這套 Gem 用來輔助在專案逐漸複雜下 Model 會出現的問題。這是由 <a href=https://leanpub.com/growing-rails>Growing Rails Application in Practice</a> 這本書的作者在書中介紹中的技巧，不過卻意外的讓我們遇到了關於 Auto Reload 機制所產生的問題。</p><p>在開始之前，我們先看看同事 Eric 的小劇場。</p><p>這是一個天氣開始轉涼的日子，在這寒冬之中專案的成員已經進行了一個上午的討論。正針對一套關於紀錄使用者與平台間帳務的系統坐出討論。</p><p>在經過一個上午的消耗後，我們各自恢復開發的進度。</p><p>此時 Eric 在他的 Rails Concole 輸入了 <code>reload!</code> 這行指令，嘗試將最近一次的變更重新讀取進來。</p><p>沒想到，Factory Girl 卻向 Eric 這樣說道「Eric 啊！你的 <code>User (#123456789)</code> 並不是 <code>User (#987654321)</code> 啊！」</p><p>Eric 心頭一驚，不過他早就遭遇過幾次這樣的問題，很快地就用 <code>FactoryGirl.reload</code> 解決了。</p><p>不過這時，AASM 又再次像 Eric 抱怨「Eric 啊！你的 <code>0:Fixnum</code> 並不能被 <code>to_sym</code>，是不是搞錯什麼了？」</p><p>不得不說，一向好運的 Eric 竟然連續兩次被抱怨，這真是非常異常的情況，團隊成員都開始警戒了起來。</p><p>於是，我們開始探討關於 <code>reload!</code> 到底在背地裡偷偷做了什麼，竟然讓 Eric 的運氣都不管用了！</p><h3 id=auto-reload-機制>Auto Reload 機制</h3><p>使用 Rails 應該都對這個機制不陌生，他能夠讓我們再修改 Model、Controller 時自動的更新物件，讓伺服器在不重啟的前提下能夠即時的更新內容。</p><p>在 Rails 中，會先透過 <code>Object#remove_const</code> 將這個 Class 清除，並且透過 Autoload 機制在找不到對應的 Constant 時自動讀取對應的檔案，藉此完成一個完整的 Reload 循環。</p><h3 id=class-即物件>Class 即物件</h3><p>大多數的 Ruby 開發者都知道，在 Ruby 的世界中是由物件組成的。即使是 Class 本身也是一個物件。也因此，是允許我們如此定義一個 Class 出來。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>klass</span> <span class=o>=</span> <span class=no>Class</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
+ <span class=c1># 其他定義</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>而每一個 Instance 都會擁有一個屬於自己的 <code>object_id</code> 也因此可以透過這個方式來比較兩個 Class 是否相同（不過 Ruby 的實作是透過其他方式）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>A</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>B</span>
+<span class=k>end</span>
+
+<span class=nb>puts</span> <span class=n>A</span><span class=o>.</span><span class=n>object_id</span> <span class=o>===</span> <span class=n>B</span><span class=o>.</span><span class=n>object_id</span>
+</code></pre></td></tr></table></div></div><h3 id=factory-girl-的情況>Factory Girl 的情況</h3><p>透過前面的介紹，我們可以簡單的得知 Rails 在做 Reload 的時候會有以下的步驟。</p><ul><li>執行 Reload （可能會做一些前置準備）</li><li>使用 <code>Object#remove_const</code> 進行清理物件</li><li>透過 Autoload 機制讀取物件</li></ul><p>那麼，為什麼 Factory Girl 會覺得 Reload 前的 <code>User</code> 和 Reload 後的 <code>User</code> 不同呢？</p><p>因為 Factory Girl 在定義時會將這個 Class 儲存到某個變數中，當作參考，以利後來檢查。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># 原始 Class</span>
+<span class=k>class</span> <span class=nc>A</span>
+<span class=k>end</span>
+
+<span class=vi>@klass</span> <span class=o>=</span> <span class=n>A</span>
+
+<span class=n>A</span><span class=o>.</span><span class=n>new</span><span class=o>.</span><span class=n>is_a?</span><span class=p>(</span><span class=vi>@klass</span><span class=p>)</span> <span class=c1># =&gt; true</span>
+
+<span class=c1># Reload 動作</span>
+
+<span class=no>Object</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=ss>:remove_const</span><span class=p>,</span> <span class=ss>:A</span><span class=p>)</span> <span class=c1># =&gt; const A is undefined</span>
+
+<span class=c1># 重新定義 A Class</span>
+
+<span class=k>class</span> <span class=nc>A</span>
+<span class=k>end</span>
+
+<span class=n>A</span><span class=o>.</span><span class=n>new</span><span class=o>.</span><span class=n>is_a?</span><span class=p>(</span><span class=vi>@klass</span><span class=p>)</span> <span class=c1># =&gt; false</span>
+
+<span class=c1># 比對 @klass 和 A</span>
+<span class=nb>puts</span> <span class=vi>@klass</span><span class=o>.</span><span class=n>object_id</span> <span class=o>==</span> <span class=n>A</span><span class=o>.</span><span class=n>object_id</span> <span class=c1># =&gt; false</span>
+</code></pre></td></tr></table></div></div><p>由此可見，當我們呼叫 <code>Object#remove_const</code> 時，<code>A</code> 在 Ruby 終究被釋放出來，因此能夠讓我們「重新」賦值到 <code>A</code> 這個 Constant 上面，而執行 <code>class A; end</code> 和 <code>Class.new</code> 此時會被視為相同的行為，因此 <code>A</code> 所對應的物件就改變了！</p><p>但是 <code>@klass</code> 還保留著原有的 <code>A</code> Class 物件參照，因此會被當作是不同的 Class。</p><p>所以，解決的方案就是透過 <code>FactoryGirl.reload</code> 讓所有 Factory Girl 的檔案重新載入一次，將新的 Class 參照儲存進去。</p><h3 id=aasm-的情況>AASM 的情況</h3><p>在 Rails 4.1 新增了 <code>enum</code> 功能大大增加了方便性，而 AASM 也可以利用 <code>enum</code> 欄位來做狀態機的處理。那麼，為什麼會出現「<code>0:Fixnum</code> 無法 <code>to_sym</code>」的這種情況呢？</p><p>大多數時候我們都是用 <code>Integer</code> 欄位來儲存，所以第一時間會用 <code>Model.defined_enums</code> 來檢查，果然我們的 <code>enum</code> 消失了！</p><p>首先，先來看看下面的的 Model 關係。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>User</span> <span class=o>&lt;</span> <span class=no>ApplicationRecord</span>
+  <span class=n>has_many</span> <span class=ss>:virtual_orders</span><span class=p>,</span> <span class=ss>class_name</span><span class=p>:</span> <span class=no>VirtualOrder</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>Order</span> <span class=o>&lt;</span> <span class=no>ApplicationRecord</span>
+  <span class=n>belongs_to</span> <span class=ss>:user</span>
+
+  <span class=n>enum</span> <span class=ss>status</span><span class=p>:</span> <span class=p>{</span>
+    <span class=ss>pending</span><span class=p>:</span> <span class=mi>0</span><span class=o></span><span class=p>,</span>
+    <span class=ss>activate</span><span class=p>:</span> <span class=mi>1</span><span class=o></span><span class=p>,</span>
+    <span class=ss>completed</span><span class=p>:</span> <span class=mi>2</span><span class=o></span><span class=p>,</span>
+    <span class=ss>canceled</span><span class=p>:</span> <span class=mi>3</span>
+  <span class=o></span><span class=p>}</span>
+<span class=k>end</span>
+
+<span class=k>class</span> <span class=nc>VirtualOrder</span> <span class=o>&lt;</span> <span class=no>ActiveType</span><span class=o>::</span><span class=no>Record</span><span class=o>[</span><span class=no>Order</span><span class=o>]</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>這些行為關係到 Autoload 的動作，因此讀取順序會像下面這樣進行。</p><ul><li><code>Order</code> -> 發現 <code>User</code> 需要讀取</li><li><code>User</code> -> 因為發現了 <code>class_name</code> 後面有 Constant 提早讀取 <code>VirtualOrder</code> 物件</li><li><code>VirtualOrder</code> -> 找不到 <code>defined_enums</code> 因為 Order 還沒執行到 <code>enum</code></li><li><code>Order</code> -> 執行 <code>enum</code></li></ul><p>因此，只要對 <code>User</code> 稍微修正。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>User</span> <span class=o>&lt;</span> <span class=no>ApplicationRecord</span>
+  <span class=n>has_many</span> <span class=ss>:virtual_orders</span>
+<span class=k>end</span>
+
+<span class=c1># 或者下面的做法</span>
+
+<span class=k>class</span> <span class=nc>User</span> <span class=o>&lt;</span> <span class=no>ApplicationRecord</span>
+  <span class=n>has_many</span> <span class=ss>:virtual_orders</span><span class=p>,</span> <span class=ss>class_name</span><span class=p>:</span> <span class=s2>&#34;</span><span class=s2>VirtualOrder</span><span class=s2>&#34;</span><span class=o>.</span><span class=n>freeze</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>如此一來，在 Rails 執行 <code>has_many</code> 的時間點就會比 <code>autoload</code> 觸發的時間更晚，就不會讓這個問題發生。</p><p>在 Ruby 中發現 Constant 後會馬上檢查，而 Rails 會先捕捉這些錯誤做 Autoload 的處理。而 <code>has_many</code> 這些如果傳入的是字串，則會在建立關聯時才呼叫。反兒給了 <code>Order</code> 物件完全初始化的機會。</p><h3 id=小結>小結</h3><p>在這次的案例中，可以知道兩個情況需要小心。</p><ol><li>使用變數儲存能被 Autoload 的 Class 的情況</li><li>互相呼叫能被 Autoload 的 Class 時的先後關係</li></ol><p>關於第一點的情況，還有另外一個關於 <code>config/initializers</code> 設定檔的有趣情況，如果有機會的話還會再做分享。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe></footer></div></article></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank>蒼時弦也</a>. All right reversed.</div></footer><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><script src=/js/app.min.65872d06d2379c3fe1b6e9d0b82a4064f89173451c64ad1ddd5a263da2405f05.js></script><div class=loading></div></body></html>
