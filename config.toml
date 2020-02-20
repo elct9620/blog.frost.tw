@@ -27,7 +27,7 @@ posts = "/posts/:year/:month/:day/:slug"
     contentDir = "content/en"
     languageName = "English"
     weight = 10
-  [languages.zh-TW]
+  [languages.zh-tw]
     contentDir = "content/zh-tw"
     languageName = "繁體中文"
     weight = 1
