@@ -15,6 +15,6 @@
 <link rel="canonical" href="{{ .Permalink }}">
 {{ if .IsTranslated -}}
 {{ range .Translations }}
-<link rel="alternate" hreflang="{{ .Lang }}" href="{{ .RelPermalink }}">
+<link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}">
 {{ end -}}
 {{ end -}}
