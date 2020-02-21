@@ -6,3 +6,9 @@ other = "Prev"
 
 [nextPage]
 other = "Next"
+
+[page]
+other = "Page {{ . }} - "
+
+[comments]
+other = "Comments"

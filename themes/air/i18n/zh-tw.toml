@@ -9,3 +9,6 @@ other = "下一頁"
 
 [page]
 other = "第 {{ .Count }} 頁 - "
+
+[comments]
+other = "留言"
