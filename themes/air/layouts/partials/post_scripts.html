@@ -1,3 +1,6 @@
+{{ $script := resources.Get "js/app.js" | minify | fingerprint }}
+<script src="{{ $script.RelPermalink }}"></script>
+
 {{ with $.Param "tag_manager" }}
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id={{ . }}"
@@ -29,10 +32,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      js = d.createElement(s); js.id = id;
      js.src = "https://connect.facebook.net/zh_TW/sdk.js";
      js.async = true
+     js.defer = true
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
 {{ end }}
-
-{{ $script := resources.Get "js/app.js" | minify | fingerprint }}
-<script src="{{ $script.RelPermalink }}"></script>
