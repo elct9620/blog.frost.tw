@@ -56,8 +56,14 @@ img {
   max-width: 100%;
 }
 
-code {
+pre {
   padding: 0.15em 0.5em;
+  background: $codeBackgroundColor;
+}
+
+code {
+  display: inline-block;
+  padding: 0 0.5em;
   margin: 0 0.5em;
 
   font-size: 14px;
