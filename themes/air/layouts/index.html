@@ -1,9 +1,11 @@
 {{ define "title" }}{{ .Site.Title }}{{ end }}
 
 {{ define "main" }}
-  {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" "posts") }}
-  {{ range $paginator.Pages }}
-    {{ partial "excerpt.html" . }}
-  {{ end }}
+  <div class="container">
+    {{ $paginator := .Paginator }}
+    {{ range $paginator.Pages }}
+      {{ partial "excerpt.html" . }}
+    {{ end }}
+  </div>
   {{ partial "pagination.html" $paginator }}
 {{ end }}

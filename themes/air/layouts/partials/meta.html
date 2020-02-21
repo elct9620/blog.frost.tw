@@ -12,9 +12,18 @@
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 {{ with $.Param "thumbnail" }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
 <meta name="theme-color" content="{{ $.Param "themecolor" | default "#ffffff" }}">
+<link href="{{ "icon-512.png" | absURL }}" rel="icon">
 <link rel="canonical" href="{{ .Permalink }}">
 {{ if .IsTranslated -}}
 {{ range .Translations }}
 <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}">
+{{ end -}}
+{{ end -}}
+{{ with .Paginator -}}
+{{ if .HasPrev -}}
+<link href="{{ .Prev.URL | absURL }}" rel="prev" />
+{{ end -}}
+{{ if .HasNext -}}
+<link href="{{ .Next.URL | absURL }}" rel="next" />
 {{ end -}}
 {{ end -}}

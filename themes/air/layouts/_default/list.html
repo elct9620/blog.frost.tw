@@ -1,7 +1,9 @@
 {{ define "main" }}
-  {{ $paginator := .Paginate (.Pages) }}
-  {{ range $paginator.Pages }}
-    {{ partial "excerpt.html" . }}
-  {{ end }}
+  <div class="container">
+    {{ $paginator := .Paginator }}
+    {{ range $paginator.Pages }}
+      {{ partial "excerpt.html" . }}
+    {{ end }}
+  </div>
   {{ partial "pagination.html" $paginator}}
 {{ end }}
