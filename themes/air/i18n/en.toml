@@ -12,3 +12,9 @@ other = "Page {{ . }} - "
 
 [comments]
 other = "Comments"
+
+[seeAlso]
+other = "See Also"
+
+[toc]
+other = "Table of Contents"

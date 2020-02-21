@@ -12,3 +12,9 @@ other = "第 {{ .Count }} 頁 - "
 
 [comments]
 other = "留言"
+
+[seeAlso]
+other = "相關文章"
+
+[toc]
+other = "大綱"

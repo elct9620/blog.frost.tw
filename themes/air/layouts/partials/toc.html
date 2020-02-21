@@ -1,0 +1,11 @@
+{{ if .Params.toc }}
+<aside class="article__toc">
+  <header class="article__toc-title">
+    <h3>{{ i18n "toc" }}</h3>
+  </header>
+  <nav role="menuitem">
+  {{ .TableOfContents }}
+  </nav>
+  <hr />
+</aside>
+{{ end }}

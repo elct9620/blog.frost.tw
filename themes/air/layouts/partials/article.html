@@ -1,12 +1,13 @@
-<article class="post article">
+<article class="post article" role="article">
   <header class="article__header">
-    <time datetime="{{ dateFormat "2006-01-02T15:04:05-0700" .PublishDate }}" class="article__time--header">
+    <time datetime="{{ dateFormat "2006-01-02T15:04:05-0700" .PublishDate }}" class="article__time--header" role="time">
       {{ dateFormat "Feb.02" .Date }}
     </time>
     <h1 class="article__title">{{ .Title }}</h1>
   </header>
   <div class="article__entry">
     {{ partial "translations.html" . }}
+    {{ partial "toc.html" . }}
     {{ .Content }}
     <footer class="article__footer">
         <div class="text-center">
@@ -21,6 +22,7 @@
         <iframe scrolling="no" frameborder="0" style="display: block; margin: 0 auto; height: 212px;" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe>
         {{ partial "tags" . }}
     </footer>
+    {{ partial "related" . }}
   </div>
 </article>
 
