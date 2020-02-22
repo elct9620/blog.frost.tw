@@ -52,10 +52,10 @@
       "@type": "ListItem",
       "position": 1,
       "item": {
-        "@id": "{{ .Site.BaseURL | absLangURL }}",
-        "name": "{{ .Site.Title }}",
+        "@id": {{ .Site.BaseURL | absLangURL }},
+        "name": {{ .Site.Title }},
         {{ with .Site.Param "cover" -}}
-        "image": "{{ . }}"
+        "image": {{ . }}
         {{ end -}}
       }
     }
@@ -64,10 +64,10 @@
       "@type": "ListItem",
       "position": 2,
       "item": {
-        "@id": "{{ .Permalink }}",
-        "name": "{{ .Title }}"
+        "@id": {{ .Permalink }},
+        "name": {{ .Title }}
         {{ with .Param "thumbnail" -}}
-        ,"image": "{{ . }}"
+        ,"image": {{ . }}
         {{ end -}}
       }
     }
