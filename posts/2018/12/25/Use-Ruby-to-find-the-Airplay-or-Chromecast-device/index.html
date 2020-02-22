@@ -1,6 +1,6 @@
 <!doctype html><html lang=zh-tw><head><title>用 Ruby 來尋找區網中的 Airplay、Chromecast - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="從雲端開始熱門起來後，為了能能讓提供不同服務的伺服器能夠被自動的偵測，我們在許多雲端相關的工具都會看到 Service Discovery 這個名詞。
 不過，除了雲端上的服務能夠透過這樣的機制互相「發現」對方，我們也可以在區網中用類似的方法找到「提供服務」的裝置。
-這就要從 mDNS (Multicast DNS) 和 DNS-SD …"><meta name=created content="2018-12-25T00:00:00+0000"><meta name=modified content="2018-12-25T18:42:06+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="用 Ruby 來尋找區網中的 Airplay、Chromecast"><meta property="og:url" content="https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"用 Ruby 來尋找區網中的 Airplay、Chromecast","datePublished":"2018-12-25T00:00:00Z","dateModified":"2018-12-25T18:42:06Z","url":"https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/","description":"從雲端開始熱門起來後，為了能能讓提供不同服務的伺服器能夠被自動的偵測，我們在許多雲端相關的工具都會看到 Service Discovery 這個名詞。\n不過，除了雲端上的服務能夠透過這樣的機制互相「發現」對方，我們也可以在區網中用類似的方法找到「提供服務」的裝置。\n這就要從 mDNS (Multicast DNS) 和 DNS-SD …\n","keywords":["Ruby","mDNS","DNS-SD","心得"],"image":"https://blog.frost.tw/images/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2018\/12\/25\/Use-Ruby-to-find-the-Airplay-or-Chromecast-device\/","name":"用 Ruby 來尋找區網中的 Airplay、Chromecast","image":"https:\/\/blog.frost.tw\/images\/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2018-12-25T18:42:06+0000 class=article__time--header role=time>Feb.25</time><h1 class=article__title>用 Ruby 來尋找區網中的 Airplay、Chromecast</h1></header><div class=article__entry><nav class=translation></nav><p>從雲端開始熱門起來後，為了能能讓提供不同服務的伺服器能夠被自動的偵測，我們在許多雲端相關的工具都會看到 Service Discovery 這個名詞。</p><p>不過，除了雲端上的服務能夠透過這樣的機制互相「發現」對方，我們也可以在區網中用類似的方法找到「提供服務」的裝置。</p><p>這就要從 mDNS (Multicast DNS) 和 DNS-SD (DNS-based Service Discovery) 開始談起。</p><h2 id=概觀>概觀</h2><p>想要可以發現區網的裝置，我們需要先搞懂 mDNS 和 DNS-SD 這兩個東西在做些什麼。簡單來說 mDNS 就是對區網做「廣播」而廣播的內容則是我們熟悉的 DNS Query。當其他有在關注 mDNS 的裝置注意到之後，就會把回應廣播回區網上。也因為這樣的特性，我們不需要特別在區網架設一個 DNS 伺服器，因為我們會直接在這個區網中交換有興趣的訊息。</p><p>而 DNS-SD 其實是由 Apple 所提出的，如果看到 Bonjour 大致上他們可能是同一個東西。簡單來說就是基於 mDNS 在區網用特定的規則「查詢」和「回應」就能讓某個裝置辨識出另一個裝置有提供的服務，從而做到 Service Discovery 的功能。</p><blockquote><p>Bonjour 是不是相等 DNS-SD 資料不多，所以我不太敢直接斷定是同樣的東西，不過 DNS-SD 文件上是會出現 Bonjour 這個名詞的。</p></blockquote><h2 id=ruby-的-resolv-標準函式庫>Ruby 的 Resolv 標準函式庫</h2><p>基本上 <code>Resolv</code> 這個函式庫存在感低到我都懷疑他為什麼一直在 Ruby 原始碼中活得好好的，沒有被切割出來。不過如果我們想產生 DNS 查詢的封包，就得靠他來實現。</p><blockquote><p>原本我是看著這篇<a href=https://routley.io/tech/2017/12/28/hand-writing-dns-messages.html>文章</a>透過 Python 來實作產生和解析封包的功能，但是想起來我曾經對 Ruby 送過 PR 剛好就是 Resolv 相關的。</p></blockquote><p>先來一段 <code>Resolv::DNS</code> 的官方使用，讓我們快速了解一下怎麼送出 DNS 查詢。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+這就要從 mDNS (Multicast DNS) 和 DNS-SD …"><meta name=created content="2018-12-25T00:00:00+0000"><meta name=modified content="2018-12-25T18:42:06+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="用 Ruby 來尋找區網中的 Airplay、Chromecast"><meta property="og:url" content="https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"用 Ruby 來尋找區網中的 Airplay、Chromecast","datePublished":"2018-12-25T00:00:00Z","dateModified":"2018-12-25T18:42:06Z","url":"https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/","description":"從雲端開始熱門起來後，為了能能讓提供不同服務的伺服器能夠被自動的偵測，我們在許多雲端相關的工具都會看到 Service Discovery 這個名詞。\n不過，除了雲端上的服務能夠透過這樣的機制互相「發現」對方，我們也可以在區網中用類似的方法找到「提供服務」的裝置。\n這就要從 mDNS (Multicast DNS) 和 DNS-SD …\n","keywords":["Ruby","mDNS","DNS-SD","心得"],"image":"https://blog.frost.tw/images/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2018/12/25/Use-Ruby-to-find-the-Airplay-or-Chromecast-device/","name":"用 Ruby 來尋找區網中的 Airplay、Chromecast","image":"https://blog.frost.tw/images/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2018-12-25T18:42:06+0000 class=article__time--header role=time>Feb.25</time><h1 class=article__title>用 Ruby 來尋找區網中的 Airplay、Chromecast</h1></header><div class=article__entry><nav class=translation></nav><p>從雲端開始熱門起來後，為了能能讓提供不同服務的伺服器能夠被自動的偵測，我們在許多雲端相關的工具都會看到 Service Discovery 這個名詞。</p><p>不過，除了雲端上的服務能夠透過這樣的機制互相「發現」對方，我們也可以在區網中用類似的方法找到「提供服務」的裝置。</p><p>這就要從 mDNS (Multicast DNS) 和 DNS-SD (DNS-based Service Discovery) 開始談起。</p><h2 id=概觀>概觀</h2><p>想要可以發現區網的裝置，我們需要先搞懂 mDNS 和 DNS-SD 這兩個東西在做些什麼。簡單來說 mDNS 就是對區網做「廣播」而廣播的內容則是我們熟悉的 DNS Query。當其他有在關注 mDNS 的裝置注意到之後，就會把回應廣播回區網上。也因為這樣的特性，我們不需要特別在區網架設一個 DNS 伺服器，因為我們會直接在這個區網中交換有興趣的訊息。</p><p>而 DNS-SD 其實是由 Apple 所提出的，如果看到 Bonjour 大致上他們可能是同一個東西。簡單來說就是基於 mDNS 在區網用特定的規則「查詢」和「回應」就能讓某個裝置辨識出另一個裝置有提供的服務，從而做到 Service Discovery 的功能。</p><blockquote><p>Bonjour 是不是相等 DNS-SD 資料不多，所以我不太敢直接斷定是同樣的東西，不過 DNS-SD 文件上是會出現 Bonjour 這個名詞的。</p></blockquote><h2 id=ruby-的-resolv-標準函式庫>Ruby 的 Resolv 標準函式庫</h2><p>基本上 <code>Resolv</code> 這個函式庫存在感低到我都懷疑他為什麼一直在 Ruby 原始碼中活得好好的，沒有被切割出來。不過如果我們想產生 DNS 查詢的封包，就得靠他來實現。</p><blockquote><p>原本我是看著這篇<a href=https://routley.io/tech/2017/12/28/hand-writing-dns-messages.html>文章</a>透過 Python 來實作產生和解析封包的功能，但是想起來我曾經對 Ruby 送過 PR 剛好就是 Resolv 相關的。</p></blockquote><p>先來一段 <code>Resolv::DNS</code> 的官方使用，讓我們快速了解一下怎麼送出 DNS 查詢。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -19,7 +19,7 @@
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=nb>require</span> <span class=s1>&#39;socket&#39;</span>
 
 <span class=n>socket</span> <span class=o>=</span> <span class=no>UDPSocket</span><span class=o>.</span><span class=n>new</span>
-<span class=n>socket</span><span class=o>.</span><span class=n>bind</span><span class=p>(</span><span class=s1>&#39;224.0.0.251&#39;</span><span class=p>,</span> <span class=mi>5353</span><span class=o></span><span class=p>)</span>
+<span class=n>socket</span><span class=o>.</span><span class=n>bind</span><span class=p>(</span><span class=s1>&#39;224.0.0.251&#39;</span><span class=p>,</span> <span class=mi>5353</span><span class=p>)</span>
 </code></pre></td></tr></table></div></div><p>不過馬上就會得到 <code>Errno::EADDRINUSE (Address already in use - bind(2) for "224.0.0.251" port 5353)</code> 這樣的錯誤訊息，所以我們需要對這個 UDPSocket 做一些設定，讓他以「加入 Multicast 群組成員」的形式運作。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -31,19 +31,19 @@
 <span class=n>socket</span> <span class=o>=</span> <span class=no>UDPSocket</span><span class=o>.</span><span class=n>new</span>
 
 <span class=n>socket</span><span class=o>.</span><span class=n>setsockopt</span><span class=p>(</span><span class=ss>:IPPROTO_IP</span><span class=p>,</span> <span class=ss>:IP_ADD_MEMBERSHIP</span><span class=p>,</span> <span class=n>membership</span><span class=p>)</span>
-<span class=n>socket</span><span class=o>.</span><span class=n>setsockopt</span><span class=p>(</span><span class=ss>:SOL_SOCKET</span><span class=p>,</span> <span class=ss>:SO_REUSEPORT</span><span class=p>,</span> <span class=mi>1</span><span class=o></span><span class=p>)</span>
+<span class=n>socket</span><span class=o>.</span><span class=n>setsockopt</span><span class=p>(</span><span class=ss>:SOL_SOCKET</span><span class=p>,</span> <span class=ss>:SO_REUSEPORT</span><span class=p>,</span> <span class=mi>1</span><span class=p>)</span>
 
-<span class=n>socket</span><span class=o>.</span><span class=n>bind</span><span class=p>(</span><span class=s1>&#39;0.0.0.0&#39;</span><span class=p>,</span> <span class=mi>5353</span><span class=o></span><span class=p>)</span>
+<span class=n>socket</span><span class=o>.</span><span class=n>bind</span><span class=p>(</span><span class=s1>&#39;0.0.0.0&#39;</span><span class=p>,</span> <span class=mi>5353</span><span class=p>)</span>
 </code></pre></td></tr></table></div></div><p>上述的程式碼簡單來說做了這幾件事情：</p><ol><li>設定 Socket 要加入 <code>224.0.0.251</code> 作為成員</li><li>設定 Socket 允許重複使用 5353 這個 Port</li></ol><p>設定 5353 Port 可以被重複使用是因為在這個裝置上可能還有其他服務存在，他也會需要關注 mDNS 或者做出廣播，所以我們可能會跟其他人共用這個 Port。</p><p>而加入 <code>224.0.0.251</code> 成員就相對不容易理解了，對沒學過網路相關知識的人來說還真的不太好好懂（所以特地查了一下資料）</p><p>我們先看 <code>setsockopt</code> 在 Ruby 原始碼做了什麼，才會知道上面這段的意思。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=cp>#</span><span class=cp> 略</span><span class=cp>
-</span><span class=cp></span><span class=k>if</span> <span class=p>(</span><span class=n>setsockopt</span><span class=p>(</span><span class=n>fptr</span><span class=o>-</span><span class=o>&gt;</span><span class=n>fd</span><span class=p>,</span> <span class=n>level</span><span class=p>,</span> <span class=n>option</span><span class=p>,</span> <span class=n>v</span><span class=p>,</span> <span class=n>vlen</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
-        <span class=n>rsock_sys_fail_path</span><span class=p>(</span><span class=sa></span><span class=s>&#34;</span><span class=s>setsockopt(2)</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>fptr</span><span class=o>-</span><span class=o>&gt;</span><span class=n>pathv</span><span class=p>)</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=cp># 略
+</span><span class=cp></span><span class=k>if</span> <span class=p>(</span><span class=n>setsockopt</span><span class=p>(</span><span class=n>fptr</span><span class=o>-&gt;</span><span class=n>fd</span><span class=p>,</span> <span class=n>level</span><span class=p>,</span> <span class=n>option</span><span class=p>,</span> <span class=n>v</span><span class=p>,</span> <span class=n>vlen</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+        <span class=n>rsock_sys_fail_path</span><span class=p>(</span><span class=s>&#34;setsockopt(2)&#34;</span><span class=p>,</span> <span class=n>fptr</span><span class=o>-&gt;</span><span class=n>pathv</span><span class=p>);</span>
 
-    <span class=k>return</span> <span class=nf>INT2FIX</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span><span class=p>;</span>
+    <span class=k>return</span> <span class=nf>INT2FIX</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>在實作上 Ruby 會直接去呼叫 C API 來做這件事情，而 <code>level</code>, <code>option</code>, <code>v</code> 就是我們從 Ruby 傳入的數值。</p><p>接下來再看看我查到的 <code>IP_ADDD_MEMBERSHIP</code> 的 C API <a href=https://www.tldp.org/HOWTO/Multicast-HOWTO-6.html>使用說明</a>（嚴格上來說是 Multicast 的說明）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -53,9 +53,9 @@
 <span class=p>{</span>
         <span class=k>struct</span> <span class=n>in_addr</span> <span class=n>imr_multiaddr</span><span class=p>;</span>   <span class=cm>/* IP multicast address of group */</span>
         <span class=k>struct</span> <span class=n>in_addr</span> <span class=n>imr_interface</span><span class=p>;</span>   <span class=cm>/* local IP address of interface */</span>
-<span class=p>}</span><span class=p>;</span>
+<span class=p>};</span>
 </code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=n>setsockopt</span> <span class=p>(</span><span class=n>socket</span><span class=p>,</span> <span class=n>IPPROTO_IP</span><span class=p>,</span> <span class=n>IP_ADD_MEMBERSHIP</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>mreq</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>mreq</span><span class=p>)</span><span class=p>)</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=n>setsockopt</span> <span class=p>(</span><span class=n>socket</span><span class=p>,</span> <span class=n>IPPROTO_IP</span><span class=p>,</span> <span class=n>IP_ADD_MEMBERSHIP</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>mreq</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>mreq</span><span class=p>));</span>
 </code></pre></td></tr></table></div></div><p>實際上跟 Ruby 的版本幾乎沒有差別，最主要的是 <code>ip_mreq</code> 是一個資料結構，我們要怎樣才能夠正確的傳遞進去呢？</p><p>先看看 <code>IPAddr.new('224.0.0.251').hton</code> 執行後會得到什麼？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>irb<span class=o>(</span>main<span class=o>)</span>:003:0&gt; IPAddr.new<span class=o>(</span><span class=s1>&#39;224.0.0.251&#39;</span><span class=o>)</span>.hton
@@ -80,18 +80,18 @@
 </span><span class=lnt>14
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=kt>char</span> <span class=o>*</span><span class=n>v</span><span class=p>;</span>
 
-<span class=cp>#</span><span class=cp> 略</span><span class=cp>
+<span class=cp># 略
 </span><span class=cp></span>
-    <span class=k>switch</span> <span class=p>(</span><span class=n>TYPE</span><span class=p>(</span><span class=n>val</span><span class=p>)</span><span class=p>)</span> <span class=p>{</span>
-      <span class=cp>#</span><span class=cp> 略</span><span class=cp>
+    <span class=k>switch</span> <span class=p>(</span><span class=n>TYPE</span><span class=p>(</span><span class=n>val</span><span class=p>))</span> <span class=p>{</span>
+      <span class=cp># 略
 </span><span class=cp></span>      <span class=k>default</span><span class=o>:</span>
-        <span class=n>StringValue</span><span class=p>(</span><span class=n>val</span><span class=p>)</span><span class=p>;</span>
-        <span class=n>v</span> <span class=o>=</span> <span class=n>RSTRING_PTR</span><span class=p>(</span><span class=n>val</span><span class=p>)</span><span class=p>;</span>
-        <span class=n>vlen</span> <span class=o>=</span> <span class=n>RSTRING_SOCKLEN</span><span class=p>(</span><span class=n>val</span><span class=p>)</span><span class=p>;</span>
+        <span class=n>StringValue</span><span class=p>(</span><span class=n>val</span><span class=p>);</span>
+        <span class=n>v</span> <span class=o>=</span> <span class=n>RSTRING_PTR</span><span class=p>(</span><span class=n>val</span><span class=p>);</span>
+        <span class=n>vlen</span> <span class=o>=</span> <span class=n>RSTRING_SOCKLEN</span><span class=p>(</span><span class=n>val</span><span class=p>);</span>
         <span class=k>break</span><span class=p>;</span>
     <span class=p>}</span>
     
-<span class=cp>#</span><span class=cp> C API 呼叫處</span><span class=cp>
+<span class=cp># C API 呼叫處
 </span></code></pre></td></tr></table></div></div><p>簡單說就是直接弄成一段 <code>char</code> 陣列，基本上我們在 C 裡面只要大小一樣直接對到結構上基本上是會運作的，於是我們就很自然的利用 Ruby 的字串變成一個在 C 裡面的 <code>ip_mreq</code> 資料結構，順利的傳遞進去了。</p><p>至於 <code>#hton</code> 是什麼呢？他是 <code>Host Byte Order to Network Byte Order</code> 的縮寫，簡單說在處理網路封包的時候需要知道 IP 位置，所以有一個特殊的格式，但是因為作業系統差異，存位置的規格可能有差異，所以送到網路上時會統一轉成網路用的位元順序。</p><p>總而言之，我們目前可以順利的接收到來自 mDNS 的廣播封包拉！</p><h2 id=解析封包>解析封包</h2><p>首先，我們先把上面的程式碼簡單重構成下面這樣的結構</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -129,7 +129,7 @@
 <span class=nb>require</span> <span class=s1>&#39;awesome_print&#39;</span>
 
 <span class=no>MDNS_PORT</span> <span class=o>=</span> <span class=mi>5353</span>
-<span class=o></span><span class=no>MDNS_ADDRESS</span> <span class=o>=</span> <span class=s1>&#39;224.0.0.251&#39;</span><span class=o>.</span><span class=n>freeze</span>
+<span class=no>MDNS_ADDRESS</span> <span class=o>=</span> <span class=s1>&#39;224.0.0.251&#39;</span><span class=o>.</span><span class=n>freeze</span>
 <span class=no>BIND_ADDRESS</span> <span class=o>=</span> <span class=s1>&#39;0.0.0.0&#39;</span><span class=o>.</span><span class=n>freeze</span>
 
 <span class=no>M_MEMBERSHIP</span> <span class=o>=</span> <span class=no>IPAddr</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=no>MDNS_ADDRESS</span><span class=p>)</span><span class=o>.</span><span class=n>hton</span> <span class=o>+</span> <span class=no>IPAddr</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=no>BIND_ADDRESS</span><span class=p>)</span><span class=o>.</span><span class=n>hton</span>
@@ -138,16 +138,16 @@
 <span class=k>class</span> <span class=nc>MDNS</span>
   <span class=kp>include</span> <span class=no>Enumerable</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span>
+  <span class=k>def</span> <span class=nf>initialize</span>
     <span class=vi>@socket</span> <span class=o>=</span> <span class=no>UDPSocket</span><span class=o>.</span><span class=n>new</span>
     <span class=vi>@socket</span><span class=o>.</span><span class=n>setsockopt</span><span class=p>(</span><span class=ss>:IPPROTO_IP</span><span class=p>,</span> <span class=ss>:IP_ADD_MEMBERSHIP</span><span class=p>,</span> <span class=no>M_MEMBERSHIP</span><span class=p>)</span>
-    <span class=vi>@socket</span><span class=o>.</span><span class=n>setsockopt</span><span class=p>(</span><span class=ss>:SOL_SOCKET</span><span class=p>,</span> <span class=ss>:SO_REUSEPORT</span><span class=p>,</span> <span class=mi>1</span><span class=o></span><span class=p>)</span>
+    <span class=vi>@socket</span><span class=o>.</span><span class=n>setsockopt</span><span class=p>(</span><span class=ss>:SOL_SOCKET</span><span class=p>,</span> <span class=ss>:SO_REUSEPORT</span><span class=p>,</span> <span class=mi>1</span><span class=p>)</span>
     <span class=vi>@socket</span><span class=o>.</span><span class=n>bind</span><span class=p>(</span><span class=no>BIND_ADDRESS</span><span class=p>,</span> <span class=no>MDNS_PORT</span><span class=p>)</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>each</span><span class=p>(</span><span class=o>&amp;</span><span class=n>_block</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>each</span><span class=p>(</span><span class=o>&amp;</span><span class=n>_block</span><span class=p>)</span>
     <span class=kp>loop</span> <span class=k>do</span>
-      <span class=k>yield</span> <span class=vi>@socket</span><span class=o>.</span><span class=n>recvfrom</span><span class=p>(</span><span class=mi>4096</span><span class=o></span><span class=p>)</span>
+      <span class=k>yield</span> <span class=vi>@socket</span><span class=o>.</span><span class=n>recvfrom</span><span class=p>(</span><span class=mi>4096</span><span class=p>)</span>
     <span class=k>end</span>
   <span class=k>end</span>
 <span class=k>end</span>
@@ -166,12 +166,12 @@
 </span><span class=lnt>8
 </span><span class=lnt>9
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=o>[</span>
-    <span class=o>[</span><span class=mi>0</span><span class=o></span><span class=o>]</span> <span class=s2>&#34;</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x84</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x02</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x01</span><span class=se>\a</span><span class=s2>Android</span><span class=se>\x05</span><span class=s2>local</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x01</span><span class=se>\x80</span><span class=se>\x01</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=s2>x</span><span class=se>\x00</span><span class=se>\x04</span><span class=se>\xAC</span><span class=se>\x1F</span><span class=se>\x01</span><span class=se>\xC0</span><span class=se>\xC0</span><span class=se>\f</span><span class=se>\x00</span><span class=se>\x1C</span><span class=se>\x80</span><span class=se>\x01</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=s2>x</span><span class=se>\x00</span><span class=se>\x10</span><span class=se>\xFE</span><span class=se>\x80</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\xAE</span><span class=s2>c</span><span class=se>\xBE</span><span class=se>\xFF</span><span class=se>\xFE</span><span class=se>\xC2</span><span class=s2>1;</span><span class=se>\xC0</span><span class=se>\f</span><span class=se>\x00</span><span class=s2>/</span><span class=se>\x80</span><span class=se>\x01</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\x00</span><span class=s2>x</span><span class=se>\x00</span><span class=se>\b</span><span class=se>\xC0</span><span class=se>\f</span><span class=se>\x00</span><span class=se>\x04</span><span class=s2>@</span><span class=se>\x00</span><span class=se>\x00</span><span class=se>\b</span><span class=s2>&#34;</span><span class=p>,</span>
-    <span class=o>[</span><span class=mi>1</span><span class=o></span><span class=o>]</span> <span class=o>[</span>
-        <span class=o>[</span><span class=mi>0</span><span class=o></span><span class=o>]</span> <span class=s2>&#34;</span><span class=s2>AF_INET</span><span class=s2>&#34;</span><span class=p>,</span>
-        <span class=o>[</span><span class=mi>1</span><span class=o></span><span class=o>]</span> <span class=mi>5353</span><span class=o></span><span class=p>,</span>
-        <span class=o>[</span><span class=mi>2</span><span class=o></span><span class=o>]</span> <span class=s2>&#34;</span><span class=s2>172.31.1.192</span><span class=s2>&#34;</span><span class=p>,</span>
-        <span class=o>[</span><span class=mi>3</span><span class=o></span><span class=o>]</span> <span class=s2>&#34;</span><span class=s2>172.31.1.192</span><span class=s2>&#34;</span>
+    <span class=o>[</span><span class=mi>0</span><span class=o>]</span> <span class=s2>&#34;</span><span class=se>\x00\x00\x84\x00\x00\x00\x00\x02\x00\x00\x00\x01\a</span><span class=s2>Android</span><span class=se>\x05</span><span class=s2>local</span><span class=se>\x00\x00\x01\x80\x01\x00\x00\x00</span><span class=s2>x</span><span class=se>\x00\x04\xAC\x1F\x01\xC0\xC0\f\x00\x1C\x80\x01\x00\x00\x00</span><span class=s2>x</span><span class=se>\x00\x10\xFE\x80\x00\x00\x00\x00\x00\x00\xAE</span><span class=s2>c</span><span class=se>\xBE\xFF\xFE\xC2</span><span class=s2>1;</span><span class=se>\xC0\f\x00</span><span class=s2>/</span><span class=se>\x80\x01\x00\x00\x00</span><span class=s2>x</span><span class=se>\x00\b\xC0\f\x00\x04</span><span class=s2>@</span><span class=se>\x00\x00\b</span><span class=s2>&#34;</span><span class=p>,</span>
+    <span class=o>[</span><span class=mi>1</span><span class=o>]</span> <span class=o>[</span>
+        <span class=o>[</span><span class=mi>0</span><span class=o>]</span> <span class=s2>&#34;AF_INET&#34;</span><span class=p>,</span>
+        <span class=o>[</span><span class=mi>1</span><span class=o>]</span> <span class=mi>5353</span><span class=p>,</span>
+        <span class=o>[</span><span class=mi>2</span><span class=o>]</span> <span class=s2>&#34;172.31.1.192&#34;</span><span class=p>,</span>
+        <span class=o>[</span><span class=mi>3</span><span class=o>]</span> <span class=s2>&#34;172.31.1.192&#34;</span>
     <span class=o>]</span>
 <span class=o>]</span>
 </code></pre></td></tr></table></div></div><p>那麼我們該如何解析呢？因為封包內容其實就是 DNS 查詢（或者回應）所以我們只需要透過 <code>Resolv::DNS::Message</code> 的 <code>#decode</code> 去解析就可以知道內容了！</p><blockquote><p>比較痛苦的大概是 <code>Resolv::DNS</code> 本身是 Class 所以無法用 <code>include</code> 進來使用，要打很長 Class Name XD</p></blockquote><p>我們稍微調整讀取封包的程式，改成這個樣子</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
@@ -251,12 +251,12 @@
 
   <span class=c1># 略</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>listen</span>
+  <span class=k>def</span> <span class=nf>listen</span>
     <span class=k>return</span> <span class=k>if</span> <span class=vi>@thread</span>
 
     <span class=vi>@thread</span> <span class=o>=</span> <span class=no>Thread</span><span class=o>.</span><span class=n>new</span> <span class=k>do</span>
       <span class=kp>loop</span> <span class=k>do</span>
-        <span class=n>packet</span><span class=p>,</span> <span class=o>=</span> <span class=vi>@socket</span><span class=o>.</span><span class=n>recvfrom</span><span class=p>(</span><span class=mi>4096</span><span class=o></span><span class=p>)</span>
+        <span class=n>packet</span><span class=p>,</span> <span class=o>=</span> <span class=vi>@socket</span><span class=o>.</span><span class=n>recvfrom</span><span class=p>(</span><span class=mi>4096</span><span class=p>)</span>
         <span class=n>reply</span> <span class=o>=</span> <span class=no>Resolv</span><span class=o>::</span><span class=no>DNS</span><span class=o>::</span><span class=no>Message</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=n>packet</span><span class=p>)</span>
         <span class=k>next</span> <span class=k>if</span> <span class=n>reply</span><span class=o>.</span><span class=n>qr</span><span class=o>.</span><span class=n>zero?</span>
         <span class=k>next</span> <span class=k>if</span> <span class=n>ptr?</span><span class=p>(</span><span class=n>reply</span><span class=p>)</span>
@@ -266,16 +266,16 @@
     <span class=k>end</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>each</span><span class=p>(</span><span class=o>&amp;</span><span class=n>_block</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>each</span><span class=p>(</span><span class=o>&amp;</span><span class=n>_block</span><span class=p>)</span>
     <span class=kp>loop</span> <span class=k>do</span>
       <span class=k>yield</span> <span class=vi>@replies</span><span class=o>.</span><span class=n>shift</span> <span class=k>until</span> <span class=vi>@replies</span><span class=o>.</span><span class=n>empty?</span>
       <span class=nb>sleep</span> <span class=mi>1</span>
-    <span class=o></span><span class=k>end</span>
+    <span class=k>end</span>
   <span class=k>end</span>
 
   <span class=kp>private</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>ptr?</span><span class=p>(</span><span class=n>reply</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>ptr?</span><span class=p>(</span><span class=n>reply</span><span class=p>)</span>
     <span class=n>reply</span><span class=o>.</span><span class=n>answer</span><span class=o>.</span><span class=n>reduce</span><span class=p>(</span><span class=kp>true</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>prev</span><span class=p>,</span> <span class=p>(</span><span class=n>_</span><span class=p>,</span> <span class=n>_</span><span class=p>,</span> <span class=n>data</span><span class=p>)</span><span class=o>|</span>
       <span class=n>prev</span> <span class=o>&amp;</span> <span class=n>data</span><span class=o>.</span><span class=n>is_a?</span><span class=p>(</span><span class=no>Resolv</span><span class=o>::</span><span class=no>DNS</span><span class=o>::</span><span class=no>Resource</span><span class=o>::</span><span class=no>IN</span><span class=o>::</span><span class=no>PTR</span><span class=p>)</span>
     <span class=k>end</span>

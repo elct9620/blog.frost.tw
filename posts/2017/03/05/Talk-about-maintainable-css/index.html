@@ -1,5 +1,5 @@
 <!doctype html><html lang=zh-tw><head><title>可維護的 CSS - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 Maintainable CSS 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。
-幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS …"><meta name=created content="2017-03-05T00:00:00+0000"><meta name=modified content="2017-03-05T00:47:33+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="可維護的 CSS"><meta property="og:url" content="https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"可維護的 CSS","datePublished":"2017-03-05T00:00:00Z","dateModified":"2017-03-05T00:47:33Z","url":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/","description":"這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 Maintainable CSS 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。\n幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS …\n","keywords":["CSS","前端"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2017\/03\/05\/Talk-about-maintainable-css\/","name":"可維護的 CSS"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2017-03-05T00:47:33+0000 class=article__time--header role=time>Feb.05</time><h1 class=article__title>可維護的 CSS</h1></header><div class=article__entry><nav class=translation></nav><p>這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 <a href=https://maintainablecss.com/>Maintainable CSS</a> 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。</p><p>幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS 逐漸複雜。所以開始有像是 OOCSS、SMACSS、BEM 等等理論出現，綜合來看這些技巧對於維護網站的樣式上都是很有幫助的。</p><p>會寫這篇文章是因為 Maintainable CSS 在很多地方上跟我自己使用的方式類似，而我目前採用的則是 SMACSS 跟 BEM 的混合版本，所以就打算來分享一下自己的經驗和技巧。</p><h2 id=語意化>語意化</h2><p>Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就是該怎麼對元素的樣式做命名這件事情。</p><p>像是 <code>.col-md-12</code> 被分類在非語意化的類型，而 <code>.product</code> 則屬於語意化。就我自己的習慣，其實是偏向於語意化的，雖然說 <code>.col-md-12</code> 必須改寫成 <code>.column-medium-12</code> 或者 <code>.column-pad-12</code> 之類的形式，會要多打不少字，但是從結果上來看，原始碼的可讀性就會增加非常多。</p><p>關於「語意化」的應用實例，可以參考 <a href=https://semantic-ui.com/>Semantic UI</a> 的應用，這套 CSS Framework 就是以語意化為前提所設計，可以從中學習到非常多語意化的範例。</p><p>至於是否要堅持完全的語意化，我個人是認為不需要的。畢竟很多情境都不是絕對的，如果太過於堅持這些地方的話，反而會變成干擾排版的障礙，在可容許的範圍內有一些例外狀況是沒有關係的。</p><h2 id=重用性>重用性</h2><p>第二個章節在討論重用性，不過我自己其實沒有很注重這部分，反而沒有太多的經驗可以分享。不過裡面提到了 SCSS 的 <code>mixin</code> 機制，確實是在重用性上非常有利的輔助。不過這部分是減少原始碼的使用，而個人認為真正的重用是對一些常用屬性的拆分，像是下面這樣的例子。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS …"><meta name=created content="2017-03-05T00:00:00+0000"><meta name=modified content="2017-03-05T00:47:33+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="可維護的 CSS"><meta property="og:url" content="https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"可維護的 CSS","datePublished":"2017-03-05T00:00:00Z","dateModified":"2017-03-05T00:47:33Z","url":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/","description":"這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 Maintainable CSS 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。\n幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS …\n","keywords":["CSS","前端"],"author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2017/03/05/Talk-about-maintainable-css/","name":"可維護的 CSS"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2017-03-05T00:47:33+0000 class=article__time--header role=time>Feb.05</time><h1 class=article__title>可維護的 CSS</h1></header><div class=article__entry><nav class=translation></nav><p>這週的 CSS Weekly 以及幾個前端相關的電子報都提到了叫做 <a href=https://maintainablecss.com/>Maintainable CSS</a> 的專案，乍看之下還以為是討論可維護 CSS 專案的文章，沒想到是一種 CSS 框架。</p><p>幾年前 Responsive Web Design 和 Single Web Application 開始熱門起來的時候，大家也注意到網站使用的 CSS 逐漸複雜。所以開始有像是 OOCSS、SMACSS、BEM 等等理論出現，綜合來看這些技巧對於維護網站的樣式上都是很有幫助的。</p><p>會寫這篇文章是因為 Maintainable CSS 在很多地方上跟我自己使用的方式類似，而我目前採用的則是 SMACSS 跟 BEM 的混合版本，所以就打算來分享一下自己的經驗和技巧。</p><h2 id=語意化>語意化</h2><p>Maintainable CSS 第一個章節在討論使用「語意化」的情境，也就是該怎麼對元素的樣式做命名這件事情。</p><p>像是 <code>.col-md-12</code> 被分類在非語意化的類型，而 <code>.product</code> 則屬於語意化。就我自己的習慣，其實是偏向於語意化的，雖然說 <code>.col-md-12</code> 必須改寫成 <code>.column-medium-12</code> 或者 <code>.column-pad-12</code> 之類的形式，會要多打不少字，但是從結果上來看，原始碼的可讀性就會增加非常多。</p><p>關於「語意化」的應用實例，可以參考 <a href=https://semantic-ui.com/>Semantic UI</a> 的應用，這套 CSS Framework 就是以語意化為前提所設計，可以從中學習到非常多語意化的範例。</p><p>至於是否要堅持完全的語意化，我個人是認為不需要的。畢竟很多情境都不是絕對的，如果太過於堅持這些地方的話，反而會變成干擾排版的障礙，在可容許的範圍內有一些例外狀況是沒有關係的。</p><h2 id=重用性>重用性</h2><p>第二個章節在討論重用性，不過我自己其實沒有很注重這部分，反而沒有太多的經驗可以分享。不過裡面提到了 SCSS 的 <code>mixin</code> 機制，確實是在重用性上非常有利的輔助。不過這部分是減少原始碼的使用，而個人認為真正的重用是對一些常用屬性的拆分，像是下面這樣的例子。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -8,21 +8,21 @@
 </span><span class=lnt>7
 </span><span class=lnt>8
 </span><span class=lnt>9
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nc>.</span><span class=nc>centered</span> <span class=p>{</span>
-  <span class=k>&amp;</span><span class=nc>.</span><span class=nc>text</span> <span class=p>{</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nc>.centered</span> <span class=p>{</span>
+  <span class=k>&amp;</span><span class=nc>.text</span> <span class=p>{</span>
    <span class=nt>text-align</span><span class=nd>:</span> <span class=nt>center</span><span class=p>;</span>
   <span class=p>}</span>
 
-  <span class=k>&amp;</span><span class=nc>.</span><span class=nc>block</span> <span class=p>{</span>
+  <span class=k>&amp;</span><span class=nc>.block</span> <span class=p>{</span>
     <span class=nt>margin</span><span class=nd>:</span> <span class=nt>0</span> <span class=nt>auto</span><span class=p>;</span>
   <span class=p>}</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;red centered text block is-fixed-size width-80&#34;</span><span class=p></span><span class=p>&gt;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;red centered text block is-fixed-size width-80&#34;</span><span class=p>&gt;</span>
   Important Message!
-<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
 </code></pre></td></tr></table></div></div><p>不過在 <code>mixin</code> 的應用技巧上，如果純熟使用的話也能減少不少多餘的步驟，像是下面這樣。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -37,8 +37,8 @@
   <span class=nt>background-color</span><span class=nd>:</span> <span class=err>$</span><span class=nt>color</span><span class=p>;</span>
 <span class=p>}</span>
 
-<span class=nc>.</span><span class=nc>profile__link--button</span> <span class=p>{</span>
-  <span class=k>@include</span><span class=nd> button-skin</span><span class=p>(</span><span class=nv>$pattle-primary</span><span class=p>)</span><span class=p>;</span>
+<span class=nc>.profile__link--button</span> <span class=p>{</span>
+  <span class=k>@include</span><span class=nd> button-skin</span><span class=p>(</span><span class=nv>$pattle-primary</span><span class=p>);</span>
 <span class=p>}</span>
 
 </code></pre></td></tr></table></div></div><p>透過包裝 <code>mixin</code> 讓一些常用的樣式設定可以用很簡單的方式被套用。我自己最常用的是 Media Query 的情境，使用起來類似下面這樣。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -52,7 +52,7 @@
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nc>.</span><span class=nc>article__quote</span> <span class=p>{</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nc>.article__quote</span> <span class=p>{</span>
   <span class=nt>width</span><span class=nd>:</span> <span class=nt>100</span><span class=err>%</span><span class=p>;</span>
 
   <span class=k>@include</span><span class=nd> at-screen</span><span class=p>(</span><span class=nv>$pad</span><span class=p>)</span> <span class=p>{</span>
@@ -76,26 +76,26 @@
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span><span class=lnt>13
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>section</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;home&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;page&#34;</span><span class=p></span><span class=p>&gt;</span>
-  <span class=p>&lt;</span><span class=nt>aside</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile&#34;</span><span class=p></span><span class=p>&gt;</span>
-    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__avatar&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__information&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-  <span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-<span class=p>&lt;</span><span class=p>/</span><span class=nt>section</span><span class=p>&gt;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>section</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;home&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;page&#34;</span><span class=p>&gt;</span>
+  <span class=p>&lt;</span><span class=nt>aside</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile&#34;</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__avatar&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__information&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+  <span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>section</span><span class=p>&gt;</span>
 
-<span class=p>&lt;</span><span class=nt>section</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;about&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;page&#34;</span><span class=p></span><span class=p>&gt;</span>
-  <span class=p>&lt;</span><span class=nt>aside</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile&#34;</span><span class=p></span><span class=p>&gt;</span>
-    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__avatar&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__information&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-  <span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-<span class=p>&lt;</span><span class=p>/</span><span class=nt>section</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>section</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;about&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;page&#34;</span><span class=p>&gt;</span>
+  <span class=p>&lt;</span><span class=nt>aside</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile&#34;</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__avatar&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;profile__information&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+  <span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>section</span><span class=p>&gt;</span>
 </code></pre></td></tr></table></div></div><p>像是上述的情況，就可以利用下面的方式在 <code>#home</code> 的時候取消掉 <code>.profile__information</code> 的顯示，這部分用在套版上帶入通用的 Widget 時就很方便。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nn>#</span><span class=nn>home</span> <span class=p>{</span>
-  <span class=nc>.</span><span class=nc>profile__information</span> <span class=p>{</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nn>#home</span> <span class=p>{</span>
+  <span class=nc>.profile__information</span> <span class=p>{</span>
     <span class=nt>display</span><span class=nd>:</span> <span class=nt>none</span><span class=p>;</span>
   <span class=p>}</span>
 <span class=p>}</span>
@@ -122,25 +122,25 @@
 </span><span class=lnt>21
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=c1>// application.css
 </span><span class=c1></span>
-<span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>variables</span><span class=s1>&#39;</span><span class=p>;</span>
+<span class=k>@import</span> <span class=s1>&#39;variables&#39;</span><span class=p>;</span>
 
 <span class=c1>// Vendors
-</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>vendors/normalize</span><span class=s1>&#39;</span><span class=p>;</span>
+</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;vendors/normalize&#39;</span><span class=p>;</span>
 
 <span class=c1>// Mixins
-</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>mixins/breakpoint</span><span class=s1>&#39;</span><span class=p>;</span>
+</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;mixins/breakpoint&#39;</span><span class=p>;</span>
 
 <span class=c1>// Default Skin
-</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>base</span><span class=s1>&#39;</span><span class=p>;</span>
+</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;base&#39;</span><span class=p>;</span>
 
 <span class=c1>// Modules
-</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>modules/header</span><span class=s1>&#39;</span><span class=p>;</span>
-<span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>modules/footer</span><span class=s1>&#39;</span><span class=p>;</span>
-<span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>modules/profile</span><span class=s1>&#39;</span><span class=p>;</span>
+</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;modules/header&#39;</span><span class=p>;</span>
+<span class=k>@import</span> <span class=s1>&#39;modules/footer&#39;</span><span class=p>;</span>
+<span class=k>@import</span> <span class=s1>&#39;modules/profile&#39;</span><span class=p>;</span>
 
 <span class=c1>// Layouts
-</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>layouts/home</span><span class=s1>&#39;</span><span class=p>;</span>
-<span class=k>@import</span> <span class=s1>&#39;</span><span class=s1>layouts/about</span><span class=s1>&#39;</span><span class=p>;</span>
+</span><span class=c1></span><span class=k>@import</span> <span class=s1>&#39;layouts/home&#39;</span><span class=p>;</span>
+<span class=k>@import</span> <span class=s1>&#39;layouts/about&#39;</span><span class=p>;</span>
 </code></pre></td></tr></table></div></div><p>先引用變數，再套用第三方的樣式到專案中。接著讓 Mixin 可以被後續的樣式使用，然後透過 <code>_base.scss</code> 先將預設的樣式（連結、表單這類）定義好，之後從模組開始定義，最後才是套用個別頁面的樣式。</p><p>其中把 Layout 放最後的好處就是 <code>id</code> 的使用，一般針對個別頁面設定 <code>id</code> 是相對容易的，也就是說覆蓋模組樣式微調去搭配排版的做法，也就可以相對容易地做到。</p><h2 id=命名模組>命名/模組</h2><p>Maintainable CSS 分開討論，不過因為 BEM 的特性比較適合一起討論這件事情。</p><p>對 BEM 來看，所有的外觀都應該要自成一個模組。但是因為我在這之中使用了 SMACSS 的理論，所以其實是有著「通用模組」跟「頁面模組」的差異，不過實際上兩者並沒有太大的差別就是了。</p><p>一個模組會由 <code>Block</code> <code>Element</code> <code>Modifier</code> 三個部分所結合而成，命名規則就是 <code>.block__element--modifier</code> 這樣的形式，不過大家應該也會注意到缺少了表示 <code>State</code> (狀態) 的規則，關於這部分對 BEM 來說大多數都是透過 Modifier 來表示的，不過我個人比較喜歡利用獨立的樣式來表示，類似下面的方式。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -155,16 +155,16 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nc>.</span><span class=nc>profile</span> <span class=p>{</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-scss data-lang=scss><span class=nc>.profile</span> <span class=p>{</span>
   <span class=c1>// ...
 </span><span class=c1></span><span class=p>}</span>
 
-<span class=nc>.</span><span class=nc>profile__details</span> <span class=p>{</span>
-  <span class=k>&amp;</span><span class=nc>.</span><span class=nc>is-expanded</span> <span class=p>{</span>
+<span class=nc>.profile__details</span> <span class=p>{</span>
+  <span class=k>&amp;</span><span class=nc>.is-expanded</span> <span class=p>{</span>
     <span class=nt>max-height</span><span class=nd>:</span> <span class=nt>auto</span><span class=p>;</span>
   <span class=p>}</span>
 
-  <span class=k>&amp;</span><span class=nc>.</span><span class=nc>is-collapsed</span> <span class=p>{</span>
+  <span class=k>&amp;</span><span class=nc>.is-collapsed</span> <span class=p>{</span>
     <span class=nt>max-height</span><span class=nd>:</span> <span class=nt>0</span><span class=p>;</span>
   <span class=p>}</span>
 <span class=p>}</span>

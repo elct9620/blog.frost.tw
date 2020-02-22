@@ -1,5 +1,5 @@
 <!doctype html><html lang=zh-tw><head><title>用 CloudFlare Workers 製作簡單的 Uptime Status 頁面 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="最近跟朋友弄了一個透過 Chatbot 做出手遊效果的專案，沒出什麼意外的話大概能在九月看到一個雛形。不過既然是手遊類型的遊戲，更新資料跟維護其實就會遇到一些困難點。
-如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。 如此一來，讓 …"><meta name=created content="2019-07-09T00:00:00+0000"><meta name=modified content="2019-07-09T19:09:08+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="用 CloudFlare Workers 製作簡單的 Uptime Status 頁面"><meta property="og:url" content="https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"用 CloudFlare Workers 製作簡單的 Uptime Status 頁面","datePublished":"2019-07-09T00:00:00Z","dateModified":"2019-07-09T19:09:08Z","url":"https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/","description":"最近跟朋友弄了一個透過 Chatbot 做出手遊效果的專案，沒出什麼意外的話大概能在九月看到一個雛形。不過既然是手遊類型的遊戲，更新資料跟維護其實就會遇到一些困難點。\n如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。 如此一來，讓 …\n","keywords":["CloudFlare","JavaScript","DevOps","Ruby","NoSQL"],"image":"https://blog.frost.tw/images/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/07\/09\/Build-a-simple-uptime-status-page-use-CloudFlare-Workers\/","name":"用 CloudFlare Workers 製作簡單的 Uptime Status 頁面","image":"https:\/\/blog.frost.tw\/images\/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers\/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2019-07-09T19:09:08+0000 class=article__time--header role=time>Feb.09</time><h1 class=article__title>用 CloudFlare Workers 製作簡單的 Uptime Status 頁面</h1></header><div class=article__entry><nav class=translation></nav><p>最近跟朋友弄了一個透過 Chatbot 做出手遊效果的專案，沒出什麼意外的話大概能在九月看到一個雛形。不過既然是手遊類型的遊戲，更新資料跟維護其實就會遇到一些困難點。</p><p>如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。
+如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。 如此一來，讓 …"><meta name=created content="2019-07-09T00:00:00+0000"><meta name=modified content="2019-07-09T19:09:08+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="用 CloudFlare Workers 製作簡單的 Uptime Status 頁面"><meta property="og:url" content="https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"用 CloudFlare Workers 製作簡單的 Uptime Status 頁面","datePublished":"2019-07-09T00:00:00Z","dateModified":"2019-07-09T19:09:08Z","url":"https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/","description":"最近跟朋友弄了一個透過 Chatbot 做出手遊效果的專案，沒出什麼意外的話大概能在九月看到一個雛形。不過既然是手遊類型的遊戲，更新資料跟維護其實就會遇到一些困難點。\n如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。 如此一來，讓 …\n","keywords":["CloudFlare","JavaScript","DevOps","Ruby","NoSQL"],"image":"https://blog.frost.tw/images/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/","name":"用 CloudFlare Workers 製作簡單的 Uptime Status 頁面","image":"https://blog.frost.tw/images/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2019-07-09T19:09:08+0000 class=article__time--header role=time>Feb.09</time><h1 class=article__title>用 CloudFlare Workers 製作簡單的 Uptime Status 頁面</h1></header><div class=article__entry><nav class=translation></nav><p>最近跟朋友弄了一個透過 Chatbot 做出手遊效果的專案，沒出什麼意外的話大概能在九月看到一個雛形。不過既然是手遊類型的遊戲，更新資料跟維護其實就會遇到一些困難點。</p><p>如果是線上遊戲或者手遊，大多數只要在公告後把玩家切斷連線然後升級過程中避免玩家連上就好。不過因為是 Chatbot 所以除非能做到不停機升級，不然是很困難的。
 如此一來，讓玩家知道遊戲（機器人）正在更新，處於無法使用的狀態，就是一個重要的關鍵。</p><p>不過因為算是業餘的作品，玩家數量可能也不會到預期的那樣多。最簡單的方法就是開一個網頁，或者把流量都倒去一個暫時的伺服器就可以。
 直覺想到的就是利用一些 Uptime Monitor 服務的狀態頁面，不過市面上能選的不多，有些方案即使最簡單的也要 $20/月，其實對小專案來說不太划算。</p><blockquote><p>其實還是有不少服務商能選，不過因為用量可能小到不忍直視就放棄這個念頭。</p></blockquote><h2 id=需求分析>需求分析</h2><p>回來思考我們的需求，其實很簡單：</p><ol><li>伺服器出現任何問題時還能被查詢</li><li>只需要最基本的正常或不正常的狀態呈現</li></ol><p>這種時候其實可以考慮人工用 GitHub Pages 的方式人工更新，不過身為工程師還是會想要偷懶一點，看看有沒有辦法自動化。</p><h2 id=cloudflare-workers>CloudFlare Workers</h2><p>評估了一下這類 Uptime Mointer 服務，做法都是簡單地去戳某個網站看看是否正常。不過因為只需要知道伺服器是否還在線上，所以直接由伺服器回報狀態其實也是個不錯的方法。
 考量了像是 AWS Lambda / GCP Cloud Functions / Firebase 等等選項，意外想到 CloudFlare Workers 也許是一個選擇。</p><p>其實大家都很清楚使用雲端服務的花費是相對高的，但是整個服務互相串連整合的方便性就很難是一般虛擬主機服務可以比擬的。</p><p>不過像是簡單的應用情境，用一些簡單的服務反而能在性價比上得到一個不錯的結果。以 CloudFlare Workers 來看，光是基本的服務用量其實就足夠我們使用。
@@ -58,17 +58,17 @@
   <span class=no>API</span> <span class=o>=</span> <span class=s1>&#39;https://api.cloudflare.com/client/%&lt;version&gt;s/accounts&#39;</span>
   <span class=no>ENDPOINT</span> <span class=o>=</span> <span class=s1>&#39;/%&lt;account&gt;s/storage/kv/namespaces/%&lt;namespace&gt;s/values/%&lt;node&gt;s&#39;</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span>
+  <span class=k>def</span> <span class=nf>initialize</span>
     <span class=vi>@node_name</span> <span class=o>=</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;NODE_NAME&#39;</span><span class=o>]</span> <span class=o>||</span> <span class=no>Socket</span><span class=o>.</span><span class=n>gethostname</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>update!</span>
+  <span class=k>def</span> <span class=nf>update!</span>
     <span class=no>Net</span><span class=o>::</span><span class=no>HTTP</span><span class=o>.</span><span class=n>start</span><span class=p>(</span><span class=n>uri</span><span class=o>.</span><span class=n>host</span><span class=p>,</span> <span class=n>uri</span><span class=o>.</span><span class=n>port</span><span class=p>,</span> <span class=ss>use_ssl</span><span class=p>:</span> <span class=n>ssl?</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>http</span><span class=o>|</span>
       <span class=n>http</span><span class=o>.</span><span class=n>request</span> <span class=n>request</span>
     <span class=k>end</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>request</span>
+  <span class=k>def</span> <span class=nf>request</span>
     <span class=n>request</span> <span class=o>=</span> <span class=no>Net</span><span class=o>::</span><span class=no>HTTP</span><span class=o>::</span><span class=no>Put</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=n>uri</span><span class=p>)</span>
     <span class=n>request</span><span class=o>[</span><span class=s1>&#39;X-Auth-Email&#39;</span><span class=o>]</span> <span class=o>=</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;CF_EMAIL&#39;</span><span class=o>]</span>
     <span class=n>request</span><span class=o>[</span><span class=s1>&#39;X-Auth-Key&#39;</span><span class=o>]</span> <span class=o>=</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;CF_TOKEN&#39;</span><span class=o>]</span>
@@ -76,16 +76,16 @@
     <span class=n>request</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>ssl?</span>
+  <span class=k>def</span> <span class=nf>ssl?</span>
     <span class=n>uri</span><span class=o>.</span><span class=n>scheme</span> <span class=o>==</span> <span class=s1>&#39;https&#39;</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>uri</span>
-    <span class=vi>@uri</span> <span class=o>||</span><span class=o>=</span>
-      <span class=no>URI</span><span class=p>(</span><span class=nb>format</span><span class=p>(</span><span class=s2>&#34;</span><span class=si>#{</span><span class=no>API</span><span class=si>}</span><span class=si>#{</span><span class=no>ENDPOINT</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>options</span><span class=p>)</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>uri</span>
+    <span class=vi>@uri</span> <span class=o>||=</span>
+      <span class=no>URI</span><span class=p>(</span><span class=nb>format</span><span class=p>(</span><span class=s2>&#34;</span><span class=si>#{</span><span class=no>API</span><span class=si>}#{</span><span class=no>ENDPOINT</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>options</span><span class=p>))</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>options</span>
+  <span class=k>def</span> <span class=nf>options</span>
     <span class=p>{</span>
       <span class=ss>version</span><span class=p>:</span> <span class=s1>&#39;v4&#39;</span><span class=p>,</span>
       <span class=ss>account</span><span class=p>:</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;CF_ACCOUNT_ID&#39;</span><span class=o>]</span><span class=p>,</span>
@@ -94,7 +94,7 @@
     <span class=p>}</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>body</span>
+  <span class=k>def</span> <span class=nf>body</span>
     <span class=p>{</span>
       <span class=ss>status</span><span class=p>:</span> <span class=ss>:online</span><span class=p>,</span>
       <span class=ss>timestamp</span><span class=p>:</span> <span class=no>Time</span><span class=o>.</span><span class=n>now</span><span class=o>.</span><span class=n>to_i</span>
@@ -137,40 +137,40 @@
 </span><span class=lnt>34
 </span><span class=lnt>35
 </span><span class=lnt>36
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>addEventListener</span><span class=p>(</span><span class=s1>&#39;fetch&#39;</span><span class=p>,</span> <span class=n>event</span> <span class=o>=</span><span class=o>&gt;</span> <span class=p>{</span>
-    <span class=n>event</span><span class=o>.</span><span class=n>respondWith</span><span class=p>(</span><span class=n>handleRequest</span><span class=p>(</span><span class=n>event</span><span class=o>.</span><span class=n>request</span><span class=p>)</span><span class=p>)</span>
-<span class=p>}</span><span class=p>)</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>addEventListener</span><span class=p>(</span><span class=s1>&#39;fetch&#39;</span><span class=p>,</span> <span class=n>event</span> <span class=o>=&gt;</span> <span class=p>{</span>
+    <span class=n>event</span><span class=o>.</span><span class=n>respondWith</span><span class=p>(</span><span class=n>handleRequest</span><span class=p>(</span><span class=n>event</span><span class=o>.</span><span class=n>request</span><span class=p>))</span>
+<span class=p>})</span>
 
-<span class=sr>/</span><span class=sr>**
+<span class=sr>/**
 </span><span class=sr> * Fetch and log a request
 </span><span class=sr> * @param {Request} request
-</span><span class=sr> *</span><span class=sr>/</span>
+</span><span class=sr> */</span>
 <span class=n>async</span> <span class=n>function</span> <span class=n>handleRequest</span><span class=p>(</span><span class=n>request</span><span class=p>)</span> <span class=p>{</span>
-    <span class=sr>/</span><span class=sr>/</span> <span class=no>Response</span> <span class=n>as</span> <span class=no>JSON</span>
+    <span class=sr>//</span> <span class=no>Response</span> <span class=n>as</span> <span class=no>JSON</span>
     <span class=n>let</span> <span class=n>responseInit</span> <span class=o>=</span> <span class=p>{</span>
-        <span class=ss>status</span><span class=p>:</span> <span class=mi>200</span><span class=o></span><span class=p>,</span>
+        <span class=ss>status</span><span class=p>:</span> <span class=mi>200</span><span class=p>,</span>
         <span class=ss>headers</span><span class=p>:</span> <span class=p>{</span>
             <span class=s1>&#39;Content-Type&#39;</span><span class=p>:</span> <span class=s1>&#39;application/json;charset=UTF-8&#39;</span>
         <span class=p>}</span>
     <span class=p>}</span>
 
-    <span class=sr>/</span><span class=sr>/</span> <span class=no>Find</span> <span class=n>all</span> <span class=n>request</span> <span class=n>nodes</span>
+    <span class=sr>//</span> <span class=no>Find</span> <span class=n>all</span> <span class=n>request</span> <span class=n>nodes</span>
     <span class=n>let</span> <span class=n>url</span> <span class=o>=</span> <span class=kp>new</span> <span class=no>URL</span><span class=p>(</span><span class=n>request</span><span class=o>.</span><span class=n>url</span><span class=p>)</span>
     <span class=n>let</span> <span class=n>nodes</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=n>searchParams</span><span class=o>.</span><span class=n>getAll</span><span class=p>(</span><span class=s1>&#39;node[]&#39;</span><span class=p>)</span>
-    <span class=n>let</span> <span class=n>status</span> <span class=o>=</span> <span class=n>await</span> <span class=n>getAllNodeStatus</span><span class=p>(</span><span class=n>nodes</span><span class=p>)</span><span class=p>;</span>
+    <span class=n>let</span> <span class=n>status</span> <span class=o>=</span> <span class=n>await</span> <span class=n>getAllNodeStatus</span><span class=p>(</span><span class=n>nodes</span><span class=p>);</span>
 
-    <span class=k>return</span> <span class=kp>new</span> <span class=no>Response</span><span class=p>(</span><span class=no>JSON</span><span class=o>.</span><span class=n>stringify</span><span class=p>(</span><span class=n>status</span><span class=p>)</span><span class=p>,</span> <span class=n>responseInit</span><span class=p>)</span>
+    <span class=k>return</span> <span class=kp>new</span> <span class=no>Response</span><span class=p>(</span><span class=no>JSON</span><span class=o>.</span><span class=n>stringify</span><span class=p>(</span><span class=n>status</span><span class=p>),</span> <span class=n>responseInit</span><span class=p>)</span>
 <span class=p>}</span>
 
-<span class=sr>/</span><span class=sr>/</span> <span class=no>Read</span> <span class=n>nodes</span> <span class=n>status</span> <span class=n>from</span> <span class=no>KV</span>
+<span class=sr>//</span> <span class=no>Read</span> <span class=n>nodes</span> <span class=n>status</span> <span class=n>from</span> <span class=no>KV</span>
 <span class=n>async</span> <span class=n>function</span> <span class=n>getAllNodeStatus</span><span class=p>(</span><span class=n>nodes</span><span class=p>)</span> <span class=p>{</span>
-    <span class=n>let</span> <span class=n>status</span> <span class=o>=</span> <span class=p>{</span><span class=p>}</span><span class=p>;</span>
-    <span class=n>await</span> <span class=no>Promise</span><span class=o>.</span><span class=n>all</span><span class=p>(</span><span class=n>nodes</span><span class=o>.</span><span class=n>map</span><span class=p>(</span><span class=n>async</span> <span class=p>(</span><span class=n>node</span><span class=p>)</span> <span class=o>=</span><span class=o>&gt;</span> <span class=p>{</span>
-        <span class=n>var</span> <span class=n>nodeStatus</span> <span class=o>=</span> <span class=n>await</span> <span class=no>Status</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>node</span><span class=p>,</span> <span class=s1>&#39;json&#39;</span><span class=p>)</span><span class=p>;</span>
+    <span class=n>let</span> <span class=n>status</span> <span class=o>=</span> <span class=p>{};</span>
+    <span class=n>await</span> <span class=no>Promise</span><span class=o>.</span><span class=n>all</span><span class=p>(</span><span class=n>nodes</span><span class=o>.</span><span class=n>map</span><span class=p>(</span><span class=n>async</span> <span class=p>(</span><span class=n>node</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+        <span class=n>var</span> <span class=n>nodeStatus</span> <span class=o>=</span> <span class=n>await</span> <span class=no>Status</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>node</span><span class=p>,</span> <span class=s1>&#39;json&#39;</span><span class=p>);</span>
         <span class=k>if</span> <span class=p>(</span><span class=n>nodeStatus</span><span class=p>)</span> <span class=p>{</span>
             <span class=n>status</span><span class=o>[</span><span class=n>node</span><span class=o>]</span> <span class=o>=</span> <span class=n>nodeStatus</span>
         <span class=p>}</span>
-    <span class=p>}</span><span class=p>)</span><span class=p>)</span><span class=p>;</span>
+    <span class=p>}));</span>
     <span class=k>return</span> <span class=n>status</span><span class=p>;</span>
 <span class=p>}</span>
 </code></pre></td></tr></table></div></div><p>因為會有多個服務，所以我設計了一個很簡單的機制去抓取 GET 請求的 Search Params 然後把抓到的 Hostname （當作 Key 的數值）拿去問 Store 是否有存過 JSON 資訊，然後把它組合成新的 JSON 回傳出來。</p><h3 id=顯示資訊>顯示資訊</h3><p>接下來就是隨意的做一個頁面，把狀態呈現出來。
@@ -223,10 +223,10 @@
 </span><span class=lnt>47
 </span><span class=lnt>48
 </span><span class=lnt>49
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=p>(</span><span class=kd>function</span><span class=p>(</span><span class=p>)</span><span class=p>{</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-js data-lang=js><span class=p>(</span><span class=kd>function</span><span class=p>(){</span>
   <span class=kd>var</span> <span class=nx>STATUS_API</span> <span class=o>=</span> <span class=s1>&#39;https://status.basaltic.tw/api/status.json&#39;</span><span class=p>;</span>
   <span class=kd>var</span> <span class=nx>$nodes</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>querySelectorAll</span><span class=p>(</span><span class=s1>&#39;.node&#39;</span><span class=p>)</span>
-  <span class=kd>var</span> <span class=nx>nodes</span> <span class=o>=</span> <span class=p>{</span><span class=p>}</span>
+  <span class=kd>var</span> <span class=nx>nodes</span> <span class=o>=</span> <span class=p>{}</span>
   <span class=kd>var</span> <span class=nx>uri</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>URL</span><span class=p>(</span><span class=nx>STATUS_API</span><span class=p>)</span>
 
   <span class=c1>// Load Nodes on Page
@@ -235,33 +235,33 @@
     <span class=c1>// Cache DOM
 </span><span class=c1></span>    <span class=nx>nodes</span><span class=p>[</span><span class=nx>hostname</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span>
       <span class=nx>$el</span><span class=o>:</span> <span class=nx>node</span><span class=p>,</span>
-      <span class=nx>$color</span><span class=o>:</span> <span class=nx>node</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;.legend__color&#39;</span><span class=p>)</span><span class=p>,</span>
-      <span class=nx>$status</span><span class=o>:</span> <span class=nx>node</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;.legend__value&#39;</span><span class=p>)</span><span class=p>,</span>
+      <span class=nx>$color</span><span class=o>:</span> <span class=nx>node</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;.legend__color&#39;</span><span class=p>),</span>
+      <span class=nx>$status</span><span class=o>:</span> <span class=nx>node</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;.legend__value&#39;</span><span class=p>),</span>
       <span class=nx>hostname</span><span class=o>:</span> <span class=nx>hostname</span>
-    <span class=p>}</span><span class=p>;</span>
+    <span class=p>};</span>
     <span class=c1>// Add for Query
-</span><span class=c1></span>    <span class=nx>uri</span><span class=p>.</span><span class=nx>searchParams</span><span class=p>.</span><span class=nx>append</span><span class=p>(</span><span class=s1>&#39;node[]&#39;</span><span class=p>,</span> <span class=nx>hostname</span><span class=p>)</span><span class=p>;</span>
-  <span class=p>}</span><span class=p>)</span><span class=p>;</span>
+</span><span class=c1></span>    <span class=nx>uri</span><span class=p>.</span><span class=nx>searchParams</span><span class=p>.</span><span class=nx>append</span><span class=p>(</span><span class=s1>&#39;node[]&#39;</span><span class=p>,</span> <span class=nx>hostname</span><span class=p>);</span>
+  <span class=p>});</span>
 
-  <span class=kd>var</span> <span class=nx>currentTime</span> <span class=o>=</span> <span class=p>(</span><span class=k>new</span> <span class=nb>Date</span><span class=p>(</span><span class=p>)</span><span class=p>)</span><span class=p>.</span><span class=nx>getTime</span><span class=p>(</span><span class=p>)</span> <span class=o>/</span> <span class=mi>1000</span><span class=p>;</span>
+  <span class=kd>var</span> <span class=nx>currentTime</span> <span class=o>=</span> <span class=p>(</span><span class=k>new</span> <span class=nb>Date</span><span class=p>()).</span><span class=nx>getTime</span><span class=p>()</span> <span class=o>/</span> <span class=mi>1000</span><span class=p>;</span>
 
   <span class=c1>// TODO: Refactor
 </span><span class=c1></span>  <span class=nx>fetch</span><span class=p>(</span><span class=nx>uri</span><span class=p>)</span>
-    <span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=kd>function</span><span class=p>(</span><span class=nx>res</span><span class=p>)</span> <span class=p>{</span> <span class=k>return</span> <span class=nx>res</span><span class=p>.</span><span class=nx>json</span><span class=p>(</span><span class=p>)</span> <span class=p>}</span><span class=p>)</span>
+    <span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=kd>function</span><span class=p>(</span><span class=nx>res</span><span class=p>)</span> <span class=p>{</span> <span class=k>return</span> <span class=nx>res</span><span class=p>.</span><span class=nx>json</span><span class=p>()</span> <span class=p>})</span>
     <span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=kd>function</span><span class=p>(</span><span class=nx>statuses</span><span class=p>)</span> <span class=p>{</span>
-      <span class=kd>var</span> <span class=nx>node</span> <span class=o>=</span> <span class=p>{</span><span class=p>}</span>
+      <span class=kd>var</span> <span class=nx>node</span> <span class=o>=</span> <span class=p>{}</span>
       <span class=kd>var</span> <span class=nx>$color</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
       <span class=kd>var</span> <span class=nx>$status</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
 
       <span class=k>for</span><span class=p>(</span><span class=kd>var</span> <span class=nx>hostname</span> <span class=k>in</span> <span class=nx>statuses</span><span class=p>)</span> <span class=p>{</span>
-        <span class=nx>node</span> <span class=o>=</span> <span class=nx>statuses</span><span class=p>[</span><span class=nx>hostname</span><span class=p>]</span><span class=p>;</span>
+        <span class=nx>node</span> <span class=o>=</span> <span class=nx>statuses</span><span class=p>[</span><span class=nx>hostname</span><span class=p>];</span>
 
         <span class=k>if</span> <span class=p>(</span> <span class=nx>node</span> <span class=o>&amp;&amp;</span> <span class=nx>nodes</span><span class=p>[</span><span class=nx>hostname</span><span class=p>]</span> <span class=p>)</span> <span class=p>{</span>
-          <span class=nx>$color</span> <span class=o>=</span> <span class=nx>nodes</span><span class=p>[</span><span class=nx>hostname</span><span class=p>]</span><span class=p>[</span><span class=s1>&#39;$color&#39;</span><span class=p>]</span><span class=p>;</span>
-          <span class=nx>$status</span> <span class=o>=</span> <span class=nx>nodes</span><span class=p>[</span><span class=nx>hostname</span><span class=p>]</span><span class=p>[</span><span class=s1>&#39;$status&#39;</span><span class=p>]</span><span class=p>;</span>
+          <span class=nx>$color</span> <span class=o>=</span> <span class=nx>nodes</span><span class=p>[</span><span class=nx>hostname</span><span class=p>][</span><span class=s1>&#39;$color&#39;</span><span class=p>];</span>
+          <span class=nx>$status</span> <span class=o>=</span> <span class=nx>nodes</span><span class=p>[</span><span class=nx>hostname</span><span class=p>][</span><span class=s1>&#39;$status&#39;</span><span class=p>];</span>
 
           <span class=c1>// Online
-</span><span class=c1></span>          <span class=k>if</span> <span class=p>(</span><span class=p>(</span><span class=nx>currentTime</span> <span class=o>-</span> <span class=nx>node</span><span class=p>.</span><span class=nx>timestamp</span><span class=p>)</span> <span class=o>/</span> <span class=mi>60</span> <span class=o>&lt;=</span> <span class=mi>5</span><span class=p>)</span> <span class=p>{</span>
+</span><span class=c1></span>          <span class=k>if</span> <span class=p>((</span><span class=nx>currentTime</span> <span class=o>-</span> <span class=nx>node</span><span class=p>.</span><span class=nx>timestamp</span><span class=p>)</span> <span class=o>/</span> <span class=mi>60</span> <span class=o>&lt;=</span> <span class=mi>5</span><span class=p>)</span> <span class=p>{</span>
             <span class=nx>$color</span><span class=p>.</span><span class=nx>style</span><span class=p>.</span><span class=nx>cssText</span> <span class=o>=</span> <span class=s2>&#34;--color: var(--color-online)&#34;</span><span class=p>;</span>
             <span class=nx>$status</span><span class=p>.</span><span class=nx>innerText</span> <span class=o>=</span> <span class=s2>&#34;Online&#34;</span><span class=p>;</span>
           <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
@@ -270,8 +270,8 @@
           <span class=p>}</span>
         <span class=p>}</span>
       <span class=p>}</span>
-    <span class=p>}</span><span class=p>)</span><span class=p>;</span>
-<span class=p>}</span><span class=p>(</span><span class=p>)</span><span class=p>)</span>
+    <span class=p>});</span>
+<span class=p>}())</span>
 </code></pre></td></tr></table></div></div><p>主要是這段 JavaScript 我們利用 <code>data-</code> 這類 Data Attribute 去把想顯示的 Hostname 抓取出來，然後統一發一次 API 請求出去查詢。</p><blockquote><p>CloudFlare Workers 有查詢限制 10ms (Free) 50ms (Pro) 但是以 Key-Value Store 來說一次查幾百個大概都沒什麼影響吧⋯⋯</p></blockquote><h2 id=總結>總結</h2><p>大家想看成果的話可以到 <a href=https://status.basaltic.tw/>Basaltic Studio Status</a> 這個頁面看看，這是我以前大學跟朋友做畢業專題的團隊名稱（Basaltic Studio）至於前面的兩段程式碼都放在 <a href=https://gist.github.com/elct9620/fc1c75ac7fb9a447bbd1993e840e8eba>Gits</a> 不過直接複製文章的也沒問題就是了。</p><p>前幾天剛好跟同事聊到，不是用技術去解決問題，而是要看問題選對的技術去解決。雖然說起來很簡單，不過對工程師來說大概是很困難的。所以最容易做好的就是有技術就玩，別太糾結在「去解決某個問題」這件事情，而是要去了解技術的性質，在未來碰到問題的時候有「解決問題的方案」</p><p>以這個小東西來說，大部分時候都是沒用的。不過這也讓我了解 CloudFlare Workers 的應用，而且變化起來其實還能做不少事情。像是 Servier Discovery 其實就跟這個機制很像（服務回報自己節點資訊，給其他人查詢）在某些奇怪的應用狀況下，說不定也是個可以應用的方向（不過我猜不會有人會想把這個功能丟在第三方服務上⋯⋯）</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/CloudFlare/>CloudFlare</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/JavaScript/>JavaScript</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/DevOps/>DevOps</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/NoSQL/>NoSQL</a></li></ul></footer><aside class=related><header class=related__header><h3 class=related__title>相關文章</h3></header><ul><li class=related__item><a class=related__link href=/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/>Ruby 中 Constant 和 Class 的關係</a></li><li class=related__item><a class=related__link href=/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/>關於 Rails 中的 Form Object / Presenter 這些物件該怎麼用（一）</a></li><li class=related__item><a class=related__link href=/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/>利用 Ruby 的 Lambda 做條件判斷</a></li><li class=related__item><a class=related__link href=/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/>如何在沒有任何設定下產生 Rails 的 Docker Image</a></li><li class=related__item><a class=related__link href=/posts/2019/03/12/I-make-a-trap-in-the-Ruby-the-usage-of-Signal/>我在 Ruby 埋了一個陷阱 - Signal 的應用</a></li></ul></aside></div></article><div class=adv><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-2844969736316510 data-ad-slot=5530952976 data-ad-format=auto></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><section id=comment class=comment-box><h1 class=comment-box__title>留言</h1><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
 var d=document,s=d.createElement('script');s.async=true;s.src='//'+"revo-skill-frost"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div></section></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank rel=noreferrer>蒼時弦也</a>. All right reversed.</div></footer><script src=/js/app.min.e979702d4c2a76dd5e32acda7647b733e4959a8621df075338d00d2c6837e87a.js></script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
 js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true

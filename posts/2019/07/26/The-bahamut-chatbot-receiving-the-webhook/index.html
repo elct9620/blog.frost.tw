@@ -1,5 +1,5 @@
 <!doctype html><html lang=zh-tw><head><title>巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="六月底的時候發現巴哈姆特似乎想為他們推出的 Messaging APP （哈哈姆特）舉辦一個聊天機器人的比賽，看到之後想說還算蠻有趣的，所以我就跟朋友很隨意的組成一個團隊來開發。
-跟大多數我們熟悉串接 Chatbot 的機制是類似的，我們可以用 Webhook 的方式接收一個來自使用者發送的訊息，然後再透過程式處理後回傳訊息給使用者。"><meta name=created content="2019-07-26T00:00:00+0000"><meta name=modified content="2019-07-26T14:44:28+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook"><meta property="og:url" content="https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-07-26-the-bahamut-chatbot-receiving-the-webhook/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook","datePublished":"2019-07-26T00:00:00Z","dateModified":"2019-07-26T14:44:28Z","url":"https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/","description":"六月底的時候發現巴哈姆特似乎想為他們推出的 Messaging APP （哈哈姆特）舉辦一個聊天機器人的比賽，看到之後想說還算蠻有趣的，所以我就跟朋友很隨意的組成一個團隊來開發。\n跟大多數我們熟悉串接 Chatbot 的機制是類似的，我們可以用 Webhook 的方式接收一個來自使用者發送的訊息，然後再透過程式處理後回傳訊息給使用者。\n","keywords":["Ruby","Ruby on Rails","聊天機器人","Chatbot","巴哈姆特"],"image":"https://blog.frost.tw/images/2019-07-26-the-bahamut-chatbot-receiving-the-webhook/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/07\/26\/The-bahamut-chatbot-receiving-the-webhook\/","name":"巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook","image":"https:\/\/blog.frost.tw\/images\/2019-07-26-the-bahamut-chatbot-receiving-the-webhook\/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2019-07-26T14:44:28+0000 class=article__time--header role=time>Feb.26</time><h1 class=article__title>巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook</h1></header><div class=article__entry><nav class=translation></nav><p>六月底的時候發現巴哈姆特似乎想為他們推出的 Messaging APP （哈哈姆特）舉辦一個聊天機器人的比賽，看到之後想說還算蠻有趣的，所以我就跟朋友很隨意的組成一個團隊來開發。</p><p>跟大多數我們熟悉串接 Chatbot 的機制是類似的，我們可以用 Webhook 的方式接收一個來自使用者發送的訊息，然後再透過程式處理後回傳訊息給使用者。</p><h2 id=了解-webhook-機制>了解 Webhook 機制</h2><p>在程式設計中，我們常常會使用一種叫做「Hook（鉤子）」或者「Callback（回呼）」的機制，用比較好懂的角度去說明，他是一個在「程式執行中插入額外動作」</p><p>舉例來說，我們會有像這樣的程式</p><ul><li>接收訊息</li><li>顯示訊息</li></ul><p>假設我們要增加一個 Hook 就會變成像這樣</p><ul><li>接收訊息</li><li>Hooks （可能有多個）</li><li>顯示訊息</li></ul><p>而 Webhook 就是指這個 Hook 利用 Web（網站）的方式執行，所以當這些 Messaging APP 收到訊息後，會利用 Webhook 做一些事情（像是發送給我們自己的伺服器）然後再繼續動作。</p><h2 id=了解-signature-機制>了解 Signature 機制</h2><p>不過當我們收到一段訊息的時候，要怎麼知道這段訊息是來是正確的使用者？</p><p>這就要靠 Signature 機制來幫助我們，透過一個共用的密鑰（Token）來對訊息內容加密，當我們收到訊息的時候只要用同樣的密鑰對訊息加密，就會獲得一段驗證碼，當我們比對驗證碼跟發送者提供給我們相同時，就可以假設這是可信的訊息。</p><blockquote><p>有些網站提供檔案下載時會提供 MD5 校驗碼也是同樣的原理。</p></blockquote><p>以哈哈姆特的 Webhook 為例子，我們會從哈哈姆特收到一個 Webhook 請求，這個請求會包含類似下面的資訊。</p><ul><li>X-BAHA-DATA-SIGNATURE 標頭（Header）</li><li>內容（Ex. 某段訊息）</li></ul><p>巴哈使用的是 SHA1 演算法（MD5 是另外一種），所以我們就要把內容用 SHA1 計算，再比對巴哈給我們的 <code>X-BAHA-DATA-SIGNATURE</code> 來驗證是否是來自巴哈，因為加密的密碼理論上只會有我們自己跟巴哈知道。</p><h2 id=接收請求>接收請求</h2><p>如果你還沒有用過 Ruby on Rails 的話，可以參考<a href=https://kaochenlong.com/>龍哥</a>所寫的<a href=https://railsbook.tw/>為你自己學 Ruby on Rails</a> 這本書，在網站上看到的部分就足夠你入門。</p><p>首先，我們希望有一個網址（Endpoint）可以接收請求，所以要在 <code>config/routes.rb</code> 定義一個控制器（Controller）來處理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+跟大多數我們熟悉串接 Chatbot 的機制是類似的，我們可以用 Webhook 的方式接收一個來自使用者發送的訊息，然後再透過程式處理後回傳訊息給使用者。"><meta name=created content="2019-07-26T00:00:00+0000"><meta name=modified content="2019-07-26T14:44:28+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook"><meta property="og:url" content="https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-07-26-the-bahamut-chatbot-receiving-the-webhook/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook","datePublished":"2019-07-26T00:00:00Z","dateModified":"2019-07-26T14:44:28Z","url":"https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/","description":"六月底的時候發現巴哈姆特似乎想為他們推出的 Messaging APP （哈哈姆特）舉辦一個聊天機器人的比賽，看到之後想說還算蠻有趣的，所以我就跟朋友很隨意的組成一個團隊來開發。\n跟大多數我們熟悉串接 Chatbot 的機制是類似的，我們可以用 Webhook 的方式接收一個來自使用者發送的訊息，然後再透過程式處理後回傳訊息給使用者。\n","keywords":["Ruby","Ruby on Rails","聊天機器人","Chatbot","巴哈姆特"],"image":"https://blog.frost.tw/images/2019-07-26-the-bahamut-chatbot-receiving-the-webhook/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2019/07/26/The-bahamut-chatbot-receiving-the-webhook/","name":"巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook","image":"https://blog.frost.tw/images/2019-07-26-the-bahamut-chatbot-receiving-the-webhook/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2019-07-26T14:44:28+0000 class=article__time--header role=time>Feb.26</time><h1 class=article__title>巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook</h1></header><div class=article__entry><nav class=translation></nav><p>六月底的時候發現巴哈姆特似乎想為他們推出的 Messaging APP （哈哈姆特）舉辦一個聊天機器人的比賽，看到之後想說還算蠻有趣的，所以我就跟朋友很隨意的組成一個團隊來開發。</p><p>跟大多數我們熟悉串接 Chatbot 的機制是類似的，我們可以用 Webhook 的方式接收一個來自使用者發送的訊息，然後再透過程式處理後回傳訊息給使用者。</p><h2 id=了解-webhook-機制>了解 Webhook 機制</h2><p>在程式設計中，我們常常會使用一種叫做「Hook（鉤子）」或者「Callback（回呼）」的機制，用比較好懂的角度去說明，他是一個在「程式執行中插入額外動作」</p><p>舉例來說，我們會有像這樣的程式</p><ul><li>接收訊息</li><li>顯示訊息</li></ul><p>假設我們要增加一個 Hook 就會變成像這樣</p><ul><li>接收訊息</li><li>Hooks （可能有多個）</li><li>顯示訊息</li></ul><p>而 Webhook 就是指這個 Hook 利用 Web（網站）的方式執行，所以當這些 Messaging APP 收到訊息後，會利用 Webhook 做一些事情（像是發送給我們自己的伺服器）然後再繼續動作。</p><h2 id=了解-signature-機制>了解 Signature 機制</h2><p>不過當我們收到一段訊息的時候，要怎麼知道這段訊息是來是正確的使用者？</p><p>這就要靠 Signature 機制來幫助我們，透過一個共用的密鑰（Token）來對訊息內容加密，當我們收到訊息的時候只要用同樣的密鑰對訊息加密，就會獲得一段驗證碼，當我們比對驗證碼跟發送者提供給我們相同時，就可以假設這是可信的訊息。</p><blockquote><p>有些網站提供檔案下載時會提供 MD5 校驗碼也是同樣的原理。</p></blockquote><p>以哈哈姆特的 Webhook 為例子，我們會從哈哈姆特收到一個 Webhook 請求，這個請求會包含類似下面的資訊。</p><ul><li>X-BAHA-DATA-SIGNATURE 標頭（Header）</li><li>內容（Ex. 某段訊息）</li></ul><p>巴哈使用的是 SHA1 演算法（MD5 是另外一種），所以我們就要把內容用 SHA1 計算，再比對巴哈給我們的 <code>X-BAHA-DATA-SIGNATURE</code> 來驗證是否是來自巴哈，因為加密的密碼理論上只會有我們自己跟巴哈知道。</p><h2 id=接收請求>接收請求</h2><p>如果你還沒有用過 Ruby on Rails 的話，可以參考<a href=https://kaochenlong.com/>龍哥</a>所寫的<a href=https://railsbook.tw/>為你自己學 Ruby on Rails</a> 這本書，在網站上看到的部分就足夠你入門。</p><p>首先，我們希望有一個網址（Endpoint）可以接收請求，所以要在 <code>config/routes.rb</code> 定義一個控制器（Controller）來處理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -18,7 +18,7 @@
 </span><span class=lnt>7
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># app/controllers/webhook_controller.rb</span>
 <span class=k>class</span> <span class=nc>WebhookController</span> <span class=o>&lt;</span> <span class=no>ActionController</span><span class=o>::</span><span class=no>API</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>bahamut</span>
+  <span class=k>def</span> <span class=nf>bahamut</span>
     <span class=c1># TODO: Implement Chatbot Handler</span>
     <span class=n>render</span> <span class=ss>plain</span><span class=p>:</span> <span class=s1>&#39;Hello World&#39;</span>
   <span class=k>end</span>
@@ -42,7 +42,7 @@
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># app/services/signature_verifer.rb</span>
 
 <span class=k>class</span> <span class=nc>SignatureVerifer</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>request</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>request</span><span class=p>)</span>
     <span class=vi>@request</span> <span class=o>=</span> <span class=n>request</span>
     <span class=c1># 讀取內容</span>
     <span class=vi>@body</span> <span class=o>=</span> <span class=vi>@request</span><span class=o>.</span><span class=n>body</span><span class=o>.</span><span class=n>read</span>
@@ -72,9 +72,9 @@
   
   <span class=kp>private</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>verify_signature</span>
-    <span class=vi>@verify_signature</span> <span class=o>||</span><span class=o>=</span>
-      <span class=s2>&#34;</span><span class=s2>sha1=</span><span class=si>#{</span><span class=no>OpenSSL</span><span class=o>::</span><span class=no>HMAC</span><span class=o>.</span><span class=n>hexdigest</span><span class=p>(</span><span class=s1>&#39;SHA1&#39;</span><span class=p>,</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;BAHA_SECRET&#39;</span><span class=o>]</span><span class=p>,</span> <span class=vi>@body</span><span class=p>)</span><span class=si>}</span><span class=s2>&#34;</span>
+  <span class=k>def</span> <span class=nf>verify_signature</span>
+    <span class=vi>@verify_signature</span> <span class=o>||=</span>
+      <span class=s2>&#34;sha1=</span><span class=si>#{</span><span class=no>OpenSSL</span><span class=o>::</span><span class=no>HMAC</span><span class=o>.</span><span class=n>hexdigest</span><span class=p>(</span><span class=s1>&#39;SHA1&#39;</span><span class=p>,</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;BAHA_SECRET&#39;</span><span class=o>]</span><span class=p>,</span> <span class=vi>@body</span><span class=p>)</span><span class=si>}</span><span class=s2>&#34;</span>
   <span class=k>end</span>
 <span class=k>end</span>
 </code></pre></td></tr></table></div></div><p>這個步驟是根據巴哈的<a href="https://sites.google.com/gamer.com.tw/hahamut-bot/%E6%8E%A5%E6%94%B6webhook%E4%BA%8B%E4%BB%B6?authuser=0">文件</a>將剛剛抓到的訊息跟聊天機器人的 Secret（秘鑰）做 SHA1 運算產生出我們自己計算的簽章，如此一來跟巴哈提供的比對，就會知道內容是不是一樣沒有被人偷偷竄改。</p><blockquote><p>要特別注意的是 <code>ENV['BAHA_SECRET']</code> 這邊我是使用「環境變數」<code>來儲存密鑰，這樣只有安裝伺服器的人會知道，就可以避面將這類敏感資訊放到程式碼之中。 在 Rails 5 之後，我們可以用</code>rails credentials:edit` 這個指令編輯一個加密的檔案，並把密鑰放到裡面，使用方法可以參考 <a href=https://guides.rubyonrails.org/configuring.html>Ruby on Rails 文件</a></p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -91,7 +91,7 @@
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>SignatureVerifer</span>
   <span class=c1># ...</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>valid?</span>
+  <span class=k>def</span> <span class=nf>valid?</span>
       <span class=vi>@signature</span> <span class=o>==</span> <span class=n>verify_signature</span>
   <span class=k>end</span>
   
@@ -117,7 +117,7 @@
 </span><span class=lnt>16
 </span><span class=lnt>17
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>WebhookController</span> <span class=o>&lt;</span> <span class=no>ActionController</span><span class=o>::</span><span class=no>API</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>bahamut</span>
+  <span class=k>def</span> <span class=nf>bahamut</span>
     <span class=k>return</span> <span class=n>unathorized_error</span> <span class=k>unless</span> <span class=n>valid_signature?</span>
     <span class=c1># TODO: Implement Chatbot Handler</span>
     <span class=n>render</span> <span class=ss>plain</span><span class=p>:</span> <span class=s1>&#39;Hello World&#39;</span>
@@ -125,12 +125,12 @@
   
   <span class=kp>private</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>valid_signature?</span>
+  <span class=k>def</span> <span class=nf>valid_signature?</span>
     <span class=no>SignatureVerifer</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=n>request</span><span class=p>)</span><span class=o>.</span><span class=n>valid?</span>
   <span class=k>end</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>unauthorized_error</span>
-    <span class=n>render</span> <span class=ss>json</span><span class=p>:</span> <span class=p>{</span> <span class=ss>error</span><span class=p>:</span> <span class=s1>&#39;Unauthorized&#39;</span> <span class=p>}</span><span class=p>,</span> <span class=ss>status</span><span class=p>:</span> <span class=ss>:unauthorized</span>
+  <span class=k>def</span> <span class=nf>unauthorized_error</span>
+    <span class=n>render</span> <span class=ss>json</span><span class=p>:</span> <span class=p>{</span> <span class=ss>error</span><span class=p>:</span> <span class=s1>&#39;Unauthorized&#39;</span> <span class=p>},</span> <span class=ss>status</span><span class=p>:</span> <span class=ss>:unauthorized</span>
   <span class=k>end</span>
 <span class=k>end</span>
 </code></pre></td></tr></table></div></div><p>假設我們透過 <code>SignatureVerifer</code> 驗證失敗的話，就回傳一個 JSON 資訊表示未驗證，並且設定 HTTP 的狀態碼為 401（未授權）的狀態。</p><blockquote><p>JSON 是一種資料格式，常常用在不同伺服器溝同時當作交歡資料的格式，我們從巴哈收到的訊息也是 JSON 格式。</p></blockquote><h2 id=發送回應>發送回應</h2><p>既然我們已經可以接收訊息，如果使用者都沒有辦法收到任何回應的話肯定會覺得奇怪，所以下一步就是要能發送訊息給使用者。</p><p>哈哈姆特目前支援文字、圖片、貼圖跟事件幾種類型，其中事件是最容易做的，打好基底後也會變得更容易修改成支援其他類型的發送程式。</p><p>我們先來看一下從巴哈接收到的訊息會是怎樣的格式（JSON）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -146,12 +146,12 @@
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-json data-lang=json><span class=p>{</span>
- <span class=nt>&#34;botid&#34;</span><span class=p>:</span><span class=err>&lt;</span><span class=err>B</span><span class=err>O</span><span class=err>T</span><span class=err>_</span><span class=err>I</span><span class=err>D</span><span class=err>&gt;</span><span class=p>,</span>
+ <span class=nt>&#34;botid&#34;</span><span class=p>:</span><span class=err>&lt;BOT_ID&gt;</span><span class=p>,</span>
  <span class=nt>&#34;time&#34;</span><span class=p>:</span><span class=mi>1512353744843</span><span class=p>,</span>
- <span class=nt>&#34;messaging&#34;</span><span class=p>:</span><span class=p>[</span>
+ <span class=nt>&#34;messaging&#34;</span><span class=p>:[</span>
    <span class=p>{</span>
-     <span class=nt>&#34;sender_id&#34;</span><span class=p>:</span><span class=err>&lt;</span><span class=err>S</span><span class=err>E</span><span class=err>N</span><span class=err>D</span><span class=err>E</span><span class=err>R</span><span class=err>_</span><span class=err>I</span><span class=err>D</span><span class=err>&gt;</span><span class=p>,</span>
-     <span class=nt>&#34;message&#34;</span><span class=p>:</span><span class=p>{</span>
+     <span class=nt>&#34;sender_id&#34;</span><span class=p>:</span><span class=err>&lt;SENDER_ID&gt;</span><span class=p>,</span>
+     <span class=nt>&#34;message&#34;</span><span class=p>:{</span>
        <span class=nt>&#34;text&#34;</span><span class=p>:</span><span class=s2>&#34;Hello~&#34;</span>
      <span class=p>}</span>
    <span class=p>}</span>
@@ -162,7 +162,7 @@
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># 照每一個訊息處理</span>
-<span class=n>params</span><span class=o>[</span><span class=s1>&#39;messaging&#39;</span><span class=o>]</span><span class=o>.</span><span class=n>each</span> <span class=k>do</span> <span class=o>|</span><span class=n>message</span><span class=o>|</span>
+<span class=n>params</span><span class=o>[</span><span class=s1>&#39;messaging&#39;</span><span class=o>].</span><span class=n>each</span> <span class=k>do</span> <span class=o>|</span><span class=n>message</span><span class=o>|</span>
  <span class=c1># 解析訊息跟回覆</span>
 <span class=k>end</span>
 </code></pre></td></tr></table></div></div><p>在開始處理之前，我們需要先能夠發送訊息到哈哈姆特。因為步驟也是比較多的，所以我們需要製作一個 Sender （發送器）物件來處理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
@@ -178,7 +178,7 @@
 
 <span class=c1># app/services/text_sender.rb</span>
 <span class=k>class</span> <span class=nc>TextSender</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>recipient</span><span class=p>,</span> <span class=n>message</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>recipient</span><span class=p>,</span> <span class=n>message</span><span class=p>)</span>
     <span class=vi>@receipient</span> <span class=o>=</span> <span class=n>receipient</span>
     <span class=vi>@message</span> <span class=o>=</span> <span class=n>message</span>
   <span class=k>end</span>
@@ -214,24 +214,24 @@
 <span class=c1># app/services/text_sender.rb</span>
 <span class=k>class</span> <span class=nc>TextSender</span>
   <span class=no>ENDPOINT</span> <span class=o>=</span> <span class=s1>&#39;https://us-central1-hahamut-8888.cloudfunctions.net/&#39;</span> <span class=p>\</span>
-             <span class=s2>&#34;</span><span class=s2>messagePush?access_token=</span><span class=si>#{</span><span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;BAHA_TOKEN&#39;</span><span class=o>]</span><span class=si>}</span><span class=s2>&#34;</span>
+             <span class=s2>&#34;messagePush?access_token=</span><span class=si>#{</span><span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;BAHA_TOKEN&#39;</span><span class=o>]</span><span class=si>}</span><span class=s2>&#34;</span>
   <span class=c1># ...</span>
  
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>perform</span>
+  <span class=k>def</span> <span class=nf>perform</span>
     <span class=c1># 發送訊息</span>
   <span class=k>end</span>
  
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>uri</span>
-    <span class=vi>@uri</span> <span class=o>||</span><span class=o>=</span> <span class=no>URI</span><span class=p>(</span><span class=no>ENDPOINT</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>uri</span>
+    <span class=vi>@uri</span> <span class=o>||=</span> <span class=no>URI</span><span class=p>(</span><span class=no>ENDPOINT</span><span class=p>)</span>
   <span class=k>end</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>ssl?</span>
+  <span class=k>def</span> <span class=nf>ssl?</span>
     <span class=n>uri</span><span class=o>.</span><span class=n>scheme</span> <span class=o>==</span> <span class=s1>&#39;https&#39;</span>
   <span class=k>end</span>
  
   <span class=kp>private</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>request</span>
+  <span class=k>def</span> <span class=nf>request</span>
     <span class=c1># 製作一個 HTTP 請求</span>
   <span class=k>end</span>
 <span class=k>end</span>
@@ -263,7 +263,7 @@
   
   <span class=kp>private</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>request</span>
+  <span class=k>def</span> <span class=nf>request</span>
     <span class=k>return</span> <span class=vi>@request</span> <span class=k>if</span> <span class=vi>@request</span><span class=o>.</span><span class=n>present?</span>
 
     <span class=c1># 產生一個 HTTP Post 請求</span>
@@ -310,7 +310,7 @@
 <span class=k>class</span> <span class=nc>TextSender</span>
   <span class=c1># ...</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>perform</span>
+  <span class=k>def</span> <span class=nf>perform</span>
     <span class=n>http</span> <span class=o>=</span> <span class=no>Net</span><span class=o>::</span><span class=no>HTTP</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=n>uri</span><span class=o>.</span><span class=n>host</span><span class=p>,</span> <span class=n>uri</span><span class=o>.</span><span class=n>port</span><span class=p>)</span>
     <span class=n>http</span><span class=o>.</span><span class=n>use_ssl</span> <span class=o>=</span> <span class=n>ssl?</span>
     <span class=c1># TODO: 處理回應</span>
@@ -318,11 +318,11 @@
     <span class=n>http</span><span class=o>.</span><span class=n>request</span><span class=p>(</span><span class=n>request</span><span class=p>)</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>body</span>
+  <span class=k>def</span> <span class=nf>body</span>
     <span class=p>{</span>
       <span class=ss>recipient</span><span class=p>:</span> <span class=p>{</span>
         <span class=nb>id</span><span class=p>:</span> <span class=vi>@recipient</span>
-      <span class=p>}</span><span class=p>,</span>
+      <span class=p>},</span>
       <span class=ss>message</span><span class=p>:</span> <span class=p>{</span>
         <span class=ss>text</span><span class=p>:</span> <span class=vi>@message</span>
       <span class=p>}</span>
@@ -356,26 +356,26 @@
 </span><span class=lnt>19
 </span><span class=lnt>20
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>WebhookController</span> <span class=o>&lt;</span> <span class=no>ActionController</span><span class=o>::</span><span class=no>API</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>bahamut</span>
+  <span class=k>def</span> <span class=nf>bahamut</span>
     <span class=k>return</span> <span class=n>unathorized_error</span> <span class=k>unless</span> <span class=n>valid_signature?</span>
     
     <span class=n>process_messages</span>
-    <span class=n>render</span> <span class=ss>json</span><span class=p>:</span> <span class=p>{</span> <span class=ss>message</span><span class=p>:</span> <span class=s1>&#39;OK&#39;</span> <span class=p>}</span><span class=p>,</span> <span class=ss>status</span><span class=p>:</span> <span class=ss>:ok</span>
+    <span class=n>render</span> <span class=ss>json</span><span class=p>:</span> <span class=p>{</span> <span class=ss>message</span><span class=p>:</span> <span class=s1>&#39;OK&#39;</span> <span class=p>},</span> <span class=ss>status</span><span class=p>:</span> <span class=ss>:ok</span>
   <span class=k>end</span>
   
   <span class=kp>private</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>process_messages</span>
-    <span class=n>params</span><span class=o>[</span><span class=s1>&#39;messaging&#39;</span><span class=o>]</span><span class=o>.</span><span class=n>each</span> <span class=k>do</span> <span class=o>|</span><span class=n>message</span><span class=o>|</span>
+  <span class=k>def</span> <span class=nf>process_messages</span>
+    <span class=n>params</span><span class=o>[</span><span class=s1>&#39;messaging&#39;</span><span class=o>].</span><span class=n>each</span> <span class=k>do</span> <span class=o>|</span><span class=n>message</span><span class=o>|</span>
       <span class=no>TextSender</span><span class=o>.</span><span class=n>new</span><span class=p>(</span>
         <span class=n>message</span><span class=o>[</span><span class=s1>&#39;sender_id&#39;</span><span class=o>]</span><span class=p>,</span>
-        <span class=s2>&#34;</span><span class=s2>PONG: </span><span class=si>#{</span><span class=n>message</span><span class=o>[</span><span class=s1>&#39;message&#39;</span><span class=o>]</span><span class=o>[</span><span class=s1>&#39;text&#39;</span><span class=o>]</span><span class=si>}</span><span class=s2>&#34;</span>
+        <span class=s2>&#34;PONG: </span><span class=si>#{</span><span class=n>message</span><span class=o>[</span><span class=s1>&#39;message&#39;</span><span class=o>][</span><span class=s1>&#39;text&#39;</span><span class=o>]</span><span class=si>}</span><span class=s2>&#34;</span>
       <span class=p>)</span>
     <span class=k>end</span>
   <span class=k>end</span>
   <span class=c1># ...</span>
 <span class=k>end</span>
-</code></pre></td></tr></table></div></div><p>我們透過將每一條訊息（<code>messaging</code>）取出來，然後將接收者設定為發送者（<code>sender_id</code>）並把訊息內容前面加上 <code>PONG:</code> 用來區別，確保確實是經過我們的 Chatbot 處理後才回應的。</p><blockquote><p>PING/PONG 跟 Hello World 都有點像是一個習慣，通常我們用來測試一個伺服器是否有正常運作，就會透過發送 PING 然後確認伺服器有回應 PONG 來當判斷，如果想換成任何想要的訊息都是沒問題的。</p></blockquote><h2 id=小結>小結</h2><p>其實這些步驟在大多數情況應該被製作成一個 Gem （Ruby 的套件，可以想像成 Mod 之類的東西）直接使用，不過最近比較忙就沒有時間好好設計並且封裝成 Gem。</p><p>不過這篇文章的概念在處理各種類型的 Chatbot 是很好用的，如果有興趣的話也蠻推薦大家詳細了解一下。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E8%81%8A%E5%A4%A9%E6%A9%9F%E5%99%A8%E4%BA%BA/>聊天機器人</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Chatbot/>Chatbot</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9/>巴哈姆特</a></li></ul></footer><aside class=related><header class=related__header><h3 class=related__title>相關文章</h3></header><ul><li class=related__item><a class=related__link href=/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/>用 CloudFlare Workers 製作簡單的 Uptime Status 頁面</a></li><li class=related__item><a class=related__link href=/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/>Ruby 中 Constant 和 Class 的關係</a></li><li class=related__item><a class=related__link href=/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/>關於 Rails 中的 Form Object / Presenter 這些物件該怎麼用（一）</a></li><li class=related__item><a class=related__link href=/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/>利用 Ruby 的 Lambda 做條件判斷</a></li><li class=related__item><a class=related__link href=/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/>如何在沒有任何設定下產生 Rails 的 Docker Image</a></li></ul></aside></div></article><div class=adv><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-2844969736316510 data-ad-slot=5530952976 data-ad-format=auto></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><section id=comment class=comment-box><h1 class=comment-box__title>留言</h1><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+</code></pre></td></tr></table></div></div><p>我們透過將每一條訊息（<code>messaging</code>）取出來，然後將接收者設定為發送者（<code>sender_id</code>）並把訊息內容前面加上 <code>PONG:</code> 用來區別，確保確實是經過我們的 Chatbot 處理後才回應的。</p><blockquote><p>PING/PONG 跟 Hello World 都有點像是一個習慣，通常我們用來測試一個伺服器是否有正常運作，就會透過發送 PING 然後確認伺服器有回應 PONG 來當判斷，如果想換成任何想要的訊息都是沒問題的。</p></blockquote><h2 id=小結>小結</h2><p>其實這些步驟在大多數情況應該被製作成一個 Gem （Ruby 的套件，可以想像成 Mod 之類的東西）直接使用，不過最近比較忙就沒有時間好好設計並且封裝成 Gem。</p><p>不過這篇文章的概念在處理各種類型的 Chatbot 是很好用的，如果有興趣的話也蠻推薦大家詳細了解一下。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby on Rails</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E8%81%8A%E5%A4%A9%E6%A9%9F%E5%99%A8%E4%BA%BA/>聊天機器人</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Chatbot/>Chatbot</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9/>巴哈姆特</a></li></ul></footer><aside class=related><header class=related__header><h3 class=related__title>相關文章</h3></header><ul><li class=related__item><a class=related__link href=/posts/2019/07/09/Build-a-simple-uptime-status-page-use-CloudFlare-Workers/>用 CloudFlare Workers 製作簡單的 Uptime Status 頁面</a></li><li class=related__item><a class=related__link href=/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/>Ruby 中 Constant 和 Class 的關係</a></li><li class=related__item><a class=related__link href=/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/>關於 Rails 中的 Form Object / Presenter 這些物件該怎麼用（一）</a></li><li class=related__item><a class=related__link href=/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/>利用 Ruby 的 Lambda 做條件判斷</a></li><li class=related__item><a class=related__link href=/posts/2019/03/20/The-zero-configure-dockerfile-for-rails/>如何在沒有任何設定下產生 Rails 的 Docker Image</a></li></ul></aside></div></article><div class=adv><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-2844969736316510 data-ad-slot=5530952976 data-ad-format=auto></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><section id=comment class=comment-box><h1 class=comment-box__title>留言</h1><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
 var d=document,s=d.createElement('script');s.async=true;s.src='//'+"revo-skill-frost"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div></section></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank rel=noreferrer>蒼時弦也</a>. All right reversed.</div></footer><script src=/js/app.min.e979702d4c2a76dd5e32acda7647b733e4959a8621df075338d00d2c6837e87a.js></script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
 js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
 js.defer=true

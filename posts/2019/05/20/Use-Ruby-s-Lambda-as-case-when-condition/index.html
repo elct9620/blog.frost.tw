@@ -1,18 +1,18 @@
 <!doctype html><html lang=zh-tw><head><title>利用 Ruby 的 Lambda 做條件判斷 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。
-1 2 3 4 5  fn = -&amp;gt;(other) { other == 1 } fn == 1 # =&amp;gt; false fn === 1 # =&amp;gt; true   剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。"><meta name=created content="2019-05-20T00:00:00+0000"><meta name=modified content="2019-05-20T21:59:53+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="利用 Ruby 的 Lambda 做條件判斷"><meta property="og:url" content="https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"利用 Ruby 的 Lambda 做條件判斷","datePublished":"2019-05-20T00:00:00Z","dateModified":"2019-05-20T21:59:53Z","url":"https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/","description":"週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。\n1 2 3 4 5  fn = -\u0026gt;(other) { other == 1 } fn == 1 # =\u0026gt; false fn === 1 # =\u0026gt; true   剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。\n","keywords":["Ruby","心得","Lambda"],"image":"https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2019\/05\/20\/Use-Ruby-s-Lambda-as-case-when-condition\/","name":"利用 Ruby 的 Lambda 做條件判斷","image":"https:\/\/blog.frost.tw\/images\/2019-05-20-use-ruby-s-lambda-as-case-when-condition\/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2019-05-20T21:59:53+0000 class=article__time--header role=time>Feb.20</time><h1 class=article__title>利用 Ruby 的 Lambda 做條件判斷</h1></header><div class=article__entry><nav class=translation></nav><p>週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+1 2 3 4 5  fn = -&amp;gt;(other) { other == 1 } fn == 1 # =&amp;gt; false fn === 1 # =&amp;gt; true   剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。"><meta name=created content="2019-05-20T00:00:00+0000"><meta name=modified content="2019-05-20T21:59:53+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="利用 Ruby 的 Lambda 做條件判斷"><meta property="og:url" content="https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"利用 Ruby 的 Lambda 做條件判斷","datePublished":"2019-05-20T00:00:00Z","dateModified":"2019-05-20T21:59:53Z","url":"https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/","description":"週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。\n1 2 3 4 5  fn = -\u0026gt;(other) { other == 1 } fn == 1 # =\u0026gt; false fn === 1 # =\u0026gt; true   剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。\n","keywords":["Ruby","心得","Lambda"],"image":"https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2019/05/20/Use-Ruby-s-Lambda-as-case-when-condition/","name":"利用 Ruby 的 Lambda 做條件判斷","image":"https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2019-05-20T21:59:53+0000 class=article__time--header role=time>Feb.20</time><h1 class=article__title>利用 Ruby 的 Lambda 做條件判斷</h1></header><div class=article__entry><nav class=translation></nav><p>週末在思考一些 Ruby 特性可以應用的小技巧時，想到龍哥大概跟我講了三次以上的一個特性。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>fn</span> <span class=o>=</span> <span class=o>-</span><span class=o>&gt;</span><span class=p>(</span><span class=n>other</span><span class=p>)</span> <span class=p>{</span> <span class=n>other</span> <span class=o>==</span> <span class=mi>1</span> <span class=o></span><span class=p>}</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>fn</span> <span class=o>=</span> <span class=o>-&gt;</span><span class=p>(</span><span class=n>other</span><span class=p>)</span> <span class=p>{</span> <span class=n>other</span> <span class=o>==</span> <span class=mi>1</span> <span class=p>}</span>
 <span class=n>fn</span> <span class=o>==</span> <span class=mi>1</span>
-<span class=o></span><span class=c1># =&gt; false</span>
+<span class=c1># =&gt; false</span>
 <span class=n>fn</span> <span class=o>===</span> <span class=mi>1</span>
-<span class=o></span><span class=c1># =&gt; true</span>
+<span class=c1># =&gt; true</span>
 </code></pre></td></tr></table></div></div><p>剛好最近工作的專案上有個問題，似乎挺適合用這個技巧。</p><h2 id=proc-物件的--方法>Proc 物件的 === 方法</h2><p>我們在 Proc 的原始碼可以看到，<code>Proc</code> 類別被特別定義了 <code>#===</code> 方法，但不包括了 <code>#==</code> 方法，而這個 <code>#===</code> 方法又剛好指定成呼叫方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=n>rb_add_method</span><span class=p>(</span><span class=n>rb_cProc</span><span class=p>,</span> <span class=n>rb_intern</span><span class=p>(</span><span class=sa></span><span class=s>&#34;</span><span class=s>===</span><span class=s>&#34;</span><span class=p>)</span><span class=p>,</span> <span class=n>VM_METHOD_TYPE_OPTIMIZED</span><span class=p>,</span>
-		  <span class=p>(</span><span class=kt>void</span> <span class=o>*</span><span class=p>)</span><span class=n>OPTIMIZED_METHOD_TYPE_CALL</span><span class=p>,</span> <span class=n>METHOD_VISI_PUBLIC</span><span class=p>)</span><span class=p>;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=n>rb_add_method</span><span class=p>(</span><span class=n>rb_cProc</span><span class=p>,</span> <span class=n>rb_intern</span><span class=p>(</span><span class=s>&#34;===&#34;</span><span class=p>),</span> <span class=n>VM_METHOD_TYPE_OPTIMIZED</span><span class=p>,</span>
+		  <span class=p>(</span><span class=kt>void</span> <span class=o>*</span><span class=p>)</span><span class=n>OPTIMIZED_METHOD_TYPE_CALL</span><span class=p>,</span> <span class=n>METHOD_VISI_PUBLIC</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>同樣還有像是 <code>#[]</code> 也有類似的性質，簡單說就是 <code>#call</code> 方法的別名。這個使用方式也可以在 <a href=https://ruby-doc.org/core-2.6.2/Proc.html#method-i-3D-3D-3D>Ruby Doc</a> 上找到。
 因為這樣的特性，剛好有些情境就是不錯的應用情況。</p><h2 id=excel-的產生難題>Excel 的產生難題</h2><p>最近花了不少時間在幫客戶處理 Excel 報表的生成功能，中間就發現了一個問題，因為客戶的報表有很多種（十幾種）而且需要的欄位又不太一樣，每種都寫一次程式的話其實是很沒有效率的（而且未來還希望能自訂報表的呈現）所以用設定檔方式設計是最適合的，不過產生的 Excel 檔案卻無法指定格式（Ex. 文字、日期）尤其是「日期」客戶每張報表的要求又不太一樣，這讓生成就變成一個難題。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -30,7 +30,7 @@
 </span><span class=lnt>14
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml>- <span class=k>name</span><span class=p>:</span><span class=w> </span>KPI<span class=w> </span>Report<span class=w>
 </span><span class=w>  </span><span class=k>columns</span><span class=p>:</span><span class=w>
-</span><span class=w></span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>user_id<span class=w>
+</span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>user_id<span class=w>
 </span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>User<span class=w> </span>ID<span class=w>
 </span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>integer<span class=w>
 </span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>signup_at<span class=w>
@@ -54,7 +54,7 @@
 </span><span class=lnt>10
 </span><span class=lnt>11
 </span><span class=lnt>12
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>formats</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nf>formats</span>
   <span class=vi>@columns</span><span class=o>.</span><span class=n>map</span> <span class=k>do</span> <span class=o>|</span><span class=n>column</span><span class=o>|</span>
     <span class=k>next</span> <span class=k>unless</span> <span class=n>column</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span>
     
@@ -75,8 +75,8 @@
 </span><span class=lnt>7
 </span><span class=lnt>8
 </span><span class=lnt>9
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>is_datetime</span> <span class=o>=</span> <span class=o>-</span><span class=o>&gt;</span><span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span> <span class=n>c</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span> <span class=p>}</span>
-<span class=n>is_split_datetime</span> <span class=o>=</span> <span class=o>-</span><span class=o>&gt;</span><span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span> <span class=n>c</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span> <span class=o>&amp;&amp;</span> <span class=n>c</span><span class=o>[</span><span class=ss>:datetime</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:split</span> <span class=p>}</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>is_datetime</span> <span class=o>=</span> <span class=o>-&gt;</span><span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span> <span class=n>c</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span> <span class=p>}</span>
+<span class=n>is_split_datetime</span> <span class=o>=</span> <span class=o>-&gt;</span><span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span> <span class=n>c</span><span class=o>[</span><span class=ss>:format</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:datetime</span> <span class=o>&amp;&amp;</span> <span class=n>c</span><span class=o>[</span><span class=ss>:datetime</span><span class=o>]</span> <span class=o>==</span> <span class=ss>:split</span> <span class=p>}</span>
 <span class=c1># ...</span>
 
 <span class=k>case</span> <span class=n>column</span>
@@ -111,26 +111,26 @@
 </span><span class=lnt>25
 </span><span class=lnt>26
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>ExcelColumn</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=nb>format</span> <span class=o>=</span> <span class=kp>nil</span><span class=p>,</span> <span class=o>**</span><span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=nb>format</span> <span class=o>=</span> <span class=kp>nil</span><span class=p>,</span> <span class=o>**</span><span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
     <span class=vi>@name</span> <span class=o>=</span> <span class=nb>name</span>
     <span class=vi>@format</span> <span class=o>=</span> <span class=nb>format</span>
     <span class=vi>@pattern</span> <span class=o>=</span> <span class=n>pattern</span>
     <span class=vi>@value_of</span> <span class=o>=</span> <span class=n>block</span>
   <span class=k>end</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>===</span><span class=p>(</span><span class=n>other</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>===</span><span class=p>(</span><span class=n>other</span><span class=p>)</span>
     <span class=vi>@pattern</span><span class=o>.</span><span class=n>reduce</span><span class=p>(</span><span class=kp>true</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>prev</span><span class=p>,</span> <span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>)</span><span class=o>|</span>
       <span class=n>prev</span> <span class=o>&amp;</span> <span class=p>(</span><span class=n>other</span><span class=o>[</span><span class=n>key</span><span class=o>]</span> <span class=o>==</span> <span class=n>value</span><span class=p>)</span>
     <span class=k>end</span>
   <span class=k>end</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>format</span>
+  <span class=k>def</span> <span class=nf>format</span>
     <span class=k>return</span> <span class=vi>@format</span> <span class=k>if</span> <span class=vi>@format</span><span class=o>.</span><span class=n>nil?</span> <span class=o>||</span> <span class=vi>@format</span><span class=o>.</span><span class=n>is_a?</span><span class=p>(</span><span class=no>Symbol</span><span class=p>)</span>
     
     <span class=nb>format</span><span class=p>(</span><span class=vi>@format</span><span class=p>)</span> <span class=c1># Customize Format</span>
   <span class=k>end</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>value</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>value</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=p>)</span>
     <span class=k>return</span> <span class=n>row</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=nb>name</span><span class=p>)</span> <span class=k>if</span> <span class=vi>@value_of</span><span class=o>.</span><span class=n>nil?</span>
     
     <span class=vi>@value_of</span><span class=o>.</span><span class=n>call</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=p>)</span>
@@ -160,14 +160,14 @@
   <span class=k>class</span> <span class=o>&lt;&lt;</span> <span class=nb>self</span>
     <span class=kp>attr_reader</span> <span class=ss>:patterns</span>
     
-    <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>pattern</span><span class=p>(</span><span class=nb>format</span><span class=p>,</span> <span class=o>**</span><span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
-      <span class=vi>@patterns</span> <span class=o>||</span><span class=o>=</span> <span class=o>[</span><span class=o>]</span>
+    <span class=k>def</span> <span class=nf>pattern</span><span class=p>(</span><span class=nb>format</span><span class=p>,</span> <span class=o>**</span><span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
+      <span class=vi>@patterns</span> <span class=o>||=</span> <span class=o>[]</span>
       <span class=vi>@patterns</span> <span class=o>&lt;&lt;</span> <span class=no>ExcelColumn</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=nb>name</span><span class=p>,</span> <span class=nb>format</span><span class=p>,</span> <span class=n>pattern</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>block</span><span class=p>)</span>
     <span class=k>end</span>
   <span class=k>end</span>
   
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>columns</span>
-    <span class=vi>@columns</span> <span class=o>||</span><span class=o>=</span>
+  <span class=k>def</span> <span class=nf>columns</span>
+    <span class=vi>@columns</span> <span class=o>||=</span>
       <span class=vi>@config</span><span class=o>.</span><span class=n>columns</span><span class=o>.</span><span class=n>map</span> <span class=k>do</span> <span class=o>|</span><span class=n>column</span><span class=o>|</span>
         <span class=o>[</span>
          <span class=n>column</span><span class=p>,</span>
@@ -184,8 +184,8 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>ExcelReportGnerator</span> <span class=o>&lt;</span> <span class=no>ExcelGenerator</span>
-  <span class=n>pattern</span> <span class=nb>format</span><span class=p>(</span><span class=ss>:date</span><span class=p>)</span><span class=p>,</span> <span class=ss>datetime</span><span class=p>:</span> <span class=ss>:date</span> <span class=k>do</span> <span class=o>|</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=o>|</span>
-    <span class=n>row</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=nb>name</span><span class=p>)</span><span class=o>&amp;</span><span class=o>.</span><span class=n>to_datetime</span>
+  <span class=n>pattern</span> <span class=nb>format</span><span class=p>(</span><span class=ss>:date</span><span class=p>),</span> <span class=ss>datetime</span><span class=p>:</span> <span class=ss>:date</span> <span class=k>do</span> <span class=o>|</span><span class=nb>name</span><span class=p>,</span> <span class=n>row</span><span class=o>|</span>
+    <span class=n>row</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=nb>name</span><span class=p>)</span><span class=o>&amp;.</span><span class=n>to_datetime</span>
   <span class=k>end</span>
   
   <span class=c1># ...</span>

@@ -1,4 +1,4 @@
-<!doctype html><html lang=zh-tw><head><title>三十分鐘做一個留言板 Part 2 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="前言（廢話）  又到了快樂的 Part 2 摟！（相隔時間可能只有幾小時而已）這樣馬拉松寫文章還真是刺激，不過各位不用跟我一樣馬拉松式的把他做完阿！！"><meta name=created content="2012-01-03T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="三十分鐘做一個留言板 Part 2"><meta property="og:url" content="https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"三十分鐘做一個留言板 Part 2","datePublished":"2012-01-03T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/","description":"前言（廢話）  又到了快樂的 Part 2 摟！（相隔時間可能只有幾小時而已）這樣馬拉松寫文章還真是刺激，不過各位不用跟我一樣馬拉松式的把他做完阿！！\n","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2012\/01\/03\/create-a-guestbook-in-30-minutes-part-2\/","name":"三十分鐘做一個留言板 Part 2"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header role=time>Feb.03</time><h1 class=article__title>三十分鐘做一個留言板 Part 2</h1></header><div class=article__entry><nav class=translation></nav><h3 id=前言del廢話del>前言（廢話）</h3><hr><p>又到了快樂的 Part 2 摟！（相隔時間可能只有幾小時而已）這樣馬拉松寫文章還真是刺激，不過各位不用跟我一樣馬拉松式的把他做完阿！！</p><h3 id=建立模型model>建立模型（Model）</h3><hr><p>基本上，就是產生一個物件，讓自己方便做一些特殊（？）的操作就是了！不過在 ActiveMongo 其實也就是先去定義一下有哪些欄位，然後就結束了！（當然，還有很多很神奇的技巧，不過還是先別探討了！）</p><p>首先，在 app/models 資料夾新增一個 Commetn.PHP 檔案，然後建立一個 Model</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+<!doctype html><html lang=zh-tw><head><title>三十分鐘做一個留言板 Part 2 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="前言（廢話）  又到了快樂的 Part 2 摟！（相隔時間可能只有幾小時而已）這樣馬拉松寫文章還真是刺激，不過各位不用跟我一樣馬拉松式的把他做完阿！！"><meta name=created content="2012-01-03T00:00:00+0000"><meta name=modified content="0001-01-01T00:00:00+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="三十分鐘做一個留言板 Part 2"><meta property="og:url" content="https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/"><meta property="og:type" content="article"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"三十分鐘做一個留言板 Part 2","datePublished":"2012-01-03T00:00:00Z","dateModified":"0001-01-01T00:00:00Z","url":"https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/","description":"前言（廢話）  又到了快樂的 Part 2 摟！（相隔時間可能只有幾小時而已）這樣馬拉松寫文章還真是刺激，不過各位不用跟我一樣馬拉松式的把他做完阿！！\n","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2012/01/03/create-a-guestbook-in-30-minutes-part-2/","name":"三十分鐘做一個留言板 Part 2"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=0001-01-01T00:00:00+0000 class=article__time--header role=time>Feb.03</time><h1 class=article__title>三十分鐘做一個留言板 Part 2</h1></header><div class=article__entry><nav class=translation></nav><h3 id=前言del廢話del>前言（廢話）</h3><hr><p>又到了快樂的 Part 2 摟！（相隔時間可能只有幾小時而已）這樣馬拉松寫文章還真是刺激，不過各位不用跟我一樣馬拉松式的把他做完阿！！</p><h3 id=建立模型model>建立模型（Model）</h3><hr><p>基本上，就是產生一個物件，讓自己方便做一些特殊（？）的操作就是了！不過在 ActiveMongo 其實也就是先去定義一下有哪些欄位，然後就結束了！（當然，還有很多很神奇的技巧，不過還是先別探討了！）</p><p>首先，在 app/models 資料夾新增一個 Commetn.PHP 檔案，然後建立一個 Model</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -113,19 +113,19 @@ require_once(ABSPATH . &#39;models/Comment.PHP&#39;);
 </span><span class=lnt>52
 </span><span class=lnt>53
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=cp>&lt;!DOCTYPE html&gt;</span>
-<span class=p>&lt;</span><span class=nt>html</span> <span class=na>lang</span><span class=o>=</span><span class=s>&#34;zh-tw&#34;</span><span class=p></span><span class=p>&gt;</span>
-<span class=p>&lt;</span><span class=nt>head</span><span class=p></span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>charset</span><span class=o>=</span><span class=s>&#34;utf-8&#34;</span> <span class=p>/</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>html</span> <span class=na>lang</span><span class=o>=</span><span class=s>&#34;zh-tw&#34;</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>head</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>charset</span><span class=o>=</span><span class=s>&#34;utf-8&#34;</span> <span class=p>/&gt;</span>
 
-	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>http-equiv</span><span class=o>=</span><span class=s>&#34;X-UA-Compatible&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;IE=edge,chrome=1&#34;</span> <span class=p>/</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>http-equiv</span><span class=o>=</span><span class=s>&#34;X-UA-Compatible&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;IE=edge,chrome=1&#34;</span> <span class=p>/&gt;</span>
 
-	<span class=p>&lt;</span><span class=nt>title</span><span class=p></span><span class=p>&gt;</span>My 30min Guest Book<span class=p>&lt;</span><span class=p>/</span><span class=nt>title</span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;description&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;&#34;</span> <span class=p>/</span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;author&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;Aotoki&#34;</span> <span class=p>/</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>title</span><span class=p>&gt;</span>My 30min Guest Book<span class=p>&lt;/</span><span class=nt>title</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;description&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;&#34;</span> <span class=p>/&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;author&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;Aotoki&#34;</span> <span class=p>/&gt;</span>
 
-	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;viewport&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;width=device-width; initial-scale=1.0&#34;</span> <span class=p>/</span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=nt>link</span> <span class=na>rel</span><span class=o>=</span><span class=s>&#34;stylesheet&#34;</span> <span class=na>href</span><span class=o>=</span><span class=s>&#34;https://twitter.Github.com/bootstrap/1.4.0/bootstrap.min.CSS&#34;</span> <span class=p>/</span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=nt>style</span><span class=p></span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>meta</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;viewport&#34;</span> <span class=na>content</span><span class=o>=</span><span class=s>&#34;width=device-width; initial-scale=1.0&#34;</span> <span class=p>/&gt;</span>
+	<span class=p>&lt;</span><span class=nt>link</span> <span class=na>rel</span><span class=o>=</span><span class=s>&#34;stylesheet&#34;</span> <span class=na>href</span><span class=o>=</span><span class=s>&#34;https://twitter.Github.com/bootstrap/1.4.0/bootstrap.min.CSS&#34;</span> <span class=p>/&gt;</span>
+	<span class=p>&lt;</span><span class=nt>style</span><span class=p>&gt;</span>
 		<span class=p>.</span><span class=nc>container</span><span class=p>{</span>
 			<span class=k>margin</span><span class=p>:</span><span class=mi>15</span><span class=kt>px</span> <span class=kc>auto</span><span class=p>;</span>
 		<span class=p>}</span>
@@ -134,37 +134,37 @@ require_once(ABSPATH . &#39;models/Comment.PHP&#39;);
 			<span class=k>margin-bottom</span><span class=p>:</span> <span class=mi>10</span><span class=kt>px</span><span class=p>;</span>
 		<span class=p>}</span>
 		
-	<span class=p>&lt;</span><span class=p>/</span><span class=nt>style</span><span class=p>&gt;</span>
-<span class=p>&lt;</span><span class=p>/</span><span class=nt>head</span><span class=p>&gt;</span>
+	<span class=p>&lt;/</span><span class=nt>style</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>head</span><span class=p>&gt;</span>
 
-<span class=p>&lt;</span><span class=nt>body</span><span class=p></span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;container&#34;</span><span class=p></span><span class=p>&gt;</span>
-		<span class=p>&lt;</span><span class=nt>header</span><span class=p></span><span class=p>&gt;</span>
-			<span class=p>&lt;</span><span class=nt>h1</span><span class=p></span><span class=p>&gt;</span>Guest Book<span class=p>&lt;</span><span class=p>/</span><span class=nt>h1</span><span class=p>&gt;</span>
-		<span class=p>&lt;</span><span class=p>/</span><span class=nt>header</span><span class=p>&gt;</span>
-		<span class=p>&lt;</span><span class=nt>nav</span><span class=p></span><span class=p>&gt;</span>
-			<span class=c>&lt;!--</span><span class=c>-</span><span class=c> 選單 </span><span class=c>--&gt;</span>
-		<span class=p>&lt;</span><span class=p>/</span><span class=nt>nav</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>body</span><span class=p>&gt;</span>
+	<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;container&#34;</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=nt>header</span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=nt>h1</span><span class=p>&gt;</span>Guest Book<span class=p>&lt;/</span><span class=nt>h1</span><span class=p>&gt;</span>
+		<span class=p>&lt;/</span><span class=nt>header</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=nt>nav</span><span class=p>&gt;</span>
+			<span class=c>&lt;!--- 選單 --&gt;</span>
+		<span class=p>&lt;/</span><span class=nt>nav</span><span class=p>&gt;</span>
 
-		<span class=p>&lt;</span><span class=nt>div</span><span class=p></span><span class=p>&gt;</span>
-			<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;comment-count&#34;</span><span class=p></span><span class=p>&gt;</span>
-				<span class=p>&lt;</span><span class=nt>span</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;label notice&#34;</span><span class=p></span><span class=p>&gt;</span>Notice<span class=p>&lt;</span><span class=p>/</span><span class=nt>span</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=nt>div</span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;comment-count&#34;</span><span class=p>&gt;</span>
+				<span class=p>&lt;</span><span class=nt>span</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;label notice&#34;</span><span class=p>&gt;</span>Notice<span class=p>&lt;/</span><span class=nt>span</span><span class=p>&gt;</span>
 				System has <span class=cp>&lt;?PHP echo intval($totalComments); ?&gt;</span> comments.
-			<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+			<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
 			<span class=cp>&lt;?PHP foreach($comments as $c){ ?&gt;</span>
-			<span class=p>&lt;</span><span class=nt>blockquote</span><span class=p></span><span class=p>&gt;</span>
-				<span class=p>&lt;</span><span class=nt>p</span><span class=p></span><span class=p>&gt;</span><span class=cp>&lt;?PHP echo $c-&gt;content; ?&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>p</span><span class=p>&gt;</span> <span class=c>&lt;!--</span><span class=c> 顯示留言內容 </span><span class=c>--&gt;</span>
-				<span class=p>&lt;</span><span class=nt>small</span><span class=p></span><span class=p>&gt;</span><span class=cp>&lt;?PHP echo $c-&gt;nickname; ?&gt;</span>, <span class=cp>&lt;?PHP echo date(&#39;Y-m-d H:i:s&#39;, $c-&gt;timestamp); ?&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>small</span><span class=p>&gt;</span> <span class=c>&lt;!--</span><span class=c> 顯示暱稱以及輸出留言時間 </span><span class=c>--&gt;</span>
-			<span class=p>&lt;</span><span class=p>/</span><span class=nt>blockquote</span><span class=p>&gt;</span>
+			<span class=p>&lt;</span><span class=nt>blockquote</span><span class=p>&gt;</span>
+				<span class=p>&lt;</span><span class=nt>p</span><span class=p>&gt;</span><span class=cp>&lt;?PHP echo $c-&gt;content; ?&gt;</span><span class=p>&lt;/</span><span class=nt>p</span><span class=p>&gt;</span> <span class=c>&lt;!-- 顯示留言內容 --&gt;</span>
+				<span class=p>&lt;</span><span class=nt>small</span><span class=p>&gt;</span><span class=cp>&lt;?PHP echo $c-&gt;nickname; ?&gt;</span>, <span class=cp>&lt;?PHP echo date(&#39;Y-m-d H:i:s&#39;, $c-&gt;timestamp); ?&gt;</span><span class=p>&lt;/</span><span class=nt>small</span><span class=p>&gt;</span> <span class=c>&lt;!-- 顯示暱稱以及輸出留言時間 --&gt;</span>
+			<span class=p>&lt;/</span><span class=nt>blockquote</span><span class=p>&gt;</span>
 			<span class=cp>&lt;?PHP } ?&gt;</span>
-		<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
+		<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
 
-		<span class=p>&lt;</span><span class=nt>footer</span><span class=p></span><span class=p>&gt;</span>
-		 <span class=p>&lt;</span><span class=nt>p</span><span class=p></span><span class=p>&gt;</span><span class=ni>&amp;copy;</span> Copyright by Aotoki<span class=p>&lt;</span><span class=p>/</span><span class=nt>p</span><span class=p>&gt;</span>
-		<span class=p>&lt;</span><span class=p>/</span><span class=nt>footer</span><span class=p>&gt;</span>
-	<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-<span class=p>&lt;</span><span class=p>/</span><span class=nt>body</span><span class=p>&gt;</span>
-<span class=p>&lt;</span><span class=p>/</span><span class=nt>html</span><span class=p>&gt;</span>
+		<span class=p>&lt;</span><span class=nt>footer</span><span class=p>&gt;</span>
+		 <span class=p>&lt;</span><span class=nt>p</span><span class=p>&gt;</span><span class=ni>&amp;copy;</span> Copyright by Aotoki<span class=p>&lt;/</span><span class=nt>p</span><span class=p>&gt;</span>
+		<span class=p>&lt;/</span><span class=nt>footer</span><span class=p>&gt;</span>
+	<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>body</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
 </code></pre></td></tr></table></div></div><p>因為有了初步的畫面顯示，所以就直接將 Bootstrap 的 CSS 用 Link 的方式直接導入（官方網站上的快速引用）這樣一來，原本單調的畫面也稍微變得豐富一點，目前可以看到畫面上顯示著之前設定的 Guest Book 標題以及 [Notice] System has 0 comments. 的字樣。</p><h3 id=新增留言>新增留言</h3><hr><p>既然輸出留言完成了，但是無法留言還是沒有辦法讓留言板發揮作用，所以打開 index.PHP 檔案，繼續編輯。</p><p>我們將位置移動到 $app->get('/', function() use ($app){}); 區塊的下方，加入新的區塊。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -230,31 +230,31 @@ $app-&gt;post(&#39;/new&#39;, function() use ($app){
 </span><span class=lnt>23
 </span><span class=lnt>24
 </span><span class=lnt>25
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=c>&lt;!--</span><span class=c> 前略 </span><span class=c>--&gt;</span>
-			<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;row&#34;</span><span class=p></span><span class=p>&gt;</span>
-				<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;span16&#34;</span><span class=p></span><span class=p>&gt;</span>
-					<span class=p>&lt;</span><span class=nt>form</span> <span class=na>method</span><span class=o>=</span><span class=s>&#34;post&#34;</span> <span class=na>action</span><span class=o>=</span><span class=s>&#34;&lt;?PHP echo $app-&gt;urlFor(&#39;new&#39;); ?&gt;&#34;</span><span class=p></span><span class=p>&gt;</span>
-						<span class=p>&lt;</span><span class=nt>fieldset</span><span class=p></span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=nt>legend</span><span class=p></span><span class=p>&gt;</span>Leave a Comment<span class=p>&lt;</span><span class=p>/</span><span class=nt>legend</span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;clearfix&#34;</span><span class=p></span><span class=p>&gt;</span>
-								<span class=p>&lt;</span><span class=nt>label</span><span class=p></span><span class=p>&gt;</span>Nickname<span class=p>&lt;</span><span class=p>/</span><span class=nt>label</span><span class=p>&gt;</span>
-								<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;input&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=nt>input</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;nickname&#34;</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;text&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;xlarge&#34;</span> <span class=p>/</span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;clearfix&lt;?PHP if($errorStatus){ echo &#39; error&#39;; } ?&gt;&#34;</span><span class=p></span><span class=p>&gt;</span>
-								<span class=p>&lt;</span><span class=nt>label</span> <span class=na>for</span><span class=o>=</span><span class=s>&#34;textarea&#34;</span><span class=p></span><span class=p>&gt;</span>Content<span class=p>&lt;</span><span class=p>/</span><span class=nt>label</span><span class=p>&gt;</span>
-								<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;input&#34;</span><span class=p></span><span class=p>&gt;</span>
-									<span class=p>&lt;</span><span class=nt>textarea</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;content&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;xlarge&lt;?PHP if($errorStatus){ echo &#39; error&#39;; } ?&gt;&#34;</span><span class=p></span><span class=p>&gt;</span><span class=p>&lt;</span><span class=p>/</span><span class=nt>textarea</span><span class=p>&gt;</span>
-									<span class=cp>&lt;?PHP if($errorStatus){ ?&gt;</span><span class=p>&lt;</span><span class=nt>span</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;help-block&#34;</span><span class=p></span><span class=p>&gt;</span>You must enter some content.<span class=p>&lt;</span><span class=p>/</span><span class=nt>span</span><span class=p>&gt;</span> <span class=cp>&lt;?PHP } ?&gt;</span>
-								<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;actions&#34;</span><span class=p></span><span class=p>&gt;</span>
-								<span class=p>&lt;</span><span class=nt>button</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;btn primary&#34;</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;submit&#34;</span><span class=p></span><span class=p>&gt;</span>Add Comment<span class=p>&lt;</span><span class=p>/</span><span class=nt>button</span><span class=p>&gt;</span>
-							<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-						<span class=p>&lt;</span><span class=p>/</span><span class=nt>fieldset</span><span class=p>&gt;</span>
-					<span class=p>&lt;</span><span class=p>/</span><span class=nt>form</span><span class=p>&gt;</span>
-				<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-			<span class=p>&lt;</span><span class=p>/</span><span class=nt>div</span><span class=p>&gt;</span>
-<span class=c>&lt;!--</span><span class=c> 後略 </span><span class=c>--&gt;</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-html data-lang=html><span class=c>&lt;!-- 前略 --&gt;</span>
+			<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;row&#34;</span><span class=p>&gt;</span>
+				<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;span16&#34;</span><span class=p>&gt;</span>
+					<span class=p>&lt;</span><span class=nt>form</span> <span class=na>method</span><span class=o>=</span><span class=s>&#34;post&#34;</span> <span class=na>action</span><span class=o>=</span><span class=s>&#34;&lt;?PHP echo $app-&gt;urlFor(&#39;new&#39;); ?&gt;&#34;</span><span class=p>&gt;</span>
+						<span class=p>&lt;</span><span class=nt>fieldset</span><span class=p>&gt;</span>
+							<span class=p>&lt;</span><span class=nt>legend</span><span class=p>&gt;</span>Leave a Comment<span class=p>&lt;/</span><span class=nt>legend</span><span class=p>&gt;</span>
+							<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;clearfix&#34;</span><span class=p>&gt;</span>
+								<span class=p>&lt;</span><span class=nt>label</span><span class=p>&gt;</span>Nickname<span class=p>&lt;/</span><span class=nt>label</span><span class=p>&gt;</span>
+								<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;input&#34;</span><span class=p>&gt;&lt;</span><span class=nt>input</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;nickname&#34;</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;text&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;xlarge&#34;</span> <span class=p>/&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+							<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+							<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;clearfix&lt;?PHP if($errorStatus){ echo &#39; error&#39;; } ?&gt;&#34;</span><span class=p>&gt;</span>
+								<span class=p>&lt;</span><span class=nt>label</span> <span class=na>for</span><span class=o>=</span><span class=s>&#34;textarea&#34;</span><span class=p>&gt;</span>Content<span class=p>&lt;/</span><span class=nt>label</span><span class=p>&gt;</span>
+								<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;input&#34;</span><span class=p>&gt;</span>
+									<span class=p>&lt;</span><span class=nt>textarea</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;content&#34;</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;xlarge&lt;?PHP if($errorStatus){ echo &#39; error&#39;; } ?&gt;&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>textarea</span><span class=p>&gt;</span>
+									<span class=cp>&lt;?PHP if($errorStatus){ ?&gt;</span><span class=p>&lt;</span><span class=nt>span</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;help-block&#34;</span><span class=p>&gt;</span>You must enter some content.<span class=p>&lt;/</span><span class=nt>span</span><span class=p>&gt;</span> <span class=cp>&lt;?PHP } ?&gt;</span>
+								<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+							<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+							<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;actions&#34;</span><span class=p>&gt;</span>
+								<span class=p>&lt;</span><span class=nt>button</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;btn primary&#34;</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;submit&#34;</span><span class=p>&gt;</span>Add Comment<span class=p>&lt;/</span><span class=nt>button</span><span class=p>&gt;</span>
+							<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+						<span class=p>&lt;/</span><span class=nt>fieldset</span><span class=p>&gt;</span>
+					<span class=p>&lt;/</span><span class=nt>form</span><span class=p>&gt;</span>
+				<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+			<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=c>&lt;!-- 後略 --&gt;</span>
 </code></pre></td></tr></table></div></div><p>不過，打開網頁又發生錯誤了！到底是怎麼一回事？原來是表單的 action 指向了 $app 但是我們並沒有把 $app 傳給 home.PHP 使用！</p><p>回到 index.PHP 稍微修改一下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3

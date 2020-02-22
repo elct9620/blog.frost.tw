@@ -1,11 +1,11 @@
-<!doctype html><html lang=zh-tw><head><title>撰寫一個合適的 RSpec 測試 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。"><meta name=created content="2020-02-20T00:00:00+0000"><meta name=modified content="2020-02-20T00:26:16+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="撰寫一個合適的 RSpec 測試"><meta property="og:url" content="https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/><link rel=alternate hreflang=en href=https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"撰寫一個合適的 RSpec 測試","datePublished":"2020-02-20T00:00:00Z","dateModified":"2020-02-20T00:26:16Z","url":"https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/","description":"包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。\n","keywords":["Ruby","RSpec","心得","BDD","TDD","Rails"],"image":"https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/blog.frost.tw\/","name":"弦而時習之","image":"http:\/\/blog.frost.tw\/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/blog.frost.tw\/posts\/2020\/02\/20\/Write-a-suitable-RSpec-test\/","name":"撰寫一個合適的 RSpec 測試","image":"https:\/\/blog.frost.tw\/images\/2020-02-20-write-a-suitable-rspec-test\/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2020-02-20T00:26:16+0000 class=article__time--header role=time>Feb.20</time><h1 class=article__title>撰寫一個合適的 RSpec 測試</h1></header><div class=article__entry><nav class=translation><a class=translation__link href=https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/>English</a></nav><aside class=article__toc><header class=article__toc-title><h3>大綱</h3></header><nav role=menuitem><nav id=TableOfContents><ul><li><a href=#pure-ruby-example>純 Ruby 的範例</a></li><li><a href=#real-world-example>實際案例</a></li><li><a href=#the-rails-examples>一些關於 Rails 的例子</a></li><li><a href=#conclusion>總結</a></li></ul></nav></nav><hr></aside><p>包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。</p><p>在開始之前我們先不要管什麼 TDD 或者 BDD 之類或是你之前讀過的一些測試相關的文章，然後反思一下什麼是「測試」為什麼我們需要「測試」？</p><p>基本上，我們會把測試放到專案裡面大多是為了要避免一些人會不小心犯的錯誤。所以透過定義一些自動化的程式，來確定我們的實作跟「規格」是相同的。</p><p>不過，規格跟程式碼都還是由人來撰寫跟產生的，所以很明顯的如果我們使用錯誤的規格或者錯誤的程式去測試，依舊還是會得到錯的結果。</p><p>所以盡量保持一切單純會是個不錯的做法，至少你在寫測試的時候會覺得快樂一點。</p><h2 id=pure-ruby-example>純 Ruby 的範例</h2><p>在我的經驗中測試其實跟你寫的程式碼是有關聯的，如果你本身寫出來的程式就很糟糕，那麼測試也會變得超級難寫。也因此不管是先寫測試還是後寫測試，最重要的事情是要想清楚你的需求還有你想要測試哪些東西。</p><p>話不多說，我們先簡單實作一個 <code>Calculator</code> 物件來測試看看。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+<!doctype html><html lang=zh-tw><head><title>撰寫一個合適的 RSpec 測試 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。"><meta name=created content="2020-02-20T00:00:00+0000"><meta name=modified content="2020-02-20T00:26:16+0000"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="撰寫一個合適的 RSpec 測試"><meta property="og:url" content="https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/><link rel=alternate hreflang=en href=https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"撰寫一個合適的 RSpec 測試","datePublished":"2020-02-20T00:00:00Z","dateModified":"2020-02-20T00:26:16Z","url":"https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/","description":"包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。\n","keywords":["Ruby","RSpec","心得","BDD","TDD","Rails"],"image":"https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/","name":"撰寫一個合適的 RSpec 測試","image":"https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2020-02-20T00:26:16+0000 class=article__time--header role=time>Feb.20</time><h1 class=article__title>撰寫一個合適的 RSpec 測試</h1></header><div class=article__entry><nav class=translation><a class=translation__link href=https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/>English</a></nav><aside class=article__toc><header class=article__toc-title><h3>大綱</h3></header><nav role=menuitem><nav id=TableOfContents><ul><li><a href=#pure-ruby-example>純 Ruby 的範例</a></li><li><a href=#real-world-example>實際案例</a></li><li><a href=#the-rails-examples>一些關於 Rails 的例子</a></li><li><a href=#conclusion>總結</a></li></ul></nav></nav><hr></aside><p>包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。</p><p>在開始之前我們先不要管什麼 TDD 或者 BDD 之類或是你之前讀過的一些測試相關的文章，然後反思一下什麼是「測試」為什麼我們需要「測試」？</p><p>基本上，我們會把測試放到專案裡面大多是為了要避免一些人會不小心犯的錯誤。所以透過定義一些自動化的程式，來確定我們的實作跟「規格」是相同的。</p><p>不過，規格跟程式碼都還是由人來撰寫跟產生的，所以很明顯的如果我們使用錯誤的規格或者錯誤的程式去測試，依舊還是會得到錯的結果。</p><p>所以盡量保持一切單純會是個不錯的做法，至少你在寫測試的時候會覺得快樂一點。</p><h2 id=pure-ruby-example>純 Ruby 的範例</h2><p>在我的經驗中測試其實跟你寫的程式碼是有關聯的，如果你本身寫出來的程式就很糟糕，那麼測試也會變得超級難寫。也因此不管是先寫測試還是後寫測試，最重要的事情是要想清楚你的需求還有你想要測試哪些東西。</p><p>話不多說，我們先簡單實作一個 <code>Calculator</code> 物件來測試看看。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Calculator</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span>
-    <span class=vi>@inputs</span> <span class=o>=</span> <span class=o>[</span><span class=o>]</span>
+  <span class=k>def</span> <span class=nf>initialize</span>
+    <span class=vi>@inputs</span> <span class=o>=</span> <span class=o>[]</span>
   <span class=k>end</span>
 <span class=k>end</span>
 </code></pre></td></tr></table></div></div><p>這是一個很簡單的 <code>Calculator</code> 物件，在初始化的時候會產生一個 <code>@inputs</code> 陣列。</p><p>然後就可以先搭出一個簡單的測試檔案出來：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
@@ -28,15 +28,15 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Calculator</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span>
-    <span class=vi>@inputs</span> <span class=o>=</span> <span class=o>[</span><span class=o>]</span>
+  <span class=k>def</span> <span class=nf>initialize</span>
+    <span class=vi>@inputs</span> <span class=o>=</span> <span class=o>[]</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>add</span><span class=p>(</span><span class=n>number</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>add</span><span class=p>(</span><span class=n>number</span><span class=p>)</span>
     <span class=vi>@inputs</span> <span class=o>&lt;&lt;</span> <span class=n>number</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>perform</span>
+  <span class=k>def</span> <span class=nf>perform</span>
     <span class=vi>@inputs</span><span class=o>.</span><span class=n>sum</span>
   <span class=k>end</span>
 <span class=k>end</span>
@@ -62,7 +62,7 @@
   <span class=n>let</span><span class=p>(</span><span class=ss>:calculator</span><span class=p>)</span> <span class=p>{</span> <span class=no>Calculator</span><span class=o>.</span><span class=n>new</span> <span class=p>}</span>
 
   <span class=n>describe</span> <span class=s1>&#39;#add&#39;</span> <span class=k>do</span>
-    <span class=n>let</span><span class=p>(</span><span class=ss>:number</span><span class=p>)</span> <span class=p>{</span> <span class=mi>1</span> <span class=o></span><span class=p>}</span>
+    <span class=n>let</span><span class=p>(</span><span class=ss>:number</span><span class=p>)</span> <span class=p>{</span> <span class=mi>1</span> <span class=p>}</span>
     <span class=n>subject</span> <span class=p>{</span> <span class=n>calculator</span><span class=o>.</span><span class=n>add</span><span class=p>(</span><span class=n>number</span><span class=p>)</span> <span class=p>}</span>
 
     <span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=kp>include</span><span class=p>(</span><span class=n>number</span><span class=p>)</span> <span class=p>}</span>
@@ -71,9 +71,9 @@
   <span class=n>describe</span> <span class=s1>&#39;#perform&#39;</span> <span class=k>do</span>
     <span class=n>subject</span> <span class=p>{</span> <span class=n>calculator</span><span class=o>.</span><span class=n>perform</span> <span class=p>}</span>
 
-    <span class=n>before</span> <span class=p>{</span> <span class=n>calculator</span><span class=o>.</span><span class=n>add</span><span class=p>(</span><span class=mi>1</span><span class=o></span><span class=p>)</span> <span class=p>}</span>
+    <span class=n>before</span> <span class=p>{</span> <span class=n>calculator</span><span class=o>.</span><span class=n>add</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=p>}</span>
 
-    <span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=n>eq</span><span class=p>(</span><span class=mi>1</span><span class=o></span><span class=p>)</span> <span class=p>}</span>
+    <span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=n>eq</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=p>}</span>
   <span class=k>end</span>
 <span class=k>end</span>
 </code></pre></td></tr></table></div></div><p>在我的經驗裡面，如果是一個很不錯的測試情境應該是可以透過定義 <code>subject</code> 來指定目前測試的對象，而且我們基本上可以用一行斷言來完成測試，而且大部分的時候我都會盡量讓我寫出來的東西可以像這樣被測試。</p><blockquote><p>不過現實情況永遠不會這麼理想，之後有機會可能會再討論看看，至少這篇文章應該不會提到這些情況。</p></blockquote><h2 id=real-world-example>實際案例</h2><p>現在我們對一個理想的測試有一些概念了，那麼我們就繼續在實際的情況中來應用看看。</p><p>今天早上討論的是一段用來處理付款的物件，不過是好幾年前寫的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -106,20 +106,20 @@
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>PaymentService</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>payment</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>payment</span><span class=p>)</span>
     <span class=vi>@order</span> <span class=o>=</span> <span class=n>payment</span><span class=o>.</span><span class=n>order</span>
     <span class=vi>@payment</span> <span class=o>=</span> <span class=n>payment</span>
      <span class=c1># ...</span>
     <span class=n>setup</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>setup</span>
+  <span class=k>def</span> <span class=nf>setup</span>
     <span class=vi>@payment</span><span class=o>.</span><span class=n>amount</span> <span class=o>=</span> <span class=n>amount</span>
     <span class=vi>@payment</span><span class=o>.</span><span class=n>currency</span> <span class=o>=</span> <span class=vi>@order</span><span class=o>.</span><span class=n>currency</span>
     <span class=c1># ...</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>perform</span>
+  <span class=k>def</span> <span class=nf>perform</span>
     <span class=k>return</span> <span class=kp>false</span> <span class=k>unless</span> <span class=vi>@payment</span><span class=o>.</span><span class=n>valid?</span>
 
     <span class=no>ActiveRecord</span><span class=o>::</span><span class=no>Base</span><span class=o>.</span><span class=n>transaction</span> <span class=k>do</span>
@@ -130,18 +130,18 @@
   <span class=k>end</span>
 
   <span class=kp>private</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>amount</span>
+  <span class=k>def</span> <span class=nf>amount</span>
     <span class=vi>@order</span><span class=o>.</span><span class=n>items</span><span class=o>.</span><span class=n>sum</span><span class=p>(</span><span class=o>&amp;</span><span class=ss>:subtotal</span><span class=p>)</span>
   <span class=k>end</span>
 <span class=k>end</span>
 </code></pre></td></tr></table></div></div><p>當我們想測試這個物件的時候會發現很難測試，因為他把所有東西都塞到 <code>@payment</code> 裡面，而且又無法在外部存取。</p><p>一般來說我們可能會想直接地把 <code>@payment</code> 曝露出去，變成像是 <code>service.payment.amount</code> 這樣的形式。</p><p>這樣我們確實可以寫出一段測試並檢查結果，不過這段測試其實有點不直覺。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>subject</span> <span class=p>{</span> <span class=n>service</span><span class=o>.</span><span class=n>payment</span><span class=o>.</span><span class=n>amount</span> <span class=p>}</span>
-<span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=n>eq</span><span class=p>(</span><span class=mi>100</span><span class=o></span><span class=p>)</span> <span class=p>}</span>
+<span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=n>eq</span><span class=p>(</span><span class=mi>100</span><span class=p>)</span> <span class=p>}</span>
 </code></pre></td></tr></table></div></div><p>我們測試的是「Service Object」本身而不是「Payment」這個封裝在裡面的 Model，根據這樣的推論，我們的測試實際上應該要像下面這樣。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>subject</span> <span class=p>{</span> <span class=n>service</span><span class=o>.</span><span class=n>amount</span> <span class=p>}</span>
-<span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=n>eq</span><span class=p>(</span><span class=mi>100</span><span class=o></span><span class=p>)</span> <span class=p>}</span>
+<span class=n>it</span> <span class=p>{</span> <span class=n>is_expected</span><span class=o>.</span><span class=n>to</span> <span class=n>eq</span><span class=p>(</span><span class=mi>100</span><span class=p>)</span> <span class=p>}</span>
 </code></pre></td></tr></table></div></div><p>現在我們的 <code>subject</code> 就確實是指我們的 Service Object 的 <code>amount</code> 而非 Payment Model。</p><p>根據我們的預期，修改後的 <code>PaymentService</code> 應該會像這樣：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -172,15 +172,15 @@
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>PaymentService</span>
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>initialize</span><span class=p>(</span><span class=n>order</span><span class=p>)</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>order</span><span class=p>)</span>
     <span class=vi>@order</span> <span class=o>=</span> <span class=n>order</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>amount</span>
+  <span class=k>def</span> <span class=nf>amount</span>
     <span class=vi>@order</span><span class=o>.</span><span class=n>items</span><span class=o>.</span><span class=n>sum</span><span class=p>(</span><span class=o>&amp;</span><span class=ss>:subtotal</span><span class=p>)</span>
   <span class=k>end</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>perform</span>
+  <span class=k>def</span> <span class=nf>perform</span>
     <span class=n>payment</span> <span class=o>=</span> <span class=n>build_payment</span>
     <span class=k>return</span> <span class=kp>false</span> <span class=k>unless</span> <span class=n>payment</span><span class=o>.</span><span class=n>valid?</span>
 
@@ -193,7 +193,7 @@
 
   <span class=kp>private</span>
 
-  <span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>build_payment</span>
+  <span class=k>def</span> <span class=nf>build_payment</span>
     <span class=vi>@order</span><span class=o>.</span><span class=n>payments</span><span class=o>.</span><span class=n>build</span><span class=p>(</span>
       <span class=ss>amount</span><span class=p>:</span> <span class=n>amount</span><span class=p>,</span>
       <span class=ss>currency</span><span class=p>:</span> <span class=vi>@order</span><span class=o>.</span><span class=n>currency</span>
@@ -221,14 +221,14 @@
   <span class=n>it</span> <span class=p>{</span> <span class=n>should</span> <span class=n>validate_presence_of</span><span class=p>(</span><span class=ss>:email</span><span class=p>)</span> <span class=p>}</span>
   <span class=c1># ...</span>
 
-  <span class=n>describe</span> <span class=s2>&#34;</span><span class=s2>#</span><span class=s2>avatar_url</span><span class=s2>&#34;</span> <span class=k>do</span>
-    <span class=n>let</span><span class=p>(</span><span class=ss>:email</span><span class=p>)</span> <span class=p>{</span> <span class=s2>&#34;</span><span class=s2>example@example.com</span><span class=s2>&#34;</span> <span class=p>}</span>
+  <span class=n>describe</span> <span class=s2>&#34;#avatar_url&#34;</span> <span class=k>do</span>
+    <span class=n>let</span><span class=p>(</span><span class=ss>:email</span><span class=p>)</span> <span class=p>{</span> <span class=s2>&#34;example@example.com&#34;</span> <span class=p>}</span>
     <span class=n>let</span><span class=p>(</span><span class=ss>:user</span><span class=p>)</span> <span class=p>{</span> <span class=n>create</span><span class=p>(</span><span class=ss>:user</span><span class=p>,</span> <span class=ss>email</span><span class=p>:</span> <span class=n>email</span><span class=p>)</span> <span class=p>}</span>
     <span class=n>subject</span> <span class=p>{</span> <span class=n>user</span><span class=o>.</span><span class=n>avatar_url</span> <span class=p>}</span>
 
-    <span class=n>it</span> <span class=s2>&#34;</span><span class=s2>returns Gravatar URL</span><span class=s2>&#34;</span> <span class=k>do</span>
+    <span class=n>it</span> <span class=s2>&#34;returns Gravatar URL&#34;</span> <span class=k>do</span>
        <span class=n>digest</span> <span class=o>=</span> <span class=no>OpenSSL</span><span class=o>::</span><span class=no>Digest</span><span class=o>::</span><span class=no>MD5</span><span class=o>.</span><span class=n>hexdigest</span><span class=p>(</span><span class=n>email</span><span class=p>)</span>
-       <span class=n>should</span> <span class=n>eq</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>https://www.gravatar.com/avatar/</span><span class=si>#{</span><span class=nb>hash</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+       <span class=n>should</span> <span class=n>eq</span><span class=p>(</span><span class=s2>&#34;https://www.gravatar.com/avatar/</span><span class=si>#{</span><span class=nb>hash</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
     <span class=k>end</span>
   <span class=k>end</span>
 <span class=k>end</span>
@@ -248,14 +248,14 @@
 </span><span class=lnt>14
 </span><span class=lnt>15
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># Request</span>
-<span class=no>RSpec</span><span class=o>.</span><span class=n>describe</span> <span class=s2>&#34;</span><span class=s2>/api/users</span><span class=s2>&#34;</span><span class=p>,</span> <span class=ss>type</span><span class=p>:</span> <span class=ss>:request</span> <span class=k>do</span>
-   <span class=n>describe</span> <span class=s2>&#34;</span><span class=s2>GET /api/users</span><span class=s2>&#34;</span> <span class=k>do</span>
-     <span class=n>let</span><span class=p>(</span><span class=ss>:users</span><span class=p>)</span> <span class=p>{</span> <span class=n>create_list</span><span class=p>(</span><span class=ss>:user</span><span class=p>,</span> <span class=mi>5</span><span class=o></span><span class=p>)</span> <span class=p>}</span>
+<span class=no>RSpec</span><span class=o>.</span><span class=n>describe</span> <span class=s2>&#34;/api/users&#34;</span><span class=p>,</span> <span class=ss>type</span><span class=p>:</span> <span class=ss>:request</span> <span class=k>do</span>
+   <span class=n>describe</span> <span class=s2>&#34;GET /api/users&#34;</span> <span class=k>do</span>
+     <span class=n>let</span><span class=p>(</span><span class=ss>:users</span><span class=p>)</span> <span class=p>{</span> <span class=n>create_list</span><span class=p>(</span><span class=ss>:user</span><span class=p>,</span> <span class=mi>5</span><span class=p>)</span> <span class=p>}</span>
      <span class=n>before</span> <span class=p>{</span> <span class=n>get</span> <span class=n>api_users_path</span> <span class=p>}</span>
      <span class=n>subject</span> <span class=p>{</span> <span class=n>response</span><span class=o>.</span><span class=n>code</span> <span class=p>}</span>
-     <span class=n>it</span> <span class=p>{</span> <span class=n>should</span> <span class=n>eq</span><span class=p>(</span><span class=s2>&#34;</span><span class=s2>200</span><span class=s2>&#34;</span><span class=p>)</span> <span class=p>}</span>
+     <span class=n>it</span> <span class=p>{</span> <span class=n>should</span> <span class=n>eq</span><span class=p>(</span><span class=s2>&#34;200&#34;</span><span class=p>)</span> <span class=p>}</span>
 
-     <span class=n>describe</span> <span class=s2>&#34;</span><span class=s2>body</span><span class=s2>&#34;</span> <span class=k>do</span>
+     <span class=n>describe</span> <span class=s2>&#34;body&#34;</span> <span class=k>do</span>
        <span class=n>subject</span> <span class=p>{</span> <span class=no>JSON</span><span class=o>.</span><span class=n>parse</span><span class=p>(</span><span class=n>response</span><span class=o>.</span><span class=n>body</span><span class=p>)</span> <span class=p>}</span>
        <span class=n>it</span> <span class=p>{</span> <span class=n>should_not</span> <span class=n>be_empty</span> <span class=p>}</span>
        <span class=c1># ...</span>
@@ -267,7 +267,7 @@
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nc></span><span class=o></span><span class=nf>sum</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>def</span> <span class=nf>sum</span>
   <span class=k>return</span> <span class=kp>false</span> <span class=k>if</span> <span class=n>summable?</span>
 
   <span class=vi>@items</span><span class=o>.</span><span class=n>sum</span>
