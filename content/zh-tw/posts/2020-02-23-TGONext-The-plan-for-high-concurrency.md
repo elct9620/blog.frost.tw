@@ -35,7 +35,7 @@ thumbnail: https://blog.frost.tw/images/2020-02-23-tgonext-the-plan-for-high-con
 * [wrk](https://github.com/wg/wrk)
 * [wrk2](https://github.com/giltene/wrk2)
 * [JMeter](https://jmeter.apache.org/)
-* SaaS (the cloud service provide similar service)
+* SaaS (提供類似功能的雲端服務)
 
 因為這些工具其實還蠻常見的，我自己反而沒有在第一時間把他跟測量工具聯想起來。
 
