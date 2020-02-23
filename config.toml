@@ -8,6 +8,10 @@ disablePathToLower = true
 disqusShortname = "revo-skill-frost"
 rssLimit = 10
 
+[author]
+  name = "蒼時弦也"
+  email = "contact@frost.tw"
+
 [params]
   author = "蒼時弦也"
   title = "弦而時習之"
