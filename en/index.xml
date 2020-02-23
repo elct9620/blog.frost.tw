@@ -1,2 +1,457 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>弦而時習之</title><link>https://blog.frost.tw/en/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><lastBuildDate>Sun, 23 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: The plan for high concurrency</title><link>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><pubDate>Sun, 23 Feb 2020 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><description>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
-&lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p></description></item><item><title>Write a suitable RSpec test</title><link>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</link><pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</guid><description>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p></description></item></channel></rss>
+&lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p></description><content>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
+&lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p>
+&lt;h2 id="what-is-high-concurrency">What is High Concurrency&lt;/h2>
+&lt;p>When we start this topic, our mentor gives us a question.&lt;/p>
+&lt;blockquote>
+&lt;p>How to define the high concurrency?&lt;/p>
+&lt;/blockquote>
+&lt;p>We know high concurrency is about we have a lot of users to use our service, but we notice we cannot clearly define it.&lt;/p>
+&lt;p>But the definition is simple and makes us think deeper.&lt;/p>
+&lt;blockquote>
+&lt;p>The requests we can handle in a short time, usually in one second.&lt;/p>
+&lt;/blockquote>
+&lt;p>Based on the above definition, the most important thing is&lt;/p>
+&lt;blockquote>
+&lt;p>We should have the capability to handle the request otherwise it is useless in our high concurrency plan.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="how-to-measure-the-concurrency">How to measure the concurrency&lt;/h2>
+&lt;p>To ensure our service to have the capability to handle the large amount request or the target our market team asks for us.&lt;/p>
+&lt;p>We have to correctly measure the capability in our system.&lt;/p>
+&lt;p>Our mentor let us list the tools we had used or heard about.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://httpd.apache.org/docs/2.4/programs/ab.html">ab&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/wg/wrk">wrk&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/giltene/wrk2">wrk2&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jmeter.apache.org/">JMeter&lt;/a>&lt;/li>
+&lt;li>SaaS (the cloud service provide similar service)&lt;/li>
+&lt;/ul>
+&lt;p>The tools are very common, so I didn&amp;rsquo;t direct link them with the measurement tools.&lt;/p>
+&lt;p>And then, the mentor asks us &amp;ldquo;the report between tools will different?&amp;rdquo;&lt;/p>
+&lt;p>We never consider this small concern, but it is very important when we measure the capability.&lt;/p>
+&lt;p>For example, &lt;code>ab&lt;/code> will create threads before sending requests. And send it at the same time. It usually gets a lower score and not fit the real-world&amp;rsquo;s user behavior.&lt;/p>
+&lt;blockquote>
+&lt;p>To measure the capability, we have to consider the test is fit the real-world&amp;rsquo;s user behavior.&lt;/p>
+&lt;/blockquote>
+&lt;p>And there have other things we also need to consider when we are testing capability.&lt;/p>
+&lt;h3 id="the-test-machines-limit">The test machine&amp;rsquo;s limit&lt;/h3>
+&lt;p>If we try to send a high concurrency request in one machine, but the max threads are over the machine&amp;rsquo;s capability. We will get the wrong result, and we need to use a tool can run on multi-machine or implement a tool controller to trigger tool in multiple machines.&lt;/p>
+&lt;h3 id="the-network-environment">The network environment&lt;/h3>
+&lt;p>If we send the request from LAN the requested amount will larger than the real-world case. At least, we have to put in a different zone and consider the user&amp;rsquo;s location.&lt;/p>
+&lt;blockquote>
+&lt;p>There has another concern have to be noted, we are testing the &amp;ldquo;capability&amp;rdquo; that means we are not put the &amp;ldquo;pressure&amp;rdquo; to our server, they are the different test type.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="the-tools-calculator-method">The tool&amp;rsquo;s calculator method&lt;/h3>
+&lt;p>This already talks before this section, but the &lt;code>wrk2&lt;/code> is mentioned by our mentor. Some tools didn&amp;rsquo;t calculate the timespan from request to response and it may not fully fit the real-world case.&lt;/p>
+&lt;p>Our mentor tells us the &lt;code>wrk2&lt;/code> use &lt;a href="https://medium.com/@siddontang/the-coordinated-omission-problem-in-the-benchmark-tools-5d9abef79279">Coordinated Omission&lt;/a> algorithm and it is more fit the real-world.&lt;/p>
+&lt;h3 id="the-perfect-result">The perfect result&lt;/h3>
+&lt;p>If we see a perfect result, we have to look-out our test method and tool. There may have something we are not expected and give us a different result.&lt;/p>
+&lt;h2 id="from-mau-to-qps">From MAU to QPS&lt;/h2>
+&lt;p>In the real-world, the QPS (query per second) isn&amp;rsquo;t defined by the developer team. It usually depends on the market team&amp;rsquo;s target or the CEO&amp;rsquo;s plan.&lt;/p>
+&lt;p>That means we usually get an MAU (monthly active user) instead of QPS.&lt;/p>
+&lt;p>For example, if the market team tells us the next month they plan to grow to 1 million monthly active users.&lt;/p>
+&lt;p>What is the minimal QPS we have to provide that can reach the market team&amp;rsquo;s requirement?&lt;/p>
+&lt;p>After a short discussion and guess, we notice some clues about the requests.&lt;/p>
+&lt;ul>
+&lt;li>User didn&amp;rsquo;t always online&lt;/li>
+&lt;li>One user may have more than one requests to process one action&lt;/li>
+&lt;li>The most user only active in the specified time (ex. event)&lt;/li>
+&lt;/ul>
+&lt;p>For example, we can use the 80-20 rule to assume the 80% user only active in 20% time.&lt;/p>
+&lt;p>And to define the max request at the same time per user, the mentor tells us in the experience we usually choose the &amp;ldquo;most active behavior&amp;rdquo; and count the API request behind it.&lt;/p>
+&lt;p>And then, we have minimal information to calculate the QPS from MAU.&lt;/p>
+&lt;ul>
+&lt;li>MAU: 1 million&lt;/li>
+&lt;li>Requests per user: 3 API Request per Action&lt;/li>
+&lt;li>Active Time: 20% time of one day&lt;/li>
+&lt;/ul>
+&lt;p>And we can start a calculate:&lt;/p>
+&lt;blockquote>
+&lt;p>(1 million * 3 API Request) / (30 * 0.2 * 86400) * 0.8 ~= 4.6 QPS&lt;/p>
+&lt;/blockquote>
+&lt;p>The calculate formula will be:&lt;/p>
+&lt;blockquote>
+&lt;p>(MAU * Requests) / (30 * 20% Time * 1 Day (in second)) * 80% User ~= QPS&lt;/p>
+&lt;/blockquote>
+&lt;p>The result is lower than we expect before we know how to calculate it. But it based on the data and reasonable.&lt;/p>
+&lt;p>Therefore, our target is to design our architecture to allow it can handle the QPS greater than 4.6.&lt;/p>
+&lt;blockquote>
+&lt;p>The mentor also tells us the ratio will be different in other cases, but we can use the report which is opened on the network and find the best ratio in your industry.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>This is the first part we discuss, it spends about 1.5 hours but has large information.&lt;/p>
+&lt;p>We have the next part to discuss the SLI/SLO/SLA and the availability to break down the QPS, but it uses a short time and we may discuss it online or next meetup. I will summary them after we finish the next topic.&lt;/p>
+&lt;p>After about 2 hours discuss with the mentor and other mentees, I still believe the most important thing in TGONext is learning the mentor&amp;rsquo;s viewpoint when they face a question.&lt;/p>
+&lt;p>In this high concurrency discussion, we define the &amp;ldquo;high concurrency&amp;rdquo; and focus on the technical part &amp;ldquo;QPS&amp;rdquo; to check the target we have to reach. And connect our experience with other departments to make us can co-work correctly.&lt;/p>
+&lt;p>In nowadays, some people say &amp;ldquo;the title is not important&amp;rdquo;. But when you learn from TGONext&amp;rsquo;s CTO or other high-level professional peoples, you will know the actual difference between us is we usually not focus on the correct problem, and we didn&amp;rsquo;t know the correct method to do it.&lt;/p>
+&lt;p>Thanks to the &lt;a href="https://tgonetworks.org/">TOGNetworks&lt;/a> provide a good chance to us, give a road-sign to learning high-level skills. Not continue self-satisfaction in the title we have in our company.&lt;/p></content></item><item><title>Write a suitable RSpec test</title><link>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</link><pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate><guid>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</guid><description>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p></description><content>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p>
+&lt;p>Before we start talking about how to write a test, let us stop thinking about anything about TDD or BDD or any you may read about it.&lt;/p>
+&lt;p>And ask yourself, what is &amp;ldquo;test&amp;rdquo;? Why we need a &amp;ldquo;test&amp;rdquo;?&lt;/p>
+&lt;p>The target we add the tests to our project usually to prevent human mistake, that means we try to let compute help us to confirm our code matches the &amp;ldquo;spec&amp;rdquo;.&lt;/p>
+&lt;p>But we have to know, the test still is human write code and the spec is human to decide. When you have the wrong spec and wrong way to test, we still get the wrong result.&lt;/p>
+&lt;p>So, let us try to keep everything simple, and you will feel happy when writing the test.&lt;/p>
+&lt;h2 id="the-pure-ruby-example">The Pure Ruby example&lt;/h2>
+&lt;p>In my experience, the test is related to your code. If you have bad code, and you will hard to test it. So, no matter you write the test before implementing anything or after it. The most important thing is the double-check which you want to test and fit your necessities.&lt;/p>
+&lt;p>Let&amp;rsquo;s write a &lt;code>Calculator&lt;/code> class, and try to test it.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">Calculator&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>
+&lt;span class="vi">@inputs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">[]&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>At first, we have a &lt;code>Calculator&lt;/code> class with initialized &lt;code>@inputs&lt;/code> array.&lt;/p>
+&lt;p>And we can create a simple RSpec skeleton.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">Calculator&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:calculator&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="no">Calculator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>And next, let us add the &lt;code>#add&lt;/code> method to the calculator to allow it to add something.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">Calculator&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>
+&lt;span class="vi">@inputs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">[]&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">number&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="vi">@inputs&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">number&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">perform&lt;/span>
+&lt;span class="vi">@inputs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sum&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>And let&amp;rsquo;s update our test&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">Calculator&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:calculator&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="no">Calculator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s1">&amp;#39;#add&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:number&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">calculator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">number&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="kp">include&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">number&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s1">&amp;#39;#perform&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">calculator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">perform&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">calculator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">eq&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>In my experience, the best case is you can simply define a &lt;code>subject&lt;/code> which is the target you want to test for, and we can use one line to test it. So I usually try to let my code can be tested like the above example.&lt;/p>
+&lt;blockquote>
+&lt;p>In the real world, it may not usually ideal. But this post we didn&amp;rsquo;t discuss these case, maybe we can discuss in the future.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="real-world-example">Real-world example&lt;/h2>
+&lt;p>After we have an imagination about the ideal test, let us try to apply it in the real world.&lt;/p>
+&lt;p>This morning we are discussing a legacy object which is the order&amp;rsquo;s payment processor with my team member.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">PaymentService&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">payment&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="vi">@order&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">order&lt;/span>
+&lt;span class="vi">@payment&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">payment&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">setup&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">setup&lt;/span>
+&lt;span class="vi">@payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">amount&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">amount&lt;/span>
+&lt;span class="vi">@payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">currency&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="vi">@order&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">currency&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">perform&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kp">false&lt;/span> &lt;span class="k">unless&lt;/span> &lt;span class="vi">@payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">valid?&lt;/span>
+&lt;span class="no">ActiveRecord&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Base&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">transaction&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="vi">@payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>
+&lt;span class="no">VendorAPI&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">create&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">amount&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="vi">@payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">amount&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="kp">private&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">amount&lt;/span>
+&lt;span class="vi">@order&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">items&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sum&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="ss">:subtotal&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>When we try to test this class, we notice it is very hard to add any test for it. Because the information is encapsulation inside the &lt;code>@payment&lt;/code> but we cannot access it.&lt;/p>
+&lt;p>You may want to expose the &lt;code>@payment&lt;/code> as an attribute like &lt;code>service.payment.amount&lt;/code>&lt;/p>
+&lt;p>But if we try to check for the amount is correct, our test code does not make sense.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">service&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">amount&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">eq&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>We test for the &amp;ldquo;Service Object&amp;rdquo; not the &amp;ldquo;Payment Model&amp;rdquo; inside it. According to this rule, the test should be like below.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">service&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">amount&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">eq&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>At this moment, the &amp;ldquo;subject&amp;rdquo; correctly refers to the service&amp;rsquo;s amount.&lt;/p>
+&lt;p>Let&amp;rsquo;s refactor the &lt;code>PaymentService&lt;/code> class to fit our expectations.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">PaymentService&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">order&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="vi">@order&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">order&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">amount&lt;/span>
+&lt;span class="vi">@order&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">items&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sum&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="ss">:subtotal&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">perform&lt;/span>
+&lt;span class="n">payment&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">build_payment&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kp">false&lt;/span> &lt;span class="k">unless&lt;/span> &lt;span class="n">payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">valid?&lt;/span>
+&lt;span class="no">ActiveRecord&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Base&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">transaction&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>
+&lt;span class="no">VendorAPI&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">payment&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">create&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">amount&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">amount&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="kp">private&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">build_payment&lt;/span>
+&lt;span class="vi">@order&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">payments&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">build&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="ss">amount&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">amount&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ss">currency&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="vi">@order&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">currency&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>After refactoring, the &lt;code>PaymentService&lt;/code> is becoming more straight and we can focus tests on the &lt;code>PaymentService&lt;/code>.&lt;/p>
+&lt;p>This is my experience when I design an object and I usually follow this rule in my work.&lt;/p>
+&lt;h2 id="more-example-of-rails">More example of Rails&lt;/h2>
+&lt;p>The Rails is the popular framework in Rubyist, I use it almost every workday. How can we use the above skills in Rails?&lt;/p>
+&lt;p>Just keep your class simple, and everything will be easier to test.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># Model&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">User&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">should&lt;/span> &lt;span class="n">validate_presence_of&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:email&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s2">&amp;#34;#avatar_url&amp;#34;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:email&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;example@example.com&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:user&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">create&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:user&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">email&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">email&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">user&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">avatar_url&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="s2">&amp;#34;returns Gravatar URL&amp;#34;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">digest&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">OpenSSL&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Digest&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">MD5&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hexdigest&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">email&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">should&lt;/span> &lt;span class="n">eq&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://www.gravatar.com/avatar/&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="nb">hash&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>For the model, I usually prevent logic inside it. If your project is small and simple, it is ok to do this. But when your project is complex, we usually have to take several steps to process one thing. And that may be a signal to us to split it into an independent class to focus on this process (we usually call them service object)&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># Request&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="s2">&amp;#34;/api/users&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">type&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:request&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s2">&amp;#34;GET /api/users&amp;#34;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:users&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">create_list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:user&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">get&lt;/span> &lt;span class="n">api_users_path&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">code&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">should&lt;/span> &lt;span class="n">eq&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;200&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s2">&amp;#34;body&amp;#34;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="no">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">body&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">should_not&lt;/span> &lt;span class="n">be_empty&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>If it is possible, I usually try to make my test more simple. It will help us to think about how to design our class is more clear and easier to use.&lt;/p>
+&lt;p>The above examples only cover very small parts of tests, but I think it is enough to show the suitable test usually depend on your code.&lt;/p>
+&lt;p>I still not used to write the test before I start work, and I also skip some tests if I have no time to write it.&lt;/p>
+&lt;p>But according to my experience, even you didn&amp;rsquo;t write the test you still need to think about &amp;ldquo;when I try to test my code, which is easier?&amp;rdquo;&lt;/p>
+&lt;p>And then, you will notice the best practice we read from the net if we follow it and usually let our code easier to be tested.&lt;/p>
+&lt;p>For example, the junior will define a method mix different type return values.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">def&lt;/span> &lt;span class="nf">sum&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kp">false&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">summable?&lt;/span>
+&lt;span class="vi">@items&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sum&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>It will cause it hard to predict which type will be returned, and we need to write more test cases to confirm it.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>This may not an advanced skill, but I spend a lot of years to learn and try to write a test suitable.&lt;/p>
+&lt;p>And I notice my company&amp;rsquo;s junior also has the same problem and feeling confusing when I ask them to try to refactor some legacy code.&lt;/p>
+&lt;p>They feel lost their way and didn&amp;rsquo;t know where they can start to refactor the code.&lt;/p>
+&lt;p>So, when you feel confusing, just check for your code about:&lt;/p>
+&lt;ul>
+&lt;li>Is the test can focus on my class without depending on others?&lt;/li>
+&lt;li>Is my behavior is focused on one thing? (ex. Read and write, validate value, send an API request)&lt;/li>
+&lt;li>Is my method returns is expectable? (ex. the only number, object have the same interface)&lt;/li>
+&lt;/ul>
+&lt;p>That sounds very simple and you may read about some object-oriented article about SOLID rules. But it still is hard to design it to a suitable state which didn&amp;rsquo;t have too many over design.&lt;/p>
+&lt;p>Anyway, hope my article can help you find some inspiration when you try to write some tests.&lt;/p></content></item></channel></rss>
