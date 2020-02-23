@@ -6,6 +6,7 @@ DefaultContentLanguage = "zh-tw"
 hasCJKLanguage = true
 disablePathToLower = true
 disqusShortname = "revo-skill-frost"
+rssLimit = 10
 
 [params]
   author = "蒼時弦也"
