@@ -29,10 +29,25 @@
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
+      {{ with .Params.tags }}
+        {{ if gt (len .) 0 }}
+        <category>
+          {{/*TODO: Improve tags in markdown*/}}
+          {{- $len := (len  .) -}}
+          {{- range $index, $tag := . -}}
+            {{- if eq (add $index 1) $len -}}
+            {{ $tag }}
+            {{- else -}}
+            {{ $tag }},
+            {{- end -}}
+          {{- end -}}
+        </category>
+        {{ end }}
+      {{ end }}
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
       <guid>{{ .Permalink }}</guid>
-      <content>{{ .Content | html }}</content>
+      <description>{{ .Content | html }}</description>
     </item>
     {{ end }}
   </channel>
