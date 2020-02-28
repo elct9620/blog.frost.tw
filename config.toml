@@ -16,7 +16,7 @@ rssLimit = 10
   author = "蒼時弦也"
   title = "弦而時習之"
   subtitle = "蒼時弦也的程式筆記"
-  description = "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JS 和 C 語言。"
+  description = "蒼時弦也的個人網誌，專注在前端、後端以及遊戲開發，大多使用 Ruby 和 Ruby on Rails 以及 Golang、JavaScript 和 C 語言。"
   cover = "http://blog.frost.tw/icon-512.png"
   themecolor = "#EFEFEF"
   tag_manager = "GTM-5TQLRN"
@@ -30,6 +30,8 @@ posts = "/posts/:year/:month/:day/:slug"
 
 [languages]
   [languages.en]
+    title = "Aotokitsuruya is learning"
+    description = "Aotokitsuruya's blog focuses on the frontend, backend, and game development. The languages are Ruby, Ruby on Rail, Golang, JavaScript, and C."
     contentDir = "content/en"
     languageName = "English"
     weight = 10
