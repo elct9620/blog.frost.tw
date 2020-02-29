@@ -3,7 +3,6 @@ languageCode = "zh-TW"
 title = "弦而時習之"
 theme = "air"
 DefaultContentLanguage = "zh-tw"
-hasCJKLanguage = true
 disablePathToLower = true
 disqusShortname = "revo-skill-frost"
 rssLimit = 10
@@ -34,10 +33,12 @@ posts = "/posts/:year/:month/:day/:slug"
     description = "Aotokitsuruya's blog focuses on the frontend, backend, and game development. The languages are Ruby, Ruby on Rail, Golang, JavaScript, and C."
     contentDir = "content/en"
     languageName = "English"
+    languageCode = "en"
     weight = 10
   [languages.zh-tw]
     contentDir = "content/zh-tw"
     languageName = "繁體中文"
+    hasCJKLanguage = true
     weight = 1
 
 [markup]
