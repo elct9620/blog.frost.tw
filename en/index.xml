@@ -1,4 +1,147 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 23 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: The plan for high concurrency</title><link>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sat, 29 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>The Reusable Ansible Role Problem</title><link>https://blog.frost.tw/en/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</link><category>
+Ansible,DevOps,Experience,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>About 1 year ago, I build a &lt;a href="https://www.ansible.com/">Ansible&lt;/a> playbook for the customers of &lt;a href="https://5xruby.tw">5xRuby&lt;/a>.&lt;/p>
+&lt;p>When our customers grow it is hard to use the fork feature to maintenance our customer&amp;rsquo;s playbook.&lt;/p>
+&lt;p>I have to update the main version and sync the changes to the fork version for each customer. Therefore I decided to split the common parts to a single role repository.&lt;/p></description><content>&lt;p>About 1 year ago, I build a &lt;a href="https://www.ansible.com/">Ansible&lt;/a> playbook for the customers of &lt;a href="https://5xruby.tw">5xRuby&lt;/a>.&lt;/p>
+&lt;p>When our customers grow it is hard to use the fork feature to maintenance our customer&amp;rsquo;s playbook.&lt;/p>
+&lt;p>I have to update the main version and sync the changes to the fork version for each customer. Therefore I decided to split the common parts to a single role repository.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>In the current version, we have a playbook like below:&lt;/p>
+&lt;pre>&lt;code>├── [1.0K] README.md
+├── [ 96] group_vars
+│   └── [1.2K] all.yml
+├── [ 96] inventories
+│   └── [ 309] local
+├── [ 480] roles
+│   ├── [ 96] 5xruby_user
+│   ├── [ 96] application
+│   ├── [ 96] compile_env
+│   ├── [ 96] deploy_user
+│   ├── [ 96] init
+│   ├── [ 128] logrotate
+│   ├── [ 160] nginx_with_passenger
+│   ├── [ 96] node
+│   ├── [ 160] postgresql_server
+│   ├── [ 96] ruby
+│   ├── [ 96] ssh
+│   ├── [ 96] sudo
+│   └── [ 128] yum_install_commons
+└── [ 467] setup.yml
+&lt;/code>&lt;/pre>&lt;p>When our customer needs to customize their provision environment, we have to fork it and change the variables and some template.&lt;/p>
+&lt;p>But it is hard to update the playbook because it may cause some conflict.&lt;/p>
+&lt;h2 id="target">Target&lt;/h2>
+&lt;p>The Ansible Galaxy provides the dependencies manage feature to Ansible, it allows us to use &lt;code>roles/requirements.yml&lt;/code> to manage it like below:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-ruby&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Before we run the playbook, we can use &lt;code>ansible-galaxy install -r roles/requirements.yml&lt;/code> to automatically install these roles. And it also works well with &lt;a href="https://github.com/ansible/awx">Ansible AWX&lt;/a> (a.k.a Ansible Tower)&lt;/p>
+&lt;p>That sounds good, but when I start work on it I got some problems.&lt;/p>
+&lt;h2 id="nginx-modules">Nginx Modules&lt;/h2>
+&lt;p>For &lt;a href="https://rubyonrails.org/">Rails&lt;/a> project, we have more than one choice of the webserver.&lt;/p>
+&lt;p>If we use &lt;a href="https://puma.io/">Puma&lt;/a> we only require to configure Nginx as a reverse proxy.&lt;/p>
+&lt;p>But if we decide to use &lt;a href="https://www.phusionpassenger.com/">Passenger&lt;/a> we have to compile it as an Nginx module.&lt;/p>
+&lt;p>It means if I want to support Puma and Passenger together, my Nginx role should include the Passenger tasks.&lt;/p>
+&lt;p>My first version is to use the &lt;a href="https://docs.ansible.com/ansible/latest/modules/include_tasks_module.html">&lt;code>include_tasks&lt;/code>&lt;/a> to add an extra module config when enabled Passenger.&lt;/p>
+&lt;p>But if we want to add more Nginx modules in the future? Our Nginx role will grow and becomes another huge playbook.&lt;/p>
+&lt;h2 id="manual-dependencies">Manual Dependencies&lt;/h2>
+&lt;p>After many tries, I find an acceptable implement to resolve the problem.&lt;/p>
+&lt;ol>
+&lt;li>Create a Fact &lt;code>nginx_module_options&lt;/code> as empty array&lt;/li>
+&lt;li>Loop &lt;code>nginx_extar_modules&lt;/code> to &lt;code>import_role&lt;/code> to execute module related tasks&lt;/li>
+&lt;li>After the module&amp;rsquo;s source code downloaded, append configure options to &lt;code>nginx_module_options&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;p>In our playbook, we can configure dependencies like below:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-passenger&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>And add Nginx module options to &lt;code>group_vars/all.yml&lt;/code> as a default config to apply to all web hosts.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="k">nginx_extra_modules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;passenger&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>After resolving the Nginx module problem, another problem is coming.&lt;/p>
+&lt;h2 id="the-role-dependencies">The Role Dependencies&lt;/h2>
+&lt;p>When I prepare the Nginx, Ruby, Node.js, and others required for deploy Rails. I configure the Rails role&amp;rsquo;s dependencies.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="k">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-ruby&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-node&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-passenger&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>When I use my playbook to run &lt;code>rails&lt;/code> role, it starts the task from the &lt;code>nginx&lt;/code> role.&lt;/p>
+&lt;p>It seems no problem for us, but we have to configure the &lt;code>nginx.conf&lt;/code> and set the &lt;code>root&lt;/code> to our application&amp;rsquo;s public directory.&lt;/p>
+&lt;p>If the &lt;code>nginx&lt;/code> role is run before the &lt;code>rails&lt;/code> role, we will get the Nginx start failed error.&lt;/p>
+&lt;blockquote>
+&lt;p>The first version Nginx will create the root directory with customized owner and group, but it has some problems in this case. The deploy user is created by the &lt;code>rails&lt;/code> role and it will unable to find the owner user which is not created yet.&lt;/p>
+&lt;/blockquote>
+&lt;p>But after clarifying the problem, it is a human design mistake.&lt;/p>
+&lt;p>&amp;ldquo;The Nginx is the dependencies of Rails?&amp;rdquo;&lt;/p>
+&lt;p>If we use the Puma, we can replace Nginx to any reverse proxy server. So we didn&amp;rsquo;t dependent on the Nginx.&lt;/p>
+&lt;h2 id="final-produce">Final Produce&lt;/h2>
+&lt;p>After about two days of hard work, I have a new playbook almost zero-config to deploy a server for Rails.&lt;/p>
+&lt;pre>&lt;code>├── install.yml
+├── group_vars
+│ └── all.yml
+├── inventory
+├── playbooks
+│ └── install-nginx.yml
+│ └── install-postgres.yml
+│ └── install-rails.yml
+├── roles
+│ └── requirements.yml
+├── templates
+└ ─── nginx.conf.j2
+&lt;/code>&lt;/pre>&lt;p>Everything is very simple, usually use &lt;code>import_role: nginx&lt;/code> to add the necessary role.&lt;/p>
+&lt;p>If we need more customized we can override the variable (e.g. &lt;code>nginx_config_template&lt;/code>) and put the customize template to &lt;code>templates/nginx.conf.j2&lt;/code>&lt;/p>
+&lt;blockquote>
+&lt;p>I only put a default Nginx config inside the Nginx role and put the customize &lt;code>nginx.conf&lt;/code> in the playbook to enable the Passenger.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>This is an interesting experience to &amp;ldquo;decouple&amp;rdquo; the provision script. As a programmer, we have a lot of rule can follow to decouple our program. But when you are working on the operation-side, how to create a reusable script and manageable?&lt;/p>
+&lt;p>But this work is only the start. I am considering the future upgrade after I finished this stage.&lt;/p>
+&lt;ul>
+&lt;li>How to clear the old versions?&lt;/li>
+&lt;li>If the database has to upgrade, should I create a new server?&lt;/li>
+&lt;li>If used for creating a Cloud Image (e.g. AMI) how to clear up?&lt;/li>
+&lt;/ul>
+&lt;p>The DevOps sounds very easy to put developer and operator together but make the work together still hard, I guess.&lt;/p></content></item><item><title>TGONext: The plan for high concurrency</title><link>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>
 Experience,TGONext,Architecture</category><pubDate>Sun, 23 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
 &lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p></description><content>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
 &lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p>
