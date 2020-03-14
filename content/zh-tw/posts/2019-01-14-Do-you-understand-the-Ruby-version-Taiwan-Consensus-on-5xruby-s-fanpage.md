@@ -1,6 +1,6 @@
 ---
 title: 你看懂五倍紅寶石粉專上的 Ruby 版台灣共識了嗎？
-date: 2019-01-14 22:00:39
+publishDate: 2019-01-14 22:00:39
 tags: [Ruby, 筆記, 台灣共識]
 thumbnail: https://blog.frost.tw/images/2019-01-14-do-you-understand-the-ruby-version-taiwan-consensus-on-5xruby-s-fanpage/thumbnail.jpg
 ---

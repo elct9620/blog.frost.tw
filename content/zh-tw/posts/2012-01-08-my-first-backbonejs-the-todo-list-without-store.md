@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '我的第一個 Backbone.js - TODO List (無儲存功能)'
-date: 2012-01-08 21:49
+publishDate: 2012-01-08 21:49
 comments: true
 tags: 
 ---

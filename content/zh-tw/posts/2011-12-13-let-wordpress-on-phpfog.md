@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '在PHPFog上架設WordPress(中文版)'
-date: 2011-12-13 20:05
+publishDate: 2011-12-13 20:05
 comments: true
 tags: 
 ---

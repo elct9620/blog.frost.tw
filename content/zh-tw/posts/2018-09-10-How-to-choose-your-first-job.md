@@ -1,6 +1,6 @@
 ---
 title: 怎麼選第一份工作？
-date: 2018-09-10 09:18:58
+publishDate: 2018-09-10 09:18:58
 tags: [心得,程式,Ruby]
 thumbnail: https://blog.frost.tw/images/2018-09-10-how-to-choose-your-first-job/thumbnail.jpg
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Nitrous.io - 網站開發協作平台'
-date: 2013-09-08 02:53
+publishDate: 2013-09-08 02:53
 comments: true
 tags: [Rails, 雲端, VPS, 教學]
 ---

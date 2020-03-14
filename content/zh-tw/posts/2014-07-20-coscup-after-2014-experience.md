@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'COSCUP 2014 會後心得不能吃'
-date: 2014-07-20 14:26
+publishDate: 2014-07-20 14:26
 comments: true
 tags: [心得, SITCON]
 ---

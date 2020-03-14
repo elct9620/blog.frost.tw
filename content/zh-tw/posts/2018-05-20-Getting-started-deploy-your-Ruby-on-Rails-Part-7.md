@@ -1,6 +1,6 @@
 ---
 title: 部署你的第一個 Ruby on Rails 網站（七）
-date: 2018-05-20 22:39:15
+publishDate: 2018-05-20 22:39:15
 tags: [DevOps,Ruby on Rails,教學]
 ---
 

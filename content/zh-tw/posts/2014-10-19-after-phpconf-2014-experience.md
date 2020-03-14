@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'PHPConf 2014 會後心得'
-date: 2014-10-19 08:18
+publishDate: 2014-10-19 08:18
 comments: true
 tags: [PHP, 心得]
 ---

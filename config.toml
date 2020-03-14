@@ -23,6 +23,8 @@ rssLimit = 10
 
 [frontmatter]
 date = [":filename", ":default"]
+lastmod = [":git", "lastmod", "publishDate", "date"]
+publishDate = ["publishDate", "date"]
 
 [permalinks]
 posts = "/posts/:year/:month/:day/:slug"

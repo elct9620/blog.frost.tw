@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '大三學習規劃'
-date: 2013-08-15 02:16
+publishDate: 2013-08-15 02:16
 comments: true
 tags: [生活, 學習]
 ---

@@ -1,6 +1,6 @@
 ---
 title: Rails 的 Auto Reload 機制所產生的錯誤
-date: 2017-03-06 23:09:31
+publishDate: 2017-03-06 23:09:31
 tags:
 ---
 

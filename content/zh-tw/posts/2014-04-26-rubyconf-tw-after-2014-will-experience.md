@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'RubyConf TW 2014 會後心得'
-date: 2014-04-26 15:40
+publishDate: 2014-04-26 15:40
 comments: true
 tags: [Ruby, 心得]
 ---

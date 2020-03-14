@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '自暑假開始後'
-date: 2012-07-03 15:21
+publishDate: 2012-07-03 15:21
 comments: true
 tags: 
 ---

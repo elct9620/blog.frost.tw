@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Unity3D - 元件化的遊戲製作'
-date: 2014-01-03 07:07
+publishDate: 2014-01-03 07:07
 comments: true
 tags: [JavaScript, 遊戲, 心得, 程式, Unity3D]
 ---

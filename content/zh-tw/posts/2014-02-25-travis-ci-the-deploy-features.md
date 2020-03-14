@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Travis CI 的 Deploy 功能'
-date: 2014-02-25 06:00
+publishDate: 2014-02-25 06:00
 comments: true
 tags: [Github, Heroku, CI, PaaS, 筆記]
 ---

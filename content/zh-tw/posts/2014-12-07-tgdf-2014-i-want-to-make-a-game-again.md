@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'TGDF 2014：重燃的遊戲夢'
-date: 2014-12-07 09:18
+publishDate: 2014-12-07 09:18
 comments: true
 tags: [遊戲, 心得]
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '三天做一個論壇 - Part 1'
-date: 2012-01-25 21:43
+publishDate: 2012-01-25 21:43
 comments: true
 tags: 
 ---

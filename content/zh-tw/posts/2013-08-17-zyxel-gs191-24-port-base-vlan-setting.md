@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'ZyXEL GS1910-24 的 Port Base VLAN 設定'
-date: 2013-08-17 02:43
+publishDate: 2013-08-17 02:43
 comments: true
 tags: [網管, VLAN]
 ---

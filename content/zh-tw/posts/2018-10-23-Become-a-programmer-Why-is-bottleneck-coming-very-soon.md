@@ -1,6 +1,6 @@
 ---
 title: 轉職工程師：為什麼馬上就遇到瓶頸？
-date: 2018-10-23 20:49:47
+publishDate: 2018-10-23 20:49:47
 tags: [心得,程式,Ruby]
 thumbnail: https://blog.frost.tw/images/2018-10-23-become-a-programmer-why-is-bottleneck-coming-very-soon/thumbnail.jpg
 ---

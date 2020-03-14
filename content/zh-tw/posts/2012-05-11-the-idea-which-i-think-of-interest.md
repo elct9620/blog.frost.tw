@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '我對興趣的看法'
-date: 2012-05-11 20:24
+publishDate: 2012-05-11 20:24
 comments: true
 tags: 
 ---

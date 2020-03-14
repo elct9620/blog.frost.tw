@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '目標與慾望'
-date: 2012-05-17 23:13
+publishDate: 2012-05-17 23:13
 comments: true
 tags: 
 ---

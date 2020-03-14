@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '在 TpGS 2016 展出後的計劃'
-date: 2016-01-30 14:46
+publishDate: 2016-01-30 14:46
 comments: true
 tags: [心得, 遊戲, 展覽]
 ---

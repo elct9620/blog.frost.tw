@@ -1,6 +1,6 @@
 ---
 title: 我在 Ruby 埋了一個陷阱 - Signal 的應用
-date: 2019-03-12 21:29:15
+publishDate: 2019-03-12 21:29:15
 tags: [Ruby, 作業系統, Daemon, 心得]
 thumbnail: https://blog.frost.tw/images/2019-03-12-i-make-a-trap-in-the-ruby-the-usage-of-signal/thumbnail.jpg
 ---

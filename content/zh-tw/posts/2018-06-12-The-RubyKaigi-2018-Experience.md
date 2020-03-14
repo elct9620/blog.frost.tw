@@ -1,6 +1,6 @@
 ---
 title: RubyKaigi 2018 會後心得
-date: 2018-06-12 21:28:36
+publishDate: 2018-06-12 21:28:36
 tags: [心得, RubyKaigi, Ruby]
 ---
 

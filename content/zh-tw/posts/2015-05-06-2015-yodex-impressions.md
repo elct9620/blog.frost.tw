@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '2015 新一代感想'
-date: 2015-05-06 06:21
+publishDate: 2015-05-06 06:21
 comments: true
 tags: [設計, 遊戲, 心得]
 ---

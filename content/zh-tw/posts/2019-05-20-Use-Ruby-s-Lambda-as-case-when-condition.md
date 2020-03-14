@@ -1,6 +1,6 @@
 ---
 title: 利用 Ruby 的 Lambda 做條件判斷
-date: 2019-05-20 21:59:53
+publishDate: 2019-05-20 21:59:53
 tags: [Ruby, 心得, Lambda]
 thumbnail: https://blog.frost.tw/images/2019-05-20-use-ruby-s-lambda-as-case-when-condition/thumbnail.png
 ---

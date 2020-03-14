@@ -1,6 +1,6 @@
 ---
 title: "TGONext: 規劃高併發服務"
-date: 2020-02-23T15:54:37+08:00
+publishDate: 2020-02-23T15:54:37+08:00
 tags: [心得, TGONext, 架構]
 series: TGONext
 toc: true

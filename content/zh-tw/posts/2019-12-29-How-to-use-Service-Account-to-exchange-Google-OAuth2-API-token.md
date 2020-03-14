@@ -1,6 +1,6 @@
 ---
 title: 如何透過 Service Account 來取得 Google API 的 OAuth2 Token
-date: 2019-12-29 20:43:04
+publishDate: 2019-12-29 20:43:04
 tags: [JWT, OAuth2, Service Account, Ruby, API, Google]
 thumbnail: https://blog.frost.tw/images/2019-12-29-how-to-use-service-account-to-exchange-google-oauth2-api-token/thumbnail.jpg
 ---

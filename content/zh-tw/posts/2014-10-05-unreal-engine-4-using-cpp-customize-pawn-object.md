@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Unreal Engine 4 - 用 C++ 自訂 Pawn 物件'
-date: 2014-10-05 06:40
+publishDate: 2014-10-05 06:40
 comments: true
 tags: [遊戲, 筆記, UnrealEngine]
 ---

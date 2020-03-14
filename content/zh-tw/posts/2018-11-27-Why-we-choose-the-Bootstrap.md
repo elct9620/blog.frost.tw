@@ -1,6 +1,6 @@
 ---
 title: 為什麼要學習 Bootstrap 呢？
-date: 2018-11-27 21:07:50
+publishDate: 2018-11-27 21:07:50
 tags: [心得,前端,Bootstrap,CSS]
 thumbnail: https://blog.frost.tw/images/2018-11-27-why-we-choose-the-bootstrap/thumbnail.jpg
 ---

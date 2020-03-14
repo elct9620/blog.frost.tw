@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '使用 Zigfu 的骨架功能'
-date: 2014-09-13 09:38
+publishDate: 2014-09-13 09:38
 comments: true
 tags: [Kinect, 遊戲, Unity3D]
 ---

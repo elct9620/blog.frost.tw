@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '三十分鐘做一個留言板 Part 2'
-date: 2012-01-03 18:31
+publishDate: 2012-01-03 18:31
 comments: true
 tags: 
 ---

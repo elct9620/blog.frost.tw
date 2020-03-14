@@ -1,6 +1,6 @@
 ---
 title: 在 RubyKaigi 2016 後的新視野
-date: 2016-09-17 19:31:02
+publishDate: 2016-09-17 19:31:02
 tags: [心得, Ruby]
 ---
 

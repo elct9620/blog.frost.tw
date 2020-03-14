@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'The Node.js Knockout 2012 Taiwan'
-date: 2012-11-13 08:36
+publishDate: 2012-11-13 08:36
 comments: true
 tags: 
 ---

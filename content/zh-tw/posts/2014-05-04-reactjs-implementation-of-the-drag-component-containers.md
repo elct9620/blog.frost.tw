@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '用 React.js 實作拖曳與元件容器'
-date: 2014-05-04 05:57
+publishDate: 2014-05-04 05:57
 comments: true
 tags: [CoffeeScript, Web, 心得, 程式語言]
 ---

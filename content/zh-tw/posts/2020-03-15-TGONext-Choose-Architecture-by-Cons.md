@@ -1,6 +1,6 @@
 ---
 title: "TGONext: 從缺點選擇架構"
-date: 2020-03-15T03:02:32+08:00
+publishDate: 2020-03-15T03:02:32+08:00
 tags: ["架構", "微服務", "資料庫", "心得", "TGONext"]
 toc: true
 series: TGONext

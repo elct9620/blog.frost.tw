@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '在忙，也要寫一下 NKO 2013'
-date: 2013-11-11 09:37
+publishDate: 2013-11-11 09:37
 comments: true
 tags: [JavaScript, Node.js, Hackathon, Flash, ActionScript3]
 ---

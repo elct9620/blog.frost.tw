@@ -1,6 +1,6 @@
 ---
 title: RubyElixirConfTW 2018 會後感想
-date: 2018-05-01 01:11:54
+publishDate: 2018-05-01 01:11:54
 tags: [Elixir,Ruby,心得]
 thumbnail: https://blog.frost.tw/images/the-rubyelixirconftw-2018-experience/thumbnail.jpg
 ---

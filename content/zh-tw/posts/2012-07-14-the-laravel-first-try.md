@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Laravel 初次嘗試'
-date: 2012-07-14 19:49
+publishDate: 2012-07-14 19:49
 comments: true
 tags:
 ---

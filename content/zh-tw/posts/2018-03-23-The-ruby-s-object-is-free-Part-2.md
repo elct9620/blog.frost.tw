@@ -1,6 +1,6 @@
 ---
 title: 自由的 Ruby 類別（二）
-date: 2018-03-23 17:32:19
+publishDate: 2018-03-23 17:32:19
 tags: [Ruby,心得]
 thumbnail: https://blog.frost.tw/images/the-ruby-s-object-is-free-part-2/thumbnail.png
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'COSCUP 2013 - Lighting Talk 補充'
-date: 2013-08-05 02:04
+publishDate: 2013-08-05 02:04
 comments: true
 tags: [JavaScript, COSCUP]
 ---

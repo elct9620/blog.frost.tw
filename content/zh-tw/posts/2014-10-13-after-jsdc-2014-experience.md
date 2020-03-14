@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'JSDC 2014 會後心得'
-date: 2014-10-13 15:18
+publishDate: 2014-10-13 15:18
 comments: true
 tags: [心得, Conference]
 ---

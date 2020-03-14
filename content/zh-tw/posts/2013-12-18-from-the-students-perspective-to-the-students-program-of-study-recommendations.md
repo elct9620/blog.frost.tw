@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '從學生的角度給學生學習程式的建議'
-date: 2013-12-18 23:52
+publishDate: 2013-12-18 23:52
 comments: true
 tags: [Rails, PHP, 經驗, 程式]
 ---

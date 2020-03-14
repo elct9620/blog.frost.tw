@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'React.js + Parse 實做簡易留言板'
-date: 2015-02-18 13:04
+publishDate: 2015-02-18 13:04
 comments: true
 tags: [心得, SITCON, 筆記, React.js]
 ---

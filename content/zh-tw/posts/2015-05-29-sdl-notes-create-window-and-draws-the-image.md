@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'SDL 筆記：產生視窗與繪製圖像'
-date: 2015-05-29 06:28
+publishDate: 2015-05-29 06:28
 comments: true
 tags: [C++, 遊戲, 筆記]
 ---

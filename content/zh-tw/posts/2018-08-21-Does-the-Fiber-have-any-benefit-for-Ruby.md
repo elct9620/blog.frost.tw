@@ -1,6 +1,6 @@
 ---
 title: 使用 Fiber 能給 Ruby 帶來好處嗎？
-date: 2018-08-21 18:08:56
+publishDate: 2018-08-21 18:08:56
 tags: [Ruby,Concurrency,Thread,Coroutine]
 thumbnail: https://blog.frost.tw/images/2018-08-21-does-the-fiber-have-any-benefit-for-ruby/thumbnail.jpg
 ---

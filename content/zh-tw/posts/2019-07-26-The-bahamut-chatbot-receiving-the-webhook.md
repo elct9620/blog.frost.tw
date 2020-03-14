@@ -1,6 +1,6 @@
 ---
 title: 巴哈姆特 Chatbot 之亂：用 Ruby on Rails 接收 Webhook
-date: 2019-07-26 14:44:28
+publishDate: 2019-07-26 14:44:28
 tags: [Ruby,Ruby on Rails,聊天機器人,Chatbot,巴哈姆特]
 thumbnail: https://blog.frost.tw/images/2019-07-26-the-bahamut-chatbot-receiving-the-webhook/thumbnail.png
 ---

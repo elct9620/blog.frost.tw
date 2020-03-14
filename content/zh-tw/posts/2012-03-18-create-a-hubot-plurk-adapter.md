@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '製作一個 Hubot 的噗浪 Adapter'
-date: 2012-03-18 14:02
+publishDate: 2012-03-18 14:02
 comments: true
 tags: 
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Using Laravel and HHVM on Heroku'
-date: 2014-01-26 06:35
+publishDate: 2014-01-26 06:35
 comments: true
 tags: [PHP, Laravel, Heroku, 心得, PaaS]
 ---

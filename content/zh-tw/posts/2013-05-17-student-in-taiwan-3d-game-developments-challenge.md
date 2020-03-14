@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '台灣學生在 3D 遊戲開發的挑戰'
-date: 2013-05-17 21:23
+publishDate: 2013-05-17 21:23
 comments: true
 tags: 
 ---

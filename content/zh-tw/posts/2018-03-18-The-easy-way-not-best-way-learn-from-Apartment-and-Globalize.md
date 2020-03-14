@@ -1,6 +1,6 @@
 ---
 title: Apartment 與 Globalize 隱藏在方便背後的陷阱
-date: 2018-03-18 23:59:56
+publishDate: 2018-03-18 23:59:56
 tags: [Ruby on Rails,筆記,Gem]
 ---
 

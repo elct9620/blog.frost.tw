@@ -1,6 +1,6 @@
 ---
 title: 在 PostgreSQL 中使用遞迴查詢來找尋父節點
-date: 2017-10-23 18:00:00
+publishDate: 2017-10-23 18:00:00
 tags: [PostgreSQL, 筆記, 資料庫]
 ---
 

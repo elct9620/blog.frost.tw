@@ -1,6 +1,6 @@
 ---
 title: 使用 GitLab CI 整合 SonarQube
-date: 2016-06-12 15:12:10
+publishDate: 2016-06-12 15:12:10
 tags: ["GitLab", "心得", "Android"]
 ---
 

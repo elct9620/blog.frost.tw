@@ -1,6 +1,6 @@
 ---
 title: 關於 Rails 中的 Form Object / Presenter 這些物件該怎麼用（一）
-date: 2019-05-28 23:54:08
+publishDate: 2019-05-28 23:54:08
 tags: [Ruby, 心得, Rails, Presenter, Form Object, Service Object]
 thumbnail: https://blog.frost.tw/images/2019-05-28-how-to-use-form-object-and-others-for-rails/thumbnail.png
 ---

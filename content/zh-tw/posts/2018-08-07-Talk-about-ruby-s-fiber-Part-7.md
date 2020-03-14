@@ -1,6 +1,6 @@
 ---
 title: 淺談 Ruby 的 Fiber（七）
-date: 2018-08-07 19:00:21
+publishDate: 2018-08-07 19:00:21
 tags: [Ruby, Concurrency, Thread]
 thumbnail: https://blog.frost.tw/images/2018-08-07-talk-about-ruby-s-fiber-part-7/thumbnail.jpg
 ---

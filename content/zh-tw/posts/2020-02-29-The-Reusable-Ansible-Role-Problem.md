@@ -1,6 +1,6 @@
 ---
 title: "重複利用的 Ansible Role 難題"
-date: 2020-02-29T17:59:46+08:00
+publishDate: 2020-02-29T17:59:46+08:00
 tags: ["Ansible", "DevOps", "心得", "Rails", "Ruby on Rails"]
 toc: true
 thumbnail: https://blog.frost.tw/images/2020-02-29-the-reusable-ansible-role-problem/thumbnail.jpg

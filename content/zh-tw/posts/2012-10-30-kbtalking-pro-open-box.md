@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'KBtalKing Pro 開箱'
-date: 2012-10-30 08:03
+publishDate: 2012-10-30 08:03
 comments: true
 tags: 
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Heroku Cedar 14 - 用 Docker 客製化環境'
-date: 2015-06-16 06:12
+publishDate: 2015-06-16 06:12
 comments: true
 tags: [Heroku, Docker, 筆記]
 ---

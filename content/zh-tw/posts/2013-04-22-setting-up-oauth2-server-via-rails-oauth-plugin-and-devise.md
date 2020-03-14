@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '使用 Oauth-Plugin 與 Devise 建置 OAuth2 伺服器'
-date: 2013-04-22 10:05
+publishDate: 2013-04-22 10:05
 comments: true
 tags: 
 ---

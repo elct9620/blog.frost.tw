@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Container Summit 2014：未來的雲端'
-date: 2014-12-12 15:09
+publishDate: 2014-12-12 15:09
 comments: true
 tags: [心得, Docker]
 ---

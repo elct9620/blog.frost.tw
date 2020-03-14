@@ -1,6 +1,6 @@
 ---
 title: 關於我怎麼準備人生第一次的履歷和面試
-date: 2018-05-14 00:58:04
+publishDate: 2018-05-14 00:58:04
 tags: [心得]
 thumbnail: https://blog.frost.tw/images/about-my-first-time-interview-and-resume/thumbnail.jpg
 ---

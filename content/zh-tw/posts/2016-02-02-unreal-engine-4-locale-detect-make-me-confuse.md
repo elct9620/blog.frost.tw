@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '微妙的 Unreal Engine 4 語言偵測機制'
-date: 2016-02-02 15:43
+publishDate: 2016-02-02 15:43
 comments: true
 tags: [遊戲, 筆記, UE4]
 ---

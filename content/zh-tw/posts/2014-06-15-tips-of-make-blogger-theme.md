@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '自製 Blogger 佈景的小技巧'
-date: 2014-06-15 06:04
+publishDate: 2014-06-15 06:04
 comments: true
 tags: [CSS, 前端, 心得]
 ---

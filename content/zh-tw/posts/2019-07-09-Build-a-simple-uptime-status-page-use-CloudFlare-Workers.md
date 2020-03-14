@@ -1,6 +1,6 @@
 ---
 title: 用 CloudFlare Workers 製作簡單的 Uptime Status 頁面
-date: 2019-07-09 19:09:08
+publishDate: 2019-07-09 19:09:08
 tags: [CloudFlare, JavaScript, DevOps, Ruby, NoSQL]
 thumbnail: https://blog.frost.tw/images/2019-07-09-build-a-simple-uptime-status-page-use-cloudflare-workers/thumbnail.png
 ---

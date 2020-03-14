@@ -1,6 +1,6 @@
 ---
 title: 管理 Ruby on Rails 外部 Assets 的小技巧
-date: 2018-03-18 16:53:59
+publishDate: 2018-03-18 16:53:59
 tags: [Ruby on Rails,技巧,筆記]
 ---
 

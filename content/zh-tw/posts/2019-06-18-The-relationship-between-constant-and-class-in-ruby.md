@@ -1,6 +1,6 @@
 ---
 title: Ruby 中 Constant 和 Class 的關係
-date: 2019-06-18 19:13:17
+publishDate: 2019-06-18 19:13:17
 tags: ['Ruby', '筆記', 'C']
 thumbnail: https://blog.frost.tw/images/2019-06-18-the-relationship-between-constant-and-class-in-ruby/thumbnail.png
 ---

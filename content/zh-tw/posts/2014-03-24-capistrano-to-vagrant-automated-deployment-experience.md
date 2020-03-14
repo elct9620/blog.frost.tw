@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Capistrano to Vagrant 自動部署心得'
-date: 2014-03-24 09:32
+publishDate: 2014-03-24 09:32
 comments: true
 tags: [Ruby, Rails, Vagrant, 心得, 筆記, Capistrano]
 ---

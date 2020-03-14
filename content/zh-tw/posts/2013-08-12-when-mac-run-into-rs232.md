@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '當 Mac 碰上 RS232'
-date: 2013-08-12 13:40
+publishDate: 2013-08-12 13:40
 comments: true
 tags: [Mac, 網管]
 ---

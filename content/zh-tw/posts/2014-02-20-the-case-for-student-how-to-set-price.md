@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '學生接案的報價技巧'
-date: 2014-02-20 01:25
+publishDate: 2014-02-20 01:25
 comments: true
 tags: [心得, 報價, 技巧]
 ---

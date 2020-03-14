@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'I am learning'
-date: 2013-01-15 15:56
+publishDate: 2013-01-15 15:56
 comments: true
 tags: 
 ---

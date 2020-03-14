@@ -1,6 +1,6 @@
 ---
 title: 快速閱讀頁遊 Unlight 開源後的原始碼
-date: 2019-08-04 18:44:09
+publishDate: 2019-08-04 18:44:09
 tags: [Ruby, Unlight, Game, ActionScript, 筆記]
 thumbnail: https://blog.frost.tw/images/2019-08-04-fast-review-the-unlight-game-source-code/thumbnail.png
 ---

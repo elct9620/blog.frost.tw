@@ -1,6 +1,6 @@
 ---
 title: 用 Ruby 來尋找區網中的 Airplay、Chromecast
-date: 2018-12-25 18:42:06
+publishDate: 2018-12-25 18:42:06
 tags: [Ruby, mDNS, DNS-SD, 心得]
 thumbnail: https://blog.frost.tw/images/2018-12-25-use-ruby-to-find-the-airplay-or-chromecast-device/thumbnail.jpg
 ---

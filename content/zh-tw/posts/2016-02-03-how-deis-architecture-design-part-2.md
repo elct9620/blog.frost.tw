@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Deis 架構分析（二）'
-date: 2016-02-03 15:54
+publishDate: 2016-02-03 15:54
 comments: true
 tags: [Deis, PaaS, 筆記, 雲端, CoreOS]
 ---

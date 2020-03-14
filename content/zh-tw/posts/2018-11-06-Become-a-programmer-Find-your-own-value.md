@@ -1,6 +1,6 @@
 ---
 title: 轉職工程師：尋找自己的價值
-date: 2018-11-06 20:55:40
+publishDate: 2018-11-06 20:55:40
 tags: [Ruby, 程式, 心得]
 thumbnail: https://blog.frost.tw/images/2018-11-06-become-a-programmer-find-your-own-value/thumbnahil.jpg
 ---

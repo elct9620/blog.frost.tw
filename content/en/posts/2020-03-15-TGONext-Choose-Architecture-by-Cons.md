@@ -1,6 +1,6 @@
 ---
 title: "TGONext: Choose Architecture By Cons"
-date: 2020-03-15T03:02:32+08:00
+publishDate: 2020-03-15T03:02:32+08:00
 tags: ["Architecture", "Microservice", "Database", "Experience", "TGONext"]
 toc: true
 series: TGONext

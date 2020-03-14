@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '改變，從現在開始 - COSCUP 2012'
-date: 2012-08-19 21:32
+publishDate: 2012-08-19 21:32
 comments: true
 tags: 
 ---

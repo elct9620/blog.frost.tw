@@ -1,6 +1,6 @@
 ---
 title: 轉職工程師：輸在起跑點
-date: 2018-09-25 23:33:23
+publishDate: 2018-09-25 23:33:23
 tags: [心得,程式,Ruby]
 thumbnail: https://blog.frost.tw/images/2018-09-25-become-a-programmer-lose-at-the-starting-line/thumbnail.jpg
 ---

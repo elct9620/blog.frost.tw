@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '網站開發之路 - Vim (2)'
-date: 2012-04-01 21:54
+publishDate: 2012-04-01 21:54
 comments: true
 tags: 
 ---

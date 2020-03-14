@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'V-Play Engine 與 Corona SDK 的簡易比較'
-date: 2013-09-18 14:46
+publishDate: 2013-09-18 14:46
 comments: true
 tags: [JavaScript, Lua, 遊戲, SDK, 心得]
 ---

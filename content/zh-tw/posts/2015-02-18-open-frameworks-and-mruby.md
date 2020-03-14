@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Open Frameworks 與 MRuby'
-date: 2015-02-18 11:15
+publishDate: 2015-02-18 11:15
 comments: true
 tags: [C++, 心得, 筆記, MRuby, OpenFrameworks]
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '用 Zephir 寫自己的 PHP Extension'
-date: 2013-10-05 15:30
+publishDate: 2013-10-05 15:30
 comments: true
 tags: [PHP, C, Zephir, 網站開發]
 ---

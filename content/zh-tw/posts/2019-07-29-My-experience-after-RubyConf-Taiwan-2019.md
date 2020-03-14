@@ -1,6 +1,6 @@
 ---
 title: RubyConf Taiwan 2019 會後感想、議程概覽
-date: 2019-07-29 15:03:01
+publishDate: 2019-07-29 15:03:01
 tags: [RubyConfTW, Ruby, 感想, 心得]
 thumbnail: https://blog.frost.tw/images/2019-07-29-my-experience-after-rubyconf-taiwan-2019/thumbnail.jpg
 ---

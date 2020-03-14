@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '在 SITCON 2015 之後'
-date: 2015-03-08 06:14
+publishDate: 2015-03-08 06:14
 comments: true
 tags: [心得, SITCON]
 ---

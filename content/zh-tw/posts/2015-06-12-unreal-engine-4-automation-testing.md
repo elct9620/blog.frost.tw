@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Unreal Engine 4 的自動化測試'
-date: 2015-06-12 07:26
+publishDate: 2015-06-12 07:26
 comments: true
 tags: [UnitTest, 筆記, UnrealEngine]
 ---

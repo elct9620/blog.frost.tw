@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Rails Girls 4 活動感想'
-date: 2014-08-31 13:42
+publishDate: 2014-08-31 13:42
 comments: true
 tags: [Ruby, Rails, 心得]
 ---

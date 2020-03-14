@@ -1,6 +1,6 @@
 ---
 title: Stripe 的 Idempotency Key 設計機制
-date: 2017-10-30 22:46:43
+publishDate: 2017-10-30 22:46:43
 tags: [Ruby, API, 心得]
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'PHPConf 2013 會後心得'
-date: 2013-10-05 15:30
+publishDate: 2013-10-05 15:30
 comments: true
 tags: [生活, 心得, PHPConf]
 ---

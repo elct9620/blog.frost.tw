@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Zigfu 跨平台的 Kinect SDK'
-date: 2014-09-13 04:02
+publishDate: 2014-09-13 04:02
 comments: true
 tags: [Kinect, 遊戲, Unity3D]
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Canon Powershot S100 & iBuddy 隨身AP 開箱'
-date: 2012-09-04 19:49
+publishDate: 2012-09-04 19:49
 comments: true
 tags: 
 ---

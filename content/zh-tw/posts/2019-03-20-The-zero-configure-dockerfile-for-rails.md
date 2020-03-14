@@ -1,6 +1,6 @@
 ---
 title: 如何在沒有任何設定下產生 Rails 的 Docker Image
-date: 2019-03-20 23:37:22
+publishDate: 2019-03-20 23:37:22
 tags: [Ruby, Docker, Rails, Gem]
 thumbnail: https://blog.frost.tw/images/2019-03-20-the-zero-configure-dockerfile-for-rails/thumbnail.jpg
 ---

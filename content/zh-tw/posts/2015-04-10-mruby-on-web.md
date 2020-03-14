@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'mRuby on Web'
-date: 2015-04-10 14:58
+publishDate: 2015-04-10 14:58
 comments: true
 tags: [Ruby, 心得, 筆記, MRuby]
 ---

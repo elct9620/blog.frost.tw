@@ -1,6 +1,6 @@
 ---
 title: 自由的 Ruby 類別（一）
-date: 2017-10-22 23:15:03
+publishDate: 2017-10-22 23:15:03
 tags: [Ruby,心得]
 ---
 

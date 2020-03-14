@@ -1,6 +1,6 @@
 ---
 title: 如何在國外演講
-date: 2018-06-19 19:30:45
+publishDate: 2018-06-19 19:30:45
 tags: [心得,RubyKaigi]
 thumbnail: https://blog.frost.tw//images/2018-06-19-how-do-i-prepare-a-speech/thumbnail.jpg
 ---

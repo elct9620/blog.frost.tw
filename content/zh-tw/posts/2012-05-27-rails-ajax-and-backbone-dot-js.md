@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Rails - Ajax and Backbone.JS'
-date: 2012-05-27 18:54
+publishDate: 2012-05-27 18:54
 comments: true
 tags: 
 ---

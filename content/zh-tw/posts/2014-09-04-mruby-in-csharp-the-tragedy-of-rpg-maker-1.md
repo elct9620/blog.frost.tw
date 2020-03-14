@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'MRuby in C# - 因 RPG Maker 的慘劇（一）'
-date: 2014-09-04 03:42
+publishDate: 2014-09-04 03:42
 comments: true
 tags: [Ruby, C#, 心得, 筆記]
 ---

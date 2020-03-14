@@ -1,6 +1,6 @@
 ---
 title: 使用 Turbolinks 時 Google Analytics 並沒有正確運作
-date: 2018-03-24 10:28:21
+publishDate: 2018-03-24 10:28:21
 tags: [筆記,Ruby on Rails,JavaScript]
 ---
 

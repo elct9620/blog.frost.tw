@@ -1,6 +1,6 @@
 ---
 title: Ruby World Conference 2019 見聞
-date: 2019-11-18 20:52:40
+publishDate: 2019-11-18 20:52:40
 tags: [Ruby,Ruby World Conference,Ruby on Rails,心得]
 ---
 

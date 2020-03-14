@@ -1,6 +1,6 @@
 ---
 title: Ruby 中該如何 Raise 一個錯誤
-date: 2018-01-09 17:28:13
+publishDate: 2018-01-09 17:28:13
 tags: [Ruby, 筆記]
 ---
 

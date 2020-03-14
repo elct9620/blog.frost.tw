@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '2014 新一代設計展心得'
-date: 2014-05-18 03:27
+publishDate: 2014-05-18 03:27
 comments: true
 tags: [心得]
 ---

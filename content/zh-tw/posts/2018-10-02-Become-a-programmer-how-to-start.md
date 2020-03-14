@@ -1,6 +1,6 @@
 ---
 title: 轉職工程師：要學什麼才好？
-date: 2018-10-02 23:26:53
+publishDate: 2018-10-02 23:26:53
 tags: [心得,程式,Ruby]
 thumbnail: https://blog.frost.tw/images/2018-10-02-become-a-programmer-how-to-start/thumbnail.jpg
 ---

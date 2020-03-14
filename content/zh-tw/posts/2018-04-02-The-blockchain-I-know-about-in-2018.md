@@ -1,6 +1,6 @@
 ---
 title: 在 2018 年我所知道的區塊鏈
-date: 2018-04-02 11:08:28
+publishDate: 2018-04-02 11:08:28
 tags: [區塊鏈,心得]
 thumbnail: https://blog.frost.tw/images/the-blockchain-i-know-about-in-2018/thumbnail.jpg
 ---

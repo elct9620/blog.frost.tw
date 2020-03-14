@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '人生RPG - 19等'
-date: 2012-06-17 12:51
+publishDate: 2012-06-17 12:51
 comments: true
 tags: 
 ---

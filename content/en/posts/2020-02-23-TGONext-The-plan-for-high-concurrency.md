@@ -1,6 +1,6 @@
 ---
 title: "TGONext: The plan for high concurrency "
-date: 2020-02-23T15:54:37+08:00
+publishDate: 2020-02-23T15:54:37+08:00
 tags: [Experience, TGONext, Architecture]
 series: TGONext
 toc: true

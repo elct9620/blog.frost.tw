@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Unreal Engine 4 collaboration with SVN'
-date: 2014-04-07 07:16
+publishDate: 2014-04-07 07:16
 comments: true
 tags: [SVN, 遊戲, 心得, VCS]
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '我的網站開發之路'
-date: 2012-03-25 14:38
+publishDate: 2012-03-25 14:38
 comments: true
 tags: 
 ---

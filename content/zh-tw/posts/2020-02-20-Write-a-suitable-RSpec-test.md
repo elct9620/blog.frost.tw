@@ -1,6 +1,6 @@
 ---
 title: 撰寫一個合適的 RSpec 測試
-date: 2020-02-20 00:26:16
+publishDate: 2020-02-20 00:26:16
 tags: [Ruby, RSpec, 心得, BDD, TDD, Rails]
 slug: Write-a-suitable-RSpec-test
 thumbnail: https://blog.frost.tw/images/2020-02-20-write-a-suitable-rspec-test/thumbnail.jpg

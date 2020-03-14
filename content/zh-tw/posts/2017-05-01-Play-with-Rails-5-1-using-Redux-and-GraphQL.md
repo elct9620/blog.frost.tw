@@ -1,6 +1,6 @@
 ---
 title: 用 Redux 跟 GraphQL 玩 Rails 5.1
-date: 2017-05-01 23:09:40
+publishDate: 2017-05-01 23:09:40
 tags: [Rails, Redux, GraphQL]
 ---
 

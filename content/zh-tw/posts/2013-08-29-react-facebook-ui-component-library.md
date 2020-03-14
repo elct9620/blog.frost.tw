@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'React - Facebook 的 UI 元件 Library'
-date: 2013-08-29 04:39
+publishDate: 2013-08-29 04:39
 comments: true
 tags: [JavaScript, CoffeeScript, UI, 前端, 界面]
 ---

@@ -1,6 +1,6 @@
 ---
 title: 淺談在 Google Cloud Platform 讓 Ruby on Rails 實現簡單的 Immutable Infrastructure 部署
-date: 2020-01-07 19:18:46
+publishDate: 2020-01-07 19:18:46
 tags: [Ruby, Ruby on Rails, GCP, DevOps, Ansible, Packer]
 thumbnail: https://blog.frost.tw/images/2020-01-07-an-overview-of-deploy-ruby-on-rails-to-google-cloud-platform-simple-immutable-infrastructure/thumbnail.jpg
 ---

@@ -1,6 +1,6 @@
 ---
 title: Rails 串接 ProxmoxVE API 自動化教學用虛擬機分配
-date: 2019-02-19 19:41:59
+publishDate: 2019-02-19 19:41:59
 tags: [Ruby, Proxmox VE, 虛擬化, Rails]
 thumbnail: https://blog.frost.tw/images/2019-02-19-automatic-vm-allocate-using-proxmox-ve-and-rails/thumbnail.jpg
 ---

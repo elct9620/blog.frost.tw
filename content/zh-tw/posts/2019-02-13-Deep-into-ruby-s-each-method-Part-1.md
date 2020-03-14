@@ -1,6 +1,6 @@
 ---
 title: 探索 Ruby 的 each 方法（一）
-date: 2019-02-13 01:00:23
+publishDate: 2019-02-13 01:00:23
 tags: [Ruby,心得,程式,Enumerable,Enumerator]
 thumbnail: https://blog.frost.tw/images/2019-02-13-deep-into-ruby-s-each-method-part-1/thumbnail.jpg
 ---

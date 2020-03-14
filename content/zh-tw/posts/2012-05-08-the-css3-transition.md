@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'The CSS3 Transition'
-date: 2012-05-08 21:02
+publishDate: 2012-05-08 21:02
 comments: true
 tags: 
 ---

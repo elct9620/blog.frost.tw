@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Firefox OS App Days 2013'
-date: 2013-01-27 13:55
+publishDate: 2013-01-27 13:55
 comments: true
 tags: 
 ---

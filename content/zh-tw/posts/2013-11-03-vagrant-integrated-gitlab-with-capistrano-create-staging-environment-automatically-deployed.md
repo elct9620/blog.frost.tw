@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '用 Vagrant 整合 GitLab 與 Capistrano 做 Staging 環境自動部署'
-date: 2013-11-03 01:38
+publishDate: 2013-11-03 01:38
 comments: true
 tags: [Ruby, Rails, Vagrant, GitLab, 心得, 筆記, Capistrano]
 ---

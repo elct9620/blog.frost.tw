@@ -1,6 +1,6 @@
 ---
 title: 部署你的第一個 Ruby on Rails 網站（三）
-date: 2018-03-27 21:30:15
+publishDate: 2018-03-27 21:30:15
 tags: [教學,DevOps,Ruby on Rails]
 thumbnail: https://blog.frost.tw/images/getting-started-deploy-your-ruby-on-rails-part-3/thumbnail.png
 ---

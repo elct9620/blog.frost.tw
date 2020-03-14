@@ -1,6 +1,6 @@
 ---
 title: 在 RubyKaigi 2017 年後的反思
-date: 2017-10-09 16:24:58
+publishDate: 2017-10-09 16:24:58
 tags: [心得, Ruby]
 ---
 

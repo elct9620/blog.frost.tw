@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '概觀響應式網頁設計'
-date: 2014-02-13 11:10
+publishDate: 2014-02-13 11:10
 comments: true
 tags: [Web, 經驗, 設計, RWD]
 ---

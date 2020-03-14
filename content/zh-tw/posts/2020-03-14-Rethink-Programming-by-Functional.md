@@ -1,6 +1,6 @@
 ---
 title: 從 Functional Programming 重新思考程式設計
-date: 2020-03-14T22:02:23+08:00
+publishDate: 2020-03-14T22:02:23+08:00
 tags: ["Functional", "C", "Ruby", "心得"]
 toc: true
 series: Functional

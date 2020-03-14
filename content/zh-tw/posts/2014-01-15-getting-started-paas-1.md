@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'PaaS 入門指南（一）'
-date: 2014-01-15 03:32
+publishDate: 2014-01-15 03:32
 comments: true
 tags: [介紹, 雲端, PaaS, 入門]
 ---

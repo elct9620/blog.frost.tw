@@ -1,6 +1,6 @@
 ---
 title: 客製化你樹莓派上運行的 Linux
-date: 2018-10-09 21:29:53
+publishDate: 2018-10-09 21:29:53
 tags: [物聯網,筆記,IoT,Linux,Ruby]
 thumbnail: https://blog.frost.tw/images/2018-10-09-customize-a-linux-for-your-raspberrypi/thumbnail.jpg
 ---
