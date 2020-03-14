@@ -1,0 +1,168 @@
+<!doctype html><html lang=zh-tw><head><title>從 Functional Programming 重新思考程式設計 - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="因為時間的關係錯過了實體課程，不過利用 228 連假把工作上用得到的函數式程式設計這門課補完。
+在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。"><meta name=created content="2020-03-14T00:00:00+0000"><meta name=modified content="2020-03-14T22:02:23+0800"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="從 Functional Programming 重新思考程式設計"><meta property="og:url" content="https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"從 Functional Programming 重新思考程式設計","datePublished":"2020-03-14T00:00:00Z","dateModified":"2020-03-14T22:02:23+08:00","url":"https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/","description":"因為時間的關係錯過了實體課程，不過利用 228 連假把工作上用得到的函數式程式設計這門課補完。\n在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。\n","keywords":["Functional","C","Ruby","心得"],"image":"https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/","name":"從 Functional Programming 重新思考程式設計","image":"https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/thumbnail.jpg"}}]}]</script><link rel=stylesheet href=/css/styls.css><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2020-03-14T22:02:23+0800 class=article__time--header role=time>Feb.14</time><h1 class=article__title>從 Functional Programming 重新思考程式設計</h1></header><div class=article__entry><nav class=translation></nav><aside class=article__toc><header class=article__toc-title><h3>大綱</h3></header><nav role=menuitem><nav id=TableOfContents><ul><li><a href=#the-flexible-design>更彈性的設計</a></li><li><a href=#rethink-the-method-design>重新思考方法的設計</a></li><li><a href=#rethink-the-definition-of-state>重新思考狀態的定義</a></li><li><a href=#impression>感想</a></li></ul></nav></nav><hr></aside><p>因為時間的關係錯過了實體課程，不過利用 228 連假把<a href="https://campus.5xruby.tw/?affcode=141380_ht16jam9">工作上用得到的函數式程式設計</a>這門課補完。</p><p>在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。</p><h2 id=the-flexible-design>更彈性的設計</h2><p>以我工作上常用的 Ruby 作為例子我們可以用一個稍微極端的例子來看</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># 來源資料</span>
+<span class=n>users</span> <span class=o>=</span> <span class=o>[</span>
+  <span class=o>[</span><span class=mi>1</span><span class=p>,</span> <span class=s1>&#39;Jimmy&#39;</span><span class=p>,</span> <span class=s1>&#39;male&#39;</span><span class=p>,</span> <span class=mi>180</span><span class=p>,</span> <span class=mi>72</span><span class=p>,</span> <span class=mi>70</span><span class=o>]</span><span class=p>,</span>
+  <span class=o>[</span><span class=mi>2</span><span class=p>,</span> <span class=s1>&#39;Mary&#39;</span><span class=p>,</span> <span class=s1>&#39;female&#39;</span><span class=p>,</span> <span class=mi>160</span><span class=p>,</span> <span class=mi>50</span><span class=p>,</span> <span class=mi>65</span><span class=o>]</span><span class=p>,</span>
+  <span class=o>[</span><span class=mi>3</span><span class=p>,</span> <span class=s1>&#39;Gary&#39;</span><span class=p>,</span> <span class=kp>nil</span><span class=p>,</span> <span class=mi>166</span><span class=p>,</span> <span class=mi>80</span><span class=p>,</span> <span class=mi>95</span><span class=o>]</span><span class=p>,</span>
+  <span class=o>[</span><span class=mi>4</span><span class=p>,</span> <span class=s1>&#39;Bob&#39;</span><span class=p>,</span> <span class=s1>&#39;male&#39;</span><span class=p>,</span> <span class=mi>160</span><span class=p>,</span> <span class=mi>75</span><span class=p>,</span> <span class=mi>90</span><span class=o>]</span>
+<span class=o>]</span>
+
+<span class=c1># Curry 化的 Function</span>
+<span class=n>gender_is</span> <span class=o>=</span> <span class=o>-&gt;</span><span class=p>(</span><span class=n>gender</span><span class=p>,</span> <span class=p>(</span><span class=n>_</span><span class=p>,</span> <span class=n>_</span><span class=p>,</span> <span class=n>item</span><span class=p>,</span> <span class=o>*</span><span class=p>))</span> <span class=p>{</span> <span class=n>gender</span> <span class=o>==</span> <span class=n>item</span> <span class=p>}</span><span class=o>.</span><span class=n>curry</span>
+<span class=n>waistline_less_than</span> <span class=o>=</span> <span class=o>-&gt;</span><span class=p>(</span><span class=n>max</span><span class=p>,</span> <span class=p>(</span><span class=o>*</span><span class=n>_args</span><span class=p>,</span> <span class=n>waistline</span><span class=p>))</span> <span class=p>{</span> <span class=n>max</span> <span class=o>&gt;</span> <span class=n>waistline</span> <span class=p>}</span><span class=o>.</span><span class=n>curry</span>
+
+<span class=n>health_users</span> <span class=o>=</span>
+  <span class=n>users</span>
+  <span class=o>.</span><span class=n>filter</span> <span class=k>do</span> <span class=o>|</span><span class=n>user</span><span class=o>|</span>
+    <span class=c1># 利用語言特性跟 Curry 動態設定條件</span>
+    <span class=k>case</span> <span class=n>user</span>
+    <span class=k>when</span> <span class=n>gender_is</span><span class=o>.</span><span class=p>(</span><span class=s1>&#39;male&#39;</span><span class=p>)</span> <span class=k>then</span> <span class=n>waistline_less_than</span><span class=o>.</span><span class=p>(</span><span class=mi>90</span><span class=p>)</span>
+    <span class=k>when</span> <span class=n>gender_is</span><span class=o>.</span><span class=p>(</span><span class=s1>&#39;female&#39;</span><span class=p>)</span> <span class=k>then</span> <span class=n>waistline_less_than</span><span class=o>.</span><span class=p>(</span><span class=mi>80</span><span class=p>)</span>
+    <span class=k>else</span> <span class=o>-&gt;</span><span class=p>(</span><span class=n>_</span><span class=p>)</span> <span class=p>{</span> <span class=kp>true</span> <span class=p>}</span>
+    <span class=k>end</span><span class=o>.</span><span class=p>(</span><span class=n>user</span><span class=p>)</span>
+  <span class=k>end</span>
+
+<span class=c1># 因為 Bob 腰圍大於 90 因此被篩選掉</span>
+<span class=n>pp</span> <span class=n>health_users</span>
+</code></pre></td></tr></table></div></div><p>以 Ruby 來說 Matz（Ruby 語言之父）曾在他的<a href=https://www.tenlong.com.tw/products/9789863473312>松本行弘談程式世界的未來</a>這本書中提過 Ruby 的一些語法是受到 Lisp 語言的影響，也因此在 Ruby 中保有了一些函數式語言的特性。</p><p>實際上最實用的是 Ruby 在迭代器（Enumerator）提供了非常多函數式語言才有的方法，像是 <code>map</code>、<code>filter</code> 這類都能讓我們很輕鬆的篩選跟處理資料。</p><h2 id=rethink-the-method-design>重新思考方法的設計</h2><p>在函數式程式設計中，以課程裡面使用的 Elixir 作為例子，我們可以利用 Pattern Matching 的特性設計出像這樣的程式碼：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-elixir data-lang=elixir><span class=n>defmodule</span> <span class=nc>Server.Connection</span> <span class=n>do</span>
+  <span class=c1># ...</span>
+
+  <span class=n>def</span> <span class=n>input</span><span class=p>(</span><span class=s2>&#34;exit&#34;</span><span class=p>,</span> <span class=n>socket</span><span class=p>),</span> <span class=ss>do</span><span class=p>:</span> <span class=ss>:gen_tcp</span><span class=o>.</span><span class=n>close</span><span class=p>(</span><span class=n>socket</span><span class=p>)</span>
+  <span class=n>def</span> <span class=n>input</span><span class=p>(</span><span class=s2>&#34;help&#34;</span><span class=p>,</span> <span class=n>socket</span><span class=p>),</span> <span class=ss>do</span><span class=p>:</span> <span class=n>socket</span> <span class=o>|&gt;</span> <span class=nc>Server.Helper</span><span class=o>.</span><span class=n>print</span>
+  <span class=n>def</span> <span class=n>input</span><span class=p>(</span><span class=n>action</span><span class=p>,</span> <span class=n>socket</span><span class=p>),</span> <span class=ss>do</span><span class=p>:</span> <span class=n>socket</span> <span class=o>|&gt;</span> <span class=nc>Server.Handler</span><span class=o>.</span><span class=n>process</span><span class=p>(</span><span class=n>action</span><span class=p>)</span>
+<span class=n>end</span>
+</code></pre></td></tr></table></div></div><p>如果是在我們熟悉的物件導向語言處理的話，就會變成類似像這樣的程式碼</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>Server</span><span class=o>::</span><span class=no>Connection</span>
+  <span class=c1># ...</span>
+
+  <span class=k>def</span> <span class=nf>input</span><span class=p>(</span><span class=n>action</span><span class=p>)</span>
+    <span class=k>case</span> <span class=n>action</span>
+    <span class=k>when</span> <span class=s2>&#34;exit&#34;</span> <span class=k>then</span> <span class=vi>@socket</span><span class=o>.</span><span class=n>close</span>
+    <span class=k>when</span> <span class=s2>&#34;help&#34;</span> <span class=k>then</span> <span class=no>Server</span><span class=o>::</span><span class=no>Helper</span><span class=o>.</span><span class=n>print_to</span><span class=p>(</span><span class=vi>@socket</span><span class=p>)</span>
+    <span class=k>else</span> <span class=vi>@handler</span><span class=o>.</span><span class=n>process</span><span class=p>(</span><span class=n>action</span><span class=p>)</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>有趣的地方在於，假設我們想要在 Ruby 裡面拓展更多「指令」的話就會讓 <code>#input</code> 這個方法不斷地增長，最後我們會變成需要設計一個像是 Registry（註冊器）來管理這些指令。</p><p>但是在支援 Pattern Matching 的函數式語言裡面，我們只需要將這些方法加以分類就可以很輕鬆的拓展出來，也因此像是在 Elixir 這類語言我們幾乎不需要使用到判斷式就能決定要做什麼，這也能讓程式碼在另一種形式上變得簡潔。</p><blockquote><p>以 Ruby 的語法檢查器 Rubocop 來說，一個方法基本上建議上只能有 10 ~ 15 行的內容，要符合一些最佳實踐的話通常會需要拆分很多方法跟物件來處理，也因此我常跟同事說我們應該試著在呼叫之前就做好判斷，讓每一個方法都明確知道自己該做些什麼。</p></blockquote><h2 id=rethink-the-definition-of-state>重新思考狀態的定義</h2><p>函數式語言之所以會被叫做 Functional 某方面來說也是跟數學非常有關係的，以數學的函式來說 <code>f(x) = x + 1</code> 其實也只會有輸入跟輸出兩種情況，也因此在函數式語言比較難實現出狀態這樣的概念。</p><p>如果我在 Ruby 想將一個資料（狀態）傳遞給下一個處理，在沒有應用物件的情況下就會需要像這樣寫：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>get_username</span><span class=p>(</span><span class=n>parse_json</span><span class=p>(</span><span class=n>fetch</span><span class=p>(</span><span class=n>url</span><span class=p>)))</span>
+</code></pre></td></tr></table></div></div><p>展開之後會像是這樣：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>response</span> <span class=o>=</span> <span class=n>fetch</span><span class=p>(</span><span class=n>url</span><span class=p>)</span>
+<span class=n>parsed_json</span> <span class=o>=</span> <span class=n>parse_json</span><span class=p>(</span><span class=n>response</span><span class=p>)</span>
+<span class=n>username</span> <span class=o>=</span> <span class=n>get_username</span><span class=p>(</span><span class=n>parsed_json</span><span class=p>)</span>
+</code></pre></td></tr></table></div></div><p>但實際上以物件導向的方式來處理的話我們會用 Instance Variable（實例變數）來保存狀態：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>User</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>url</span><span class=p>)</span>
+    <span class=vi>@url</span> <span class=o>=</span> <span class=n>url</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nf>username</span>
+    <span class=n>parsed_json</span><span class=o>.</span><span class=n>fetch</span><span class=p>(</span><span class=ss>:username</span><span class=p>)</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nf>parsed_json</span>
+    <span class=vi>@parsed_json</span> <span class=o>||=</span> <span class=no>JSON</span><span class=o>.</span><span class=n>parse</span><span class=p>(</span><span class=n>response</span><span class=p>)</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nf>response</span>
+    <span class=vi>@responsd</span> <span class=o>||=</span> <span class=no>Net</span><span class=o>::</span><span class=no>HTTP</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=vi>@url</span><span class=p>)</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=no>User</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=n>url</span><span class=p>)</span><span class=o>.</span><span class=n>username</span>
+</code></pre></td></tr></table></div></div><p>透過這樣的方式使用者就能夠透過很簡單的方式直接的取得所需的資訊，而在 Elixir 中則會像這樣實現：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-elixir data-lang=elixir><span class=n>defmodule</span> <span class=nc>User</span> <span class=n>do</span>
+  <span class=n>def</span> <span class=n>username</span><span class=p>(</span><span class=n>user</span><span class=p>),</span> <span class=ss>do</span><span class=p>:</span> <span class=n>user</span> <span class=o>|&gt;</span> <span class=nc>Map</span><span class=o>.</span><span class=n>fetch</span><span class=p>(</span><span class=ss>:username</span><span class=p>)</span>
+  <span class=n>def</span> <span class=n>load</span><span class=p>(</span><span class=n>url</span><span class=p>),</span> <span class=ss>do</span><span class=p>:</span> <span class=nc>HTTP</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>url</span><span class=p>)</span> <span class=o>|&gt;</span> <span class=nc>JSON</span><span class=o>.</span><span class=n>parse</span>
+<span class=n>end</span>
+
+<span class=p>{</span><span class=ss>:ok</span><span class=p>,</span> <span class=n>username</span> <span class=p>}</span> <span class=o>=</span> <span class=nc>User</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>url</span><span class=p>)</span> <span class=o>|&gt;</span> <span class=nc>User</span><span class=o>.</span><span class=n>username</span>
+</code></pre></td></tr></table></div></div><p>因為沒有內部的狀態保存，所以通常會將狀態透過參數傳遞，雖然無法保存但是透過語言的特性依舊能夠恰當處理，甚至我們需要反思封裝狀態這件事情是否是在多數情況下「必要」的。</p><p>有趣的是，我們平常享受 Ruby 的物件導向特性讓我們可以透過物件來保存狀態，但是在 CRuby 或者 mruby 每次處理也是需要將狀態當作參數傳遞進去的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=c1>// mruby
+</span><span class=c1></span>
+<span class=n>mrb_value</span> <span class=nf>user_get_name</span><span class=p>(</span><span class=n>mrb_state</span><span class=o>*</span> <span class=n>mrb</span><span class=p>,</span> <span class=n>mrb_value</span> <span class=n>self</span><span class=p>)</span> <span class=p>{</span>
+  <span class=k>return</span> <span class=n>mrb_str_new_cstr</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=s>&#34;Username&#34;</span><span class=p>);</span>
+<span class=p>}</span>
+
+<span class=kt>void</span> <span class=nf>init_user</span><span class=p>(</span><span class=n>mrb_state</span><span class=o>*</span> <span class=n>mrb</span><span class=p>)</span> <span class=p>{</span>
+  <span class=k>struct</span> <span class=n>RClass</span> <span class=o>*</span><span class=n>klass</span> <span class=o>=</span> <span class=n>mrb_define_class</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=s>&#34;User&#34;</span><span class=p>,</span> <span class=n>mrb</span><span class=o>-&gt;</span><span class=n>object_class</span><span class=p>);</span>
+  <span class=n>mrb_define_method</span><span class=p>(</span><span class=n>mrb</span><span class=p>,</span> <span class=n>klass</span><span class=p>,</span> <span class=s>&#34;username&#34;</span><span class=p>,</span> <span class=n>user_get_name</span><span class=p>,</span> <span class=n>MRB_ARGS_NONE</span><span class=p>());</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><blockquote><p>不過 C 語言不是函數式語言，方法頂多是一種指標而已。只是在非物件導向語言裡面，保存狀態通常都是透過參數傳遞。</p></blockquote><p>像這樣去接觸不同的語言了且背後的設計是一件很有趣的事情，尤其是函數式語言在思考上跟物件導向語言差異很大的時候更能夠幫助我們反思為什麼要這樣設計，原本自己在物件導向語言的設計是否還有沒考慮到的地方。</p><h2 id=impression>感想</h2><p>第一次接觸 Elixir 跟函數式語言應該也是在一兩年前，也是因為課程的<a href=https://taian.su/>泰安</a>老師在五倍紅寶石上課時介紹給我的。不過當時雖然也會寫 JavaScript 而且常常看到一些對於 Functional Programming 相關的文章，不過實際上對函數式程式設計還是處於一知半解的狀態。</p><p>在課程中其實也有提到以 JavaScript 作為範例其實有點不適合，畢竟有一些特性跟功能以一個函數式語言來說還不太足夠。所以在上完這次的課程之後，原本寫起來覺得很卡的 Elixir 在正確理解一些正確的特性之後，就能很順利地使用。</p><p>也趁著還有印象的時候趕快用 Elixir 和 Ruby 搭配寫了一款 <a href=https://github.com/elct9620/elixir-mud>MUD</a> 類型遊戲練習，如果對寫 JavaScript 無法寫得乾淨有困擾或者想多善用一些語言特性，是很推薦試試看這門課程的。</p><p>最後補上 MUD 遊戲製作中的畫面：</p><p><img src=/images/2020-03-14-rethink-programming-by-functional/mud.gif alt="MUD 有限狀態機"></p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Functional/>Functional</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/C/>C</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li></ul></footer><aside class=related><header class=related__header><h3 class=related__title>相關文章</h3></header><ul><li class=related__item><a class=related__link href=/posts/2020/02/20/Write-a-suitable-RSpec-test/>撰寫一個合適的 RSpec 測試</a></li><li class=related__item><a class=related__link href=/posts/2019/11/18/Ruby-World-Conference-2019-Experience/>Ruby World Conference 2019 見聞</a></li><li class=related__item><a class=related__link href=/posts/2019/07/29/My-experience-after-RubyConf-Taiwan-2019/>RubyConf Taiwan 2019 會後感想、議程概覽</a></li><li class=related__item><a class=related__link href=/posts/2019/06/18/The-relationship-between-constant-and-class-in-ruby/>Ruby 中 Constant 和 Class 的關係</a></li><li class=related__item><a class=related__link href=/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/>關於 Rails 中的 Form Object / Presenter 這些物件該怎麼用（一）</a></li></ul></aside></div></article><div class=adv><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-2844969736316510 data-ad-slot=5530952976 data-ad-format=auto></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><section id=comment class=comment-box><h1 class=comment-box__title>留言</h1><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"revo-skill-frost"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div></section></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank rel=noreferrer>蒼時弦也</a>. All right reversed.</div></footer><script src=/js/app.min.e979702d4c2a76dd5e32acda7647b733e4959a8621df075338d00d2c6837e87a.js></script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+js.defer=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><div class=loading></div></body></html>

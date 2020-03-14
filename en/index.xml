@@ -1,7 +1,110 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sat, 29 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>The Reusable Ansible Role Problem</title><link>https://blog.frost.tw/en/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</link><category>
-Ansible,DevOps,Experience,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>About 1 year ago, I build a &lt;a href="https://www.ansible.com/">Ansible&lt;/a> playbook for the customers of &lt;a href="https://5xruby.tw">5xRuby&lt;/a>.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 15 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: Choose Architecture By Cons</title><link>https://blog.frost.tw/en/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</link><category>
+Architecture,Microservice,Database,Experience,TGONext</category><pubDate>Sun, 15 Mar 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</guid><description>&lt;p>This meetup we review previous discussions and switch to the next topic. Based on the high concurrency we talk about the last meetup, we simulate an architecture and evolution it.&lt;/p></description><content:encoded>&lt;p>This meetup we review previous discussions and switch to the next topic. Based on the high concurrency we talk about the last meetup, we simulate an architecture and evolution it.&lt;/p>
+&lt;h2 id="the-trap-inside-the-suggested-way">The trap inside the suggested way&lt;/h2>
+&lt;p>At first, we have a monolithic application put web server and database in the same machine.&lt;/p>
+&lt;pre>&lt;code>+-----------------------+
+|+---------------------+|
+|| ||
+|| Web Server ||
+|| ||
+|+---------------------+|
+|+---------------------+|
+|| ||
+|| Database ||
+|| ||
+|+---------------------+|
++-----------------------+
+&lt;/code>&lt;/pre>&lt;p>When the requests are growing, we will split the web server and database to the standalone machine.&lt;/p>
+&lt;pre>&lt;code>+---------------------+ +---------------------+
+| | | |
+| Web Server &amp;lt;----------&amp;gt; Database |
+| | | |
++---------------------+ +---------------------+
+&lt;/code>&lt;/pre>&lt;p>When we feel it slow down again, we put a &amp;ldquo;cache server&amp;rdquo; to our architecture.
+For example, a cache server is added between the web server and database server.&lt;/p>
+&lt;pre>&lt;code>+---------------------+ +---------------------+ +---------------------+
+| | | | | |
+| Web Server &amp;lt;------&amp;gt; Cache Server &amp;lt;------&amp;gt; Database |
+| | | | | |
++---------------------+ +---------------------+ +---------------------+
+&lt;/code>&lt;/pre>&lt;p>When our cache crashed. The service will recovery after reboot or not?&lt;/p>
+&lt;blockquote>
+&lt;p>It may unable to recovery because the cache server lost everything when it restarts, and the webserver still sends a large number of requests to the cache server but passthrough to the database.&lt;/p>
+&lt;/blockquote>
+&lt;p>This is the &amp;ldquo;avalanche effect&amp;rdquo;, one of our servers is failed and cause others to become unstable and finally let all service down.&lt;/p>
+&lt;p>Our mentor suggests to didn&amp;rsquo;t add the cache server before our team member knows the pros and cons of the cache server, and know what happens the library or framework they are using.&lt;/p>
+&lt;h2 id="will-microservice-rescue-us">Will microservice rescue us?&lt;/h2>
+&lt;p>If we want to prevent the &amp;ldquo;avalanche effect&amp;rdquo;, you may associate it to the microservice which is popular in recent years.&lt;/p>
+&lt;p>The microservice is designed for &amp;ldquo;decentralize&amp;rdquo; which means each component can redeploy easily and work independently.&lt;/p>
+&lt;p>But it is too ideal, our service usually has some dependency on another service. For example, the webserver usually depends on the database.&lt;/p>
+&lt;p>This is another point we have to consider when we design an architecture.&lt;/p>
+&lt;p>In nowadays, the most popular way is to manage the dependency problem in microservice is to create a &amp;ldquo;sidecar&amp;rdquo; to control all community between components. The sidecar can know other services is alive or ready and report the status of the service which is managed.&lt;/p>
+&lt;p>Our mentor tells us an architecture solution usually depends on a problem that is designed to resolve it.&lt;/p>
+&lt;p>Another point is to find a problem in a microservice system, we have to know which service caused the issue. That means a microservice system needs a powerful log tracker to track each event inside the system.&lt;/p>
+&lt;h2 id="which-is-paid-for-an-architecture-choice">Which is paid for an architecture choice?&lt;/h2>
+&lt;p>After we learn some popular terms and the latest architecture design we start to discuss when should we use microservice.&lt;/p>
+&lt;p>Our mentor tells us the performance includes three concern:&lt;/p>
+&lt;ul>
+&lt;li>Throughput&lt;/li>
+&lt;li>Latency&lt;/li>
+&lt;li>Memory Footprint&lt;/li>
+&lt;/ul>
+&lt;p>They will inflect each other which means if we choose one of them, the others should be paid for our gain.&lt;/p>
+&lt;p>In the microservice, it passes the packet inside the system to redirect it to the target services. That means the latency will be higher than other architecture, but it is decentralized and easier to create more components that we can easier to handle the growing incoming bandwidth.&lt;/p>
+&lt;p>The microservice uses latency to exchange more throughput to give us the ability to handle more requests.&lt;/p>
+&lt;p>But if our service requirements are low latency, the microservice will be a bad idea for our product.&lt;/p>
+&lt;h3 id="domain-driven-design">Domain-Driven Design&lt;/h3>
+&lt;p>The DDD is one of our topics, our mentor also let us think about why DDD becomes popular when microservice is becoming popular.&lt;/p>
+&lt;p>We can find a similar part is they are both considered by a &amp;ldquo;domain.&amp;rdquo; They try to let each service to focus on one business part. This is very different than the MVC we are using. And that is why the DDD is more close to the microservice&amp;rsquo;s necessary.&lt;/p>
+&lt;p>On the other hand, if we want to use the microservice in our company. It depends on your company size and you have some problems to communicate with different departments. The microservice may be a good idea for each department to have its own service.&lt;/p>
+&lt;blockquote>
+&lt;p>But we have to consider the over design in our department.We may only need to create a monolithic application as the only service in our department or company. The microservice still have a lot of requirement and have too many services in one department may cause more problem.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-data-consistency">The data consistency&lt;/h2>
+&lt;p>Besides the performance, another important part is the data inside our architecture. Each system has its own state and our service needs decide to use a strong consistency or eventual consistency and it should be discussed carefully.&lt;/p>
+&lt;p>For example, the bank system should be a strong consistency. You may not expect it shows your money does not exist after you save it into the bank. And after one hour it shows again after the bank finished the consistency check.&lt;/p>
+&lt;blockquote>
+&lt;p>The distributed system is a data consistency problem too.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-databases-evolution">The database&amp;rsquo;s evolution&lt;/h2>
+&lt;p>In a system, the database is directly related to the data consistency topics. Our mentor let us compare the RDBMS, NoSQL, and NewSQLs&amp;rsquo; different.&lt;/p>
+&lt;h3 id="rdbms">RDBMS&lt;/h3>
+&lt;p>Before the RDBMS there has an Object-Oriented Database, but we didn&amp;rsquo;t discuss it even the PostgreSQL has the trait of it.&lt;/p>
+&lt;blockquote>
+&lt;p>This is the first state of evolution and most common for us so we didn&amp;rsquo;t discuss it too many at this time.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="nosql">NoSQL&lt;/h3>
+&lt;p>In the NoSQL cases, we paid the consistency for throughput. This is why NoSQL has good scalability to let us can scale it very easily.&lt;/p>
+&lt;p>But NoSQL had to implement a lot of things in the application layer because the RDBMS does many things for us but NoSQL doesn&amp;rsquo;t do that for us.&lt;/p>
+&lt;blockquote>
+&lt;p>Another trait is the NoSQL is depended on the SSD trait to change the data store design and give us a super-fast key-value type data access.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="newsql">NewSQL&lt;/h3>
+&lt;p>The NewSQL is the reflection of NoSQL, people start thinking about NoSQL as a database is not enough. There have many things that should not implement on the application layer and should be done in the database.&lt;/p>
+&lt;p>Therefore they are starting to create a NewSQL that has strong consistency similar to RDBMS but has enough scalability capability.&lt;/p>
+&lt;blockquote>
+&lt;p>Currently, the NewSQL is not popular and didn&amp;rsquo;t have a lot of Open Source solutions.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-choose-of-database">The choose of database&lt;/h2>
+&lt;p>In the previous discussion, the mentor let us share our views about the reason to choose a database.&lt;/p>
+&lt;p>There have many cases to let us choose a database:&lt;/p>
+&lt;ul>
+&lt;li>The Database Feature&lt;/li>
+&lt;li>Framework&lt;/li>
+&lt;li>Team Member&lt;/li>
+&lt;li>Customer&amp;rsquo;s preference&lt;/li>
+&lt;/ul>
+&lt;p>There is no correct answer, like the above the architecture has many pros and cons in the different designs we discussed.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>This article lost a lot of detail, but I am out of my memory to write more details.&lt;/p>
+&lt;p>After the first meetup, I am worried about our discussion will stop at some calculate and knowledge we didn&amp;rsquo;t know.&lt;/p>
+&lt;p>But in this meetup, our mentor gives us a new method or new viewpoint which we can apply to our work.&lt;/p>
+&lt;p>The most important thing is &lt;strong>find the cons in your solution&lt;/strong> and review it before you decide to use it.&lt;/p>
+&lt;p>The pros usually give us benefits, but when our system has some trouble. The cons are the actual problem we have to face.&lt;/p>
+&lt;p>Therefore we have to choose an architecture with minimal damage to our product which means the cons didn&amp;rsquo;t have too many conflicts with our product&amp;rsquo;s requirements.&lt;/p></content:encoded></item><item><title>The Reusable Ansible Role Problem</title><link>https://blog.frost.tw/en/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</link><category>
+Ansible,DevOps,Experience,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</guid><description>&lt;p>About 1 year ago, I build a &lt;a href="https://www.ansible.com/">Ansible&lt;/a> playbook for the customers of &lt;a href="https://5xruby.tw">5xRuby&lt;/a>.&lt;/p>
 &lt;p>When our customers grow it is hard to use the fork feature to maintenance our customer&amp;rsquo;s playbook.&lt;/p>
-&lt;p>I have to update the main version and sync the changes to the fork version for each customer. Therefore I decided to split the common parts to a single role repository.&lt;/p></description><content>&lt;p>About 1 year ago, I build a &lt;a href="https://www.ansible.com/">Ansible&lt;/a> playbook for the customers of &lt;a href="https://5xruby.tw">5xRuby&lt;/a>.&lt;/p>
+&lt;p>I have to update the main version and sync the changes to the fork version for each customer. Therefore I decided to split the common parts to a single role repository.&lt;/p></description><content:encoded>&lt;p>About 1 year ago, I build a &lt;a href="https://www.ansible.com/">Ansible&lt;/a> playbook for the customers of &lt;a href="https://5xruby.tw">5xRuby&lt;/a>.&lt;/p>
 &lt;p>When our customers grow it is hard to use the fork feature to maintenance our customer&amp;rsquo;s playbook.&lt;/p>
 &lt;p>I have to update the main version and sync the changes to the fork version for each customer. Therefore I decided to split the common parts to a single role repository.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
@@ -141,9 +244,9 @@ Ansible,DevOps,Experience,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 202
 &lt;li>If the database has to upgrade, should I create a new server?&lt;/li>
 &lt;li>If used for creating a Cloud Image (e.g. AMI) how to clear up?&lt;/li>
 &lt;/ul>
-&lt;p>The DevOps sounds very easy to put developer and operator together but make the work together still hard, I guess.&lt;/p></content></item><item><title>TGONext: The plan for high concurrency</title><link>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>
-Experience,TGONext,Architecture</category><pubDate>Sun, 23 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
-&lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p></description><content>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
+&lt;p>The DevOps sounds very easy to put developer and operator together but make the work together still hard, I guess.&lt;/p></content:encoded></item><item><title>TGONext: The plan for high concurrency</title><link>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>
+Experience,TGONext,Architecture</category><pubDate>Sun, 23 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><description>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
+&lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p></description><content:encoded>&lt;p>Yesterday is the first meetup of the &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> project, we are learning from Taiwan&amp;rsquo;s high-level technical leaders. After the opening, our mentor &lt;a href="https://blog.gcos.me/">Ant&lt;/a> let our polling for the topic we want to discuss in this half-year project time.&lt;/p>
 &lt;p>We decide to pick up 4 topics to discuss and the first topic is &amp;ldquo;high concurrency.&amp;rdquo;&lt;/p>
 &lt;h2 id="what-is-high-concurrency">What is High Concurrency&lt;/h2>
 &lt;p>When we start this topic, our mentor gives us a question.&lt;/p>
@@ -228,8 +331,8 @@ Experience,TGONext,Architecture</category><pubDate>Sun, 23 Feb 2020 00:00:00 +00
 &lt;p>After about 2 hours discuss with the mentor and other mentees, I still believe the most important thing in TGONext is learning the mentor&amp;rsquo;s viewpoint when they face a question.&lt;/p>
 &lt;p>In this high concurrency discussion, we define the &amp;ldquo;high concurrency&amp;rdquo; and focus on the technical part &amp;ldquo;QPS&amp;rdquo; to check the target we have to reach. And connect our experience with other departments to make us can co-work correctly.&lt;/p>
 &lt;p>In nowadays, some people say &amp;ldquo;the title is not important&amp;rdquo;. But when you learn from TGONext&amp;rsquo;s CTO or other high-level professional peoples, you will know the actual difference between us is we usually not focus on the correct problem, and we didn&amp;rsquo;t know the correct method to do it.&lt;/p>
-&lt;p>Thanks to the &lt;a href="https://tgonetworks.org/">TOGNetworks&lt;/a> provide a good chance to us, give a road-sign to learning high-level skills. Not continue self-satisfaction in the title we have in our company.&lt;/p></content></item><item><title>Write a suitable RSpec test</title><link>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</link><category>
-Ruby,RSpec,Experience,BDD,TDD,Rails</category><pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p></description><content>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p>
+&lt;p>Thanks to the &lt;a href="https://tgonetworks.org/">TOGNetworks&lt;/a> provide a good chance to us, give a road-sign to learning high-level skills. Not continue self-satisfaction in the title we have in our company.&lt;/p></content:encoded></item><item><title>Write a suitable RSpec test</title><link>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</link><category>
+Ruby,RSpec,Experience,BDD,TDD,Rails</category><pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/02/20/Write-a-suitable-RSpec-test/</guid><description>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p></description><content:encoded>&lt;p>Include me, write test is many people&amp;rsquo;s nightmare. Many junior programmers feel it is hard to define which should be tested. So, I decided to share my experience after I tech my colleague today.&lt;/p>
 &lt;p>Before we start talking about how to write a test, let us stop thinking about anything about TDD or BDD or any you may read about it.&lt;/p>
 &lt;p>And ask yourself, what is &amp;ldquo;test&amp;rdquo;? Why we need a &amp;ldquo;test&amp;rdquo;?&lt;/p>
 &lt;p>The target we add the tests to our project usually to prevent human mistake, that means we try to let compute help us to confirm our code matches the &amp;ldquo;spec&amp;rdquo;.&lt;/p>
@@ -599,4 +702,4 @@ Ruby,RSpec,Experience,BDD,TDD,Rails</category><pubDate>Thu, 20 Feb 2020 00:00:00
 &lt;li>Is my method returns is expectable? (ex. the only number, object have the same interface)&lt;/li>
 &lt;/ul>
 &lt;p>That sounds very simple and you may read about some object-oriented article about SOLID rules. But it still is hard to design it to a suitable state which didn&amp;rsquo;t have too many over design.&lt;/p>
-&lt;p>Anyway, hope my article can help you find some inspiration when you try to write some tests.&lt;/p></content></item></channel></rss>
+&lt;p>Anyway, hope my article can help you find some inspiration when you try to write some tests.&lt;/p></content:encoded></item></channel></rss>

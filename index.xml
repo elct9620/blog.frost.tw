@@ -1,7 +1,341 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sat, 29 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>重複利用的 Ansible Role 難題</title><link>https://blog.frost.tw/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</link><category>
-Ansible,DevOps,心得,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>大概一年前左右，我開始製作一個 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 的 Playbook 來幫&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>的客戶安裝環境。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 15 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: 從缺點選擇架構</title><link>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</link><category>
+架構,微服務,資料庫,心得,TGONext</category><pubDate>Sun, 15 Mar 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</guid><description>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p></description><content:encoded>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p>
+&lt;h2 id="the-trap-inside-the-suggested-way">建議方法中的陷阱&lt;/h2>
+&lt;p>首先，我們有一個單體式的應用將 Web 伺服器跟資料庫都跑在同一台機器上。&lt;/p>
+&lt;pre>&lt;code>+-----------------------+
+|+---------------------+|
+|| ||
+|| Web Server ||
+|| ||
+|+---------------------+|
+|+---------------------+|
+|| ||
+|| Database ||
+|| ||
+|+---------------------+|
++-----------------------+
+&lt;/code>&lt;/pre>&lt;p>當請求量增加之後，我們可能會先把 Web 伺服器和資料庫分離到獨立的機器中。&lt;/p>
+&lt;pre>&lt;code>+---------------------+ +---------------------+
+| | | |
+| Web Server &amp;lt;----------&amp;gt; Database |
+| | | |
++---------------------+ +---------------------+
+&lt;/code>&lt;/pre>&lt;p>當我們再次感覺到變慢的時候，我們可能會增加「快取伺服器」到我們的架構中。
+像是增加一個快取伺服器到 Web 伺服器和資料庫之間。&lt;/p>
+&lt;pre>&lt;code>+---------------------+ +---------------------+ +---------------------+
+| | | | | |
+| Web Server &amp;lt;------&amp;gt; Cache Server &amp;lt;------&amp;gt; Database |
+| | | | | |
++---------------------+ +---------------------+ +---------------------+
+&lt;/code>&lt;/pre>&lt;p>當我們的快取伺服器故障時，我們的服務會再重啟之後恢復正常嗎？&lt;/p>
+&lt;blockquote>
+&lt;p>實際上它可能不會在快取伺服器重啟後正常恢復，因為我們的快取伺服器遺失了所有資料同時 Web 伺服器依舊發出大量地請求到快取伺服器卻無法處理而轉送到資料庫上。&lt;/p>
+&lt;/blockquote>
+&lt;p>這就是所謂的「雪崩效應」，當一個服務發生故障時進而影響其他人變得不穩，最後造成整個服務停止。&lt;/p>
+&lt;p>我們的導師建議我們在我們的團隊成員了解快取伺服器的優缺點和整個框架或套件使用後會如何運作之前，不要輕易的去增加快取伺服器。&lt;/p>
+&lt;h2 id="will-microservice-rescue-us">微服務能解決這一切嗎？&lt;/h2>
+&lt;p>如果我們想要避免雪崩效應，你可能會聯想到這幾年很熱門的微服務（Microservice）&lt;/p>
+&lt;p>微服務是以「去中心化（Decentralize）」為目的設計的，這表示每個元件大多獨立運作而且很容易的重新部署。&lt;/p>
+&lt;p>但是這其實有點太過理想，我們的服務經常會有一些相依於其他服務的情況。像是 Web 伺服器就經常的依賴於資料庫。&lt;/p>
+&lt;p>這是另外一個關鍵我們需要在設計架構的時候去考慮的地方。&lt;/p>
+&lt;p>目前在微服務中最熱門的相依問題解決方式是製作一種叫做「邊車（Sidecar）」的服務來控制每個元件間的溝通，因為邊車通常會知道其他服務的存活情況以及是否可以被連接，因此能夠回報跟管理他目前所負責的服務。&lt;/p>
+&lt;p>我們的導師告訴我們架構大多是為了要解決某個問題才會被設計出來的。&lt;/p>
+&lt;p>另一方面，我們如果要在微服務中找到問題，我們必須知道在這連續的呼叫中是在哪個服務停止的。這也表示微服務的系統需要有一個強大的紀錄追蹤機制來追蹤系統中的每一個事件。&lt;/p>
+&lt;h2 id="which-is-paid-for-an-architecture-choice">選擇某種架構付出的代價&lt;/h2>
+&lt;p>在我們學習了一些最近熱門的關鍵字之後，我們開始討論是否適合使用微服務。&lt;/p>
+&lt;p>我們的導師告訴我們效能（Performance）涵蓋三個部分：&lt;/p>
+&lt;ul>
+&lt;li>吞吐量（Throughput）&lt;/li>
+&lt;li>延遲（Latency）&lt;/li>
+&lt;li>記憶體使用（Memory Footprint）&lt;/li>
+&lt;/ul>
+&lt;p>他們會互相影響，這表示如果我們選擇了其中一個作為目標其他的項目就會變成代價支付出去。&lt;/p>
+&lt;p>在微服務系統中會將封包導向目標的服務，這也表示延遲會比其他架構還高得多。但是他的去中心化特性讓我們很容易的增加更多的元件來處理不斷增加的流量。&lt;/p>
+&lt;p>微服務是透過延遲來交換更大的吞吐量，讓我們擁有處理大量請求的能力。&lt;/p>
+&lt;p>也因此，如果我們的服務非常要求低延遲的話，微服務對我們的產品可能就不是一個好主意。&lt;/p>
+&lt;h3 id="domain-driven-design">Domain-Driven Design&lt;/h3>
+&lt;p>DDD 是我們討論的主題之一，我們的導師讓我們思考為什麼微服務變得熱門的同時 DDD 也同樣開始變得熱門。&lt;/p>
+&lt;p>實際上我們可以發現他們相似的在意「領域（Domain）」，他們嘗試將讓每個服務都專注在某一個業務上。這和我們平常使用的 MVC 是非常不同的，不過這也說明了為什麼 DDD 的設計會更適合微服務的需要。&lt;/p>
+&lt;p>另一方面，如果我們想要在公司中使用微服務。他通常取決於公司的規模或者在跨部門之前的溝通有些問題時，微服務可可能會是得不錯的選擇讓每個部門維護自己的服務。&lt;/p>
+&lt;blockquote>
+&lt;p>不過我們也需要注意過度的設計在我們自己的部門中，因為我們很可能只需要一個單體式的應用在我們的部門或公司。另一方面微服務也有不少需求需要滿足，如果果在一個部門中擁有過多的為服務可能會造成另外的問題。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-data-consistency">資料的一致性&lt;/h2>
+&lt;p>除了效能問題之外，資料在我們的架構中也是另一個重要的面向。每一個系統都會有他自己的狀態，而我們的服務則需要小心討論來決定使用強一致性或者最終一致性。&lt;/p>
+&lt;p>舉例來說，一個銀行系統必須是強一致性的。至少你不會預期銀行在你存入一些錢之後，顯示並沒有這筆紀錄。卻在幾小時完成一致性的檢查後，才顯示出來。&lt;/p>
+&lt;blockquote>
+&lt;p>分散式系統其實也是一種資料一制的探討。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-database-evolution">資料庫的演進&lt;/h2>
+&lt;p>在一個系統中，資料庫通常是最直接跟資料一致性有關聯的主題。因此我們的導師讓我們先比較 RDBMS（關連式資料庫）、NoSQL 和 NewSQL 的差異。&lt;/p>
+&lt;h3 id="rdbms">RDBMS&lt;/h3>
+&lt;p>在 RDBMS 之前還有一個叫做 Object-Orident Database （物件導向資料庫）的東西，雖然 PostgreSQL 有一部分的特性，但是我們並沒有繼續討論他。&lt;/p>
+&lt;blockquote>
+&lt;p>基本上這是我們討論演進的第一個階段，令一方面因為他算是非常常見因此我們並沒有在這個時候討論太多。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="nosql">NoSQL&lt;/h3>
+&lt;p>在 NoSQL 的情況，我們透過將一致性作為代價來提高吞吐量。這也是為什麼 NoSQL 擁有很不錯的拓展性能讓我們非常簡單的去擴充。&lt;/p>
+&lt;p>不過 NoSQL 必須在應用層實作很多東西，因為 RDBMS 幫我們處理了不少事情，但是 NoSQL 並沒有。&lt;/p>
+&lt;blockquote>
+&lt;p>另外一個特性是 NoSQL 是伴隨 SSD 的特性出現的，因此透過改變儲存資料的方式讓我們獲得高速的 Key-Value 資料存取能力。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="newsql">NewSQL&lt;/h3>
+&lt;p>NewSQL 比較類似於 NoSQL 的反思，人們開始使思考 NoSQL 作為一個資料庫還有所不足。實際上有很多東西不應該在應用層實現，而應該讓資料庫幫助我們來完成。&lt;/p>
+&lt;p>也因此開始開發 NewSQL 這種具備類似 RDBMS 的強一致性但是又有足夠的擴充能力的資料庫。&lt;/p>
+&lt;blockquote>
+&lt;p>目前 NewSQL 還沒有變的熱門，而且也沒有太多開放原始碼的解決方案。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-choose-of-database">資料的選擇&lt;/h2>
+&lt;p>在前面的討論，我們的導師讓我們分享選用一個資料庫的觀點和理由。&lt;/p>
+&lt;p>這裡有很多情況讓我們決定要選擇哪個資料庫：&lt;/p>
+&lt;ul>
+&lt;li>資料庫的功能&lt;/li>
+&lt;li>使用的框架&lt;/li>
+&lt;li>團隊成員&lt;/li>
+&lt;li>客戶的偏好&lt;/li>
+&lt;/ul>
+&lt;p>實際上這沒有正確答案，就像前面在架構上的討論在不同的設計上會有不同的優缺點出現。&lt;/p>
+&lt;h2 id="conclusion">總結&lt;/h2>
+&lt;p>實際上這篇文章還是缺少了很多細節，不過太多東西我實在沒辦法一次性的記住。&lt;/p>
+&lt;p>實際上在第一次聚會結束後我是有點擔心討論會止於一些計算或了解一些知識而已。&lt;/p>
+&lt;p>不過這次聚會我們的導師讓我們學到了一些新的方法跟觀點能夠直接應用在工作上。&lt;/p>
+&lt;p>最重要的是我們要在決定之前「找出計畫的缺點」並且重新檢視他，優點確實能給我們好處，但當系統發生問題的時候缺點才是我們需要面對的。&lt;/p>
+&lt;p>也因此，我們需要去決定一個架構是對我們的產品傷害最小的，也就是大多數的缺點跟我們產品的需求是不會有太多衝突。&lt;/p></content:encoded></item><item><title>從 Functional Programming 重新思考程式設計</title><link>https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/</link><category>
+Functional,C,Ruby,心得</category><pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/</guid><description>&lt;p>因為時間的關係錯過了實體課程，不過利用 228 連假把&lt;a href="https://campus.5xruby.tw/?affcode=141380_ht16jam9">工作上用得到的函數式程式設計&lt;/a>這門課補完。&lt;/p>
+&lt;p>在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。&lt;/p></description><content:encoded>&lt;p>因為時間的關係錯過了實體課程，不過利用 228 連假把&lt;a href="https://campus.5xruby.tw/?affcode=141380_ht16jam9">工作上用得到的函數式程式設計&lt;/a>這門課補完。&lt;/p>
+&lt;p>在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。&lt;/p>
+&lt;h2 id="the-flexible-design">更彈性的設計&lt;/h2>
+&lt;p>以我工作上常用的 Ruby 作為例子我們可以用一個稍微極端的例子來看&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># 來源資料&lt;/span>
+&lt;span class="n">users&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">[&lt;/span>
+&lt;span class="o">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Jimmy&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;male&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">180&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">72&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">70&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Mary&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;female&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">160&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">65&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">[&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Gary&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kp">nil&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">166&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">80&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">95&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="o">[&lt;/span>&lt;span class="mi">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bob&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;male&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">160&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">75&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">90&lt;/span>&lt;span class="o">]&lt;/span>
+&lt;span class="o">]&lt;/span>
+&lt;span class="c1"># Curry 化的 Function&lt;/span>
+&lt;span class="n">gender_is&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gender&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">gender&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="p">}&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">curry&lt;/span>
+&lt;span class="n">waistline_less_than&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">max&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">_args&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">waistline&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">max&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">waistline&lt;/span> &lt;span class="p">}&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">curry&lt;/span>
+&lt;span class="n">health_users&lt;/span> &lt;span class="o">=&lt;/span>
+&lt;span class="n">users&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="n">filter&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="o">|&lt;/span>
+&lt;span class="c1"># 利用語言特性跟 Curry 動態設定條件&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="n">user&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="n">gender_is&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;male&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">then&lt;/span> &lt;span class="n">waistline_less_than&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">90&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="n">gender_is&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;female&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">then&lt;/span> &lt;span class="n">waistline_less_than&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">80&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">else&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="kp">true&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># 因為 Bob 腰圍大於 90 因此被篩選掉&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">health_users&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以 Ruby 來說 Matz（Ruby 語言之父）曾在他的&lt;a href="https://www.tenlong.com.tw/products/9789863473312">松本行弘談程式世界的未來&lt;/a>這本書中提過 Ruby 的一些語法是受到 Lisp 語言的影響，也因此在 Ruby 中保有了一些函數式語言的特性。&lt;/p>
+&lt;p>實際上最實用的是 Ruby 在迭代器（Enumerator）提供了非常多函數式語言才有的方法，像是 &lt;code>map&lt;/code>、&lt;code>filter&lt;/code> 這類都能讓我們很輕鬆的篩選跟處理資料。&lt;/p>
+&lt;h2 id="rethink-the-method-design">重新思考方法的設計&lt;/h2>
+&lt;p>在函數式程式設計中，以課程裡面使用的 Elixir 作為例子，我們可以利用 Pattern Matching 的特性設計出像這樣的程式碼：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-elixir" data-lang="elixir">&lt;span class="n">defmodule&lt;/span> &lt;span class="nc">Server.Connection&lt;/span> &lt;span class="n">do&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;exit&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:gen_tcp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">close&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">socket&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;help&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">socket&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Server.Helper&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">print&lt;/span>
+&lt;span class="n">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">socket&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Server.Handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">process&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果是在我們熟悉的物件導向語言處理的話，就會變成類似像這樣的程式碼&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">Server&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Connection&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="n">action&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="s2">&amp;#34;exit&amp;#34;&lt;/span> &lt;span class="k">then&lt;/span> &lt;span class="vi">@socket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">close&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="s2">&amp;#34;help&amp;#34;&lt;/span> &lt;span class="k">then&lt;/span> &lt;span class="no">Server&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Helper&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">print_to&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vi">@socket&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">else&lt;/span> &lt;span class="vi">@handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">process&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>有趣的地方在於，假設我們想要在 Ruby 裡面拓展更多「指令」的話就會讓 &lt;code>#input&lt;/code> 這個方法不斷地增長，最後我們會變成需要設計一個像是 Registry（註冊器）來管理這些指令。&lt;/p>
+&lt;p>但是在支援 Pattern Matching 的函數式語言裡面，我們只需要將這些方法加以分類就可以很輕鬆的拓展出來，也因此像是在 Elixir 這類語言我們幾乎不需要使用到判斷式就能決定要做什麼，這也能讓程式碼在另一種形式上變得簡潔。&lt;/p>
+&lt;blockquote>
+&lt;p>以 Ruby 的語法檢查器 Rubocop 來說，一個方法基本上建議上只能有 10 ~ 15 行的內容，要符合一些最佳實踐的話通常會需要拆分很多方法跟物件來處理，也因此我常跟同事說我們應該試著在呼叫之前就做好判斷，讓每一個方法都明確知道自己該做些什麼。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="rethink-the-definition-of-state">重新思考狀態的定義&lt;/h2>
+&lt;p>函數式語言之所以會被叫做 Functional 某方面來說也是跟數學非常有關係的，以數學的函式來說 &lt;code>f(x) = x + 1&lt;/code> 其實也只會有輸入跟輸出兩種情況，也因此在函數式語言比較難實現出狀態這樣的概念。&lt;/p>
+&lt;p>如果我在 Ruby 想將一個資料（狀態）傳遞給下一個處理，在沒有應用物件的情況下就會需要像這樣寫：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">get_username&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">parse_json&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>展開之後會像是這樣：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">parsed_json&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">parse_json&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">username&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">get_username&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">parsed_json&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>但實際上以物件導向的方式來處理的話我們會用 Instance Variable（實例變數）來保存狀態：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">User&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="vi">@url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">url&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">username&lt;/span>
+&lt;span class="n">parsed_json&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:username&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">parsed_json&lt;/span>
+&lt;span class="vi">@parsed_json&lt;/span> &lt;span class="o">||=&lt;/span> &lt;span class="no">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">response&lt;/span>
+&lt;span class="vi">@responsd&lt;/span> &lt;span class="o">||=&lt;/span> &lt;span class="no">Net&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">HTTP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vi">@url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="no">User&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">username&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>透過這樣的方式使用者就能夠透過很簡單的方式直接的取得所需的資訊，而在 Elixir 中則會像這樣實現：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-elixir" data-lang="elixir">&lt;span class="n">defmodule&lt;/span> &lt;span class="nc">User&lt;/span> &lt;span class="n">do&lt;/span>
+&lt;span class="n">def&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Map&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:username&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">def&lt;/span> &lt;span class="n">load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nc">HTTP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>
+&lt;span class="n">end&lt;/span>
+&lt;span class="p">{&lt;/span>&lt;span class="ss">:ok&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">username&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nc">User&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">User&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">username&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>因為沒有內部的狀態保存，所以通常會將狀態透過參數傳遞，雖然無法保存但是透過語言的特性依舊能夠恰當處理，甚至我們需要反思封裝狀態這件事情是否是在多數情況下「必要」的。&lt;/p>
+&lt;p>有趣的是，我們平常享受 Ruby 的物件導向特性讓我們可以透過物件來保存狀態，但是在 CRuby 或者 mruby 每次處理也是需要將狀態當作參數傳遞進去的。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="c1">// mruby
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="n">mrb_value&lt;/span> &lt;span class="nf">user_get_name&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mrb_state&lt;/span>&lt;span class="o">*&lt;/span> &lt;span class="n">mrb&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mrb_value&lt;/span> &lt;span class="n">self&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">mrb_str_new_cstr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mrb&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Username&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kt">void&lt;/span> &lt;span class="nf">init_user&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mrb_state&lt;/span>&lt;span class="o">*&lt;/span> &lt;span class="n">mrb&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">struct&lt;/span> &lt;span class="n">RClass&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">klass&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mrb_define_class&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mrb&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;User&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mrb&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">object_class&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="n">mrb_define_method&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mrb&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">klass&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;username&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">user_get_name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">MRB_ARGS_NONE&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>不過 C 語言不是函數式語言，方法頂多是一種指標而已。只是在非物件導向語言裡面，保存狀態通常都是透過參數傳遞。&lt;/p>
+&lt;/blockquote>
+&lt;p>像這樣去接觸不同的語言了且背後的設計是一件很有趣的事情，尤其是函數式語言在思考上跟物件導向語言差異很大的時候更能夠幫助我們反思為什麼要這樣設計，原本自己在物件導向語言的設計是否還有沒考慮到的地方。&lt;/p>
+&lt;h2 id="impression">感想&lt;/h2>
+&lt;p>第一次接觸 Elixir 跟函數式語言應該也是在一兩年前，也是因為課程的&lt;a href="https://taian.su/">泰安&lt;/a>老師在五倍紅寶石上課時介紹給我的。不過當時雖然也會寫 JavaScript 而且常常看到一些對於 Functional Programming 相關的文章，不過實際上對函數式程式設計還是處於一知半解的狀態。&lt;/p>
+&lt;p>在課程中其實也有提到以 JavaScript 作為範例其實有點不適合，畢竟有一些特性跟功能以一個函數式語言來說還不太足夠。所以在上完這次的課程之後，原本寫起來覺得很卡的 Elixir 在正確理解一些正確的特性之後，就能很順利地使用。&lt;/p>
+&lt;p>也趁著還有印象的時候趕快用 Elixir 和 Ruby 搭配寫了一款 &lt;a href="https://github.com/elct9620/elixir-mud">MUD&lt;/a> 類型遊戲練習，如果對寫 JavaScript 無法寫得乾淨有困擾或者想多善用一些語言特性，是很推薦試試看這門課程的。&lt;/p>
+&lt;p>最後補上 MUD 遊戲製作中的畫面：&lt;/p>
+&lt;p>&lt;img src="https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/mud.gif" alt="MUD 有限狀態機">&lt;/p></content:encoded></item><item><title>重複利用的 Ansible Role 難題</title><link>https://blog.frost.tw/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</link><category>
+Ansible,DevOps,心得,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</guid><description>&lt;p>大概一年前左右，我開始製作一個 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 的 Playbook 來幫&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>的客戶安裝環境。&lt;/p>
 &lt;p>不過當我們的客戶增加之後，其實開始有點變的很難透過 Fork 的機制來管理不同客戶的 Playbook。&lt;/p>
-&lt;p>這表示我必須先更新主要的 Playbook 然後再同步到每一個客戶的版本上，也因此我決定去把這些通用的部分拆成單獨的 Role 專案。&lt;/p></description><content>&lt;p>大概一年前左右，我開始製作一個 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 的 Playbook 來幫&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>的客戶安裝環境。&lt;/p>
+&lt;p>這表示我必須先更新主要的 Playbook 然後再同步到每一個客戶的版本上，也因此我決定去把這些通用的部分拆成單獨的 Role 專案。&lt;/p></description><content:encoded>&lt;p>大概一年前左右，我開始製作一個 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 的 Playbook 來幫&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>的客戶安裝環境。&lt;/p>
 &lt;p>不過當我們的客戶增加之後，其實開始有點變的很難透過 Fork 的機制來管理不同客戶的 Playbook。&lt;/p>
 &lt;p>這表示我必須先更新主要的 Playbook 然後再同步到每一個客戶的版本上，也因此我決定去把這些通用的部分拆成單獨的 Role 專案。&lt;/p>
 &lt;h2 id="overview">概觀&lt;/h2>
@@ -141,8 +475,8 @@ Ansible,DevOps,心得,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00
 &lt;li>如果資料庫要升級，是否需要部署新的伺服器？&lt;/li>
 &lt;li>如果是用於製作 Cloud Image (像是 AMI）又該如何清理多餘的檔案？&lt;/li>
 &lt;/ul>
-&lt;p>DevOps 看起來似乎只要把工程師跟維運人員放在一起就可以做到，不過我認為要讓兩者能夠協作還是不容易的。&lt;/p></content></item><item><title>TGONext: 規劃高併發服務</title><link>https://blog.frost.tw/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>
-心得,TGONext,架構</category><pubDate>Sun, 23 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>昨天是 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 的第一次聚會，在這個活動中我們會向台灣的一些高階主管學習。在開場結束後我們的導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 讓我們投票選出幾個想在這半年的時間內討論的題目。基本上我們預定討論四個主題，而「高併發」是我們的第一個主題。&lt;/p></description><content>&lt;p>昨天是 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 的第一次聚會，在這個活動中我們會向台灣的一些高階主管學習。在開場結束後我們的導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 讓我們投票選出幾個想在這半年的時間內討論的題目。基本上我們預定討論四個主題，而「高併發」是我們的第一個主題。&lt;/p>
+&lt;p>DevOps 看起來似乎只要把工程師跟維運人員放在一起就可以做到，不過我認為要讓兩者能夠協作還是不容易的。&lt;/p></content:encoded></item><item><title>TGONext: 規劃高併發服務</title><link>https://blog.frost.tw/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>
+心得,TGONext,架構</category><pubDate>Sun, 23 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><description>&lt;p>昨天是 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 的第一次聚會，在這個活動中我們會向台灣的一些高階主管學習。在開場結束後我們的導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 讓我們投票選出幾個想在這半年的時間內討論的題目。基本上我們預定討論四個主題，而「高併發」是我們的第一個主題。&lt;/p></description><content:encoded>&lt;p>昨天是 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 的第一次聚會，在這個活動中我們會向台灣的一些高階主管學習。在開場結束後我們的導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 讓我們投票選出幾個想在這半年的時間內討論的題目。基本上我們預定討論四個主題，而「高併發」是我們的第一個主題。&lt;/p>
 &lt;h2 id="what-is-high-concurrency">什麼是高併發&lt;/h2>
 &lt;p>再開始的時候，我們的導師問了我們這個問題。&lt;/p>
 &lt;blockquote>
@@ -223,8 +557,8 @@ Ansible,DevOps,心得,Rails,Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 00
 &lt;p>在這約兩小時跟導師和其他成員的討論後，我依舊認為在 TGONext 這個活動最重要的是跟導師學習他們在面對問題時的觀點。&lt;/p>
 &lt;p>在這個高併發的討論中，我們從定義「高併發」到專注在技術上的「QPS」來檢視我們需要的目標，最後再將我們的經驗連結其他部門讓合作得以達成。&lt;/p>
 &lt;p>這幾年不時會有「頭銜不重要」的說法出現，不過當你跟 TGONext 裡面的這些 CTO 或者其他高階人才學習後，你會發現我們跟他們的差別在於我們常常關注在錯誤的問題上，而且並不清楚該用什麼方法正確的處理。&lt;/p>
-&lt;p>也因此我是很感謝 &lt;a href="https://tgonetworks.org/">TGONextworks&lt;/a> 提供這樣的機會給我們一個類似路標一樣的方向去學習更高階的技巧，而非因為自己在公司有個不錯的頭銜而自我滿足。&lt;/p></content></item><item><title>撰寫一個合適的 RSpec 測試</title><link>https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/</link><category>
-Ruby,RSpec,心得,BDD,TDD,Rails</category><pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。&lt;/p></description><content>&lt;p>包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。&lt;/p>
+&lt;p>也因此我是很感謝 &lt;a href="https://tgonetworks.org/">TGONextworks&lt;/a> 提供這樣的機會給我們一個類似路標一樣的方向去學習更高階的技巧，而非因為自己在公司有個不錯的頭銜而自我滿足。&lt;/p></content:encoded></item><item><title>撰寫一個合適的 RSpec 測試</title><link>https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/</link><category>
+Ruby,RSpec,心得,BDD,TDD,Rails</category><pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/20/Write-a-suitable-RSpec-test/</guid><description>&lt;p>包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。&lt;/p></description><content:encoded>&lt;p>包括我自己在內，寫測試有時候是一個非常不想面對的工作。也有很多剛入門的工程師覺得很難去分辨該怎麼去寫測試，在今天跟同事說明完一些技巧後就決定來寫一下這篇分享一下我自己的經驗。&lt;/p>
 &lt;p>在開始之前我們先不要管什麼 TDD 或者 BDD 之類或是你之前讀過的一些測試相關的文章，然後反思一下什麼是「測試」為什麼我們需要「測試」？&lt;/p>
 &lt;p>基本上，我們會把測試放到專案裡面大多是為了要避免一些人會不小心犯的錯誤。所以透過定義一些自動化的程式，來確定我們的實作跟「規格」是相同的。&lt;/p>
 &lt;p>不過，規格跟程式碼都還是由人來撰寫跟產生的，所以很明顯的如果我們使用錯誤的規格或者錯誤的程式去測試，依舊還是會得到錯的結果。&lt;/p>
@@ -592,12 +926,12 @@ Ruby,RSpec,心得,BDD,TDD,Rails</category><pubDate>Thu, 20 Feb 2020 00:00:00 +00
 &lt;li>回傳的數值是否是可以預期的（像是只會有數字、擁有同樣介面的物件）&lt;/li>
 &lt;/ul>
 &lt;p>其實這些東西如果有讀過一些像是 SOLID 這種物件導向的原則會覺得這些東西還蠻簡單的，不過實際上實作的時候還是很難拿捏要怎麼寫才不會過度設計並寫出適當的測試。&lt;/p>
-&lt;p>總之，希望這篇文章能給大家在寫測試上有一些靈感。&lt;/p></content></item><item><title>淺談在 Google Cloud Platform 讓 Ruby on Rails 實現簡單的 Immutable Infrastructure 部署</title><link>https://blog.frost.tw/posts/2020/01/07/An-overview-of-deploy-Ruby-on-Rails-to-Google-Cloud-Platform-uses-simple-immutable-infrastructure/</link><category>
-Ruby,Ruby on Rails,GCP,DevOps,Ansible,Packer</category><pubDate>Tue, 07 Jan 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/01/07/An-overview-of-deploy-Ruby-on-Rails-to-Google-Cloud-Platform-uses-simple-immutable-infrastructure/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>去年雙十一活動的時候有一個算是比較急的專案是要做活動網站，當時評估了一下之後決定來嘗試透過 CI 自動生成 GCE 的自訂映像檔然後搭配 Auto Scale 來做部署。&lt;/p>
+&lt;p>總之，希望這篇文章能給大家在寫測試上有一些靈感。&lt;/p></content:encoded></item><item><title>淺談在 Google Cloud Platform 讓 Ruby on Rails 實現簡單的 Immutable Infrastructure 部署</title><link>https://blog.frost.tw/posts/2020/01/07/An-overview-of-deploy-Ruby-on-Rails-to-Google-Cloud-Platform-uses-simple-immutable-infrastructure/</link><category>
+Ruby,Ruby on Rails,GCP,DevOps,Ansible,Packer</category><pubDate>Tue, 07 Jan 2020 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/01/07/An-overview-of-deploy-Ruby-on-Rails-to-Google-Cloud-Platform-uses-simple-immutable-infrastructure/</guid><description>&lt;p>去年雙十一活動的時候有一個算是比較急的專案是要做活動網站，當時評估了一下之後決定來嘗試透過 CI 自動生成 GCE 的自訂映像檔然後搭配 Auto Scale 來做部署。&lt;/p>
 &lt;p>會選擇這樣的方式主要是因為 Rails 或者大多數開發框架的部署工具預設大多是不適合 Auto Scale 的，像是 Capistrano 大多數是手動填入伺服器位置（之前也有實作過透過 GCP API 自動填入）比較適合雲端服務的作法其實就是是製作成一個映像檔來處理，也因此像是 Docker Image 這類型容器化技術在這方面是相對容易做的。&lt;/p>
 &lt;p>不過考量到容器化本身也還有一些調整問題才適合使用，再加上雲端服務的選擇是使用 GCP 來提供服務，並不像 AWS ECS 有專門針對容器的服務（可能是我不知道）而是提供 K8S 的方案，對一個短期活動來說在整個專案成員都沒有經驗的前提下學習成本還是偏高的。&lt;/p>
 &lt;p>因此相對適合的做法是用之前我準備好的 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 腳本，搭配 &lt;a href="https://www.packer.io/">Packer&lt;/a> 這套工具直接在 GCP 上面生成一個自訂的映像檔然後直接更新 Instance Group 的設定讓他以新版本 Scale 起來，就能做到基本上網站不斷掉的更新（Health Check 和 Scale 規則需要調整好）&lt;/p>
-&lt;p>我們大概花了約一天多的時間快速搭起來，這次的開發時間約兩週中間是透過放額外的人力去支援搭建這個部署流程。&lt;/p></description><content>&lt;p>去年雙十一活動的時候有一個算是比較急的專案是要做活動網站，當時評估了一下之後決定來嘗試透過 CI 自動生成 GCE 的自訂映像檔然後搭配 Auto Scale 來做部署。&lt;/p>
+&lt;p>我們大概花了約一天多的時間快速搭起來，這次的開發時間約兩週中間是透過放額外的人力去支援搭建這個部署流程。&lt;/p></description><content:encoded>&lt;p>去年雙十一活動的時候有一個算是比較急的專案是要做活動網站，當時評估了一下之後決定來嘗試透過 CI 自動生成 GCE 的自訂映像檔然後搭配 Auto Scale 來做部署。&lt;/p>
 &lt;p>會選擇這樣的方式主要是因為 Rails 或者大多數開發框架的部署工具預設大多是不適合 Auto Scale 的，像是 Capistrano 大多數是手動填入伺服器位置（之前也有實作過透過 GCP API 自動填入）比較適合雲端服務的作法其實就是是製作成一個映像檔來處理，也因此像是 Docker Image 這類型容器化技術在這方面是相對容易做的。&lt;/p>
 &lt;p>不過考量到容器化本身也還有一些調整問題才適合使用，再加上雲端服務的選擇是使用 GCP 來提供服務，並不像 AWS ECS 有專門針對容器的服務（可能是我不知道）而是提供 K8S 的方案，對一個短期活動來說在整個專案成員都沒有經驗的前提下學習成本還是偏高的。&lt;/p>
 &lt;p>因此相對適合的做法是用之前我準備好的 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 腳本，搭配 &lt;a href="https://www.packer.io/">Packer&lt;/a> 這套工具直接在 GCP 上面生成一個自訂的映像檔然後直接更新 Instance Group 的設定讓他以新版本 Scale 起來，就能做到基本上網站不斷掉的更新（Health Check 和 Scale 規則需要調整好）&lt;/p>
@@ -829,10 +1163,10 @@ only:
 &lt;/code>&lt;/pre>&lt;p>如此一來在開發團隊確定一項功能可以 Merge 回 master 之後就能夠自動製作出對應版本的映像檔，用於之後部署的時候自動更新。&lt;/p>
 &lt;h2 id="總結">總結&lt;/h2>
 &lt;p>實際上這個方案整體來說是相當不完善的，不過除了從網路上的資料學習參考這些應用方式之外也還需要客戶有適合的情境才能夠這樣使用。不過工作這三年也算是勉強把各種比較常被討論的部屬方式都練過一遍，雖然不知道下一次有時間讓我改進 Ansible 以及這個部署流程的時間跟機會是什麼時候，不過還是不得不感嘆現在整個網站、軟體開發的領域真的是越來越複雜跟專業，有時候必須對每一種領域的技能都有所概念，才能夠幫助客戶解決各種情境上的問題。&lt;/p>
-&lt;p>這也是我會選擇在剛畢業後就到接案類型公司的原因之一，相比在一間公司只使用一種方式解決問題，能夠根據情況跟需求選擇不同的技術並在不影響客戶的狀況下嘗試跟改進並逐漸完整一個開發體系，算是很難得的經驗。&lt;/p></content></item><item><title>如何透過 Service Account 來取得 Google API 的 OAuth2 Token</title><link>https://blog.frost.tw/posts/2019/12/29/How-to-use-Service-Account-to-exchange-Google-OAuth2-API-token/</link><category>
-JWT,OAuth2,Service Account,Ruby,API,Google</category><pubDate>Sun, 29 Dec 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/12/29/How-to-use-Service-Account-to-exchange-Google-OAuth2-API-token/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>前陣子在嘗試一些比較少見的 Google API 時發現，在 Google 提供的 Ruby Gem 裡面並不支援這個 API 的實作，這表示需要自己去想辦法解決如何去呼叫這個 API 的問題。&lt;/p>
+&lt;p>這也是我會選擇在剛畢業後就到接案類型公司的原因之一，相比在一間公司只使用一種方式解決問題，能夠根據情況跟需求選擇不同的技術並在不影響客戶的狀況下嘗試跟改進並逐漸完整一個開發體系，算是很難得的經驗。&lt;/p></content:encoded></item><item><title>如何透過 Service Account 來取得 Google API 的 OAuth2 Token</title><link>https://blog.frost.tw/posts/2019/12/29/How-to-use-Service-Account-to-exchange-Google-OAuth2-API-token/</link><category>
+JWT,OAuth2,Service Account,Ruby,API,Google</category><pubDate>Sun, 29 Dec 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/12/29/How-to-use-Service-Account-to-exchange-Google-OAuth2-API-token/</guid><description>&lt;p>前陣子在嘗試一些比較少見的 Google API 時發現，在 Google 提供的 Ruby Gem 裡面並不支援這個 API 的實作，這表示需要自己去想辦法解決如何去呼叫這個 API 的問題。&lt;/p>
 &lt;p>不過呼叫 API 需要 Access Token 才能夠使用，以往我們都是依靠第三方套件或者 Google 官方提供的 Gem 直接呼叫，似乎很少去直接實作客戶端。另一方面我們對 OAuth2 的認識大多是做 SSO（Single Sign On）而非這種伺服器對伺服器的呼叫。&lt;/p>
-&lt;p>以 Google 這種規模的公司，如果是直接使用一般 OAuth2 的伺服器對伺服器的作法似乎也不太適合，而 Google 提供的解決方案就是 Service Account 了！&lt;/p></description><content>&lt;p>前陣子在嘗試一些比較少見的 Google API 時發現，在 Google 提供的 Ruby Gem 裡面並不支援這個 API 的實作，這表示需要自己去想辦法解決如何去呼叫這個 API 的問題。&lt;/p>
+&lt;p>以 Google 這種規模的公司，如果是直接使用一般 OAuth2 的伺服器對伺服器的作法似乎也不太適合，而 Google 提供的解決方案就是 Service Account 了！&lt;/p></description><content:encoded>&lt;p>前陣子在嘗試一些比較少見的 Google API 時發現，在 Google 提供的 Ruby Gem 裡面並不支援這個 API 的實作，這表示需要自己去想辦法解決如何去呼叫這個 API 的問題。&lt;/p>
 &lt;p>不過呼叫 API 需要 Access Token 才能夠使用，以往我們都是依靠第三方套件或者 Google 官方提供的 Gem 直接呼叫，似乎很少去直接實作客戶端。另一方面我們對 OAuth2 的認識大多是做 SSO（Single Sign On）而非這種伺服器對伺服器的呼叫。&lt;/p>
 &lt;p>以 Google 這種規模的公司，如果是直接使用一般 OAuth2 的伺服器對伺服器的作法似乎也不太適合，而 Google 提供的解決方案就是 Service Account 了！&lt;/p>
 &lt;h2 id="jwt">JWT&lt;/h2>
@@ -947,9 +1281,9 @@ JWT,OAuth2,Service Account,Ruby,API,Google</category><pubDate>Sun, 29 Dec 2019 0
 &lt;h2 id="總結">總結&lt;/h2>
 &lt;p>其實整體來說並不複雜，不過會想寫這篇文章是因為之前雖然看過 Firebase 的使用方式卻沒有多想。這次透過 Google API 串接了解到在 JWT 和 OAuth2 的搭配應用上還能有這樣的變化，算是非常直得學習的一個方式。&lt;/p>
 &lt;p>相較於我們直接將 JWT 作為 Access Token 的使用方式，這種方式在某種層面上來說提供了我們在一些額外應用場景的新選擇，就我自己目前能想到的就有像是 API 服務、IoT 裝置等等，不過前陣子有稍微查了一下是否有其他專案有這樣的應用方式，資料似乎還不多。&lt;/p>
-&lt;p>不過至少未來設計服務的時候可以多一種方式來提供 API 串接的選項，畢竟以 Service Account 方式的管理似乎是比原本對每個客戶端都開設 Application 還簡單了一些（或者內部隱含的還是做了 Application 的註冊）&lt;/p></content></item><item><title>Ruby World Conference 2019 見聞</title><link>https://blog.frost.tw/posts/2019/11/18/Ruby-World-Conference-2019-Experience/</link><category>
-Ruby,Ruby World Conference,Ruby on Rails,心得</category><pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/11/18/Ruby-World-Conference-2019-Experience/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>今年把在六月到八月做的一個小專案拿去投稿 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a> 意外的獲得了 15 分鐘的時間，於是又展開了一次日本出差之旅，剛好彌補一下今年因為客戶專案需要趕上線而無法參加 &lt;a href="https://rubykaigi.org/">RubyKaigi&lt;/a> 的遺憾。&lt;/p>
-&lt;p>跟 RubyKaigi 不太一樣的地方是 Ruby World Conference 雖然叫做「World Conference」但是除了台上的講者之外，幾乎都是日本人（而且是稍微有年紀的大叔）去參加的。&lt;/p></description><content>&lt;p>今年把在六月到八月做的一個小專案拿去投稿 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a> 意外的獲得了 15 分鐘的時間，於是又展開了一次日本出差之旅，剛好彌補一下今年因為客戶專案需要趕上線而無法參加 &lt;a href="https://rubykaigi.org/">RubyKaigi&lt;/a> 的遺憾。&lt;/p>
+&lt;p>不過至少未來設計服務的時候可以多一種方式來提供 API 串接的選項，畢竟以 Service Account 方式的管理似乎是比原本對每個客戶端都開設 Application 還簡單了一些（或者內部隱含的還是做了 Application 的註冊）&lt;/p></content:encoded></item><item><title>Ruby World Conference 2019 見聞</title><link>https://blog.frost.tw/posts/2019/11/18/Ruby-World-Conference-2019-Experience/</link><category>
+Ruby,Ruby World Conference,Ruby on Rails,心得</category><pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/11/18/Ruby-World-Conference-2019-Experience/</guid><description>&lt;p>今年把在六月到八月做的一個小專案拿去投稿 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a> 意外的獲得了 15 分鐘的時間，於是又展開了一次日本出差之旅，剛好彌補一下今年因為客戶專案需要趕上線而無法參加 &lt;a href="https://rubykaigi.org/">RubyKaigi&lt;/a> 的遺憾。&lt;/p>
+&lt;p>跟 RubyKaigi 不太一樣的地方是 Ruby World Conference 雖然叫做「World Conference」但是除了台上的講者之外，幾乎都是日本人（而且是稍微有年紀的大叔）去參加的。&lt;/p></description><content:encoded>&lt;p>今年把在六月到八月做的一個小專案拿去投稿 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a> 意外的獲得了 15 分鐘的時間，於是又展開了一次日本出差之旅，剛好彌補一下今年因為客戶專案需要趕上線而無法參加 &lt;a href="https://rubykaigi.org/">RubyKaigi&lt;/a> 的遺憾。&lt;/p>
 &lt;p>跟 RubyKaigi 不太一樣的地方是 Ruby World Conference 雖然叫做「World Conference」但是除了台上的講者之外，幾乎都是日本人（而且是稍微有年紀的大叔）去參加的。&lt;/p>
 &lt;h2 id="議程">議程&lt;/h2>
 &lt;p>到目前為止我似乎還沒有在 RubyKaigi 清醒過（扣掉部分英文的議程）這次即使因為出雲大社的祭典（神在月）需要跟老闆去膠囊旅館，因此每天晚上幾乎都是洗個澡就睡（空間小、在公共空間又不適合辦公）其實睡得還蠻飽的，但是依舊不敵口譯的催眠之力，直接睡死。&lt;/p>
@@ -1015,10 +1349,10 @@ Ruby,Ruby World Conference,Ruby on Rails,心得</category><pubDate>Mon, 18 Nov 2
 &lt;p>&lt;img src="https://blog.frost.tw/images/2019-11-18-ruby-world-conference-2019-experience/F635324619CC5B26ABE0A106ED9AB92C.jpg" alt="壽喜燒">&lt;/p>
 &lt;p>中間等飛機的時間決定來去機場的餐廳嘗試了一下壽喜燒，之前幾次都礙於價位（吃一次就 5000 日幣以上）猶豫不決。但是這次想說既然是出差，而且身上日幣其實也花得不算太多，所以就決定來試試看。雖然只是先嘗試看看中等價位的雪花牛，不過跟平常吃到的比起來好吃太多，覺得算是蠻值得嘗試的。&lt;/p>
 &lt;h2 id="後記">後記&lt;/h2>
-&lt;p>這篇明明是研討會的紀錄結果跟遊記一樣，不過實際上中間還是多少有聊到一些技術的東西，但是相對的少。像是在 Welcome Party 有向 Matz 請教一些 WebAssembly 跑 mruby 的一些問題，看看能不能加快之後手邊幾個專案的開發。還有跟老闆說非常擅長 PostgreSQL 的大大請教該讀什麼書比較好，雖然說議程跟技術在整幾天佔的比例其實不大，不過現階段已經能輕鬆做到開發東西的狀況來說，也許去了解其他人怎麼思考反而是比較容易再進一步的做法吧。&lt;/p></content></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （二）</title><link>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</link><category>
-COSCUP,Game,Ruby,Golang,HTML5,JavaScript,DevOps,Docker,Unlight</category><pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
+&lt;p>這篇明明是研討會的紀錄結果跟遊記一樣，不過實際上中間還是多少有聊到一些技術的東西，但是相對的少。像是在 Welcome Party 有向 Matz 請教一些 WebAssembly 跑 mruby 的一些問題，看看能不能加快之後手邊幾個專案的開發。還有跟老闆說非常擅長 PostgreSQL 的大大請教該讀什麼書比較好，雖然說議程跟技術在整幾天佔的比例其實不大，不過現階段已經能輕鬆做到開發東西的狀況來說，也許去了解其他人怎麼思考反而是比較容易再進一步的做法吧。&lt;/p></content:encoded></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （二）</title><link>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</link><category>
+COSCUP,Game,Ruby,Golang,HTML5,JavaScript,DevOps,Docker,Unlight</category><pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</guid><description>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
 &lt;p>中間在鐵人賽的部分花了一些時間把目前理解到關於 Unlight 的一些基本設計整理出來，後面則是實作。至於近期也已經開始在搭建 HTML5 版本的底層設計，還有 mruby 的&lt;a href="https://github.com/elct9620/mruby.wasm">整合&lt;/a>（因為想提供 Mod 功能到遊戲中）等等東西都在進行中，十一月還要飛日本一趟參加 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a>，可以說是完全都閒不下來。&lt;/p>
-&lt;p>總之，讓我們在來看看 COSCUP 這場演講的後續吧 XD&lt;/p></description><content>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
+&lt;p>總之，讓我們在來看看 COSCUP 這場演講的後續吧 XD&lt;/p></description><content:encoded>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
 &lt;p>中間在鐵人賽的部分花了一些時間把目前理解到關於 Unlight 的一些基本設計整理出來，後面則是實作。至於近期也已經開始在搭建 HTML5 版本的底層設計，還有 mruby 的&lt;a href="https://github.com/elct9620/mruby.wasm">整合&lt;/a>（因為想提供 Mod 功能到遊戲中）等等東西都在進行中，十一月還要飛日本一趟參加 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a>，可以說是完全都閒不下來。&lt;/p>
 &lt;p>總之，讓我們在來看看 COSCUP 這場演講的後續吧 XD&lt;/p>
 &lt;h2 id="營運">營運&lt;/h2>
@@ -1111,11 +1445,11 @@ COSCUP,Game,Ruby,Golang,HTML5,JavaScript,DevOps,Docker,Unlight</category><pubDat
 &lt;p>這場演講基本上算是一個過程上的紀錄，在短短一到兩週內的時間怎麼去讓一款遊戲可以運行、營運，以及我們是怎樣慢慢的改造跟重構一個古老的遊戲專案讓他變得容易維護。&lt;/p>
 &lt;p>不過實際上當時評估如果要繼續做下去的話，絕對是花上一兩年都跑不到的大工程，雖然不知道能堅持到什麼時候但至少每一個階段都能發現有趣的東西，應該是還可以繼續在努力很久。反而是關於 IP 上的問題，也就是遊戲的內容本身因為並沒有實際的完全開放，反而讓未來改版完畢後遊戲想要進入新的階段變得非常受限⋯⋯&lt;/p>
 &lt;p>不過也因為這款遊戲，讓我自己在遊戲開發上有很多不確定的東西有了一個大概知道能怎麼做的方案，以及很多新的想法可以嘗試。&lt;/p>
-&lt;p>那麼，就請大家期待在不久的未來我們重新開發過的 Unlight 會是怎樣的面貌了 XD&lt;/p></content></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （一）</title><link>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</link><category>
-COSCUP,Game,Ruby,Golang,HTML5,JavaScript,DevOps,Docker,Unlight</category><pubDate>Tue, 03 Sep 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
+&lt;p>那麼，就請大家期待在不久的未來我們重新開發過的 Unlight 會是怎樣的面貌了 XD&lt;/p></content:encoded></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （一）</title><link>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</link><category>
+COSCUP,Game,Ruby,Golang,HTML5,JavaScript,DevOps,Docker,Unlight</category><pubDate>Tue, 03 Sep 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</guid><description>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
 不過看起來還是有很多人沒有機會來聽，雖然之後因為會把一部分重心放在這款遊戲上，所以應該還是有不少機會，但還是簡單的來彙整一下今天講的東西。&lt;/p>
 &lt;p>上一篇&lt;a href="https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/">快速閱讀 Unlight 原始碼&lt;/a>大致上有提到了我在當時看到原始碼的看法跟概觀。有興趣的話可以搭配&lt;a href="https://speakerdeck.com/elct9620/2019-coscup-fu-huo-ge-browser-game-unlight-kai-yuan-shi-jian">演講簡報&lt;/a>一起讀這篇文章。&lt;/p>
-&lt;p>另外，這次整個遊戲運作起來除了我自己本身對 Ruby / ActionScript 有一定的了解外，也要感謝一下我們這個團隊（&lt;a href="https://unlight.app">Open Unlight&lt;/a>）的初期成員 Poka 和舞鶴，給我硬體上的支援跟對其他玩家的客服支援，不然有時候真的很難同時處理這些事情。&lt;/p></description><content>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
+&lt;p>另外，這次整個遊戲運作起來除了我自己本身對 Ruby / ActionScript 有一定的了解外，也要感謝一下我們這個團隊（&lt;a href="https://unlight.app">Open Unlight&lt;/a>）的初期成員 Poka 和舞鶴，給我硬體上的支援跟對其他玩家的客服支援，不然有時候真的很難同時處理這些事情。&lt;/p></description><content:encoded>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
 不過看起來還是有很多人沒有機會來聽，雖然之後因為會把一部分重心放在這款遊戲上，所以應該還是有不少機會，但還是簡單的來彙整一下今天講的東西。&lt;/p>
 &lt;p>上一篇&lt;a href="https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/">快速閱讀 Unlight 原始碼&lt;/a>大致上有提到了我在當時看到原始碼的看法跟概觀。有興趣的話可以搭配&lt;a href="https://speakerdeck.com/elct9620/2019-coscup-fu-huo-ge-browser-game-unlight-kai-yuan-shi-jian">演講簡報&lt;/a>一起讀這篇文章。&lt;/p>
 &lt;p>另外，這次整個遊戲運作起來除了我自己本身對 Ruby / ActionScript 有一定的了解外，也要感謝一下我們這個團隊（&lt;a href="https://unlight.app">Open Unlight&lt;/a>）的初期成員 Poka 和舞鶴，給我硬體上的支援跟對其他玩家的客服支援，不然有時候真的很難同時處理這些事情。&lt;/p>
@@ -1185,1034 +1519,4 @@ COSCUP,Game,Ruby,Golang,HTML5,JavaScript,DevOps,Docker,Unlight</category><pubDat
 &lt;/blockquote>
 &lt;h2 id="小結">小結&lt;/h2>
 &lt;p>雖然已經盡量寫的簡單，但是似乎文章還是有點太長 XD&lt;/p>
-&lt;p>下一篇會再聊一下後續的處理，也就是經過我修改過的 Docker 版本提供了選擇性客製化的功能以及我們怎麼在經營遊戲上處理盡量讓玩家有一個相對好的體驗、以及對 HTML5 化的規劃跟實驗。&lt;/p></content></item><item><title>快速閱讀頁遊 Unlight 開源後的原始碼</title><link>https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/</link><category>
-Ruby,Unlight,Game,ActionScript,筆記</category><pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>最近一款有點年紀的頁遊 &lt;a href="https://zh.wikipedia.org/zh-tw/Unlight">Unlight&lt;/a> 在停止營運後幾年，突然公佈說要開放原始碼跟圖片素材。&lt;/p>
-&lt;p>這款遊戲嚴格說起來並沒有像我們熟悉的端遊、手遊之類的那樣華麗，但是非常有特色的人物設計跟對戰系統倒是讓很多玩家即使在好幾年後仍然在期待他能復活。&lt;/p>
-&lt;p>作為一個曾經的玩家，其實也是非常期待的，不過這次的開放原始碼路線大概是復活無望。不過從這幾天公開的資料來看，圖片、音效到客戶端和伺服端都公開的狀況下，還是很有希望被熱血的玩家復活的。&lt;/p>
-&lt;p>另一方面，既然伺服器是透過 Ruby 撰寫的，身為使用 Ruby 的開發者在遊戲類應用不常見的狀況下，能可以作為學習素材肯定是要看過一遍的。&lt;/p></description><content>&lt;p>最近一款有點年紀的頁遊 &lt;a href="https://zh.wikipedia.org/zh-tw/Unlight">Unlight&lt;/a> 在停止營運後幾年，突然公佈說要開放原始碼跟圖片素材。&lt;/p>
-&lt;p>這款遊戲嚴格說起來並沒有像我們熟悉的端遊、手遊之類的那樣華麗，但是非常有特色的人物設計跟對戰系統倒是讓很多玩家即使在好幾年後仍然在期待他能復活。&lt;/p>
-&lt;p>作為一個曾經的玩家，其實也是非常期待的，不過這次的開放原始碼路線大概是復活無望。不過從這幾天公開的資料來看，圖片、音效到客戶端和伺服端都公開的狀況下，還是很有希望被熱血的玩家復活的。&lt;/p>
-&lt;p>另一方面，既然伺服器是透過 Ruby 撰寫的，身為使用 Ruby 的開發者在遊戲類應用不常見的狀況下，能可以作為學習素材肯定是要看過一遍的。&lt;/p>
-&lt;h2 id="概觀">概觀&lt;/h2>
-&lt;p>大概是在七月底的時候 Unlight 的 &lt;a href="https://unlight-world.com">官網&lt;/a> 突然復活，並且出現了一些開放素材的資訊。大約在昨天半夜（8/3 ~ 8/4）有人貼出了 &lt;a href="https://github.com/unlightcpa">Unlight 的 GitHub&lt;/a> 就此大家就開始期待是否有人能夠將他重建出來。&lt;/p>
-&lt;p>開始使用之前，需要先確認授權的形式。&lt;/p>
-&lt;ul>
-&lt;li>原始碼 - MIT 授權&lt;/li>
-&lt;li>素材（圖片、音樂）- CC BY-ND 4.0&lt;/li>
-&lt;/ul>
-&lt;p>以原始碼來說基本上算是可以自由使用跟修改，算是很寬鬆的條款。而圖片素材部分則是需要註明作者，主要受限的地方是「禁止改作」的部分，因為目前釋出的檔案大多以 SWF 為主（裡面含有一些動畫檔案）所以如果想要抽取出圖片後修改為適合手遊、HTML5 的應用時，是否不會跟授權牴觸就是需要注意的部分。&lt;/p>
-&lt;h2 id="架構語言">架構、語言&lt;/h2>
-&lt;p>原始碼部分包含了 &lt;a href="https://zh.wikipedia.org/zh-tw/ActionScript">ActionScript 3.0&lt;/a> 和 &lt;a href="https://www.ruby-lang.org/zh_tw/">Ruby&lt;/a> 兩個部分，AS3 的部分主要是用於客戶端，而 Ruby 則是提供伺服器。&lt;/p>
-&lt;blockquote>
-&lt;p>考慮到 Unlight 的時代背景，採用 Flash + Ruby 的方式其實跟目前大家熟悉的 HTML5 頁遊是比較不一樣的，他比較接近於端遊的類型在伺服器和客戶端之間溝通，網頁部分可以視為下載客戶端的載體。&lt;/p>
-&lt;/blockquote>
-&lt;p>客戶端部分目前推測「缺少非常多檔案」因為看起來有使用一些第三方的套件，官方也沒有提供任何文件說明，所以看起來是暫時無法「產出客戶端」的情況。而伺服端就看起來比較容易設定起來，至少有 &lt;code>Gemfile&lt;/code> 描述了需要安裝的 Ruby 套件，可以輕鬆的設定起來。&lt;/p>
-&lt;h2 id="客戶端">客戶端&lt;/h2>
-&lt;p>目前從 &lt;code>app/client&lt;/code> 目錄下看到的資訊來看，是一些原始的 ActionScript 原始碼，但是假設要編譯的話基本上會需要透過像是 &lt;a href="https://zh.wikipedia.org/zh-tw/Adobe_Flash_Builder">Flash Builder&lt;/a> 或者 &lt;a href="https://www.adobe.com/devnet/flex/flex-sdk-download.html">Flex SDK&lt;/a> 來做編譯，但是前者目前基本上是無法正常取得（可以透過 Creative Cloud 的知識庫找到載點）後者雖然可以取得，但是只能編譯單個 ActionScript 檔案。&lt;/p>
-&lt;p>但是目錄下目前並沒有關於如何編譯的說明，唯一知道的是在 GitHub 上的 &lt;a href="https://github.com/unlightcpa/Unlight/issues/2">Issue&lt;/a>（推測是原作者）表示無法在比較新版的 Flex 編譯，不過實際上要怎麼編譯還是未知的。&lt;/p>
-&lt;blockquote>
-&lt;p>我在我自己的 macOS 上安裝了 Flash Builder 但是 Java 版本已經過新無法啟動，網路上提供的手動指定 JVM 路徑的方式也無法正常開啟，網路上有一個說法是透過 Flash Builder 打開專案之後就能夠自動編譯。&lt;/p>
-&lt;/blockquote>
-&lt;p>另外一個疑點是 Client 端裡面的檔案，像是 &lt;code>Config.as&lt;/code> 或者 &lt;code>News.as&lt;/code> 這類檔案，都可以看到讀取某些 XML 設定檔的資訊，像是下面這段節錄。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-actionscript" data-lang="actionscript"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nx">Config&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="nx">XMLData&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">const&lt;/span> &lt;span class="nx">_TRANS_CONFIG_URL&lt;/span> &lt;span class="o">:&lt;/span>&lt;span class="nb">String&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;/public/config.xml&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
-&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">const&lt;/span> &lt;span class="nx">__URL&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="nb">String&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">_TRANS_CONFIG_URL&lt;/span>
-&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">const&lt;/span> &lt;span class="nx">__VERSION&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="nb">String&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;multi_servers_111003&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>這些檔案我們都會看到像是 &lt;code>import flash.net.URLRequest;&lt;/code> 的片段，明顯是用來抓取某些資料的，不過目前卻不知道這些 XML 資料需要提供哪些資訊，以及似乎沒有實際呼叫的地方，表示可能有一些行為是還未完善的。&lt;/p>
-&lt;blockquote>
-&lt;p>在寫這篇文章時發現是從 &lt;code>XMLData&lt;/code> 繼承來的，不過即使能夠呼叫並讀取設定檔等資訊，實際上要怎麼運行還是個問題。&lt;/p>
-&lt;/blockquote>
-&lt;p>另一方面是在伺服器端（待會會提到）的地方有設計一個加密機制，玩家跟伺服器交換資料的時候是會經過加密的（保護及防止作弊）而實際上玩家的每一個動作都會被轉會成 Command（指令）的概念去跟伺服器互動，但是目前在客戶端裡面找不到任何編碼指令的程式碼。&lt;/p>
-&lt;blockquote>
-&lt;p>前面提到 Unlight 比較類似傳統端遊的做法是因為他不是透過 HTTP 請求（網頁）的方式連線，而是直接透過 TCP 連線對伺服器連線後互動，考慮這種方式在 Flash 遊戲還盛行的時期，還算是合理且常見的作法。&lt;/p>
-&lt;/blockquote>
-&lt;p>另外就是客戶端理論上要有讀取前面素材包裡面的 SWF 檔案的片段，目前看起來也暫時還沒有發現是在哪裡定義的（也可能是透過使用的外部套件）&lt;/p>
-&lt;h3 id="伺服端">伺服端&lt;/h3>
-&lt;p>這部分算是我比較熟悉的部分，目前工作大部分時間都是使用 Ruby 來開發，所以把它跑起來算是相對客戶端輕鬆的。&lt;/p>
-&lt;p>先看 &lt;code>Gemfile&lt;/code> 這個檔案，我們可以大概知道他使用了哪些技術（從目錄結構上可以馬上判斷出不是採用 Ruby on Rails 開發的）&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">source&lt;/span> &lt;span class="ss">:rubygems&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;dalli&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;~&amp;gt;2.0.2&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;eventmachine&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;mysql2&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;0.3.7&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;oauth&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;0.4.5&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;RocketAMF&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;0.2.1&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;rspec&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;2.11.0&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;sequel&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;4.0&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;RubyInline&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;3.12.4&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;sqlite3&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;~&amp;gt;1.3.11&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;daemons&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;gmp&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>寫法上來說很明顯是相對舊版本的 Ruby 所開發的，不過 Ruby 核心團隊對於「向下相容性」的堅持，我們使用較新的 Ruby 2.6.3 都還是能正常使用。&lt;/p>
-&lt;p>裡面大概可以看出來使用了 Memcached / MySQL / OAuth 等技術，實際上用的第三方套件不多，這點我個人就蠻佩服日本的遊戲開發者，他們在這類技術上都是很扎實的一點一點製作出來。&lt;/p>
-&lt;blockquote>
-&lt;p>不過以比較商業的角度上來看，善用套件是很有用的，有不少日本手遊公司都是使用 Ruby on Rails 來開發。不過礙於遊戲相關的程式碼在技術圈是相對封閉的，所以很多時候都會依賴很多電腦科學的基礎知識來架構出遊戲。&lt;/p>
-&lt;/blockquote>
-&lt;p>因為是快速導讀，所以就不贅述這些套件的應用。從 &lt;code>Gemfile&lt;/code> 我們是可以大致上看出來使用的資料庫、優化技術跟串些的應用（Ex. OAuth 大概是跟當年跑在 Facebook 上用來串接的機制有關）&lt;/p>
-&lt;p>接下來看一下目錄結構&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>bin/&lt;/code> - 各種啟動伺服器的指令&lt;/li>
-&lt;li>&lt;code>data/&lt;/code> - 遊戲的資料（伺服器的紀錄檔也會在這）&lt;/li>
-&lt;li>&lt;code>db/&lt;/code> - 空的，根據原始碼的說明使用 &lt;code>csv&lt;/code> 模式當資料庫會放在這&lt;/li>
-&lt;li>&lt;code>lib/&lt;/code> - 空的，專案中有一些計算是利用 C 輔助的，他會在執行時產生一些 C 相關的檔案置入&lt;/li>
-&lt;li>&lt;code>script/&lt;/code> - 一些輔助腳本，像是匯入遊戲資料（Ex. 道具、角色素質等）&lt;/li>
-&lt;li>&lt;code>src/&lt;/code> - 伺服器的本體&lt;/li>
-&lt;/ul>
-&lt;p>一般來說我會先找可以描述整個資料結構的目錄看，所以先稍微看了一下 &lt;code>data/&lt;/code> 和 &lt;code>src/model&lt;/code> 兩個目錄，裡面大致上就是描述了 Unlight 這款遊戲是怎樣做數值設定跟紀錄玩家的操作，根據我工作的經驗設計的好壞其實很大的影響整個系統的穩定和維護，另外最重要的是這是最快可以大致瞭解作者想法的方式。&lt;/p>
-&lt;h2 id="目錄bin">目錄：bin/&lt;/h2>
-&lt;p>裡面看起來很多檔案，但是不要被嚇到，大部分的檔案機制都是類似的。會這樣設定可能是方便在不同伺服器上面開設不同的服務，或者做簡易的分流用的。&lt;/p>
-&lt;blockquote>
-&lt;p>印象中當時停止營運的時候我有用當時負責的客戶（手遊公司）的營運花費，用等比例的方式推算 Unlight 的遊戲規模，大概推算是一個月營運大概會是花費 100 ~ 200 萬台幣左右，這個目錄下大概有 100 個檔案左右，假設每個檔案都是獨立一台伺服器我們用 &lt;a href="https://aws.amazon.com/tw/">Amazon AWS&lt;/a> 上面的雲端伺服器數字非常不精確的推算一下，用一般正式伺服器可能會選用的 m 系列機器的 m4.large 規格，大概會花到 20 萬左用（&lt;a href="https://calculator.s3.amazonaws.com/index.html?nc2=h_ql_pr#r=NRT&amp;amp;s=EC2&amp;amp;key=files/calc-8d0494a1ee2ae3d0f1a990397358bd3f1e581769&amp;amp;v=ver20190731tO">試算&lt;/a>）這可能還不包過資料庫、當時的伺服器單價相對高等問題，加上人事跟營運成本，一個月營運的花費確實有機會接近到 100 萬台幣。&lt;/p>
-&lt;/blockquote>
-&lt;p>那麼這些檔案內容是怎樣的，我們用登入伺服器（&lt;code>authserver&lt;/code>）這個檔案看看。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="ch">#!/usr/local/bin/ruby&lt;/span>
-&lt;span class="c1"># -*- coding: utf-8 -*-&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;rubygems&amp;#39;&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;daemons&amp;#39;&lt;/span>
-&lt;span class="n">options&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="ss">:app_name&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s2">&amp;#34;ul_authserver&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">:dir_mode&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="ss">:normal&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">:dir&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s1">&amp;#39;pids&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">:backtrace&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="c1"># :monitor =&amp;gt; true,&lt;/span>
-&lt;span class="ss">:log_output&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="kp">true&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">f&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">File&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">File&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">expand_path&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">__FILE__&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gsub!&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;/bin/authserver&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s2">&amp;#34;/src&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="no">Dir&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">chdir&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">File&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">File&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">expand_path&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">__FILE__&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gsub!&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;authserver&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)))&lt;/span>
-&lt;span class="no">Daemons&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/authentication.rb&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>基本上結構的規則都是差不多的，提供這個伺服器的基本設定，然後用 &lt;code>Daemons&lt;/code> 這個套件把伺服器啟動（常駐執行）而執行的檔案就是裡面指定的像是 &lt;code>authentication.rb&lt;/code> 這些檔案，等一下我們會再討論 &lt;code>src/&lt;/code> 目錄時一起看。&lt;/p>
-&lt;h2 id="目錄script">目錄：script/&lt;/h2>
-&lt;p>我們把非程式的部分跳過，因為那些都是一些數據資料，雖然人類直接閱讀會有點吃力。但是習慣之後還是能閱讀的部分，大多數遊戲公司的企劃應該都有能力閱讀和修改。&lt;/p>
-&lt;p>這部分主要是維運需要的的腳本，因為比較雜亂就不特別討論，我們稍微看一下 &lt;code>import_csv_data.rb&lt;/code> 這個檔案，假設我們想要將遊戲設定起來，就需要將 &lt;code>data/&lt;/code> 目錄下面的遊戲資料匯入，就會需要呼叫這個檔案。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">if&lt;/span> &lt;span class="sb">`pwd`&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">chomp&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;/home/unlight/svn/trunk/app/server&amp;#34;&lt;/span>
-&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;このスクリプトはここで使用してはいけません&amp;#34;&lt;/span>
-&lt;span class="nb">exit&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">opt&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">OptionParser&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>
-&lt;span class="vg">$VER_OVERWRITE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">false&lt;/span>
-&lt;span class="vg">$VER_NUMBERING&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">false&lt;/span>
-&lt;span class="vg">$VER_RESTART&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">false&lt;/span>
-&lt;span class="n">over_text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;（ドロップモード：すべて捨てて作り直します。時間がかかりますが正確です ）&amp;#34;&lt;/span>
-&lt;span class="n">opt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">on&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;-n&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;--numbering&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="o">|&lt;/span>&lt;span class="n">v&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="vg">$VER_NUMBERING&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">true&lt;/span>
-&lt;span class="n">over_text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;（ナンバリングモード：数値で指定されたファイルのみ更新します）&amp;#34;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">opt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">on&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;-r&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;--restart&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="o">|&lt;/span>&lt;span class="n">v&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="vg">$VER_RESTART&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kp">true&lt;/span>
-&lt;span class="n">over_text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;（再開モード：数値で指定されたファイル以降を更新します）&amp;#34;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">opt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse!&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">ARGV&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="vg">$VER_NUMBERING&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="vg">$VER_RESTART&lt;/span>
-&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;Option n, r は同時に指定出来ません。&amp;#34;&lt;/span>
-&lt;span class="nb">exit&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="vg">$arg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">ARGV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">shift&lt;/span>
-&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;serverに存在するcsvdataでインポートしますか (sb)&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="n">over_text&lt;/span>
-&lt;span class="vg">$arg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">gets&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">chomp&lt;/span>
-&lt;span class="vi">@m_set&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">[]&lt;/span>
-&lt;span class="no">LANGUAGE_SET&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sr">/_tcn$|_en$|_scn$|_kr$|_fr$|_ina$|_thai$/&lt;/span>
-&lt;span class="no">MESSAGES&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;sb&amp;#34;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s2">&amp;#34;SandBox&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
-&lt;span class="no">DATABASES&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>
-&lt;span class="s2">&amp;#34;192.168.1.14:5001&amp;#34;&lt;/span>&lt;span class="o">=&amp;gt;&lt;/span>&lt;span class="s2">&amp;#34;SandBox&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>前面這段主要只是一些讀取匯入設定相關的資訊，我在試跑的時候遇到的問題其實是說明跟描述都不太明確，反而沒有搞懂操作，之後詳細閱讀之後再細看。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">def&lt;/span> &lt;span class="nf">csv_import&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">dir&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">local&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="no">Find&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;./data/csv&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="k">next&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="no">File&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">directory?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="c1"># ...&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>這段就是匯入的本體，會將檔案找出來後匯入，基本上匯入程式大多大同小異就是了⋯⋯&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;code>script/&lt;/code> 目錄下的東西大多很雜，其實也不會試運行伺服器馬上會需要的部分，實際上可以先略過，除了匯入資料的部分。不過經過測試發現過程中會呼叫某個方法，而這個方法目前是找不到的，這也表示有可能除了匯入會失敗之外，遊戲運行在某些情況下也會失敗。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="目錄src">目錄：src/&lt;/h2>
-&lt;p>這個目錄下還有不少資料夾，我們可以稍微看一下&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>constants/&lt;/code> - 遊戲中的常數，也就是一些固定的數值（Ex. 新手任務的編號）&lt;/li>
-&lt;li>&lt;code>controller/&lt;/code> - 遊戲的控制器，目前還不確定用途，不過主要是跟玩家操作有關（Ex. 發送聊天訊息）&lt;/li>
-&lt;li>&lt;code>model/&lt;/code> - 遊戲資料的處理程式，用來讀取玩家、怪物等資料，以及數值的更新（Ex. 等級提升）&lt;/li>
-&lt;li>&lt;code>net/&lt;/code> - 伺服器跟客戶端溝通的機制，基本上只是處理一段加密的操作&lt;/li>
-&lt;li>&lt;code>protocol/&lt;/code> - 伺服器的本體，裡面定義了各種類型的伺服器 Ex. 登入伺服器、戰鬥伺服器等&lt;/li>
-&lt;li>&lt;code>rule/&lt;/code> - 遊戲的規則，基本上是描述一些像是 AI、抽卡的機制&lt;/li>
-&lt;/ul>
-&lt;p>基本上蠻多檔案內容都蠻多的，這邊只簡單介紹伺服器啟動的部分（目前有讀的部分）&lt;/p>
-&lt;p>基本上不管是哪種伺服器，都會繼承 &lt;code>Unlight&lt;/code> 這個物件（&lt;code>src/protocol/unlight.rb&lt;/code>）&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">module&lt;/span> &lt;span class="nn">Unlight&lt;/span>
-&lt;span class="k">module&lt;/span> &lt;span class="nn">Protocol&lt;/span>
-&lt;span class="k">class&lt;/span> &lt;span class="nc">ULServer&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">EventMachine&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Connection&lt;/span>
-&lt;span class="c1"># これ以上前に反応していなかった切る&lt;/span>
-&lt;span class="no">CONNECT_LIVE_SEC&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3600&lt;/span> &lt;span class="c1"># 1時間&lt;/span>
-&lt;span class="c1"># 何回のコマンドエラーで切断するか&lt;/span>
-&lt;span class="no">COMMAND_ERROR_MAX&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span> &lt;span class="c1">#&lt;/span>
-&lt;span class="kp">attr_accessor&lt;/span> &lt;span class="ss">:player&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="ss">:last_connect&lt;/span>
-&lt;span class="c1"># クラスの初期化&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>Unlight 使用的是當時 Ruby 用來做一些連線機制常用的 &lt;code>EventMachine&lt;/code> 套件，所以會直接繼承 &lt;code>EventMachine::Connection&lt;/code> 實作，基本上是為了借用 EventMachine 的一些機制。&lt;/p>
-&lt;blockquote>
-&lt;p>因為筆者本身沒有使用 EventMachine 所以無法太詳細描述，不過以當時的時間點來看，使用 EventMachine 是一個很不錯的選擇，因為能負擔的玩家數量是遠比其他方式更高，而且也更好用。&lt;/p>
-&lt;/blockquote>
-&lt;p>在 &lt;code>unlight.rb&lt;/code> 檔案中會看到這段&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby"> &lt;span class="c1"># データの受信&lt;/span>
-&lt;span class="k">def&lt;/span> &lt;span class="nf">receive_data&lt;/span> &lt;span class="n">data&lt;/span>
-&lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data2command&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="vi">@command_list&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="k">unless&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">empty?&lt;/span>
-&lt;span class="n">do_command&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>簡單說不管是哪種伺服器，在收到資料後會做一個「解碼」的動作將客戶端傳輸的指令（Command）轉換成像是 &lt;code>[:register, 'xxx@example.com', 'Aotoki']&lt;/code> 的格式，再由不同伺服器（Ex. AuthServer）來處理。&lt;/p>
-&lt;p>我們在看到 &lt;code>src/&lt;/code> 目錄下的這些 Ruby 檔案，其實大多是將前面提到的 &lt;code>EventMachine&lt;/code> 啟動的部分（也就是前面 &lt;code>bin/&lt;/code> 呼叫的檔案）以「大廳（Lobby）」這個檔案為例子（&lt;code>src/lobby.rb&lt;/code>）&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">module&lt;/span> &lt;span class="nn">Unlight&lt;/span>
-&lt;span class="kp">include&lt;/span> &lt;span class="no">Protocol&lt;/span>
-&lt;span class="n">port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">12002&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_descriptor_table_size&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10000&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ソケットMaxを設定&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">epoll&lt;/span> &lt;span class="c1"># Epollを使用するように設定。&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">run&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="no">LobbyServer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setup&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">start_server&lt;/span> &lt;span class="s2">&amp;#34;0.0.0.0&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="no">SV_PORT&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="no">LobbyServer&lt;/span>
-&lt;span class="no">SERVER_LOG&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;LobbyServer Start: port[&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="no">SV_PORT&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">]&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="c1"># タイマの制度を上げる&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_quantum&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="c1"># 1分に一回でソケットの生き死にをチェック&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">PeriodicTimer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">60&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">proc&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="k">begin&lt;/span>
-&lt;span class="no">LobbyServer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">check_connection&lt;/span>
-&lt;span class="k">rescue&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span>&lt;span class="n">e&lt;/span>
-&lt;span class="no">SERVER_LOG&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fatal&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;LobbyServer: [check_connection:] fatal error &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">:&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">backtrace&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="p">})&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="no">DB_CONNECT_CHECK&lt;/span>
-&lt;span class="c1"># 7時間に一回でDBとの接続をチェック&lt;/span>
-&lt;span class="no">EM&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">PeriodicTimer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">60&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">60&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">proc&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="k">begin&lt;/span>
-&lt;span class="no">LobbyServer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">check_db_connection&lt;/span>
-&lt;span class="k">rescue&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span>&lt;span class="n">e&lt;/span>
-&lt;span class="no">SERVER_LOG&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fatal&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;LobbyServer: [check_db_connection:] fatal error &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">:&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">backtrace&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="p">})&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>這段就是將 EventMachine 跑起來，然後根據伺服器類型（Ex. LobbyServer）去做呼叫，並且執行對應的任務。&lt;/p>
-&lt;p>最後我們看一下 &lt;code>src/net&lt;/code> 下面的檔案，裡面用了一個叫做 &lt;a href="http://srp.stanford.edu/design.html">SRP&lt;/a> 的演算法實作，他會用在登入伺服器的時候加密玩家的登入密碼，而其他一般指令則會用 &lt;code>crypt.rb&lt;/code> 這個檔案做編碼處理，如果想要保護伺服器的互動避免外掛或者惡意玩家，可以嘗試改變這個檔案的計算機制。&lt;/p>
-&lt;h2 id="運作">運作&lt;/h2>
-&lt;p>大致上看過一輪伺服器跟客戶端之後，我們來總結一下整個伺服器的運作。&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>bin/authserver&lt;/code> =&amp;gt; 啟動伺服器，呼叫 &lt;code>authentication.rb&lt;/code> 等待連線&lt;/li>
-&lt;li>&lt;code>authentication.rb&lt;/code> =&amp;gt; 等待連線，有資料的話透過 &lt;code>AuthServer&lt;/code> 處理&lt;/li>
-&lt;li>&lt;code>AuthServer&lt;/code> =&amp;gt; 收到操作後基於指令轉換為方法（一般定義在 Controller 裡面）&lt;/li>
-&lt;li>Controller =&amp;gt; 根據指令執行動作，可能會呼叫 Model / Rule 協助處理&lt;/li>
-&lt;li>&lt;code>AuthServer&lt;/code> =&amp;gt; 發送結果給玩家&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>&lt;code>AuthServer&lt;/code> 因為指令比較少所以沒有定義 Controller 但是像是 LobbyServer 之類的就有定義&lt;/p>
-&lt;/blockquote>
-&lt;p>到此為止我們大致上對伺服端有一個概念，另外值得一提的是前面在看 &lt;code>Gemfile&lt;/code> 看到的 &lt;code>RocketAMF&lt;/code> 套件，似乎可以直接轉換 Ruby 的資料變成 Flash 可以讀取的格式，不過目前還暫時看不出來在哪裡有被使用，也可能是透過指令帶入給客戶端值些呼叫（類似伺服器的行為）&lt;/p>
-&lt;h2 id="後記">後記&lt;/h2>
-&lt;p>雖然是很粗略的掃過一次原始碼，不過大致上對整個伺服器的運作已經有一個大致上的概念。回到現實面來看，以目前公開的資訊想要用現有的檔案去重新建置一個 Unlight 伺服器大概是蠻困難的，但是如果基於目前已知的程式跟運作，重新開發過一套有類似或者改進的系統，應該已經是有可能的。&lt;/p>
-&lt;p>跟單機遊戲不同的地方是連線遊戲為了保證公平性，需要將遊戲的規則判定都坐在伺服器上面，即使目前看起來不管是伺服端還是客戶端都有缺少部分檔案，但是整體上來說伺服器已經算是最接近完整的部分，至少大部分遊戲的邏輯跟機制都能夠被找到。&lt;/p>
-&lt;p>九月左右還有鐵人賽，最近應該會評估一下 30 天左右要寫什麼主題，也許基於 Unlight 的伺服器來討論開發遊戲伺服器會是個不錯的題目。&lt;/p></content></item><item><title>你大概沒機會遇到的 Bug - 跟 Ruby Committer 聊 Enumerator 跟 Fiber</title><link>https://blog.frost.tw/posts/2019/07/30/Talk-with-the-Ruby-Committer-about-Enumerator-and-Fiber-the-bug-you-may-never-touch/</link><category>
-RubyConfTW,Bug,Ruby,Enumerator,Fiber</category><pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/07/30/Talk-with-the-Ruby-Committer-about-Enumerator-and-Fiber-the-bug-you-may-never-touch/</guid><dc:creator>蒼時弦也</dc:creator><description>&lt;p>今年 &lt;a href="https://2019.rubyconf.tw/">RubyConf Taiwan&lt;/a> 嘗試辦了 After Hack 這個活動，也因此有機會可以跟 Ruby 語言的 Commiter 聊一些有趣的問題。&lt;/p>
-&lt;p>當天我的預定是把活動這幾天寫的 Gem 認真的補完測試，不過沒想到還剩下一個多小時就做完了，那就順便來思考一下 &lt;a href="https://tamashii.io">Tamashii&lt;/a> 專案能怎樣去改進，在今年的演講中大家應該都對 Fiber 有一個認識，而這個也許是一個不錯的選項。&lt;/p>
-&lt;p>所以就馬上去看了一下講者（Samuel）的 &lt;a href="https://github.com/socketry/async">Async&lt;/a> 這個 Gem 做了些什麼事情，因為剛講完關於 Enumerator 的演講，所以自然地看到了一段引起我興趣的說明。&lt;/p>
-&lt;blockquote>
-&lt;p>Due to limitations within Ruby and the nature of this library, it is not possible to use to_enum on methods which invoke asynchronous behavior. We hope to fix this issue in the future.&lt;/p>
-&lt;/blockquote>
-&lt;p>既然作者本人就在現場，而且 Issue 的內容也看不太出來發生什麼問題，那麼就直接問吧！&lt;/p></description><content>&lt;p>今年 &lt;a href="https://2019.rubyconf.tw/">RubyConf Taiwan&lt;/a> 嘗試辦了 After Hack 這個活動，也因此有機會可以跟 Ruby 語言的 Commiter 聊一些有趣的問題。&lt;/p>
-&lt;p>當天我的預定是把活動這幾天寫的 Gem 認真的補完測試，不過沒想到還剩下一個多小時就做完了，那就順便來思考一下 &lt;a href="https://tamashii.io">Tamashii&lt;/a> 專案能怎樣去改進，在今年的演講中大家應該都對 Fiber 有一個認識，而這個也許是一個不錯的選項。&lt;/p>
-&lt;p>所以就馬上去看了一下講者（Samuel）的 &lt;a href="https://github.com/socketry/async">Async&lt;/a> 這個 Gem 做了些什麼事情，因為剛講完關於 Enumerator 的演講，所以自然地看到了一段引起我興趣的說明。&lt;/p>
-&lt;blockquote>
-&lt;p>Due to limitations within Ruby and the nature of this library, it is not possible to use to_enum on methods which invoke asynchronous behavior. We hope to fix this issue in the future.&lt;/p>
-&lt;/blockquote>
-&lt;p>既然作者本人就在現場，而且 Issue 的內容也看不太出來發生什麼問題，那麼就直接問吧！&lt;/p>
-&lt;h2 id="關於-fiber">關於 Fiber&lt;/h2>
-&lt;p>詳細的部分可以參考之前寫過的 &lt;a href="https://blog.frost.tw/posts/2018/06/26/Talk-about-ruby-s-fiber-Part-1/">Fiber 簡介&lt;/a> 以下只做簡單的介紹方便跟上這篇文章的內容，另外因為這幾年很多語言都在努力的更新，雖然 Ruby 是一個相容性非常好的語言，但是還是有不少變化是隱含的。&lt;/p>
-&lt;blockquote>
-&lt;p>以文章中的 4K 堆疊為例，今年另一位講者（&lt;a href="https://github.com/dsh0416">Delton Ding&lt;/a>）在 &lt;a href="https://twitter.com/DeltonDing/status/1155853101586214918">Twitter&lt;/a> 提醒我這個特性在 2010 年和 2017 年都修改過，在 Ruby 2.5 之後的版本是不會產生，而改用指標的方式來處理。&lt;/p>
-&lt;/blockquote>
-&lt;p>Fiber 機制用很簡單的方式說明，就是我們可以在單一的 Thread 下面，再做一次切割來切換執行順序。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">f&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="c1"># A: 做某些事情&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span> &lt;span class="c1"># I/O Blocking 先跳出給其他人做事&lt;/span>
-&lt;span class="c1"># B: 繼續做事情&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="c1"># 執行 Fiber (A 區塊）&lt;/span>
-&lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">resume&lt;/span>
-&lt;span class="c1"># 繼續執行（B 區塊）&lt;/span>
-&lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">resume&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>以前我們會需要用切分 Thread 的方式來對應 I/O Blocking 的情況，現在我們可以用一些 Non-Blocking 的操作來判斷是否有賭塞現象，進而控制執行的流程。&lt;/p>
-&lt;h2 id="enumerator-中的-fiber">Enumerator 中的 Fiber&lt;/h2>
-&lt;p>今年我自己的演講主要是著重在 Enumerator 的生成與運作上，所以討論了 Ruby 能用哪些技巧去做到讓 &lt;code>yield&lt;/code> 行為暫時不發生，以及讓某些動作能夠被「延遲（&lt;code>#lazy&lt;/code>）」執行。&lt;/p>
-&lt;p>當我跟 Samuel 聊到這個 Enumerator 的 Bug 時候，我問了一句「Which ruby version this will happen?」得到的是「All versions」的解答，然後我馬上就知道這是我「沒有讀」的那一個部分，也就是關於 Enumerator 如何去迭代數值的部分。&lt;/p>
-&lt;blockquote>
-&lt;p>寫這篇文章的時候我再去看了一次 &lt;code>enumerator.c&lt;/code> 裡面有出現 Fiber 的區段，基本上應該是有使用到 &lt;code>#next&lt;/code> 的情況會發生，如果是一些 &lt;code>#zip&lt;/code> 和 &lt;code>#map&lt;/code> 的情況，因為不一定會去呼叫到 &lt;code>#next&lt;/code> 就不會產生問題。&lt;/p>
-&lt;/blockquote>
-&lt;p>那麼，到底是在哪裡產生了 Fiber 呢？&lt;/p>
-&lt;p>&lt;code>enumerator.c&lt;/code>（Ruby 2.6.2）裡面只有一個 &lt;code>fiber_new&lt;/code> 我們照呼叫的順序去來追蹤，首先會看到 &lt;code>enumerator_next&lt;/code> 這個實作。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="k">static&lt;/span> &lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">enumerator_next&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">vs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">enumerator_next_values&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">ary2sv&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vs&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>這邊會把 &lt;code>enumerator_next_values&lt;/code> 回傳的數值找出第一個（如果是陣列）或者直接回傳，基本上就是把下一個元素找出來。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="k">static&lt;/span> &lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">enumerator_next_values&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="k">struct&lt;/span> &lt;span class="n">enumerator&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">enumerator_ptr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">vs&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">lookahead&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">vs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">lookahead&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">lookahead&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">vs&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">get_next_values&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>然後這邊會拿當下作用的 Enumerator 來去找接下來會出現的數值，所以我們再繼續往下看到 &lt;code>get_next_values&lt;/code> 這個方法。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="k">static&lt;/span> &lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">get_next_values&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">struct&lt;/span> &lt;span class="n">enumerator&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">curr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">vs&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">stop_exc&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">rb_exc_raise&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">stop_exc&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">curr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_fiber_current&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">fib&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">rb_fiber_alive_p&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">next_init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">vs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_fiber_resume&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">curr&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">stop_exc&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">fib&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">dst&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qnil&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">lookahead&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">feedvalue&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">rb_exc_raise&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">stop_exc&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">vs&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>到了這段，我們終於發現了 Fiber 的蹤跡，稍微來看一下發生了哪些事情。&lt;/p>
-&lt;ol>
-&lt;li>呼叫 &lt;code>Fiber.current&lt;/code> 取得當下作用中的 Fiber&lt;/li>
-&lt;li>&lt;strong>如果 Enumerator 的 Fiber 不存在或者執行完畢&lt;/strong>，就做 &lt;code>next_init&lt;/code> 這個動作&lt;/li>
-&lt;li>對 Enumerator 的 Fiber 呼叫 &lt;code>#resume&lt;/code>&lt;/li>
-&lt;/ol>
-&lt;p>因為 &lt;code>#resume&lt;/code> 的回傳值是 &lt;code>Fiber.yield&lt;/code> 傳入的參數，所以我們只要再找到 Enumerator 的 Fiber 就能了解是怎樣運作的。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;span class="lnt">7
-&lt;/span>&lt;span class="lnt">8
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="k">static&lt;/span> &lt;span class="kt">void&lt;/span>
-&lt;span class="nf">next_init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">struct&lt;/span> &lt;span class="n">enumerator&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">curr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_fiber_current&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">dst&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">curr&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">fib&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_fiber_new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">next_i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">lookahead&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>回到 &lt;code>next_init&lt;/code> 這段，我們會發現 Ruby 將 &lt;code>next_i&lt;/code> 的方法當作是 Fiber 執行的區段來呼叫（就是我們 Fiber.new 給的 Block）&lt;/p>
-&lt;p>繼續往下追會看到 &lt;code>next_i&lt;/code> 和 &lt;code>next_ii&lt;/code> 兩個方法&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="k">static&lt;/span> &lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">next_ii&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">RB_BLOCK_CALL_FUNC_ARGLIST&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">))&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="k">struct&lt;/span> &lt;span class="n">enumerator&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">enumerator_ptr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">feedvalue&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qnil&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">args&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_ary_new4&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">rb_fiber_yield&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">feedvalue&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">feedvalue&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">feedvalue&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">feedvalue&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qundef&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">feedvalue&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">static&lt;/span> &lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">next_i&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">curr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">VALUE&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="k">struct&lt;/span> &lt;span class="n">enumerator&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">enumerator_ptr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">nil&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Qnil&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_block_call&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">id_each&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">next_ii&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">obj&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">stop_exc&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rb_exc_new2&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rb_eStopIteration&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;iteration reached an end&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="n">rb_ivar_set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">stop_exc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">id_result&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">rb_fiber_yield&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">nil&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>首先看 &lt;code>next_i&lt;/code> 這個方法，他會去呼叫我們定義的 Enumerator 的 &lt;code>#each&lt;/code> 方法來做迭代，跟我們對 Enumerator 的理解上是一致的，而迭代的行為（給 &lt;code>#each&lt;/code> 的 Block）就是 &lt;code>next_ii&lt;/code> 本身。
-繼續看到 &lt;code>next_ii&lt;/code> 這個方法，可以理解為他就是單純的呼叫 &lt;code>Fiber.yield&lt;/code> 而已，所以我們可以把這段轉換成下面的 Ruby 來理解。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">each&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span> &lt;span class="n">item&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>也就是說，每次我們用 &lt;code>#next&lt;/code> 的時候，Ruby 會產生一個 Fiber 然後每執行一次迭代就用 &lt;code>Fiber.yield&lt;/code> 跳出來，直到都沒有任何元素可以被迭代後，再產生 &lt;code>StopIteration&lt;/code> 的 Exception 同時做最後一次的 &lt;code>Fiber.yield&lt;/code>&lt;/p>
-&lt;p>我們可以用 Ruby簡單模擬這個行為&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;fiber&amp;#39;&lt;/span>
-&lt;span class="c1"># :nodoc:&lt;/span>
-&lt;span class="k">class&lt;/span> &lt;span class="nc">FiberNext&lt;/span>
-&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">items&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="vi">@items&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">items&lt;/span>
-&lt;span class="vi">@fiber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">create_fiber&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">def&lt;/span> &lt;span class="nf">next&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="k">unless&lt;/span> &lt;span class="vi">@fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">alive?&lt;/span>
-&lt;span class="vi">@fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">resume&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="kp">private&lt;/span>
-&lt;span class="k">def&lt;/span> &lt;span class="nf">create_fiber&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="vi">@items&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">each&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span> &lt;span class="n">item&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">enum&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">FiberNext&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">apple&lt;/span> &lt;span class="n">water&lt;/span> &lt;span class="n">flashlight&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="mi">3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">times&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;Next: &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">enum&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">next&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>讀到這裡，不得不感嘆一下 Ruby Commiter 們用如此漂亮的方式設計了一個機能，我們都知道 Enumerator 對應的 &lt;code>#each&lt;/code> 裡面只要給了 &lt;code>yield&lt;/code> 基本上就是一個無法停止的狀態，他會不斷呼叫我們給的 Block 直到沒有 &lt;code>yield&lt;/code> 再被呼叫，所以在 Ruby 裡面這算是一種「迭代」&lt;/p>
-&lt;p>但是想要控制迭代的進度，用步進的方式進行呢？如果採用一般的方式可能要做很多動作才能達成，此時 Fiber 這種可以暫停某個位置的執行跳去做其他任務，再跳回去的機制就變得非常實用。以應用案例來說，我想這大概也是非常漂亮的一個學習參考，以我過去對 Fiber 的理解是沒辦法想到這樣的使用方式的。&lt;/p>
-&lt;h2 id="被少考慮的情境">被少考慮的情境&lt;/h2>
-&lt;p>前情提要終於結束了，回到我們的主題，那個你不會遇到的 Bug 到底是什麼？&lt;/p>
-&lt;p>在 Samuel 對 Ruby 的 &lt;a href="https://github.com/ruby/ruby/pull/2002#issuecomment-515749562">PR&lt;/a> 中你可以看到一段使用 &lt;code>#to_enum&lt;/code> 和 &lt;code>Fiber&lt;/code> 的程式碼，這段是當天再向我解釋時給的一個範例。&lt;/p>
-&lt;p>我稍微整理一下，讓大家比較好看到問題&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">def&lt;/span> &lt;span class="nf">items&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">block&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="k">yield&lt;/span> &lt;span class="ss">:apple&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span> &lt;span class="c1"># 我想在這跳出我的 Fiber&lt;/span>
-&lt;span class="k">yield&lt;/span> &lt;span class="ss">:water&lt;/span>
-&lt;span class="k">yield&lt;/span> &lt;span class="ss">:flashlight&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">enum&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">to_enum&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:items&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">f&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="mi">3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">times&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;Next: &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">enum&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">next&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">resume&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>執行的結果卻是這樣的&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="o">[&lt;/span>elct9620&lt;span class="o">]&lt;/span> Desktop % ruby fiber.rb
-Next: apple
-Next:
-Next: water
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>照正常的迭代器運作，不應該是把 &lt;code>:apple&lt;/code>, &lt;code>:water&lt;/code> 和 &lt;code>:flashlight&lt;/code> 印出來，為什麼多了一個 &lt;code>nil&lt;/code> 的數值呢？&lt;/p>
-&lt;p>如果我們把 &lt;code>Fiber.yield&lt;/code> 改成 &lt;code>Fiber.yield :oops&lt;/code> 執行看看&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="o">[&lt;/span>&lt;span class="n">elct9620&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="no">Desktop&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">ruby&lt;/span> &lt;span class="n">fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rb&lt;/span>
-&lt;span class="ss">Next&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">apple&lt;/span>
-&lt;span class="ss">Next&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">oops&lt;/span>
-&lt;span class="ss">Next&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">water&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>問題就出在 &lt;code>Fiber.yield&lt;/code> 竟然變得跟 &lt;code>yield&lt;/code> 一樣，這是怎麼一回事？&lt;/p>
-&lt;p>回想一下前面介紹 Enumerator 在做 &lt;code>#next&lt;/code> 的時候，是不是會產生一個新的 Fiber 然後用那個 Fiber 去做事情？&lt;/p>
-&lt;p>我們把前面那段產生 &lt;code>#next&lt;/code> 的 Fiber 區段找出來，然後代入 &lt;code>#items&lt;/code> 方法，會變成怎樣呢？&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># ...&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="c1"># @items.each do |item|&lt;/span>
-&lt;span class="n">items&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="c1"># 第一次 =&amp;gt; item = (yield :apple)&lt;/span>
-&lt;span class="c1"># 第一次 =&amp;gt; Fiber.yield :oops&lt;/span>
-&lt;span class="c1"># 第二次 =&amp;gt; item = (yield :water)&lt;/span>
-&lt;span class="c1"># 第三次 =&amp;gt; item = (yield :flashlight)&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span> &lt;span class="n">item&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="c1"># ...&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>大家有沒有發現，我們在第一次到第二次迭代的時候，被偷做了一次 &lt;code>Fiber.yield&lt;/code> 然後他就跑回去變成 &lt;code>#resume&lt;/code> 的回傳值，然後 &lt;code>#next&lt;/code> 行為的次數就大亂了，歸咎原因在於他在執行的時候被 Ruby 判斷為「屬於 Enumerator 的 Fiber」&lt;/p>
-&lt;p>所以如果我們修改成像下面這樣執行，反而就不會出問題&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">def&lt;/span> &lt;span class="nf">items&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">block&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="k">yield&lt;/span> &lt;span class="ss">:apple&lt;/span>
-&lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yield&lt;/span> &lt;span class="c1"># 我想在這跳出我的 Fiber&lt;/span>
-&lt;span class="k">yield&lt;/span> &lt;span class="ss">:water&lt;/span>
-&lt;span class="k">yield&lt;/span> &lt;span class="ss">:flashlight&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">enum&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">to_enum&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:items&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">f&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Fiber&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="n">items&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;Next: &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">resume&lt;/span>
-&lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">resume&lt;/span> &lt;span class="c1"># 因為被正確 `Fiber.yield` 所以要再做一次讓他能繼續&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>因為沒有使用 &lt;code>#next&lt;/code> 所以不會產生一個 Fiber 也就不會有被判斷錯誤的問題。&lt;/p>
-&lt;h2 id="解決方案與-fiber-的切換機制">解決方案與 Fiber 的切換機制&lt;/h2>
-&lt;p>目前我們看到的 PR 算是一個暫時性的解法，Samuel 告訴我這跟目前 Fiber 的設計有關係，所以只能先處理掉這個問題（大概會是 2.7 or 2.8 之類的會好）目前 PR 上已經是另一個版本，也就是最後展示給我會動的版本。中間也還有使用像是 &lt;code>Fiber.transfer&lt;/code> 之類的方式做切換，就能指定應該要跳回哪一個 Fiber 上。&lt;/p>
-&lt;p>不過 Samuel 告訴我的想法我還不太清楚他想表達的是哪一個，不過只能說目前大致上有一個解決方法可以用。&lt;/p>
-&lt;ol>
-&lt;li>Enumerator 的 Fiber 要能跟普通的 Fiber 區分開來&lt;/li>
-&lt;li>Fiber 要加入一些類似 Call Stack 的機制，用來判斷要跳回去的 Fiber（以解釋來說比較像是多存一個指標）&lt;/li>
-&lt;/ol>
-&lt;p>最後，我們來談談目前（Ruby 2.6.2）的 Fiber 切換機制是怎樣的。&lt;/p>
-&lt;p>目前已知 &lt;code>Fiber.yield&lt;/code> &lt;code>Fiber.transfer&lt;/code> 和 &lt;code>#resume&lt;/code> 三個方法可以做切換，那麼來看一下這三個的實作&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">rb_fiber_resume&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">fibval&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">const&lt;/span> &lt;span class="n">VALUE&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="n">rb_fiber_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">fib&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fiber_ptr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fibval&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">prev&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">fiber_is_root_p&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">rb_raise&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rb_eFiberError&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;double resume&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">transferred&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">rb_raise&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rb_eFiberError&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;cannot resume transferred Fiber&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">fiber_switch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">rb_fiber_yield&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">const&lt;/span> &lt;span class="n">VALUE&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">fiber_switch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">return_fiber&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">rb_fiber_transfer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">VALUE&lt;/span> &lt;span class="n">fibval&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">const&lt;/span> &lt;span class="n">VALUE&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">fiber_switch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fiber_ptr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fibval&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>仔細一看，除了 &lt;code>#resume&lt;/code> 有做一些檢查去避免重複執行之外，基本上都是做同樣的事情。（也就是文章前面提到的在新版的 Fiber 已經採用指標切換）&lt;/p>
-&lt;p>而 &lt;code>Fiber.yield&lt;/code> 和 &lt;code>Fiber.transfer&lt;/code> 的差異幾乎是只剩下「是否能指定 Fiber」這點，這也是 Samuel 有提到可能可以用 &lt;code>Fiber.transfer&lt;/code> 去解決 Enumerator 裡面的 Fiber 問題的原因，因為我們可以利用這樣的方式「手動指定」而不是交由 Ruby 自己判斷，那麼就能讓我們指定正確的 Fiber 去繼續執行。&lt;/p>
-&lt;p>至於為什麼會選到錯誤的 Fiber 執行，我們看一下 &lt;code>fiber_siwtch&lt;/code> 和 &lt;code>return_fiber&lt;/code> 大概就可以猜到原因。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;span class="lnt">37
-&lt;/span>&lt;span class="lnt">38
-&lt;/span>&lt;span class="lnt">39
-&lt;/span>&lt;span class="lnt">40
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="k">static&lt;/span> &lt;span class="kr">inline&lt;/span> &lt;span class="n">VALUE&lt;/span>
-&lt;span class="nf">fiber_switch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rb_fiber_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">const&lt;/span> &lt;span class="n">VALUE&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">is_resume&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="n">VALUE&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">rb_context_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">cont&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">fib&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">cont&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">rb_thread_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">th&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">GET_THREAD&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;span class="c1">// 略
-&lt;/span>&lt;span class="c1">&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">is_resume&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">fib&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">prev&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fiber_current&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="c1">// 略
-&lt;/span>&lt;span class="c1">&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">static&lt;/span> &lt;span class="kr">inline&lt;/span> &lt;span class="n">rb_fiber_t&lt;/span>&lt;span class="o">*&lt;/span>
-&lt;span class="nf">return_fiber&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="n">rb_fiber_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">fib&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fiber_current&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;span class="n">rb_fiber_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">prev&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fib&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">prev&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">prev&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">rb_thread_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">th&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">GET_THREAD&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;span class="n">rb_fiber_t&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">root_fiber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">th&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">root_fiber&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="n">VM_ASSERT&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">root_fiber&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="nb">NULL&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">root_fiber&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">fib&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">rb_raise&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rb_eFiberError&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;can&amp;#39;t yield from root fiber&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">root_fiber&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="n">fib&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">prev&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">NULL&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="k">return&lt;/span> &lt;span class="n">prev&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>簡單說當我們呼叫 &lt;code>#resume&lt;/code> 的時候，會把當下的 Fiber 標記成前一個 Fiber，而做 &lt;code>Fiber.yield&lt;/code> 的時候就會因為有紀錄，就把這個 Fiber 當作前一個目標做切換。&lt;/p>
-&lt;p>過程大概像是這樣：&lt;/p>
-&lt;ol>
-&lt;li>Fiber.new （我們的）&lt;/li>
-&lt;li>#resume （我們的）&lt;/li>
-&lt;li>#next （產生 Enumerator 的 Fiber）&lt;/li>
-&lt;li>Fiber.yield =&amp;gt; 找到的是 Enumerator 的 Fiber&lt;/li>
-&lt;/ol>
-&lt;p>所以在這中間，我們的 Fiber 已經不被我們自定義的迭代方法中的 &lt;code>Fiber.yield&lt;/code> 認識。&lt;/p>
-&lt;h2 id="總結">總結&lt;/h2>
-&lt;p>在 After Hack 回到家之後，才發現原來是被 Commiter 直接一對一教學了一個多小時，算是很不錯的經驗。大概也是因為克服了這類心理上的障礙，所以即使聽得蠻吃力的但還是能夠繼續嘗試，我想之後的活動大概不會有不敢用英文對話的困擾了吧！&lt;/p>
-&lt;p>最大的收穫大概是有 Commiter 帶你看了一部分的原始碼，還有去理解這些國外的高手是怎樣思考問題的。至少以台灣人來說算是不錯的經驗，以比例來看台灣人不多的狀況下能遇到的高手是固定的但是如果有像是研討會這類活動，我們就有機會接觸到篩選出來的高手，把握機會跟這些人交流就能很快地學到新東西跟進步，畢竟算是短時間的讓台灣的高手比例上升吧 XD&lt;/p>
-&lt;p>雖然會覺得能早點突破心理障礙就能更快接觸到，不過有時候很多知識還沒準備齊全（像是嘗試過 Fiber 和了解基本原理等等）也蠻難能問對問題，可以的話真的蠻需要平常多準備一些問題或者寫下來，才不會遇到機會都沒辦法問。&lt;/p>
-&lt;blockquote>
-&lt;p>不過我自己也沒有這個習慣，但是看起來還是要準備一點會比較好呢 XD&lt;/p>
-&lt;/blockquote></content></item></channel></rss>
+&lt;p>下一篇會再聊一下後續的處理，也就是經過我修改過的 Docker 版本提供了選擇性客製化的功能以及我們怎麼在經營遊戲上處理盡量讓玩家有一個相對好的體驗、以及對 HTML5 化的規劃跟實驗。&lt;/p></content:encoded></item></channel></rss>
