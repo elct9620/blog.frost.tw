@@ -6,6 +6,10 @@ toc: true
 series: Functional
 thumbnail: https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/thumbnail.jpg
 credit:
+promote:
+  image: /images/banners/functional-670x120.png
+  link: http://bit.ly/2IUIxWO
+  title: 工作上用得到的函數式程式設計
 ---
 
 因為時間的關係錯過了實體課程，不過利用 228 連假把[工作上用得到的函數式程式設計](http://bit.ly/2IUIxWO)這門課補完。

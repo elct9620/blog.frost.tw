@@ -8,6 +8,13 @@
   <div class="article__entry">
     {{ partial "translations.html" . }}
     {{ partial "toc.html" . }}
+    {{ if .Params.promote }}
+    <div class="promote">
+      <a class="promote__link" href="{{ .Params.promote.link }}" rel="nofollow" target="_blank" title="{{ .Params.promote.title }}">
+        <img src="{{ .Params.promote.image | absURL }}" class="promote__link" alt="{{ .Params.promote.title }}" />
+      </a>
+    </div>
+    {{ end }}
     {{ .Content }}
     <footer class="article__footer">
         <div class="text-center">
