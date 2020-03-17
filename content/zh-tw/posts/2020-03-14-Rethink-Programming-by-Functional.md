@@ -8,7 +8,7 @@ thumbnail: https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functi
 credit:
 ---
 
-因為時間的關係錯過了實體課程，不過利用 228 連假把[工作上用得到的函數式程式設計](https://campus.5xruby.tw/?affcode=141380_ht16jam9)這門課補完。
+因為時間的關係錯過了實體課程，不過利用 228 連假把[工作上用得到的函數式程式設計](http://bit.ly/2IUIxWO)這門課補完。
 
 在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。
 
