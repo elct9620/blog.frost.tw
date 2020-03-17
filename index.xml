@@ -101,8 +101,8 @@
 &lt;p>不過這次聚會我們的導師讓我們學到了一些新的方法跟觀點能夠直接應用在工作上。&lt;/p>
 &lt;p>最重要的是我們要在決定之前「找出計畫的缺點」並且重新檢視他，優點確實能給我們好處，但當系統發生問題的時候缺點才是我們需要面對的。&lt;/p>
 &lt;p>也因此，我們需要去決定一個架構是對我們的產品傷害最小的，也就是大多數的缺點跟我們產品的需求是不會有太多衝突。&lt;/p></content:encoded></item><item><title>從 Functional Programming 重新思考程式設計</title><link>https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/</link><category>
-Functional,C,Ruby,心得</category><pubDate>Sat, 14 Mar 2020 22:02:23 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/</guid><description>&lt;p>因為時間的關係錯過了實體課程，不過利用 228 連假把&lt;a href="https://campus.5xruby.tw/?affcode=141380_ht16jam9">工作上用得到的函數式程式設計&lt;/a>這門課補完。&lt;/p>
-&lt;p>在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。&lt;/p></description><content:encoded>&lt;p>因為時間的關係錯過了實體課程，不過利用 228 連假把&lt;a href="https://campus.5xruby.tw/?affcode=141380_ht16jam9">工作上用得到的函數式程式設計&lt;/a>這門課補完。&lt;/p>
+Functional,C,Ruby,心得</category><pubDate>Sat, 14 Mar 2020 22:02:23 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/14/Rethink-Programming-by-Functional/</guid><description>&lt;p>因為時間的關係錯過了實體課程，不過利用 228 連假把&lt;a href="http://bit.ly/2IUIxWO">工作上用得到的函數式程式設計&lt;/a>這門課補完。&lt;/p>
+&lt;p>在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。&lt;/p></description><content:encoded>&lt;p>因為時間的關係錯過了實體課程，不過利用 228 連假把&lt;a href="http://bit.ly/2IUIxWO">工作上用得到的函數式程式設計&lt;/a>這門課補完。&lt;/p>
 &lt;p>在 Functional Programming（函數式程式設計）裡面有許多概念是可以提取出來應用的，如果你使用的語言有支援一定程度的特性的話，就能更做出更多的變化。&lt;/p>
 &lt;h2 id="the-flexible-design">更彈性的設計&lt;/h2>
 &lt;p>以我工作上常用的 Ruby 作為例子我們可以用一個稍微極端的例子來看&lt;/p>
