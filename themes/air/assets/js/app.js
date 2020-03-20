@@ -42,7 +42,7 @@
 
       disqusReload = false;
     }
-  }, 100)
+  }, 1000)
 
   var onPageReload = function(ev) {
     // Refresh Typekit
@@ -62,7 +62,7 @@
   }
 
   var onScroll = function(ev) {
-    if(window.scrollY >= 100) {
+    if(window.scrollY >= window.innerHeight / 2) {
       reloadDisqus()
     }
   }
