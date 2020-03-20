@@ -10,6 +10,6 @@ disqusReload=false;}},1000)
 var onPageReload=function(ev){if(typeof FB!=="undefined"&&FB!==null){FB.XFBML.parse();}
 if(typeof dataLayer!=="undefined"&&dataLayer!==null){dataLayer.push({'event':'turbolinks:load','virtualUrl':event.data.url});}
 disqusReload=true;}
-var onScroll=function(ev){if(window.scrollY>=window.innerHeight/2){reloadDisqus()}}
+var onScroll=function(ev){if(window.scrollY>=window.innerHeight/4){reloadDisqus()}}
 document.addEventListener("turbolinks:load",onPageReload)
 document.addEventListener("scroll",onScroll)}())
