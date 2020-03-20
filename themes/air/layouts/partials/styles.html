@@ -1,4 +1,4 @@
-{{ $options := (dict "targetPath" "css/styls.css" "outputStyle" "compressed" "enableSourceMap" false) -}}
+{{ $options := (dict "targetPath" "css/styles.css" "outputStyle" "compressed" "enableSourceMap" false) -}}
 {{ if eq hugo.Environment "development" -}}
   {{ $options = merge $options (dict "outputStyle" "nested" "enableSourceMap" true) -}}
 {{ end -}}
