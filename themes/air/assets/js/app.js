@@ -62,7 +62,7 @@
   }
 
   var onScroll = function(ev) {
-    if(window.scrollY >= window.innerHeight / 2) {
+    if(window.scrollY >= window.innerHeight / 4) {
       reloadDisqus()
     }
   }
