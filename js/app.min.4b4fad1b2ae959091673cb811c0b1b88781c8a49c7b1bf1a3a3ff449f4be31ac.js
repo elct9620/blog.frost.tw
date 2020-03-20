@@ -6,10 +6,10 @@ if(typeof DISQUS==="undefined"){(function(){var dsq=document.createElement('scri
 return}
 if(disqusReload){DISQUS.reset({reload:true,config:function(){this.page.identifier=document.title
 this.page.url=location.href}})
-disqusReload=false;}},100)
+disqusReload=false;}},1000)
 var onPageReload=function(ev){if(typeof FB!=="undefined"&&FB!==null){FB.XFBML.parse();}
 if(typeof dataLayer!=="undefined"&&dataLayer!==null){dataLayer.push({'event':'turbolinks:load','virtualUrl':event.data.url});}
 disqusReload=true;}
-var onScroll=function(ev){if(window.scrollY>=100){reloadDisqus()}}
+var onScroll=function(ev){if(window.scrollY>=window.innerHeight/2){reloadDisqus()}}
 document.addEventListener("turbolinks:load",onPageReload)
 document.addEventListener("scroll",onScroll)}())
