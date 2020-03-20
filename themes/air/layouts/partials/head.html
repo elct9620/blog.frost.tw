@@ -3,5 +3,4 @@
 {{ $turbolinks := resources.Get "js/turbolinks.js" | resources.Minify -}}
 {{- partial "meta.html" . -}}
 {{- partial "meta_json_ld.html" . -}}
-{{- partial "styles.html" . -}}
 <script async src="{{ $turbolinks.RelPermalink }}"></script>

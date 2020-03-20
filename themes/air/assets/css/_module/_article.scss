@@ -68,7 +68,7 @@
 
       font-weight: 700;
 
-      color: $exLightFontColor;
+      color: $lightFontColor;
 
       @include breakpoint(sm) {
         font-size: 36px;
@@ -159,6 +159,21 @@
     a {
       color: $white;
       text-decoration: none;
+    }
+  }
+
+  @include element('toc-list') {
+    li {
+      margin: .5em auto;
+    }
+  }
+}
+
+@include block('related') {
+  @include element('item') {
+    margin: .5em auto;
+
+    @include breakpoint(md) {
     }
   }
 }

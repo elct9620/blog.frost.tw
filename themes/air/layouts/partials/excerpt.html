@@ -1,6 +1,6 @@
 <article class="post article is-index" role="article">
   <header class="article__header">
-    <time datetime="{{ dateFormat "2006-01-02T15:04:05-0700" .PublishDate }}" class="article__time--header" role="time">
+    <time datetime="{{ dateFormat "2006-01-02T15:04:05-0700" .PublishDate }}" class="article__time--header">
       {{ dateFormat "Jan.2" .Date  }}
     </time>
     <h3 class="article__title"><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h3>

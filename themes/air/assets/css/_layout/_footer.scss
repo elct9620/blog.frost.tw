@@ -4,4 +4,8 @@
   margin-top: 3em;
   margin-bottom: 3em;
   text-align: center;
+
+  a {
+    color: darken($linkColor, 15%);
+  }
 }
