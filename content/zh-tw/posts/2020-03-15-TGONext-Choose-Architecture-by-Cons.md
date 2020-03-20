@@ -138,7 +138,7 @@ NewSQL 比較類似於 NoSQL 的反思，人們開始使思考 NoSQL 作為一�
 
 > 目前 NewSQL 還沒有變的熱門，而且也沒有太多開放原始碼的解決方案。
 
-## 資料的選擇 {#the-choose-of-database}
+## 資料庫的選擇 {#the-choose-of-database}
 
 在前面的討論，我們的導師讓我們分享選用一個資料庫的觀點和理由。
 
