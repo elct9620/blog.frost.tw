@@ -84,7 +84,7 @@
 &lt;blockquote>
 &lt;p>目前 NewSQL 還沒有變的熱門，而且也沒有太多開放原始碼的解決方案。&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="the-choose-of-database">資料的選擇&lt;/h2>
+&lt;h2 id="the-choose-of-database">資料庫的選擇&lt;/h2>
 &lt;p>在前面的討論，我們的導師讓我們分享選用一個資料庫的觀點和理由。&lt;/p>
 &lt;p>這裡有很多情況讓我們決定要選擇哪個資料庫：&lt;/p>
 &lt;ul>
