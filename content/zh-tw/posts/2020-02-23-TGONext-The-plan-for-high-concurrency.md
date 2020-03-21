@@ -73,7 +73,7 @@ thumbnail: https://blog.frost.tw/images/2020-02-23-tgonext-the-plan-for-high-con
 
 在現實世界中，QPS（每秒查詢次數）通常不是由開發團隊來決定的，他大多是仰賴於行銷團隊的目標或者老闆的計畫。
 
-這雨表示我們通常只會得到 MAU（每月活躍用戶數）而不是一個明確的 QPS 數值。
+這也表示我們通常只會得到 MAU（每月活躍用戶數）而不是一個明確的 QPS 數值。
 
 舉例來說，如果行銷團隊告訴我們下個月他們計畫讓每月活躍用戶成長到 100 萬人，至少要多少的 QPS 才能夠滿足行銷團隊的需求呢？
 
@@ -106,6 +106,7 @@ thumbnail: https://blog.frost.tw/images/2020-02-23-tgonext-the-plan-for-high-con
 因此，要達到目標我們設計的架構至少要允許每秒大於 4.6 的 QPS 才能夠滿足行銷團隊的需求。
 
 > 不過導師也提醒我們這個比例會因為不同情況而改變，但是我們可以透過網路上公開的報告來評估自己所在的產業或服務適合採取怎樣的比例配置。
+> 2020/03/21 補充：根據導師的[文章](https://blog.gcos.me/post/2020-03-11_how-software-architecture-meet-business-require-mau-sla-by-rps-slo/)這邊的 QPS 應該是 RPS （每秒請求數量）比較準確，單個請求可能會產生多個查詢。
 
 ## 結論 {#onclusion}
 
