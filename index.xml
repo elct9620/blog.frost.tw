@@ -1,4 +1,91 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 15 Mar 2020 03:02:32 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: 從缺點選擇架構</title><link>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</link><category>架構</category><category>微服務</category><category>資料庫</category><category>心得</category><category>TGONext</category><pubDate>Sun, 15 Mar 2020 03:02:32 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</guid><description>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p></description><content:encoded>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Fri, 03 Apr 2020 21:14:56 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: 資料庫變遷跟架構改變</title><link>https://blog.frost.tw/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</link><category>TGONext</category><category>架構</category><category>資料庫</category><category>心得</category><pubDate>Fri, 03 Apr 2020 21:14:56 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</guid><description>&lt;p>這次在開始討論關於架構的主題之前，我們的倒是讓我們提出一些問題。&lt;/p>
+&lt;p>剛好在兩次聚會的期間，我的客戶因為一些錯誤的計畫讓 Migration 失敗了，所以我提出了關於在不停機的狀況下做 Migration 的規劃問題。&lt;/p></description><content:encoded>&lt;p>這次在開始討論關於架構的主題之前，我們的倒是讓我們提出一些問題。&lt;/p>
+&lt;p>剛好在兩次聚會的期間，我的客戶因為一些錯誤的計畫讓 Migration 失敗了，所以我提出了關於在不停機的狀況下做 Migration 的規劃問題。&lt;/p>
+&lt;h2 id="migrate-database-without-downtime">不停機的 Migration&lt;/h2>
+&lt;p>實際上，在我的工作中大多客戶都是能接受停止一段時間來更新資料庫的新創公司類型。&lt;/p>
+&lt;p>不過對於比較大的服務，將伺服器停止後進行更新基本上是很難被接受的。&lt;/p>
+&lt;blockquote>
+&lt;p>尤其是越來越多提供全球使用的服務，即使我們可以在某個區域暫停來停機，對於其他區域來說也不一定能被接受。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="the-mentee-s-experience">參與者的經驗&lt;/h3>
+&lt;p>我認為包含我的大部分工程師都知道怎麼做，不過應該是有很多細節我們沒有預期到的。&lt;/p>
+&lt;p>導師讓我們分享各自的經驗：&lt;/p>
+&lt;ul>
+&lt;li>不要去移除欄位&lt;/li>
+&lt;li>避免框架的 Migration 移除東西&lt;/li>
+&lt;li>複製並且重新命名資料表&lt;/li>
+&lt;li>使用 Trigger 複製資料&lt;/li>
+&lt;/ul>
+&lt;p>其實大部分的做法我都在網路上看過，大家提出比較常見的作法就是避免去移除或者更改欄位名稱。&lt;/p>
+&lt;h3 id="does-the-database-has-version-control">資料庫真的有版本控制嗎？&lt;/h3>
+&lt;p>有些人提到因為在 Migiration 的過程中不能遺失資料，所以他們大多不刪除欄位或者在 Rollback （回滾）的時候刪除任何東西。也因此在討論的過程中，我們的導師點出了這樣一個問題。&lt;/p>
+&lt;p>以原始碼來說我們可以跳到任一個版本而不會有任何副作用，這是因為原始碼大多是無狀態的。但是我們嘗試去改變資料庫的版本從 &lt;code>2020-03-28&lt;/code> 到 &lt;code>2020-01-01&lt;/code> 然後我們可能再次跳回 &lt;code>2020-03-28&lt;/code> 的版本而能讓所有跟 Rollback 之前完全一樣嗎？&lt;/p>
+&lt;p>基本上這沒有一個準確的解答，大多會仰賴於我們的服務對這些資料的重視程度。不過在我們設計 Migration 的時候，確實應該要小心的選擇一個比較安全的做法。&lt;/p>
+&lt;h3 id="the-performance-lost">效能損失&lt;/h3>
+&lt;p>既然我們不會去刪除欄位，資料庫就會需要去讀取一個更大的 Row 來查詢東西而這可能會讓資料庫變慢。&lt;/p>
+&lt;p>基本上這是因為 RDBMS 的資料庫大多是以 Row 為基礎來設計的才會有這樣的特性。而 NoSQL 通常以 Column 為基礎設計，因此 NoSQL 通常不會遇到這類問題。&lt;/p>
+&lt;p>不過我們也有其他的選擇，像是透過修改重新命名資料表的方式來避免長成大表。先建立一個暫時的資料表套用變更後再去替換這個資料表。&lt;/p>
+&lt;p>像是 GitHub 就有一個叫做 &lt;a href="https://github.com/github/gh-ost">gh-host&lt;/a> 的工具可以讓我們不用自己實作上面的流程。&lt;/p>
+&lt;blockquote>
+&lt;p>不過我們的導師也提醒我們，如果 Migration 的過程會花費很多時間我們可能會想要中途暫停，但是 &lt;code>gh-ost&lt;/code> 並不支援這樣的機制。&lt;/p>
+&lt;/blockquote>
+&lt;p>除了效能問題之外，我們也還有像是 Table-lock 和其他問題需要注意。&lt;/p>
+&lt;blockquote>
+&lt;p>在討論中我發現其實有很多資料庫的行為是我們已經知道的，但是在選擇方案時並沒有將這些東西連結起來去確認可能存在的風險。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-database-scalability">資料庫的擴充性&lt;/h2>
+&lt;p>這算是前面問題的延伸，當我們討論到 RDBMS 和 NoSQL 有不同特性時，我們開始比較 MySQL/PostgreSQL 和 MongoDB 的設計。&lt;/p>
+&lt;p>在 RDBMS 中我們通常會使用 B+ Tree 來建立 Index（索引），而我們的導師向我們提出問題：「為什麼 MongoDB 會選擇使用 B Tree 來建立索引？」&lt;/p>
+&lt;p>為了加快查詢資料，其中一種方法是減少總查詢的筆數。在 RDBMS 我們通常會選擇使用 Shard（分片）或者 Partition（分區）來建立一個比較小的資料表子集合。&lt;/p>
+&lt;p>在 B+ Tree 裡面，資料節點通常會連接著下一筆資料，這表示我們在 RDBMS 能有快速的範圍查詢。不過如果我們需要去建立一個 Shard 或者將資料切割到不同的資料庫，這反而變成一個讓 RDBMS 感到困難的問題，因為很難確定要將哪些資料節點放在一起切割出來同時還要考慮資料節點的連結關係。&lt;/p>
+&lt;p>因為 MongoDB 使用了 B Tree，這表示可以非常容易的選出一個子樹就能切割，因為不需要擔心資料節點會連結在另一個子樹上的資料節點上。&lt;/p>
+&lt;p>這種特性讓 MongoDB 更容易被拓展，但是同時缺點就包含了範圍查詢相對的慢，以及 Shard 機制可能因為某些原因頻繁的移動資料而造成 Disk I/O 上的壓力。&lt;/p>
+&lt;blockquote>
+&lt;p>這個討論其實給我了一些在未來建議其他人選用資料庫的靈感，每一個小的設計細節都會改變行為跟優缺點。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-architecture-changing">架構的改變&lt;/h2>
+&lt;p>這其實是我們這次聚會預定討論的主題，我們的導師先讓我們分享一些當服務無法處理增加的請求時要怎麼做的想法。&lt;/p>
+&lt;p>大致上歸納整理後，我們大概有這幾種方式：&lt;/p>
+&lt;ul>
+&lt;li>垂直升級 (像是增加記憶體、處理器)&lt;/li>
+&lt;li>水平拓展 (增加更多同質的實體)&lt;/li>
+&lt;li>加入快取&lt;/li>
+&lt;li>加入隊列（Queue）&lt;/li>
+&lt;li>增加限流機制（像是次數或者流量限制）&lt;/li>
+&lt;li>將單機服務分割成不同的實體&lt;/li>
+&lt;/ul>
+&lt;p>接下來我們的導師讓我們分享何時會從其中一種模式換到另外一種，網路上有很多公司分享過他們的經驗，但是這些並不一定符合我們的情況。&lt;/p>
+&lt;p>如同每一次的聚會，我們從討論每一種選擇的缺點開始。像是水平拓展雖然看似是一個不錯的選擇，但是假設我們有超過 300 台或者更多機器時，管理上是容易的嗎？進行改版時要花多久才能全部更新完畢？&lt;/p>
+&lt;p>因此我們可能會想要合併或者減少我們所管理的總實體數量，我們的導師也讓我們思考一些使用 Microservice 的知名公司總共有多少微服務以及是否有一個管理數量的極限存在。&lt;/p>
+&lt;p>我們也針對上面幾種模式討論各種選擇的優點跟缺點，這邊我選了幾個比較有趣的跟大家分享。&lt;/p>
+&lt;blockquote>
+&lt;p>在現實世界中我們大多不會只用一種模式，我覺得比較像是當作積木的感覺去組合或者分解來配合我們的業務需求。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="queue">Queue&lt;/h2>
+&lt;p>這是我們討論比較多的部分，最開始我們是討論使用 Queue 的時機。&lt;/p>
+&lt;p>舉例來說，如果我們有一些服務是非常要求即時回應的。那麼 Queue 的非同步特性可能會造成一些問題，而這樣的特性跟 Thread 是類似的。&lt;/p>
+&lt;p>在現實中我們常常需要讓寫入資料庫的動作是依序執行的來避免 Race-Condition（競爭條件）也因此 Queue 通常會是依序執行的。&lt;/p>
+&lt;p>另一方面，Queue 也通常會有一個容量的上限，如果我們接收了超過上限的請求就需要反過來阻塞使用者。&lt;/p>
+&lt;p>這表示我們雖然可以透過使用 Queue 可以為資料庫爭取到緩衝，但同時也可能變成其他服務的瓶頸。&lt;/p>
+&lt;blockquote>
+&lt;p>這其實也符合在上一次聚會我的感想，不同的選項會有不同的缺點，而我們的工作是要小心地在這些選項中選擇一個恰當的方案。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="rabbitmq">RabbitMQ&lt;/h3>
+&lt;p>我們也討論了幾個 Queue 服務的解決方案。RabbitMQ 是用 Erlang 所撰寫的，而 Erlang 有著能從失敗的 Process 恢復的特性。這表示在大多數情況下我們的 Queue 會需要兩倍的記憶體來確保能夠正確的恢復，因為我們有另一份備份在記憶體中，來確保失敗的 Process 可以被復原。&lt;/p>
+&lt;h3 id="kafka">Kafka&lt;/h3>
+&lt;p>我們的導師問我們，Kafka 是用 Java 寫的但是為什麼他跑得非常快？是什麼原因讓 Java 會慢？&lt;/p>
+&lt;p>其中一個原因是 GC 會造成一些效能的問題，不過 Java 也提供了 &lt;code>Off-Heap&lt;/code> 的機制讓我們自己管理記憶體，因此 Kafka 能比正常狀況更快。&lt;/p>
+&lt;p>而 Kafka 是由 Linkedin 所開發，主要專注在吞吐量（Throughput）上，這是因為對 Linkedin 來說吞吐量比較重要。我們的導師告訴我們，有些比較是沒有意義的因為他們嘗試比較同類型的服務，但是並沒有注意到這些服務想解決的問題不同。&lt;/p>
+&lt;h2 id="region">區域&lt;/h2>
+&lt;p>另一個有趣的討論是關於區域，在垂直升級的選項中哪個通常是難以升級的？通常是網路，也因此像是 AWS、GCP 和大多數大型的全球公司都會嘗試搭建他們自己的海纜或者機房在不同的國家。&lt;/p>
+&lt;p>為了能夠在兩個區域高速交換資料，我們很難用購買 CPU、記憶體或者應䩞的方式改善。&lt;/p>
+&lt;p>另一個問題是當我們有高可用性（High-Avalability）或者 Master-Master 架構的時候，如果我們其中一個資料中心停止運作的時候，有多少問題需要我們去解決？&lt;/p>
+&lt;p>我們可能會有一些資料並沒有同步到另一個資料中心，假設主要的機房恢復的狀況下，要怎麼確保資料是一致的&lt;/p>
+&lt;p>？以及我們主要的機房停止的狀況下，備援的機房是否有相同的硬體可以去支撐原本的請求呢？&lt;/p>
+&lt;h2 id="conclusion">結論&lt;/h2>
+&lt;p>在這次的聚會中我認為學到了一些關於選擇方案的技巧，在過去我經常很難去回答別人像是為什麼要使用 PostgreSQL 或者 MySQL 或是為什麼要使用 Ruby 這類問題。&lt;/p>
+&lt;p>剛開始我認為這是因為我不夠專業的關係，不過我想原因可能是因為我並沒有去注意特性跟那些隱藏在功能後的細節。&lt;/p>
+&lt;p>其實這是很好的機會去練習在缺點中去尋找更多資訊，我現在也嘗試改變我的習慣跟流程去實踐這個做法。&lt;/p></content:encoded></item><item><title>TGONext: 從缺點選擇架構</title><link>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</link><category>架構</category><category>微服務</category><category>資料庫</category><category>心得</category><category>TGONext</category><pubDate>Sun, 15 Mar 2020 03:02:32 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</guid><description>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p></description><content:encoded>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p>
 &lt;h2 id="the-trap-inside-the-suggested-way">建議方法中的陷阱&lt;/h2>
 &lt;p>首先，我們有一個單體式的應用將 Web 伺服器跟資料庫都跑在同一台機器上。&lt;/p>
 &lt;pre>&lt;code>+-----------------------+
@@ -1437,77 +1524,4 @@ only:
 &lt;p>這場演講基本上算是一個過程上的紀錄，在短短一到兩週內的時間怎麼去讓一款遊戲可以運行、營運，以及我們是怎樣慢慢的改造跟重構一個古老的遊戲專案讓他變得容易維護。&lt;/p>
 &lt;p>不過實際上當時評估如果要繼續做下去的話，絕對是花上一兩年都跑不到的大工程，雖然不知道能堅持到什麼時候但至少每一個階段都能發現有趣的東西，應該是還可以繼續在努力很久。反而是關於 IP 上的問題，也就是遊戲的內容本身因為並沒有實際的完全開放，反而讓未來改版完畢後遊戲想要進入新的階段變得非常受限⋯⋯&lt;/p>
 &lt;p>不過也因為這款遊戲，讓我自己在遊戲開發上有很多不確定的東西有了一個大概知道能怎麼做的方案，以及很多新的想法可以嘗試。&lt;/p>
-&lt;p>那麼，就請大家期待在不久的未來我們重新開發過的 Unlight 會是怎樣的面貌了 XD&lt;/p></content:encoded></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （一）</title><link>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</link><category>COSCUP</category><category>Game</category><category>Ruby</category><category>Golang</category><category>HTML5</category><category>JavaScript</category><category>DevOps</category><category>Docker</category><category>Unlight</category><pubDate>Tue, 03 Sep 2019 19:44:11 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/</guid><description>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
-不過看起來還是有很多人沒有機會來聽，雖然之後因為會把一部分重心放在這款遊戲上，所以應該還是有不少機會，但還是簡單的來彙整一下今天講的東西。&lt;/p>
-&lt;p>上一篇&lt;a href="https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/">快速閱讀 Unlight 原始碼&lt;/a>大致上有提到了我在當時看到原始碼的看法跟概觀。有興趣的話可以搭配&lt;a href="https://speakerdeck.com/elct9620/2019-coscup-fu-huo-ge-browser-game-unlight-kai-yuan-shi-jian">演講簡報&lt;/a>一起讀這篇文章。&lt;/p>
-&lt;p>另外，這次整個遊戲運作起來除了我自己本身對 Ruby / ActionScript 有一定的了解外，也要感謝一下我們這個團隊（&lt;a href="https://unlight.app">Open Unlight&lt;/a>）的初期成員 Poka 和舞鶴，給我硬體上的支援跟對其他玩家的客服支援，不然有時候真的很難同時處理這些事情。&lt;/p></description><content:encoded>&lt;p>在 &lt;a href="https://coscup.org/2019/">COSCUP&lt;/a> 分享了這兩週左右（8/3 ~ 8/17）把一款決定開放原始碼的網頁遊戲，從無法啟動到恢復伺服器開始運作的一些經驗跟大家分享。
-不過看起來還是有很多人沒有機會來聽，雖然之後因為會把一部分重心放在這款遊戲上，所以應該還是有不少機會，但還是簡單的來彙整一下今天講的東西。&lt;/p>
-&lt;p>上一篇&lt;a href="https://blog.frost.tw/posts/2019/08/04/Fast-review-the-Unlight-game-s-source-code/">快速閱讀 Unlight 原始碼&lt;/a>大致上有提到了我在當時看到原始碼的看法跟概觀。有興趣的話可以搭配&lt;a href="https://speakerdeck.com/elct9620/2019-coscup-fu-huo-ge-browser-game-unlight-kai-yuan-shi-jian">演講簡報&lt;/a>一起讀這篇文章。&lt;/p>
-&lt;p>另外，這次整個遊戲運作起來除了我自己本身對 Ruby / ActionScript 有一定的了解外，也要感謝一下我們這個團隊（&lt;a href="https://unlight.app">Open Unlight&lt;/a>）的初期成員 Poka 和舞鶴，給我硬體上的支援跟對其他玩家的客服支援，不然有時候真的很難同時處理這些事情。&lt;/p>
-&lt;h2 id="動機">動機&lt;/h2>
-&lt;p>最開始只是我想自己研究，主要是這幾點原因在。&lt;/p>
-&lt;p>第一點是日本的遊戲公司很少會放出原始碼，至少以現在很熱門的手遊大家幾乎是沒機會看到開放原始碼的專案，不過即使是歐美也是，所以變得很難有機會學習怎麼做。
-第二點則是因為他用了 Ruby 和 ActionScript 這兩個語言，前者是我工作用的語言也是我個人很喜歡的語言，後者是我大學寫過一陣子的語言，兩個我都蠻熟悉的。&lt;/p>
-&lt;p>後來發現伺服器用 DigitalOcean
-沒辦法支撐後，朋友 Poka 就把家裡閒置的機器拉出來提供給我使用，所以又再加上把一些工作上很少有機會用到的理論套上去，因為玩家數夠多了！&lt;/p>
-&lt;blockquote>
-&lt;p>注意：不是每個朋友家裡都剛好會有空的機櫃、伺服器跟有冷氣的機房！&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="復原">復原&lt;/h2>
-&lt;p>&lt;img src="https://blog.frost.tw/images/2019-09-03-coscup-2019-talk-about-the-browser-game-unlight-which-i-revived-it/screenshot.png" alt="遊戲畫面">&lt;/p>
-&lt;p>其實伺服器部分本身沒有什麼大問題，基本上就是缺幾個檔案。不過這些檔案只是被改成 &lt;code>_orig&lt;/code> 的形式，把檔名改回去後就好了，基本上是一些設定檔像是伺服器的 IP 位置、資料庫設定等等。&lt;/p>
-&lt;p>至於 Flash 客戶端的部分，因為想說是 Flash 所以就跑去想把 Flash IDE 裝回來，畢竟一般來說都是靠 IDE 來處理的。不過因為看起來像是用 Flex 就選擇安裝 Flash Builder 來跑，結果就直接噴出 &lt;code>Failed to create Java Virtual Machine&lt;/code> 的錯誤，這是因為新版的 macOS 用的 Java 已經新太多。&lt;/p>
-&lt;p>而且 Adobe 還把這些 IDE 都下架，所以光是想要取得就有不少困難在。&lt;/p>
-&lt;p>不過因為是用 Flex 所以還有 Flex SDK 可以替代，至少能用 Command Line 的方式去編譯，結果當時（週五晚上）由 CPA 釋出的原始碼裡面缺少了最重要的 &lt;code>src/&lt;/code> 目錄，也就是客戶端本體的實作部分。
-大概過了兩天，到週一的時候才發現少上傳補上到 GitHub 上面，此時就能透過 &lt;code>mxmlc&lt;/code> 這個指令去編譯。&lt;/p>
-&lt;blockquote>
-&lt;p>回頭來看，我們會認為 Flash 就是用 IDE 用 GUI 去寫這個專案，但其實 Unlight 幾乎是直接用 ActionScript 寫的，除了美術的部分合理推測會使用 Flash 的 IDE 之外，其實遊戲本身大概是沒有使用的。&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="缺少的-as-檔案">缺少的 as 檔案&lt;/h3>
-&lt;p>不過即使取得了完整原始碼，還是發現這樣子還是有缺檔案的樣子。經過追查之後，發現缺少的 &lt;code>FontLoader.as&lt;/code> 和 &lt;code>Constants.as&lt;/code> 應該都是由 Ruby 的腳本生成。&lt;/p>
-&lt;p>所以找了一下，發現在伺服器端確實有腳本需要執行過才能正常生成客戶端。&lt;/p>
-&lt;p>&lt;code>Constants.as&lt;/code> - 一些文本資料或不影響平衡的都可以塞到客戶端，這個檔案基本上應該就是將 DB 的資料直接整到客戶端的主要方式。
-&lt;code>FontLoader.as&lt;/code> - Unlight 當時算是非常熱門的遊戲，所以至少有五到六種語言的翻譯，為了遊戲美術表現的品質所以會把字體內嵌，因此會使用 Ruby 負責掃瞄出這個語言客戶端所需的 Unicode 來告訴 Flex Compiler 需要內嵌哪些字體檔案。&lt;/p>
-&lt;blockquote>
-&lt;p>基本上是蠻合理的設計，不過因為我們大部分都是做 Web 習慣的，可能會不太理解吧 XD&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="語言切換">語言切換&lt;/h3>
-&lt;p>令一方面因為多國語言，所以其實有很多 &lt;code>.swf&lt;/code> 檔案都會用像是 &lt;code>_tc.swf&lt;/code> &lt;code>_ja.swf&lt;/code> 這樣的形式命名，假設原始檔案叫做 &lt;code>tutorial.swf&lt;/code> 的話，一開始是不會有這個檔案的，因為你需要利用一個叫做 &lt;code>switch_resouce.rb&lt;/code> 的檔案，幫你從 &lt;code>tutorial_tc.swf&lt;/code> 重新命名成 &lt;code>tutorial.swf&lt;/code> 才行。&lt;/p>
-&lt;p>但是因為他是用 Git 的方式讓大家下載的，所以最後就會讓整個 Repo 裡面充滿各種沒有被追蹤的檔案，也會非常混亂。&lt;/p>
-&lt;blockquote>
-&lt;p>除此之外部署的時候如果沒有切換的話，在遊戲過程中還會因為抓不到對應的 swf 造成許多地方無法正常運作。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="docker-化">Docker 化&lt;/h2>
-&lt;p>基於前面這些編譯客戶端的問題，最簡單的方法就是用 Docker 來處理。另一方面就是要部署起來其實需要不少額外的補丁，而這些處理目前是否能 PR 回官方的版本，或者直接修改維護都還是問題。雖然 Docker 不是一個萬用的解決方案，但是在想要有一個乾淨的編譯環境來說，反而是一個相對適合的做法。&lt;/p>
-&lt;p>在編譯客戶端的時候，只需要將圖檔這些東西都複製進去 Docker 裡面，然後將前面設定 Java 環境（Flex 是基於 Java）、Flex SDK 設定以及各種補丁和我自己修改過的檔案，全部加入到容器裡面，再用做一次性的編譯環境就可以很方便的產生客戶端。&lt;/p>
-&lt;blockquote>
-&lt;p>某方面來說可以用時間換來一定程度相對乾淨的專案環境&lt;/p>
-&lt;/blockquote>
-&lt;p>令一方面因為 Unlight 的設計很適合讓思考 SOA / Microservice 之類的架構設計思考方式，因為它將登入伺服器、任務伺服器等等都切割開來，所以要部署伺服器起來其實也要做不少動作，但假設我們使用 Docker Compose 的話，就可以透過設定檔去解決這些問題。&lt;/p>
-&lt;h2 id="登入失敗">登入失敗&lt;/h2>
-&lt;p>經過幾天的努力總算是有能執行的客戶端以及可以運行的伺服器，不過在修復客戶端時使用了網路上下載的 &lt;code>as3crypto.swc&lt;/code> 這個套件，結果卻一直無法登入。&lt;/p>
-&lt;blockquote>
-&lt;p>理論上加密演算法不應該不一樣，但是因為各種理由使用 CPA 後來（一週後）提供的檔案，就能正成使用。&lt;/p>
-&lt;/blockquote>
-&lt;p>Unlight 使用了一個叫做 &lt;strong>Secure Remote Passwor&lt;/strong> 的機制，在做簡報的時候發現他的實作裡面有一個叫做 OpenSSL 所以還蠻好懂的，我們在開發網站很熟悉的 SSL 憑證基本上也基於這個 &lt;a href="http://srp.stanford.edu/design.html">Stanford 的論文&lt;/a>來實現的，不過中間遭遇了很多問題。&lt;/p>
-&lt;p>因為遊戲使用的是「論文版本」也就是完全參照論文去實現，但是網路上像是 1Password 的 Golang 版本或者 Mozilla 的 Node.js 版本，都是基於 RFC5054 的版本差異上來說就是 Salt 在客戶端的先後順序。&lt;/p>
-&lt;p>論文版本是由客戶端先發送 Public Key 到伺服器換取 Salt 跟伺服器的 Public Key 在繼續後面的運算，但是 RFC 版本使用的則是客戶端先發送請求初始化連線，再從伺服器拿到 Public Key 和 Salt 這些資訊，最後再生成 Public Key 發給伺服器後做後續的運算。&lt;/p>
-&lt;p>兩個版本順序剛好是相反的，也讓我很難用其他語言實作來驗證看看。&lt;/p>
-&lt;blockquote>
-&lt;p>其實 RFC 還有其他版本，不過目前主流的應該是 RFC5054 的這個版本。另外還有一個好處是當伺服器更改了計算的基準（N, g）的時候，因為伺服器發回來的也包含這兩個數值，所以就不需要修改客戶端，至少在安全性跟方便性都有所提高。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="效能調校">效能調校&lt;/h2>
-&lt;p>因為 Poka 支援了伺服器，所以我們實際上是有 24 Core &amp;amp; 24G RAM 的伺服器，連硬碟都是用有著 98K IOPS 的 SSD 理論上是不應該卡頓的⋯⋯&lt;/p>
-&lt;p>不過根據我前兩天在 Digital Ocean 用 $5 和 $15 的機器測試的狀況，大概是 60 人跟 300 人會明顯卡頓，但是換到了 Poka 的機器上硬體至少提升了有十幾倍，卻還是卡在 500 多人就很不合理。&lt;/p>
-&lt;p>中間我們做了很多嘗試，像是利用 Docker 可以限制使用的 CPU 核心之類的設定將 DB 集中在某個 CPU 上之類，還有調整記憶體限制等等，最後才發現了一筆異常的數值。&lt;/p>
-&lt;p>因為 SSD 的關係遊戲每個 SQL 操作大概是在 0.0001s 左右，但是有一個很頻繁的 SQL 操作大概花上 0.2s 左右經過補上 Index 的處理後，遊戲直接達到 1000 人左右都不卡頓的狀況。&lt;/p>
-&lt;blockquote>
-&lt;p>當時有玩家還在猜該不會當初遊戲公司死掉也跟這個少掉的 Index 有關吧？不過理論上以當時的玩家數量，不太可能少處理這點。&lt;/p>
-&lt;/blockquote>
-&lt;p>就我跟 Poka 的評估，目前使用的伺服器即使到了 3000 多人也應該能支撐住才對。不過到了最近玩家人數開始穩定的減少，推測差不多應該會停在一個負擔不太大的數值上吧 XD&lt;/p>
-&lt;blockquote>
-&lt;p>畢竟很多玩家都是來懷舊的⋯⋯&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="小結">小結&lt;/h2>
-&lt;p>雖然已經盡量寫的簡單，但是似乎文章還是有點太長 XD&lt;/p>
-&lt;p>下一篇會再聊一下後續的處理，也就是經過我修改過的 Docker 版本提供了選擇性客製化的功能以及我們怎麼在經營遊戲上處理盡量讓玩家有一個相對好的體驗、以及對 HTML5 化的規劃跟實驗。&lt;/p></content:encoded></item></channel></rss>
+&lt;p>那麼，就請大家期待在不久的未來我們重新開發過的 Unlight 會是怎樣的面貌了 XD&lt;/p></content:encoded></item></channel></rss>
