@@ -10,7 +10,7 @@
 <code>bin/compile</code> 跟 Dockerfile 在建構 Ruby 環境都是下載相同的檔案解壓縮（這是為了加速，直接寫入編譯程式也是可以的）</p></blockquote><p>唯一的不同點在於 Docker 版本預設不會自動生成 Procfile 所以必須自行指定像是 <code>Rails server</code> 之類的指令。</p><blockquote><p>原始碼中有指出： Procfile 必要，並且要有一個 web node 存在</p></blockquote><h4 id=exec>exec</h4><p>用途跟 <code>Heroku run</code> 一樣，不過要注意的是 Dockerfile 裡面所寫的 <code>ONBUILD</code> 是不會執行的。</p><blockquote><p>他是直接跑你的 image 而不是產生新的 image 去執行（下一段的 <code>start</code> 會提到）</p></blockquote><h4 id=start>start</h4><p>可以在本機測試 Deploy 後的情況，相對過去要 Deploy 到 Heroku 上測試比起來，真的好太多了！</p><blockquote><p>執行的時候可以看一下目錄，會發現多出一個 <code>Dockerfile-(一段應該是 SHA1 的字串)</code> 的檔案，內容就是 <code>FROM 剛剛的 Image</code> 也因此會觸發 <code>ONBUILD</code> 去設定環境</p></blockquote><p>這樣做的原因大概可以推測是為了避免在跑 <code>exec</code> 的時候還要先裝完相依這些執行時用不到的檔案吧 XD</p><h4 id=release>release</h4><p>跟 <code>git push Heroku master</code> 差不多的意思，他會把剛剛的環境壓縮成一個 Gzip 檔然後上傳到 Heroku。
 這個 Gzip 檔就是過去用 Buildpacks 跑完後產生的 <code>slug</code> 也就是說，如果專案加上相依有 100MB 那就得上傳 100MB 的相依上去。</p><blockquote><p>我自己維護的 PHP + Phalcon 專案壓縮後就有 49MB 非常的大，這也是我後來沒有改用 Docker 的原因。</p></blockquote><h3 id=clean>clean</h3><p>這個指令會把產生的 image 跟 container 清除，以確保環境是乾淨的（超貼心 XD）</p><hr><p>那麼這有什麼用呢？大致上可以歸類為以下幾點：</p><ol><li>私有的 Source Code 需要 Compile 後 Deploy</li><li>高度客製化的環境（而且無法製成 Buildpacks）或者不希望其他人使用這個環境</li><li>需要自行安裝 Heroku 的 <code>cedar</code> 不支援的相依</li><li>用來輔助本地測試</li><li>用來製作 Buildpacks</li></ol><h3 id=dockerfile-的撰寫>Dockerfile 的撰寫</h3><p>假設我需要編譯一些檔案好 Deploy 到 Heroku 上面，只要改寫 Dockerfile 就可以了！</p><p>這邊就以我自己維護的 Buildpacks 所用的 Dockerfile 作為範例來講解。</p><blockquote><p>在撰寫 Dockerfile 的時候以方便為主，不需要優化 Docker Image 的大小（我寫完 Buildpacks 才發現）
 主要是 Heroku 不會跑任何 Dockerfile 所以壓縮的再小也沒有意義，也不會節省任何時間。</p></blockquote><p>首先要引用 Heroku 預先準備好的 <code>cedar</code> image 來當作基底（跟 Heroku 實際環境一樣，不用再猜了 XD）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Docker data-lang=Docker><span class=k>FROM</span><span class=s> Heroku/cedar:14</span><span class=err>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Docker data-lang=Docker><span class=k>FROM</span><span class=s> Heroku/cedar:14</span><span class=err>
 </span></code></pre></td></tr></table></div></div><p>之後就是很淡定的開始跑各種指令拉（節錄部分 Dockerfile）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -58,53 +58,53 @@
 </span><span class=lnt>45
 </span><span class=lnt>46
 </span><span class=lnt>47
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=k>RUN</span> useradd -d /app -m app<span class=err>
-</span><span class=err></span><span class=k>USER</span><span class=s> app</span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> mkdir /app/build<span class=err>
-</span><span class=err></span><span class=k>RUN</span> mkdir /app/src<span class=err>
-</span><span class=err></span><span class=k>WORKDIR</span><span class=s> /app/src</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># Environment</span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> HOME /app<span class=err>
-</span><span class=err></span><span class=k>ENV</span> BUILD_HOME /app/build<span class=err>
-</span><span class=err></span><span class=k>ENV</span> APACHE_ROOT <span class=si>${</span><span class=nv>HOME</span><span class=si>}</span>/apache<span class=err>
-</span><span class=err></span><span class=k>ENV</span> PCRE_ROOT <span class=si>${</span><span class=nv>HOME</span><span class=si>}</span>/libs/pcre<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> APACHE_VERSION 2.4.12<span class=err>
-</span><span class=err></span><span class=k>ENV</span> APR_VERSION 1.5.2<span class=err>
-</span><span class=err></span><span class=k>ENV</span> APR_UTIL_VERSION 1.5.4<span class=err>
-</span><span class=err></span><span class=k>ENV</span> LIBPCRE_VERSION 8.37<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> APACHE_URL https://www.us.apache.org/dist/httpd/httpd-<span class=si>${</span><span class=nv>APACHE_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
-</span><span class=err></span><span class=k>ENV</span> APR_URL https://www.us.apache.org/dist/apr/apr-<span class=si>${</span><span class=nv>APR_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
-</span><span class=err></span><span class=k>ENV</span> APR_UTIL_URL https://www.us.apache.org/dist/apr/apr-util-<span class=si>${</span><span class=nv>APR_UTIL_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
-</span><span class=err></span><span class=k>ENV</span> PCRE_URL ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-<span class=si>${</span><span class=nv>LIBPCRE_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> APACHE_DIR httpd-<span class=si>${</span><span class=nv>APACHE_VERSION</span><span class=si>}</span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> APR_DIR apr-<span class=si>${</span><span class=nv>APR_VERSION</span><span class=si>}</span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> APR_UTIL_DIR apr-util-<span class=si>${</span><span class=nv>APR_UTIL_VERSION</span><span class=si>}</span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> PCRE_DIR pcre-<span class=si>${</span><span class=nv>LIBPCRE_VERSION</span><span class=si>}</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> CURL_FLAGS --location --silent<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># Compile</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>			 curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APACHE_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APR_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APR_UTIL_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$PCRE_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx<span class=err>
-</span><span class=err></span>       <span class=err>
-</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span>/<span class=nv>$PCRE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    ./configure --prefix<span class=o>=</span><span class=nv>$PCRE_ROOT</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
-</span><span class=err></span>    <span class=err>
-</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>		mv <span class=nv>$APR_DIR</span> <span class=nv>$APACHE_DIR</span>/srclib/apr <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    mv <span class=nv>$APR_UTIL_DIR</span> <span class=nv>$APACHE_DIR</span>/srclib/apr-util <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    <span class=nb>cd</span> <span class=nv>$APACHE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    ./configure --prefix<span class=o>=</span><span class=nv>$APACHE_ROOT</span> --with-pcre<span class=o>=</span><span class=nv>$PCRE_ROOT</span> --enable-rewrite <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=k>RUN</span> useradd -d /app -m app<span class=err>
+</span><span class=err></span><span class=k>USER</span><span class=s> app</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> mkdir /app/build<span class=err>
+</span><span class=err></span><span class=k>RUN</span> mkdir /app/src<span class=err>
+</span><span class=err></span><span class=k>WORKDIR</span><span class=s> /app/src</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># Environment</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> HOME /app<span class=err>
+</span><span class=err></span><span class=k>ENV</span> BUILD_HOME /app/build<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_ROOT <span class=si>${</span><span class=nv>HOME</span><span class=si>}</span>/apache<span class=err>
+</span><span class=err></span><span class=k>ENV</span> PCRE_ROOT <span class=si>${</span><span class=nv>HOME</span><span class=si>}</span>/libs/pcre<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_VERSION 2.4.12<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_VERSION 1.5.2<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_UTIL_VERSION 1.5.4<span class=err>
+</span><span class=err></span><span class=k>ENV</span> LIBPCRE_VERSION 8.37<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_URL https://www.us.apache.org/dist/httpd/httpd-<span class=si>${</span><span class=nv>APACHE_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_URL https://www.us.apache.org/dist/apr/apr-<span class=si>${</span><span class=nv>APR_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_UTIL_URL https://www.us.apache.org/dist/apr/apr-util-<span class=si>${</span><span class=nv>APR_UTIL_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err></span><span class=k>ENV</span> PCRE_URL ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-<span class=si>${</span><span class=nv>LIBPCRE_VERSION</span><span class=si>}</span>.tar.gz<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APACHE_DIR httpd-<span class=si>${</span><span class=nv>APACHE_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_DIR apr-<span class=si>${</span><span class=nv>APR_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> APR_UTIL_DIR apr-util-<span class=si>${</span><span class=nv>APR_UTIL_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> PCRE_DIR pcre-<span class=si>${</span><span class=nv>LIBPCRE_VERSION</span><span class=si>}</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> CURL_FLAGS --location --silent<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># Compile</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span> <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>			 curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APACHE_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APR_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$APR_UTIL_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>       curl <span class=nv>$CURL_FLAGS</span> <span class=s2>&#34;</span><span class=nv>$PCRE_URL</span><span class=s2>&#34;</span> <span class=p>|</span> tar zx<span class=err>
+</span><span class=err></span>       <span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span>/<span class=nv>$PCRE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    ./configure --prefix<span class=o>=</span><span class=nv>$PCRE_ROOT</span> <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
+</span><span class=err></span>    <span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>cd</span> <span class=nv>$BUILD_HOME</span> <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>		mv <span class=nv>$APR_DIR</span> <span class=nv>$APACHE_DIR</span>/srclib/apr <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    mv <span class=nv>$APR_UTIL_DIR</span> <span class=nv>$APACHE_DIR</span>/srclib/apr-util <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    <span class=nb>cd</span> <span class=nv>$APACHE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    ./configure --prefix<span class=o>=</span><span class=nv>$APACHE_ROOT</span> --with-pcre<span class=o>=</span><span class=nv>$PCRE_ROOT</span> --enable-rewrite <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
 </span></code></pre></td></tr></table></div></div><p>這邊很重要的訣竅就是 Compile 的時候可以分開為單獨的 <code>RUN</code> 因為 Docker 在 Build 的時候會把一個指令當成一個 <code>layer</code> 也就是說，中間如果失敗（寫 Script 總是會失誤）就不用整個重新 Compile 過，而是只需要重新跑部分的指令而已。</p><blockquote><p>這會節省非常多時間，我自己的 Macbook Pro Retina 15&rdquo; 就要花上十幾分鐘完整編譯。
 這邊最重要的是自行編譯的檔案都要放到 <code>/app</code> 目錄，因為包成 Slug 的時候是不會壓縮這個目錄以外的檔案。</p></blockquote><p>至於設定檔的部分，我則是這樣設定的（利用 <code>sed</code> 去置換預設的設定檔）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -117,17 +117,17 @@
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=c># Configure</span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> sed -ire <span class=s1>&#39;s/^Listen.*$/Listen \${PORT}/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    sed -ire <span class=s1>&#39;s/^DocumentRoot.*$/DocumentRoot\ &#34;\/app\/src&#34;/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    sed -ire <span class=s1>&#39;s/&lt;Directory &#34;\/app\/apache\/htdocs&#34;&gt;/&lt;Directory &#34;\/app\/src&#34;&gt;/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    sed -ire <span class=s1>&#39;s/AllowOverride\ None/AllowOverride\ All/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf<span class=err>
-</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;&lt;IfModule dir_module&gt;\nDirectoryIndex index.html index.PHP\n&lt;/IfModule&gt;&#34;</span> &gt;&gt; <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;&lt;FilesMatch \.PHP</span>$<span class=s2>&gt;\nSetHandler application/x-httpd-PHP\n&lt;/FilesMatch&gt;&#34;</span> &gt;&gt; <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf<span class=err>
-</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;zend_extension=opcache.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=phalcon.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=mongo.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=redis.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini<span class=err>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=c># Configure</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> sed -ire <span class=s1>&#39;s/^Listen.*$/Listen \${PORT}/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    sed -ire <span class=s1>&#39;s/^DocumentRoot.*$/DocumentRoot\ &#34;\/app\/src&#34;/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    sed -ire <span class=s1>&#39;s/&lt;Directory &#34;\/app\/apache\/htdocs&#34;&gt;/&lt;Directory &#34;\/app\/src&#34;&gt;/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    sed -ire <span class=s1>&#39;s/AllowOverride\ None/AllowOverride\ All/g&#39;</span> <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf<span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;&lt;IfModule dir_module&gt;\nDirectoryIndex index.html index.PHP\n&lt;/IfModule&gt;&#34;</span> &gt;&gt; <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    <span class=nb>echo</span> <span class=s2>&#34;&lt;FilesMatch \.PHP</span>$<span class=s2>&gt;\nSetHandler application/x-httpd-PHP\n&lt;/FilesMatch&gt;&#34;</span> &gt;&gt; <span class=nv>$APACHE_ROOT</span>/conf/httpd.conf<span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;zend_extension=opcache.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=phalcon.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=mongo.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>    <span class=nb>echo</span> <span class=s2>&#34;extension=redis.so&#34;</span> &gt;&gt; <span class=nv>$PHP_ROOT</span>/PHP.ini<span class=err>
 </span></code></pre></td></tr></table></div></div><p>這樣做的原因是如果未來要相容在 Docker Plugin 時，就可以省去問題（Plugin 只會把 Template 丟出來，並不支援 ADD 之類的增加檔案）</p><blockquote><p>不過後來想想，包個 Buildpacks 給 Plugin 下載比較實在 XD</p></blockquote><p>最後是 Deploy 的時候會用到的 <code>ONBUILD</code> 部分（其實就是把 Source Code 複製進去而已）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -148,26 +148,26 @@
 </span><span class=lnt>18
 </span><span class=lnt>19
 </span><span class=lnt>20
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=c># Copy SourceCode</span><span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>COPY</span> . /app/src<span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> root</span><span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> chown -R app /app<span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> app</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># Setup Dependency</span><span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=k>if</span> <span class=o>[</span> -f /app/src/composer.json <span class=o>]</span><span class=p>;</span> <span class=k>then</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>            curl --silent --max-time <span class=m>60</span> --location <span class=s2>&#34;</span><span class=nv>$COMPOSER_URL</span><span class=s2>&#34;</span> &gt; <span class=nv>$HOME</span>/src/composer.phar<span class=p>;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>            PHP <span class=nv>$HOME</span>/src/composer.phar install --prefer-dist<span class=p>;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>            rm <span class=nv>$HOME</span>/src/composer.phar<span class=p>;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>            <span class=k>fi</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># Configure Profile</span><span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> app</span><span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> mkdir -p /app/.profile.d<span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;export PATH=\&#34;</span><span class=nv>$PATH</span><span class=s2>:</span><span class=nv>$PHP_ROOT</span><span class=s2>/bin:</span><span class=nv>$APACHE_ROOT</span><span class=s2>/bin\&#34;&#34;</span> &gt; /app/.profile.d/PHP.sh<span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;cd /app/src&#34;</span> &gt;&gt; /app/.profile.d/PHP.sh<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>EXPOSE</span><span class=s> 3000</span><span class=err>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Dockerfile data-lang=Dockerfile><span class=c># Copy SourceCode</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>COPY</span> . /app/src<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> root</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> chown -R app /app<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> app</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># Setup Dependency</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=k>if</span> <span class=o>[</span> -f /app/src/composer.json <span class=o>]</span><span class=p>;</span> <span class=k>then</span> <span class=se>\
+</span><span class=se></span>            curl --silent --max-time <span class=m>60</span> --location <span class=s2>&#34;</span><span class=nv>$COMPOSER_URL</span><span class=s2>&#34;</span> &gt; <span class=nv>$HOME</span>/src/composer.phar<span class=p>;</span> <span class=se>\
+</span><span class=se></span>            PHP <span class=nv>$HOME</span>/src/composer.phar install --prefer-dist<span class=p>;</span> <span class=se>\
+</span><span class=se></span>            rm <span class=nv>$HOME</span>/src/composer.phar<span class=p>;</span> <span class=se>\
+</span><span class=se></span>            <span class=k>fi</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># Configure Profile</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>USER</span><span class=s> app</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> mkdir -p /app/.profile.d<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;export PATH=\&#34;</span><span class=nv>$PATH</span><span class=s2>:</span><span class=nv>$PHP_ROOT</span><span class=s2>/bin:</span><span class=nv>$APACHE_ROOT</span><span class=s2>/bin\&#34;&#34;</span> &gt; /app/.profile.d/PHP.sh<span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;cd /app/src&#34;</span> &gt;&gt; /app/.profile.d/PHP.sh<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>ONBUILD</span> <span class=k>EXPOSE</span><span class=s> 3000</span><span class=err>
 </span></code></pre></td></tr></table></div></div><p>裡面跑了 <code>composer install</code> 至於需不需要跑就看專案摟～
 （像是 PHP/Node.js 的相依都會被一起複製到，其實也不用這麼在意拉⋯⋯）</p><p>至於 Port 一律都是 3000 所以 <code>EXPOSE</code> 到 3000 就沒問題了。</p><h3 id=輔助-buildpacks-製作>輔助 Buildpacks 製作</h3><p>稍微修改一下 Dockerfile 放點輔助的 Script 進去就可以了。</p><p>我是寫了一個叫做 <code>package.sh</code> 的 Shell Script 幫我把 <code>/app</code> 的環境包出來。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2

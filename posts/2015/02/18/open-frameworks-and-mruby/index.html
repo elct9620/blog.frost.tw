@@ -23,9 +23,9 @@ Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來�
 </span><span class=lnt>19
 </span><span class=lnt>20
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp>
-<span class=cp>#include</span> <span class=cpf>&lt;string.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/compile.h&gt;</span><span class=cp>
+<span class=cp>#include</span> <span class=cpf>&lt;string.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/compile.h&gt;</span><span class=cp>
 </span><span class=cp></span>
 <span class=c1>// 使用 string.h 是因為 Open Framrworks 大部份都是傳回 string 而非 const char *
 </span><span class=c1>// 我們會需要使用 mRuby/compile.h 裡面含有從檔案讀取等處理，若要直接執行 .rb 檔案則需要引用
@@ -79,7 +79,7 @@ Open Frameworks 基本上被稱為是 C++ 版本的 Processing 就各方面來�
 </span><span class=lnt>35
 </span><span class=lnt>36
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp>
-<span class=cp>#include</span> <span class=cpf>&#34;Ruby.h&#34;</span><span class=cp>
+<span class=cp>#include</span> <span class=cpf>&#34;Ruby.h&#34;</span><span class=cp>
 </span><span class=cp></span>
 <span class=n>Ruby</span><span class=o>::</span><span class=n>Ruby</span><span class=p>()</span> <span class=p>{</span>
   <span class=n>mrb</span> <span class=o>=</span> <span class=n>mrb_open</span><span class=p>();</span>
@@ -140,11 +140,11 @@ Ruby-&gt;close();
 </span><span class=lnt>20
 </span><span class=lnt>21
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp>
-<span class=cp>#include</span> <span class=cpf>&lt;ofMain.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/string.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/data.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/class.h&gt;</span><span class=cp>
+<span class=cp>#include</span> <span class=cpf>&lt;ofMain.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/string.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/data.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/class.h&gt;</span><span class=cp>
 </span><span class=cp></span>
 <span class=k>using</span> <span class=k>namespace</span> <span class=n>std</span><span class=p>;</span>
 
@@ -255,7 +255,7 @@ Ruby-&gt;close();
 </span><span class=lnt>92
 </span><span class=lnt>93
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp>
-<span class=cp>#include</span> <span class=cpf>&#34;Image.h&#34;</span><span class=cp>
+<span class=cp>#include</span> <span class=cpf>&#34;Image.h&#34;</span><span class=cp>
 </span><span class=cp></span>
 <span class=k>using</span> <span class=k>namespace</span> <span class=n>Ruby</span><span class=p>;</span>
 

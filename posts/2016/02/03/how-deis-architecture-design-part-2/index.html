@@ -29,36 +29,36 @@
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span><span class=lnt>30
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=k>FROM</span><span class=s> alpine:3.2</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># install common packages</span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> apk add --update-cache <span class=se>\</span><span class=err>
-</span><span class=err></span>  bash <span class=se>\</span><span class=err>
-</span><span class=err></span>  curl <span class=se>\</span><span class=err>
-</span><span class=err></span>  geoip <span class=se>\</span><span class=err>
-</span><span class=err></span>  libssl1.0 <span class=se>\</span><span class=err>
-</span><span class=err></span>  openssl <span class=se>\</span><span class=err>
-</span><span class=err></span>  pcre <span class=se>\</span><span class=err>
-</span><span class=err></span>  sudo <span class=se>\</span><span class=err>
-</span><span class=err></span>  <span class=o>&amp;&amp;</span> rm -rf /var/cache/apk/*<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># install confd</span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> curl -sSL -o /usr/local/bin/confd https://s3-us-west-2.amazonaws.com/opdemand/confd-git-73f7489 <span class=se>\</span><span class=err>
-</span><span class=err></span>  <span class=o>&amp;&amp;</span> chmod +x /usr/local/bin/confd<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># add nginx user</span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> addgroup -S nginx <span class=o>&amp;&amp;</span> <span class=se>\</span><span class=err>
-</span><span class=err></span>  adduser -S -G nginx -H -h /opt/nginx -s /sbin/nologin -D nginx<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>COPY</span> rootfs /<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=c># compile nginx from source</span><span class=err>
-</span><span class=err></span><span class=k>RUN</span> build<span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;boot&#34;</span><span class=p>]</span><span class=err>
-</span><span class=err></span><span class=k>EXPOSE</span><span class=s> 80 2222 9090</span><span class=err>
-</span><span class=err></span><span class=err>
-</span><span class=err></span><span class=k>ENV</span> DEIS_RELEASE 1.13.0-dev<span class=err>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=k>FROM</span><span class=s> alpine:3.2</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># install common packages</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> apk add --update-cache <span class=se>\
+</span><span class=se></span>  bash <span class=se>\
+</span><span class=se></span>  curl <span class=se>\
+</span><span class=se></span>  geoip <span class=se>\
+</span><span class=se></span>  libssl1.0 <span class=se>\
+</span><span class=se></span>  openssl <span class=se>\
+</span><span class=se></span>  pcre <span class=se>\
+</span><span class=se></span>  sudo <span class=se>\
+</span><span class=se></span>  <span class=o>&amp;&amp;</span> rm -rf /var/cache/apk/*<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># install confd</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> curl -sSL -o /usr/local/bin/confd https://s3-us-west-2.amazonaws.com/opdemand/confd-git-73f7489 <span class=se>\
+</span><span class=se></span>  <span class=o>&amp;&amp;</span> chmod +x /usr/local/bin/confd<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># add nginx user</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> addgroup -S nginx <span class=o>&amp;&amp;</span> <span class=se>\
+</span><span class=se></span>  adduser -S -G nginx -H -h /opt/nginx -s /sbin/nologin -D nginx<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>COPY</span> rootfs /<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=c># compile nginx from source</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> build<span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;boot&#34;</span><span class=p>]</span><span class=err>
+</span><span class=err></span><span class=k>EXPOSE</span><span class=s> 80 2222 9090</span><span class=err>
+</span><span class=err>
+</span><span class=err></span><span class=k>ENV</span> DEIS_RELEASE 1.13.0-dev<span class=err>
 </span></code></pre></td></tr></table></div></div><p>透過 Dockerfile 可以簡單了解到這個服務是怎麼啟動的，整體上來說非常簡單，除了安裝 confd 之外。就是把名為 <code>rootfs</code> 的目錄加進去，並且編譯客製化的 Nginx 接著啟動伺服器。</p><blockquote><p>這邊比較特別的地方是客製化編譯 Nginx 的部份，主要是因為 Deis 除了基本的 Nginx 功能外，也增加了防火牆模組（<a href=https://github.com/nbs-system/naxsi>NAXSI</a>）跟一些模組在裡面，有興趣的可以自行閱讀 <code>rootfs/bin/build</code> 這個檔案的內容。</p></blockquote><h3 id=boot>boot</h3><p>我想大家會覺得奇怪，為什麼不是直接執行 Nginx 而是執行一個名為 <code>boot</code> 的指令呢？
 這是因為 Deis 除了啟動 Nginx 之外，還要將像是 confd 之類的服務也一併啟動。</p><blockquote><p>這邊比較有趣的是，一般會用 Shell Script 來處理。但是 Deis 使用 Golang 來做處理。</p></blockquote><p>從 Makefile 可以看出 <code>boot</code> 這個檔案是透過 Golang 的 Cross-compile 功能所編譯後，再構出 Docker 的 Image 來使用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -66,7 +66,7 @@
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-makefile data-lang=makefile><span class=nf>build</span><span class=o>:</span> <span class=n>check</span>-<span class=n>docker</span>
-  <span class=nv>GOOS</span><span class=o>=</span>linux <span class=nv>GOARCH</span><span class=o>=</span>amd64 <span class=nv>CGO_ENABLED</span><span class=o>=</span><span class=m>0</span> godep go build -a -installsuffix -v -ldflags <span class=s1>&#39;-s&#39;</span> -o <span class=k>$(</span>BINARY_DEST_DIR<span class=k>)</span>/boot cmd/boot/boot.go <span class=o>||</span> <span class=nb>exit</span> 1
+  <span class=nv>GOOS</span><span class=o>=</span>linux <span class=nv>GOARCH</span><span class=o>=</span>amd64 <span class=nv>CGO_ENABLED</span><span class=o>=</span><span class=m>0</span> godep go build -a -installsuffix -v -ldflags <span class=s1>&#39;-s&#39;</span> -o <span class=k>$(</span>BINARY_DEST_DIR<span class=k>)</span>/boot cmd/boot/boot.go <span class=o>||</span> <span class=nb>exit</span> <span class=m>1</span>
   @<span class=k>$(</span>call check-static-binary,rootfs/bin/boot<span class=k>)</span>
   docker build -t <span class=k>$(</span>IMAGE<span class=k>)</span> .
   rm rootfs/bin/boot

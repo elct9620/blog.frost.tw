@@ -12,7 +12,7 @@ git init</p></blockquote><p>切進去後，初始化 git 專案（Heroku 是利�
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=n>source</span> <span class=s1>&#39;https://Rubygems.org&#39;</span>
 <span class=no>Ruby</span> <span class=s1>&#39;2.0.0&#39;</span>
 
-<span class=c1># Bundle edge Rails instead: gem &#39;Rails&#39;, Github: &#39;rails/rails&#39;</span>
+<span class=c1># Bundle edge Rails instead: gem &#39;Rails&#39;, Github: &#39;rails/rails&#39;</span>
 <span class=n>gem</span> <span class=s1>&#39;Rails&#39;</span><span class=p>,</span> <span class=s1>&#39;4.0.2&#39;</span>
 </code></pre></td></tr></table></div></div><p>在 <code>source 'https://Rubygems.org'</code> 後面加入 <code>ruby '2.0.0'</code> 來告訴 Heroku 要使用的版本。
 （這與 RVM 相容，大家可以不用擔心相容性）</p><p>註：如果 Mac 使用者有使用 <code>pow</code> 套用後卻因為 Ruby 版本發生問題無法順利啟動，可以加入 <code>.powrc</code> 這個檔案，內容如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
@@ -26,7 +26,7 @@ git init</p></blockquote><p>切進去後，初始化 git 專案（Heroku 是利�
 </code></pre></td></tr></table></div></div><p>如此一來 <code>pow</code> 就可以自動切換到對應的 Ruby 版本。</p><p>另外 Rails 預設可能是使用 SQLite 但是 Heroku 不支援，我們將它調整為 <code>pgsql</code> 作為 <code>production</code> 環境的資料庫。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># Use sqlite3 as the database for Active Record</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># Use sqlite3 as the database for Active Record</span>
 <span class=n>gem</span> <span class=s1>&#39;sqlite3&#39;</span><span class=p>,</span> <span class=ss>group</span><span class=p>:</span> <span class=ss>:development</span>
 <span class=n>gem</span> <span class=s1>&#39;pg&#39;</span><span class=p>,</span> <span class=ss>group</span><span class=p>:</span> <span class=ss>:production</span>
 </code></pre></td></tr></table></div></div><p>透過設定使用時機的群組，讓本機可以使用 SQLite 開發省去資料庫設定的麻煩，而遠端則能夠支援 PostgreSQL 來運行。

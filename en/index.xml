@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Fri, 03 Apr 2020 21:14:56 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: Database Migration and Architecture Changing</title><link>https://blog.frost.tw/en/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</link><category>TGONext</category><category>Architecture</category><category>Database</category><category>Experience</category><pubDate>Fri, 03 Apr 2020 21:14:56 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</guid><description>&lt;p>Before we starting to discuss architecture, our mentor let us ask some questions.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Tue, 28 Apr 2020 00:31:53 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Review the Rails' Autoloading and Reloading</title><link>https://blog.frost.tw/en/posts/2020/05/28/Review-the-Rails-Autoloading-and-Reloading/</link><category>Ruby</category><category>Rails</category><category>Autoloading</category><pubDate>Tue, 28 Apr 2020 00:31:53 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/05/28/Review-the-Rails-Autoloading-and-Reloading/</guid><description>&lt;p>A few years ago, I have a post talking about &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a>. In recent days, my colleague has some problems with Autoloading and Reloading.&lt;/p>
+&lt;p>Therefore I decided to review the Autoloading mechanism in Rails 5 and 6.&lt;/p></description><content:encoded>&lt;p>A few years ago, I have a post talking about &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a>. In recent days, my colleague has some problems with Autoloading and Reloading.&lt;/p>
+&lt;p>Therefore I decided to review the Autoloading mechanism in Rails 5 and 6.&lt;/p>
+&lt;h2 id="why-autoloading">Why Autoloading?&lt;/h2>
+&lt;p>Before we starting to discuss Autoloading or Reloading, I want to spend some time to think about it.&lt;/p>
+&lt;p>In the C, C++, or Java which is compiled language. They didn&amp;rsquo;t need to autoload because the compiler will include the necessary parts to the binary. And we usually use &lt;code>#include&lt;/code> or &lt;code>import&lt;/code> to include the related symbols to reference the codes we are required.&lt;/p>
+&lt;p>But in the Ruby, PHP, or Node.js which is interpreted in the runtime. That means our code didn&amp;rsquo;t preprocess before we execute it. And our code didn&amp;rsquo;t know other code until we &lt;code>require&lt;/code> or &lt;code>include&lt;/code> them into our main program file.&lt;/p>
+&lt;p>These two types of languages are trying to split codes into small files. But for the interpreted language we cannot skip unnecessary files to loaded if we require each file.&lt;/p>
+&lt;p>In Ruby, we have a keyword &lt;a href="https://ruby-doc.org/core-2.7.0/Module.html#method-i-autoload-3F">&lt;code>autoload&lt;/code>&lt;/a> that allows us to define &amp;ldquo;when the constant not defined, load the specify file.&amp;rdquo; to implement load required files.&lt;/p>
+&lt;p>It may reduce memory usage when we load a large amount of code in our application. But I more believe autoloading is used to help us to find codes in a large application that has many files.&lt;/p>
+&lt;h2 id="the-require-method">The require method&lt;/h2>
+&lt;p>In my code review, I ask for my colleague to use &lt;code>require 'middleware/domain_rewriter'&lt;/code> instead &lt;code>require_relative '../lib/middleware/domain_rewriter'&lt;/code> to include our extra middleware in Rails in &lt;code>config/application.rb&lt;/code>&lt;/p>
+&lt;p>But it doesn&amp;rsquo;t work correctly, we have to use &lt;code>require_relative&lt;/code> in this case.&lt;/p>
+&lt;p>The question is &amp;ldquo;why we can use &lt;code>require&lt;/code> in the non-relatives path?&amp;rdquo;&lt;/p>
+&lt;p>In Ruby, we have a global variable named &lt;code>$LOAD_PATH&lt;/code> if we use &lt;code>pp&lt;/code> to print it, we can find our Ruby install path is listed inside it. It will let Ruby find files inside these paths when we try to require something.&lt;/p>
+&lt;p>If we have the &lt;code>Gemfile&lt;/code> in the project folder, the gems install path will be added to this list. This is why we can require gems only to add them to the Gemfile.&lt;/p>
+&lt;p>After we know the &lt;code>$LOAD_PATH&lt;/code> provide &lt;code>require&lt;/code> search paths, the reason why &lt;code>config/application.rb&lt;/code> cannot directly require &lt;code>lib/&lt;/code> is easier to recognize.&lt;/p>
+&lt;p>The Rails is a Rack-based application and it usually boots from &lt;code>config.ru&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="c1"># This file is used by Rack-based servers to start the application.&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s2">&amp;#34;config/environment&amp;#34;&lt;/span>
+&lt;span class="n">run&lt;/span> &lt;span class="no">Rails&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">application&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>This file requires the &lt;code>config/environment.rb&lt;/code> and we can find it require the &lt;code>config/application.rb&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="c1"># Load the Rails application.&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s2">&amp;#34;application&amp;#34;&lt;/span>
+&lt;span class="c1"># Initialize the Rails application.&lt;/span>
+&lt;span class="no">Rails&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">application&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">initialize!&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>It is obvious the Rails didn&amp;rsquo;t add &lt;code>lib/&lt;/code> into the &lt;code>$LOAD_PATH&lt;/code> and we cannot require them directly.&lt;/p>
+&lt;h2 id="the-autoloading">The Autoloading&lt;/h2>
+&lt;p>Since we can load library elegant by use &lt;code>require&lt;/code> but we still need to require the application code via &lt;code>require_relative&lt;/code> and it makes us feel annoyed when our codebase is growing.&lt;/p>
+&lt;p>Since Rails 6, it starts to use the &lt;a href="https://github.com/fxn/zeitwerk">&lt;code>Zeitwerk&lt;/code>&lt;/a> as the code loader, we will use it as an example in this post to reduce complex behaviors behind it.&lt;/p>
+&lt;p>According to Zeitwerk&amp;rsquo;s readme, we can know the basic logic is below shows:&lt;/p>
+&lt;pre>&lt;code>lib/my_gem.rb -&amp;gt; MyGem
+lib/my_gem/foo.rb -&amp;gt; MyGem::Foo
+lib/my_gem/bar_baz.rb -&amp;gt; MyGem::BarBaz
+lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
+&lt;/code>&lt;/pre>&lt;p>It is very similar to we put the files inside &lt;code>app/controller&lt;/code> or &lt;code>app/models&lt;/code> because Rails register these directories for us.&lt;/p>
+&lt;blockquote>
+&lt;p>This is mean it is not required to use &lt;code>_controller&lt;/code> as postfix in your &lt;code> app/controller&lt;/code> folder, but it will cause other hard to recognize the file usage.&lt;/p>
+&lt;/blockquote>
+&lt;p>The Zeitwerk uses Ruby&amp;rsquo;s &lt;code>autoload&lt;/code> to load classes when we configure the autoload paths, it will scan all files and add them to the related classes&amp;rsquo; autoload list.&lt;/p>
+&lt;blockquote>
+&lt;p>In my memory, the older version Rails has its autoloading implementation via override some Kernel methods and rescue NameError to find the actual file path to load it.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-reloading">The Reloading&lt;/h2>
+&lt;p>I think this part is the most Junior developer feeling confuse when they try to &lt;code>require&lt;/code> something but it breaks when they update some code.&lt;/p>
+&lt;p>In Zeitwerk we have &lt;code>#enable_reloading&lt;/code> options can grant permission to call the &lt;code>#reload&lt;/code> method. The reloading feature is helpful in the development environment when we change something but not required to restart the server.&lt;/p>
+&lt;blockquote>
+&lt;p>For the compiled language, it is necessary to recompile and reopen it. But there have other methods can prevent it.&lt;/p>
+&lt;/blockquote>
+&lt;p>But why we can &lt;code>#unload&lt;/code> the interpreted code? This usually depends on the language feature, in the Ruby the constant variable is changeable and allows to be removed.&lt;/p>
+&lt;p>When we call the &lt;code>#reload&lt;/code> method, the Zeitwerk will &lt;a href="https://github.com/fxn/zeitwerk/blob/806795d302840a7e96612b88ff45f231ea4318b0/lib/zeitwerk/loader.rb#L796">&lt;code>#unload&lt;/code>&lt;/a> constants which are loaded. And load all classes again to put the new codes into memory.&lt;/p>
+&lt;p>That is means when we have a top-level constant is unloaded, the children will be unloaded together.&lt;/p>
+&lt;p>This is a common mistake when we defined a child class in the same file with parent class, but directly use it in other file but didn&amp;rsquo;t load its parent.&lt;/p>
+&lt;blockquote>
+&lt;p>It may not happen in newer Rails, the loader will try to load its parent before load it.&lt;/p>
+&lt;/blockquote>
+&lt;p>In the same case, a similar mistake is we define the &lt;code>API&lt;/code> namespace under autoload managed folder (eg. &lt;code>app/&lt;/code>) and define the in the not-managed folder (eg. &lt;code>lib/&lt;/code>), too.&lt;/p>
+&lt;p>When we change some files under &lt;code>app/&lt;/code> folder and it will unload the &lt;code>API&lt;/code> namespace, after reload the &lt;code>lib/&lt;/code> defined &lt;code>API&lt;/code> will be unloaded and never go back.&lt;/p>
+&lt;p>The reason is the &lt;code>require&lt;/code> recognize the file is loaded, therefore Ruby thinks it didn&amp;rsquo;t load again but it is unloaded for reloading.&lt;/p>
+&lt;p>Below codes is an example:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s1">&amp;#39;api&amp;#39;&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">defined?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">API&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># =&amp;gt; &amp;#34;constant&amp;#34;&lt;/span>
+&lt;span class="no">Object&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:remove_const&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;API&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s1">&amp;#39;api&amp;#39;&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">defined?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">API&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># =&amp;gt; nil&lt;/span>
+&lt;span class="nb">load&lt;/span> &lt;span class="s2">&amp;#34;api.rb&amp;#34;&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">defined?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">API&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># =&amp;gt; &amp;#34;constant&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The &lt;code>require&lt;/code> can prevent we load the same file twice but the &lt;code>load&lt;/code> didn&amp;rsquo;t check for it. The Zeitwerk also overrides the &lt;a href="https://github.com/fxn/zeitwerk/blob/master/lib/zeitwerk/kernel.rb#L24">&lt;code>#require&lt;/code>&lt;/a> method to provide a similar feature which managed by Zeitwerk loader.&lt;/p>
+&lt;p>Depends on the above example, we can have an outline of the Rails&amp;rsquo; autoloading and reloading mechanism to help us use them more reasonably.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>In the end, I have on more thing I want to talk about. The &lt;code>lib/&lt;/code> is managed by Rails, too. But it can be used after Rails is booted, this is the reason we cannot use them in the &lt;code>config/application.rb&lt;/code> before boot.&lt;/p>
+&lt;blockquote>
+&lt;p>The source is &lt;a href="https://github.com/rails/rails/blob/758e4f8406e680a6cbf21b170749202c537a2576/railties/lib/rails/engine/configuration.rb#L53">here&lt;/a> to defined as load path and &lt;a href="https://github.com/rails/rails/blob/c0d91a4f9da10094ccdb80e34d1be42ce1016c9a/railties/lib/rails/engine.rb#L570-L575">here&lt;/a> to add into load path.&lt;/p>
+&lt;/blockquote>
+&lt;p>The autoloading and reloading are useful when we develop our application and Zeitwerk allows us to add it to our project easier. If you have projects not based on Rails, I suggest you try to add it and learn more from practice.&lt;/p></content:encoded></item><item><title>TGONext: Database Migration and Architecture Changing</title><link>https://blog.frost.tw/en/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</link><category>TGONext</category><category>Architecture</category><category>Database</category><category>Experience</category><pubDate>Fri, 03 Apr 2020 21:14:56 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</guid><description>&lt;p>Before we starting to discuss architecture, our mentor let us ask some questions.&lt;/p>
 &lt;p>Between this meetup and previous meetup, my customer breaks their migration due to some incorrect plan. So I raise a migration question to discuss the zero-downtime migration plan.&lt;/p></description><content:encoded>&lt;p>Before we starting to discuss architecture, our mentor let us ask some questions.&lt;/p>
 &lt;p>Between this meetup and previous meetup, my customer breaks their migration due to some incorrect plan. So I raise a migration question to discuss the zero-downtime migration plan.&lt;/p>
 &lt;h2 id="migrate-database-without-downtime">Migrate Database without Downtime&lt;/h2>

@@ -3,7 +3,7 @@
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>deploy<span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
 </span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w> </span>xxx<span class=w>
 </span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
@@ -13,9 +13,9 @@
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>deploy<span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span>api_key<span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
 </span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
 </span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
 </span></code></pre></td></tr></table></div></div><p>上面基本上就是最為基本的使用，不過要注意的是，假設測試的版本有多個（Ex. PHP 5.4, PHP 5.5）那麼這個動作也會被執行兩次（預設情況）</p><p>後面就來談談<a href=https://docs.travis-ci.com/user/deployment/Heroku/>官方文件</a>上所敘述的其他運用方式吧！
@@ -26,9 +26,9 @@
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>deploy<span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span>api_key<span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
 </span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
 </span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> 
 </span><span class=w>  	</span><span class=k>production</span><span class=p>:</span><span class=w> </span>production-app<span class=w>
@@ -40,9 +40,9 @@
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>deploy<span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span>api_key<span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
 </span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
 </span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
 </span><span class=w>  </span><span class=k>on</span><span class=p>:</span><span class=w> </span>production<span class=w>
@@ -54,12 +54,12 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>deploy<span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span>api_key<span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
 </span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
 </span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
-</span><span class=w> 	</span>run<span class=p>:</span><span class=w>
+</span><span class=w> 	</span><span class=k>run</span><span class=p>:</span><span class=w>
 </span><span class=w>  	</span>- <span class=s2>&#34;rake db:migrate&#34;</span><span class=w>
 </span><span class=w>    </span>- <span class=s2>&#34;rake assets:precompile&#34;</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>如果只需要 <code>rake db:migrate</code> 直接寫在 <code>run</code> 後面就可以了。</p><p>整體來說很好理解，不過這個功能卻解決了網站在 Deploy 上的問題。

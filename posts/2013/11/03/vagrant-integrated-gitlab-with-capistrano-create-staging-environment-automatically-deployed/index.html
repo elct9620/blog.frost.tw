@@ -121,31 +121,31 @@ cap install
 </span><span class=lnt>24
 </span><span class=lnt>25
 </span><span class=lnt>26
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># Load DSL and Setup Up Stages</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># Load DSL and Setup Up Stages</span>
 <span class=nb>require</span> <span class=s1>&#39;capistrano/setup&#39;</span>
 
-<span class=c1># Includes default deployment tasks</span>
+<span class=c1># Includes default deployment tasks</span>
 <span class=nb>require</span> <span class=s1>&#39;capistrano/deploy&#39;</span>
 
-<span class=c1># Includes tasks from other gems included in your Gemfile</span>
-<span class=c1>#</span>
-<span class=c1># For documentation on these, see for example:</span>
-<span class=c1>#</span>
-<span class=c1>#   https://Github.com/capistrano/rvm</span>
-<span class=c1>#   https://Github.com/capistrano/rbenv</span>
-<span class=c1>#   https://Github.com/capistrano/chRuby</span>
-<span class=c1>#   https://Github.com/capistrano/bundler</span>
-<span class=c1>#   https://Github.com/capistrano/Rails/tree/master/assets</span>
-<span class=c1>#   https://Github.com/capistrano/Rails/tree/master/migrations</span>
-<span class=c1>#</span>
+<span class=c1># Includes tasks from other gems included in your Gemfile</span>
+<span class=c1>#</span>
+<span class=c1># For documentation on these, see for example:</span>
+<span class=c1>#</span>
+<span class=c1>#   https://Github.com/capistrano/rvm</span>
+<span class=c1>#   https://Github.com/capistrano/rbenv</span>
+<span class=c1>#   https://Github.com/capistrano/chRuby</span>
+<span class=c1>#   https://Github.com/capistrano/bundler</span>
+<span class=c1>#   https://Github.com/capistrano/Rails/tree/master/assets</span>
+<span class=c1>#   https://Github.com/capistrano/Rails/tree/master/migrations</span>
+<span class=c1>#</span>
 <span class=nb>require</span> <span class=s1>&#39;capistrano/rvm&#39;</span>
-<span class=c1># require &#39;capistrano/rbenv&#39;</span>
-<span class=c1># require &#39;capistrano/chRuby&#39;</span>
+<span class=c1># require &#39;capistrano/rbenv&#39;</span>
+<span class=c1># require &#39;capistrano/chRuby&#39;</span>
 <span class=nb>require</span> <span class=s1>&#39;capistrano/bundler&#39;</span>
-<span class=c1># require &#39;capistrano/Rails/assets&#39;</span>
+<span class=c1># require &#39;capistrano/Rails/assets&#39;</span>
 <span class=nb>require</span> <span class=s1>&#39;capistrano/Rails/migrations&#39;</span>
 
-<span class=c1># Loads custom tasks from `lib/capistrano/tasks&#39; if you have any defined.</span>
+<span class=c1># Loads custom tasks from `lib/capistrano/tasks&#39; if you have any defined.</span>
 <span class=no>Dir</span><span class=o>.</span><span class=n>glob</span><span class=p>(</span><span class=s1>&#39;lib/capistrano/tasks/*.cap&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>each</span> <span class=p>{</span> <span class=o>|</span><span class=n>r</span><span class=o>|</span> <span class=n>import</span> <span class=n>r</span> <span class=p>}</span>
 </code></pre></td></tr></table></div></div><p>然後修改 <code>config/deploy/staging.rb</code> 設定 SSH 連線資訊</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -167,7 +167,7 @@ cap install
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># 設定 Branch 為這次 Push 的 Branch / Commit</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby><span class=c1># 設定 Branch 為這次 Push 的 Branch / Commit</span>
 <span class=n>branch</span> <span class=o>=</span> <span class=s1>&#39;staging&#39;</span>
 <span class=n>branch</span> <span class=o>=</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;CI_BUILD_REF&#39;</span><span class=o>]</span> <span class=k>if</span> <span class=no>ENV</span><span class=o>[</span><span class=s1>&#39;CI_BUILD_REF&#39;</span><span class=o>]</span>
 

@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Fri, 03 Apr 2020 21:14:56 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: 資料庫變遷跟架構改變</title><link>https://blog.frost.tw/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</link><category>TGONext</category><category>架構</category><category>資料庫</category><category>心得</category><pubDate>Fri, 03 Apr 2020 21:14:56 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</guid><description>&lt;p>這次在開始討論關於架構的主題之前，我們的倒是讓我們提出一些問題。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Tue, 28 Apr 2020 00:31:53 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>複習 Rails 的 Autoloading 和 Reloading</title><link>https://blog.frost.tw/posts/2020/05/28/Review-the-Rails-Autoloading-and-Reloading/</link><category>Ruby</category><category>Rails</category><category>Autoloading</category><pubDate>Tue, 28 Apr 2020 00:31:53 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/05/28/Review-the-Rails-Autoloading-and-Reloading/</guid><description>&lt;p>在幾年前我有一篇文章討論 &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a> 的問題，這幾天剛好有同事在 Autoloading 和 Reloading 上也有類似的問題。&lt;/p>
+&lt;p>所以我決定寫一篇文章來複習 Rails 5 和 6 的 Autoloading 的機制。&lt;/p></description><content:encoded>&lt;p>在幾年前我有一篇文章討論 &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a> 的問題，這幾天剛好有同事在 Autoloading 和 Reloading 上也有類似的問題。&lt;/p>
+&lt;p>所以我決定寫一篇文章來複習 Rails 5 和 6 的 Autoloading 的機制。&lt;/p>
+&lt;h2 id="why-autoloading">為什麼要 Autoloading&lt;/h2>
+&lt;p>在開始討論 Autoloading 和 Reloading 之前，我想先花一點時間思考這個問題。&lt;/p>
+&lt;p>像是 C、C++ 或者 Java 這類需要編譯的語言，他們通常不會需要 Autoload（自動載入）的功能，因為 Compiler（編譯器）已經需要的檔案包含在二進位檔案中。也因此我們經常會用 &lt;code>#include&lt;/code> 或 &lt;code>import&lt;/code> 來將需要的符號或者參照引用進來。&lt;/p>
+&lt;p>如果像是 Ruby、PHP 或者 Node.js 這類在執行的時候才進行轉換的語言，通常表示我們的程式碼在執行前都不會被處理的。同時我們的程式碼也不會知道其他程式碼，直到我們用 &lt;code>require&lt;/code> 或者 &lt;code>include&lt;/code> 將他們從主程式引用進來。&lt;/p>
+&lt;p>這兩種類型的語言實際上都是嘗試將程式碼分割為小檔案，不過對於直譯式語言來說如果我們將全部的檔案都引用的話，是無法跳過不需要的部分。&lt;/p>
+&lt;p>在 Ruby 裡面有一個叫做 &lt;a href="https://ruby-doc.org/core-2.7.0/Module.html#method-i-autoload-3F">&lt;code>autoload&lt;/code>&lt;/a> 的關鍵字，它允許我們去定義「當常數（Constant）不存在時，要去讀取哪個指定的檔案。」來實現這個需求。&lt;/p>
+&lt;p>這可能在我們載入大量程式碼的時候減少一些記憶體使用，不過我更相信 Autoloading 是用來幫助我們更容易的在大型專案中尋找到我們需要的程式碼。&lt;/p>
+&lt;h2 id="the-require-method">require 方法&lt;/h2>
+&lt;p>在我的 Code Review 裡面，我要求同事使用 &lt;code>require 'middleware/domain_rewriter'&lt;/code> 而不是 &lt;code>require_relative '../lib/middleware/domain_rewriter'&lt;/code> 去引用額外的 Middleware 在 Rails 的 &lt;code>config/application.rb&lt;/code>。&lt;/p>
+&lt;p>不過實際上這並沒有正常運作， 在這個情況我們必須使用 &lt;code>require_relative&lt;/code> 才對。&lt;/p>
+&lt;p>第一個問題是「為什麼我們可以在非相對的路徑使用 &lt;code>require&lt;/code> 呢？」&lt;/p>
+&lt;p>在 Ruby 中，我們有一個全域變數叫做 &lt;code>$LOAD_PATH&lt;/code> 如果我們用 &lt;code>pp&lt;/code> 去顯示他的內容，我們會發現 Ruby 的安裝路徑是被放在裡面的。他是用來讓 Ruby 在我們嘗試引用某些東西時用來參考的搜尋路徑。&lt;/p>
+&lt;p>如果我們有 &lt;code>Gemfile&lt;/code> 在專案目錄，那麼 Gem 安裝的路徑也會被加入到這個列表，這也是為什麼我們可以直接引用 Gem 而只需要將他們寫在 Gemfile 的理由。&lt;/p>
+&lt;p>在我們知道 &lt;code>$LOAD_PATH&lt;/code> 提供給 &lt;code>require&lt;/code> 搜尋路徑後，我們無法直接在 &lt;code>config/application.rb&lt;/code> 去引用 &lt;code>lib/&lt;/code> 目錄的原因就非常的明顯了。&lt;/p>
+&lt;p>基本上 Rails 是一個 Rack 為基礎的應用，因此通常會以 &lt;code>config.ru&lt;/code> 這個檔案作為起點啟動。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="c1"># This file is used by Rack-based servers to start the application.&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s2">&amp;#34;config/environment&amp;#34;&lt;/span>
+&lt;span class="n">run&lt;/span> &lt;span class="no">Rails&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">application&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>這個檔案會繼續引用 &lt;code>config/environment.rb&lt;/code> 並且我們可以發現他引用了 &lt;code>config/application.rb&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="c1"># Load the Rails application.&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s2">&amp;#34;application&amp;#34;&lt;/span>
+&lt;span class="c1"># Initialize the Rails application.&lt;/span>
+&lt;span class="no">Rails&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">application&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">initialize!&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>很明顯的，在這裏 Rails 並沒有把 &lt;code>lib/&lt;/code> 放到 &lt;code>$LOAD_PATH&lt;/code> 裡面造成我們無法直接去引用裡面的檔案。&lt;/p>
+&lt;h2 id="the-autoloading">Autoloading&lt;/h2>
+&lt;p>既然我們知道我們可以用 &lt;code>require&lt;/code> 簡單的載入函式庫，但我們還是需要透過 &lt;code>require_relative&lt;/code> 去載入專案的程式碼，這在我們的程式碼增加時會讓人開始感到煩躁。&lt;/p>
+&lt;p>從 Rails 6 之後開始使用 &lt;a href="https://github.com/fxn/zeitwerk">&lt;code>Zeitwerk&lt;/code>&lt;/a> 作為程式碼的載入器，我會用他來當作範例解釋，來減少我們討論後續複雜的行為。&lt;/p>
+&lt;p>根據 Zeitwerk 的說明，我們可以看到載入的邏輯基本上如下：&lt;/p>
+&lt;pre>&lt;code>lib/my_gem.rb -&amp;gt; MyGem
+lib/my_gem/foo.rb -&amp;gt; MyGem::Foo
+lib/my_gem/bar_baz.rb -&amp;gt; MyGem::BarBaz
+lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
+&lt;/code>&lt;/pre>&lt;p>這其實非常類似我們將檔案放在 &lt;code>app/controller&lt;/code> 或者 &lt;code>app/model&lt;/code> 下面的狀況，因為 Rails 會把這些目錄註冊給 Zeitwerk。&lt;/p>
+&lt;blockquote>
+&lt;p>某方面來說這也表示我們不一定需要在 &lt;code>app/controller&lt;/code> 目錄下使用 &lt;code>_controller&lt;/code> 作為檔案的結尾，不過我們通常不會使用這種難以區分用途的做法。&lt;/p>
+&lt;/blockquote>
+&lt;p>而 Zeitwerk 會使用 Ruby 的 &lt;code>autoload&lt;/code> 來載入這些 Class 也因此當我們設定 Autoload 路徑後，他會去掃描所有的檔案並把他登記到相關的 Class 上的 Autoload 列表。&lt;/p>
+&lt;blockquote>
+&lt;p>在我的記憶中舊版的 Rails 有他自己的 Autoloading 實作，會透過覆蓋掉部分 Kernel 的方法以及對 NameError 的捕捉來找到實際應該載入的檔案。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="the-reloading">Reloading&lt;/h2>
+&lt;p>實際上我認為這個部分是大部分初級工程師嘗試自己用 &lt;code>require&lt;/code> 載入某些東西，但是修改某些檔案後就壞掉後，會覺得疑惑的地方。&lt;/p>
+&lt;p>在 Zeitwerk 我們有 &lt;code>#enable_reloading&lt;/code> 選項可以讓我們能夠使用 &lt;code>#reload&lt;/code> 方法。在開發中 Reloading 功能是非常有幫助的，尤其是當我們修改了一些東西後不需要重新啟動伺服器。&lt;/p>
+&lt;blockquote>
+&lt;p>對編譯式的語言來說總會需要重新編譯和重新打開，不過還是有一些方法可以避免這件事情。&lt;/p>
+&lt;/blockquote>
+&lt;p>不過為什麼我們可以 &lt;code>#unload&lt;/code> 掉已經轉換過的程式碼呢？實際上這很看語言的特性，至少在 Ruby 裡面常數是一種被允許修改跟被移除的數值。&lt;/p>
+&lt;p>當我們呼叫 &lt;code>#reload&lt;/code> 時，Zeitwerk 會 &lt;a href="https://github.com/fxn/zeitwerk/blob/806795d302840a7e96612b88ff45f231ea4318b0/lib/zeitwerk/loader.rb#L796">&lt;code>#unload&lt;/code>&lt;/a> 那些被載入的常數。同時會再將這些 Class 讀取一次，來將新的程式碼放到記憶體中。&lt;/p>
+&lt;p>這也是為什麼當我們有一個頂層的常數被移除後，他下面的物件或模組也會被一起移除的原因。&lt;/p>
+&lt;p>這其實是一個常見的錯誤，當我們在父物件的檔案同時定義了一個子物件並且在其他檔案呼叫時可能會出現錯誤。&lt;/p>
+&lt;blockquote>
+&lt;p>不過這可能不會在比較新的 Rails 發生，載入器通常會對他的父物件的檔案先嘗試載入一次。&lt;/p>
+&lt;/blockquote>
+&lt;p>在同樣的狀況下，類似的錯誤是我們定義了一個 &lt;code>API&lt;/code> 的命名空間在 Autoload 管理的目錄（像是 &lt;code>app/&lt;/code>）同時也定義在沒有被管理的目錄（像是 &lt;code>lib/&lt;/code>）裡面。&lt;/p>
+&lt;p>當我們修改一些在 &lt;code>app/&lt;/code> 目錄下的檔案時，&lt;code>API&lt;/code> 會被移除，而 &lt;code>lib/&lt;/code> 定義的 &lt;code>API&lt;/code> 就永遠不會再被載入回來。&lt;/p>
+&lt;p>這是因為 &lt;code>require&lt;/code> 認為這個檔案已經被載入，因此 Ruby 認為這個檔案不需要再次被載入，但他已經因為 Reloading 被移除了。&lt;/p>
+&lt;p>以下是一個簡單的範例：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s1">&amp;#39;api&amp;#39;&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">defined?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">API&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># =&amp;gt; &amp;#34;constant&amp;#34;&lt;/span>
+&lt;span class="no">Object&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:remove_const&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;API&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">require_relative&lt;/span> &lt;span class="s1">&amp;#39;api&amp;#39;&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">defined?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">API&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># =&amp;gt; nil&lt;/span>
+&lt;span class="nb">load&lt;/span> &lt;span class="s2">&amp;#34;api.rb&amp;#34;&lt;/span>
+&lt;span class="n">pp&lt;/span> &lt;span class="n">defined?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">API&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1"># &amp;#34;constant&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>require&lt;/code> 可以避免我們載入檔案兩次，不過 &lt;code>load&lt;/code> 並不會檢查，而 Zeitwerk 也覆蓋掉 &lt;a href="https://github.com/fxn/zeitwerk/blob/master/lib/zeitwerk/kernel.rb#L24">&lt;code>#require&lt;/code>&lt;/a> 方法來提供由 Zeitwerk 管理的類似的功能。&lt;/p>
+&lt;p>基於以上的例子，我們大致上就能對 Rails 的 Autoloading 和 Reloading 有一個概念，並且幫助我們更合理的應用他們。&lt;/p>
+&lt;h2 id="conclusion">總結&lt;/h2>
+&lt;p>在最後，我還有一件事情要提一下。實際上 &lt;code>lib/&lt;/code> 也是被 Rails 管理的。不過他只能在 Rails 啟動之後使用，這也是為什麼我們無法在 &lt;code>config/application.rb&lt;/code> 使用的原因。&lt;/p>
+&lt;blockquote>
+&lt;p>在原始碼的&lt;a href="https://github.com/rails/rails/blob/758e4f8406e680a6cbf21b170749202c537a2576/railties/lib/rails/engine/configuration.rb#L53">這裏&lt;/a>定義了作為 Load Path 以及在&lt;a href="https://github.com/rails/rails/blob/c0d91a4f9da10094ccdb80e34d1be42ce1016c9a/railties/lib/rails/engine.rb#L570-L575">這裏&lt;/a>將他加入了 Load Path 中。&lt;/p>
+&lt;/blockquote>
+&lt;p>Autoloading 和 Reloading 是我們在開發時非常有用的工具，而 Zeitwerk 更讓我們非常容易的加入這個功能到專案中。如果你有專案不是使用 Rails 的話，我很推薦嘗試加入 Zeitwerk 並且在實踐中了解更多相關的知識。&lt;/p></content:encoded></item><item><title>TGONext: 資料庫變遷跟架構改變</title><link>https://blog.frost.tw/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</link><category>TGONext</category><category>架構</category><category>資料庫</category><category>心得</category><pubDate>Fri, 03 Apr 2020 21:14:56 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/04/03/TGONext-Database-Migration-and-Architecture-Changing/</guid><description>&lt;p>這次在開始討論關於架構的主題之前，我們的倒是讓我們提出一些問題。&lt;/p>
 &lt;p>剛好在兩次聚會的期間，我的客戶因為一些錯誤的計畫讓 Migration 失敗了，所以我提出了關於在不停機的狀況下做 Migration 的規劃問題。&lt;/p></description><content:encoded>&lt;p>這次在開始討論關於架構的主題之前，我們的倒是讓我們提出一些問題。&lt;/p>
 &lt;p>剛好在兩次聚會的期間，我的客戶因為一些錯誤的計畫讓 Migration 失敗了，所以我提出了關於在不停機的狀況下做 Migration 的規劃問題。&lt;/p>
 &lt;h2 id="migrate-database-without-downtime">不停機的 Migration&lt;/h2>
@@ -1429,99 +1555,4 @@ only:
 &lt;p>&lt;img src="https://blog.frost.tw/images/2019-11-18-ruby-world-conference-2019-experience/F635324619CC5B26ABE0A106ED9AB92C.jpg" alt="壽喜燒">&lt;/p>
 &lt;p>中間等飛機的時間決定來去機場的餐廳嘗試了一下壽喜燒，之前幾次都礙於價位（吃一次就 5000 日幣以上）猶豫不決。但是這次想說既然是出差，而且身上日幣其實也花得不算太多，所以就決定來試試看。雖然只是先嘗試看看中等價位的雪花牛，不過跟平常吃到的比起來好吃太多，覺得算是蠻值得嘗試的。&lt;/p>
 &lt;h2 id="後記">後記&lt;/h2>
-&lt;p>這篇明明是研討會的紀錄結果跟遊記一樣，不過實際上中間還是多少有聊到一些技術的東西，但是相對的少。像是在 Welcome Party 有向 Matz 請教一些 WebAssembly 跑 mruby 的一些問題，看看能不能加快之後手邊幾個專案的開發。還有跟老闆說非常擅長 PostgreSQL 的大大請教該讀什麼書比較好，雖然說議程跟技術在整幾天佔的比例其實不大，不過現階段已經能輕鬆做到開發東西的狀況來說，也許去了解其他人怎麼思考反而是比較容易再進一步的做法吧。&lt;/p></content:encoded></item><item><title>COSCUP 2019 - 演講後談復活的頁遊 - Unlight （二）</title><link>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</link><category>COSCUP</category><category>Game</category><category>Ruby</category><category>Golang</category><category>HTML5</category><category>JavaScript</category><category>DevOps</category><category>Docker</category><category>Unlight</category><pubDate>Sun, 20 Oct 2019 17:09:31 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/10/20/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it-Part-2/</guid><description>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
-&lt;p>中間在鐵人賽的部分花了一些時間把目前理解到關於 Unlight 的一些基本設計整理出來，後面則是實作。至於近期也已經開始在搭建 HTML5 版本的底層設計，還有 mruby 的&lt;a href="https://github.com/elct9620/mruby.wasm">整合&lt;/a>（因為想提供 Mod 功能到遊戲中）等等東西都在進行中，十一月還要飛日本一趟參加 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a>，可以說是完全都閒不下來。&lt;/p>
-&lt;p>總之，讓我們在來看看 COSCUP 這場演講的後續吧 XD&lt;/p></description><content:encoded>&lt;p>寫完&lt;a href="https://blog.frost.tw/posts/2019/09/03/COSCUP-2019-Talk-about-the-browser-game-Unlight-which-I-revived-it/">上篇&lt;/a>後就開始員工旅遊、鐵人賽（&lt;a href="https://ithelp.ithome.com.tw/users/20065771/ironman/2734">從讀遊戲原始碼學做連線遊戲&lt;/a>）反而一直都沒有時間把下篇寫完，離 COSCUP 都已經過了一個多月自己都忘記還剩什麼沒有寫在文章裡面。&lt;/p>
-&lt;p>中間在鐵人賽的部分花了一些時間把目前理解到關於 Unlight 的一些基本設計整理出來，後面則是實作。至於近期也已經開始在搭建 HTML5 版本的底層設計，還有 mruby 的&lt;a href="https://github.com/elct9620/mruby.wasm">整合&lt;/a>（因為想提供 Mod 功能到遊戲中）等等東西都在進行中，十一月還要飛日本一趟參加 &lt;a href="https://2019.rubyworld-conf.org/en/">Ruby World Conference&lt;/a>，可以說是完全都閒不下來。&lt;/p>
-&lt;p>總之，讓我們在來看看 COSCUP 這場演講的後續吧 XD&lt;/p>
-&lt;h2 id="營運">營運&lt;/h2>
-&lt;p>前面基本上已經把整個遊戲能緊急處理的都做過一遍了，因此後需要繼續的明顯就是要怎麼讓遊戲可以持續的運作。最初基本上都是用看 Log 的方式在觀察玩家，連上線人數都要開一個 SSH 連線到伺服器刷 Log 來看，很明顯是不太 OK 的做法。&lt;/p>
-&lt;p>因此就開始評估有什麼解法比較適合，因為大量的改動不熟悉的程式碼（遊戲量很大）是一件危險很高的事情，尤其是雖然專案看起來有測試但是卻完全找不到。&lt;/p>
-&lt;p>所以最後決定的做法就是在某些特定檔案做小規模的修改，先以「增加監控」能力為主，因此我們先做的就是讓上線人數可以到 CloudWatch 上面被看到，至少能統計 DAU (Daily Active User) 來評估遊戲是否該做調整之類的。&lt;/p>
-&lt;p>解決方案也是簡單粗暴，因為只有 Auth Server 在連上的狀態遊戲才能正常遊玩，因此直接對 Auth Server 吐線上玩家統計 Log 的地方用同樣的方式 Hack 出一個定時把資料吐回 CloudWatch 的功能。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby"> &lt;span class="no">EM&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">PeriodicTimer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">60&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">proc&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="k">begin&lt;/span>
-&lt;span class="no">SERVER_LOG&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;AuthServer: [cloud_watch:] updated online number&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="no">CLOUD_WATCH&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">put_metric_data&lt;/span>&lt;span class="p">({&lt;/span>
-&lt;span class="ss">namespace&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;Unlight&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">metric_data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">[&lt;/span>&lt;span class="p">{&lt;/span>
-&lt;span class="ss">metric_name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;OnlineNumber&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">dimensions&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">[&lt;/span>
-&lt;span class="p">{&lt;/span>
-&lt;span class="nb">name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;Hostname&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="no">ENV&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;SERVER_NAME&amp;#39;&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="s1">&amp;#39;unlight.app&amp;#39;&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="o">]&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">timestamp&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="no">Time&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="no">AuthServer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">class_variable_get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:@@online_list&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">unit&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;Count&amp;#39;&lt;/span>
-&lt;span class="p">}&lt;/span>&lt;span class="o">]&lt;/span>
-&lt;span class="p">})&lt;/span>
-&lt;span class="k">rescue&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span>&lt;span class="n">e&lt;/span>
-&lt;span class="no">SERVER_LOG&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fatal&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;AuthServer: [cloud_watch:] fatal error &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">:&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">backtrace&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="p">})&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>除此之外我們也盡量使用像是 Google Analytics 等工具追蹤一些我們額外掛上去的功能，不過受限於 Flash 很多東西還是追不到的狀態。&lt;/p>
-&lt;h2 id="客製化">客製化&lt;/h2>
-&lt;p>不過想要加額外的東西是會影響到我們目前在 &lt;a href="https://github.com/open-unlight/legacy-unlight-docker">GitHub&lt;/a> 公開的版本，這個版本是基於 CPA 釋出的原始碼建構並且修正一些有問題的小地方。如果去調整的話會造成所有人都需要跟我們使用一樣的架構。&lt;/p>
-&lt;p>但是這很明顯不應該出現在一個 Open Source 專案上，從設計的角度看也應該提供選擇才對，所以最後的作法就是增加一個 &lt;code>customize&lt;/code> 目錄來放這些客製化的東西。&lt;/p>
-&lt;p>在 Docker 的建置過程中，我們可以使用多次 &lt;code>ADD&lt;/code> 來加入檔案，如果是重複的檔案就會被覆蓋掉，利用這樣的特性就可以做到類似這樣的客製化調整。&lt;/p>
-&lt;pre>&lt;code>原始 Gemfile -&amp;gt; 自訂 Gemfile -&amp;gt; 原始檔案 -&amp;gt; 自訂檔案
-&lt;/code>&lt;/pre>&lt;p>如此一來最後整合出來的專案就會是被客製化修改過的，利用這樣的特性我們就把 CloudWatch 的線上玩家監控，還有遊戲中透過 API 方式開放的課金道具商店給實作出來。&lt;/p>
-&lt;h2 id="rack">Rack&lt;/h2>
-&lt;p>不過在 Unlight 這樣的 TCP 專案上要怎麼擴充出 API 呢？因為本質上他還是一個 Ruby 專案，因此我們只需要時做一個符合 Rack 介面的標準就可以任意讓 Web Server 啟動他跑起來。實際上在這方面 Unlight 做得還算不錯，整體專案上分為幾個大區塊&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>model/&lt;/code> - 資料相關，通常會連接資料庫&lt;/li>
-&lt;li>&lt;code>controller/&lt;/code> 邏輯相關，遊戲的運作本體&lt;/li>
-&lt;li>其他大多是輔助的工具，還有比較特殊的是遊戲規則定義（Rule 目錄）&lt;/li>
-&lt;/ul>
-&lt;p>因為操作的部分已經被封裝到 Model 裡面，像是「發放給玩家一個道具」這樣的動作是封裝好的，因此我們可以在 API 透過這樣的方式直接發放道具給玩家。&lt;/p>
-&lt;blockquote>
-&lt;p>在 Controller 裡面會是「檢查玩家是否符合條件，然後發放道具」的組合動作。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="客服">客服&lt;/h2>
-&lt;p>這段基本上很難做，我們後來的作法就是搭配各種工具。像是 &lt;a href="https://help.unlight.com.tw/hc/zh-tw">Zendesk&lt;/a> 這類工具來提供玩家回報問題的地方，網頁右下角直接會有能回報錯誤的按鈕可以查詢 FAQ 或者回報問題。&lt;/p>
-&lt;p>內部的話則是用 Discord 和 Asana 等工具溝通跟討論下一階段更新要做什麼、有什麼事情要優先處理等等。&lt;/p>
-&lt;blockquote>
-&lt;p>幫助按鈕後來改左邊，因為我們加上了 Discord Widget 讓玩家可以透過 Chatbot 在我們的玩家群組裡面發言而不需要登入或者註冊。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="html5">HTML5&lt;/h2>
-&lt;p>最後是 HTML5 改版，考慮到只有 WebSocket 可以使用的情況下勢必要去改伺服器來實現 WebSocket 不然就無法使用。不過運氣不錯的是這件事情剛好因為 Unlight 是使用 EventMachine 來處理 TCP 連線的，因此我把 WebSocket 套件加上去之後做一些簡單的修改，就勉強可以使用 WebSocket 來作為伺服器。&lt;/p>
-&lt;blockquote>
-&lt;p>Ruby 目前的 WebSocket Gem 是基於 EventMachine 開發的，因此在連線處理上幾乎沒有太大的變化。&lt;/p>
-&lt;/blockquote>
-&lt;p>不過還是缺失了不少功能，演講當時基本上就簡單分享了一下 WebSocket 的機制跟目前的進度。寫這篇文章的時候已經透過 Electron.js 製作桌機版讓 Flash 續命時間增加了一定程度，又發現能夠直接透過 Node.js 做 TCP 連線，因此目前的主力已經先轉移到將 HTML5 Client 開發出來後先直接使用原有伺服器來運行，等到 Client 穩定後再去修改伺服器的作法。&lt;/p>
-&lt;p>在這之前，因為 Unlight 的指令是很用 Byte 去組合而成的結構在 JavaScript 上也很難處理。因此又開了一個 &lt;a href="https://github.com/open-unlight/go-ul">Go UL&lt;/a> 的專案想利用 Golang 來解析，在轉換成 WebAssembly 整合到 JavaScript 上面來改善這方面的處理問題（SPR 的密碼加密計算用 Golang 也會比 JavaScript 容易處理，畢竟 BigInt 在 JavaScript 上也需要額外的支援）&lt;/p>
-&lt;h2 id="後記">後記&lt;/h2>
-&lt;p>這場演講基本上算是一個過程上的紀錄，在短短一到兩週內的時間怎麼去讓一款遊戲可以運行、營運，以及我們是怎樣慢慢的改造跟重構一個古老的遊戲專案讓他變得容易維護。&lt;/p>
-&lt;p>不過實際上當時評估如果要繼續做下去的話，絕對是花上一兩年都跑不到的大工程，雖然不知道能堅持到什麼時候但至少每一個階段都能發現有趣的東西，應該是還可以繼續在努力很久。反而是關於 IP 上的問題，也就是遊戲的內容本身因為並沒有實際的完全開放，反而讓未來改版完畢後遊戲想要進入新的階段變得非常受限⋯⋯&lt;/p>
-&lt;p>不過也因為這款遊戲，讓我自己在遊戲開發上有很多不確定的東西有了一個大概知道能怎麼做的方案，以及很多新的想法可以嘗試。&lt;/p>
-&lt;p>那麼，就請大家期待在不久的未來我們重新開發過的 Unlight 會是怎樣的面貌了 XD&lt;/p></content:encoded></item></channel></rss>
+&lt;p>這篇明明是研討會的紀錄結果跟遊記一樣，不過實際上中間還是多少有聊到一些技術的東西，但是相對的少。像是在 Welcome Party 有向 Matz 請教一些 WebAssembly 跑 mruby 的一些問題，看看能不能加快之後手邊幾個專案的開發。還有跟老闆說非常擅長 PostgreSQL 的大大請教該讀什麼書比較好，雖然說議程跟技術在整幾天佔的比例其實不大，不過現階段已經能輕鬆做到開發東西的狀況來說，也許去了解其他人怎麼思考反而是比較容易再進一步的做法吧。&lt;/p></content:encoded></item></channel></rss>

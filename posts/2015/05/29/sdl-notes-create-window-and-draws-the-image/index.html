@@ -27,7 +27,7 @@
 </span><span class=lnt>21
 </span><span class=lnt>22
 </span><span class=lnt>23
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp><span class=cp>#include</span> <span class=cpf>&#34;SDL2/SDL.h&#34;</span><span class=cp>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp><span class=cp>#include</span> <span class=cpf>&#34;SDL2/SDL.h&#34;</span><span class=cp>
 </span><span class=cp></span>
 <span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>int</span><span class=p>,</span> <span class=kt>char</span><span class=o>**</span><span class=p>)</span>
 <span class=p>{</span>
@@ -97,8 +97,8 @@
 </code></pre></td></tr></table></div></div><p>基本上 SDL 的 API 都是 <code>Create</code> 跟 <code>Destroy</code> 做 Prefix 去表示產生物件，記住規則之後就蠻好懂的。
 至於 Renderer 的參數，依序是顯示在哪個視窗、用哪張顯卡（文件叫 rendering driver 應該是顯卡）跟一些設定（flags）這邊是啟用硬體加速還有開啟 VSync 功能。</p><h3 id=讀取圖片>讀取圖片</h3><p>這邊我直接使用 Image Extension 提供的 API 而不是 SDL 預設的（我參考的教學會先教你讀取 bmp）</p><p>引用檔案的部分加入這兩行來提供支援。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp><span class=cp>#include</span> <span class=cpf>&#34;iostream&#34;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&#34;SDL2/SDL_image.h&#34;</span><span class=cp>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp><span class=cp>#include</span> <span class=cpf>&#34;iostream&#34;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&#34;SDL2/SDL_image.h&#34;</span><span class=cp>
 </span></code></pre></td></tr></table></div></div><p>關於 <code>SDL_image.h</code> 的位置似乎會因為安裝方法不同有所改變，大家可能要自己注意一下。</p><p>這邊會直接寫一個 Function 去實作讀取圖片，其實到後面程式碼算是蠻多的⋯⋯</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -215,8 +215,8 @@
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-cpp data-lang=cpp><span class=cp>#ifndef CLEANUP_H
 </span><span class=cp>#define CLEANUP_H
 </span><span class=cp></span>
-<span class=cp>#include</span> <span class=cpf>&lt;utility&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;SDL2/SDL.h&gt;</span><span class=cp>
+<span class=cp>#include</span> <span class=cpf>&lt;utility&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;SDL2/SDL.h&gt;</span><span class=cp>
 </span><span class=cp></span>
 <span class=c1>// 定義一個可以接收 N 個參數的函示 cleanup()
 </span><span class=c1></span><span class=k>template</span><span class=o>&lt;</span><span class=k>typename</span> <span class=n>T</span><span class=p>,</span> <span class=k>typename</span><span class=p>...</span> <span class=n>Args</span><span class=o>&gt;</span>

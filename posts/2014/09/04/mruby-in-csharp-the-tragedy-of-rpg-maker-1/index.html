@@ -27,8 +27,8 @@ Ruby ./minirake</p></blockquote><p>編譯就這樣，簡單到你覺得根本不
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-rb data-lang=rb><span class=c1># 略</span>
-<span class=c1># 解除下面這些的註解狀態</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-rb data-lang=rb><span class=c1># 略</span>
+<span class=c1># 解除下面這些的註解狀態</span>
 <span class=no>MRuby</span><span class=o>::</span><span class=no>CrossBuild</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=s1>&#39;32bit&#39;</span><span class=p>)</span> <span class=k>do</span> <span class=o>|</span><span class=n>conf</span><span class=o>|</span>
   <span class=n>toolchain</span> <span class=ss>:gcc</span>
 
@@ -37,9 +37,9 @@ Ruby ./minirake</p></blockquote><p>編譯就這樣，簡單到你覺得根本不
 
   <span class=n>conf</span><span class=o>.</span><span class=n>build_mrbtest_lib_only</span>
 
-	<span class=c1># 預設會編譯範例的 Gem 可以自己擴充</span>
-  <span class=c1># conf.gem &#39;examples/mrbgems/c_and_Ruby_extension_example&#39;</span>
-  <span class=n>conf</span><span class=o>.</span><span class=n>gembox</span> <span class=s1>&#39;default&#39;</span> <span class=c1># 手動加入這行，確保預設的核心 Gem 都有被編譯</span>
+	<span class=c1># 預設會編譯範例的 Gem 可以自己擴充</span>
+  <span class=c1># conf.gem &#39;examples/mrbgems/c_and_Ruby_extension_example&#39;</span>
+  <span class=n>conf</span><span class=o>.</span><span class=n>gembox</span> <span class=s1>&#39;default&#39;</span> <span class=c1># 手動加入這行，確保預設的核心 Gem 都有被編譯</span>
 
   <span class=n>conf</span><span class=o>.</span><span class=n>test_runner</span><span class=o>.</span><span class=n>command</span> <span class=o>=</span> <span class=s1>&#39;env&#39;</span>
 
@@ -50,10 +50,10 @@ Ruby ./minirake</p></blockquote><p>編譯就這樣，簡單到你覺得根本不
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=cp>#include</span> <span class=cpf>&lt;mRuby.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/string.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/compile.h&gt;</span><span class=cp>
-</span><span class=cp>#include</span> <span class=cpf>&#34;main.h&#34;</span><span class=cp>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c><span class=cp>#include</span> <span class=cpf>&lt;mRuby.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/string.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;mRuby/compile.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&#34;main.h&#34;</span><span class=cp>
 </span></code></pre></td></tr></table></div></div><blockquote><p>Linker 在 Mac 要用 <code>-Wl,-force-load</code> 而 Linux 則用 <code>-Wl,-while-archive</code> 則可以把整個 Static Library 包進 Shared Library</p></blockquote><h3 id=建立-mrbvalue-資料結構>建立 MrbValue 資料結構</h3><p>而這個 MrbValue 基本上也是 C# 裡面唯一一個需要特別實作的結構，其他的即使不實作，也是能夠正常運作的。
 （雖然這是以我研究進度為基準，但是大致上就是這樣的狀況⋯⋯）</p><p>在 MRuby 封裝 <code>mrb_value</code> 結構的方式有三種，但是一般用到的是下面這種。
 （基於我不懂重複定義的用意，所以並沒有深入探討背後在 C 的原理）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1

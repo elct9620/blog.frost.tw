@@ -31,7 +31,7 @@
 #
 </code></pre></td></tr></table></div></div><p>也就是說，我們現在上傳是沒有意義的。</p><p>不過，我們可以透過修正 Shell Script 的運作來達成「自動更新」的功能。
 （關於這部分的運作，相對的複雜，會在進階篇內討論 OpenShift 的運作機制）</p><p>我們再次打開 <code>.openshift/action_hooks/build</code> 這個檔案。</p><p>找到</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=o>[</span> -d <span class=s2>&#34;</span><span class=si>${</span><span class=nv>current_version_dir</span><span class=si>}</span><span class=s2>&#34;</span> <span class=o>]</span> <span class=o>&amp;&amp;</span> <span class=nb>exit</span> 0
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=o>[</span> -d <span class=s2>&#34;</span><span class=si>${</span><span class=nv>current_version_dir</span><span class=si>}</span><span class=s2>&#34;</span> <span class=o>]</span> <span class=o>&amp;&amp;</span> <span class=nb>exit</span> <span class=m>0</span>
 </code></pre></td></tr></table></div></div><p>改為</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh>rm -rf <span class=si>${</span><span class=nv>current_version_dir</span><span class=si>}</span>
 </code></pre></td></tr></table></div></div><p>這個動作會讓你每次上傳時重新安裝一次 WordPress 的檔案（但是不用擔心圖檔備份問題）</p><p>然後接著在下面加入這三行語法</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
