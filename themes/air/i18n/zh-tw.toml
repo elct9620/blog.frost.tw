@@ -18,3 +18,9 @@ other = "相關文章"
 
 [toc]
 other = "大綱"
+
+[subscribeTitle]
+other = "電子報"
+
+[subscribeButton]
+other = "訂閱"

@@ -1,0 +1,49 @@
+@include block("subscribe") {
+  margin: 1em -1em 0;
+  padding: 2em 4em;
+
+  box-sizing: border-box;
+  text-align: center;
+
+  background: $lightBackgroundColor;
+
+  @include breakpoint(sm) {
+    max-width: 100%;
+    margin: 1em 0 0;
+  }
+
+  @include breakpoint(md) {
+    max-width: 75%;
+    margin: 2em auto 0;
+  }
+
+  @include element("title") {
+    font-weight: 400;
+  }
+
+  @include element("input") {
+    display: inline-block;
+
+    min-width: 340px;
+
+    margin: .5em 0em;
+    padding: .25em .5em;
+    outline: 0;
+
+    background-color: $white;
+  }
+
+  @include element("button") {
+    min-width: 4em;
+    display: inline-block;
+
+    margin: .5em 0em;
+    padding: .5em 1em;
+    outline: 0;
+
+    border: 0;
+
+    color: $white;
+    background-color: $linkColor;
+  }
+}

@@ -18,3 +18,9 @@ other = "See Also"
 
 [toc]
 other = "Table of Contents"
+
+[subscribeTitle]
+other = "Newsletter"
+
+[subscribeButton]
+other = "Subscribe"
