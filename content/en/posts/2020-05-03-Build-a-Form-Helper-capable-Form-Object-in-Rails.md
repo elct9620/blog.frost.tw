@@ -4,7 +4,7 @@ publishDate: 2020-05-03T16:29:36+08:00
 date: 2020-05-03T16:29:36+08:00
 tags: ["Rails", "Ruby", "Ruby on Rails", "Experience"]
 toc: true
-thumbnail: https://blog.frost.tw/images/post/image/2020-05-03-build-a-form-helper-capable-form-object-in-rails/thumbnail.jpg
+thumbnail: https://blog.frost.tw/images/2020-05-03-build-a-form-helper-capable-form-object-in-rails/thumbnail.jpg
 credit:
 ---
 
