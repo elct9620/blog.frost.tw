@@ -1,4 +1,302 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Tue, 28 Apr 2020 00:31:53 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Review the Rails' Autoloading and Reloading</title><link>https://blog.frost.tw/en/posts/2020/04/28/Review-the-Rails-Autoloading-and-Reloading/</link><category>Ruby</category><category>Rails</category><category>Autoloading</category><pubDate>Tue, 28 Apr 2020 00:31:53 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/04/28/Review-the-Rails-Autoloading-and-Reloading/</guid><description>&lt;p>A few years ago, I have a post talking about &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a>. In recent days, my colleague has some problems with Autoloading and Reloading.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Aotokitsuruya is learning</title><link>https://blog.frost.tw/en/</link><description>Recent content on Aotokitsuruya is learning</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 03 May 2020 16:29:36 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Build a Form Helper capable Form Object in Rails</title><link>https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</link><category>Rails</category><category>Ruby</category><category>Ruby on Rails</category><category>Experience</category><pubDate>Sun, 03 May 2020 16:29:36 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</guid><description>&lt;p>The Form Object is a common pattern in Rails when our form becomes complex. But the tutorial in network&amp;rsquo;s example usually incapable of Rails&amp;rsquo; form helper.&lt;/p>
+&lt;p>And I start thinking about is it possible to support form helpers without too many changes?&lt;/p></description><content:encoded>&lt;p>The Form Object is a common pattern in Rails when our form becomes complex. But the tutorial in network&amp;rsquo;s example usually incapable of Rails&amp;rsquo; form helper.&lt;/p>
+&lt;p>And I start thinking about is it possible to support form helpers without too many changes?&lt;/p>
+&lt;h2 id="common-form-object-implementation">Common Form Object Implementation&lt;/h2>
+&lt;p>To improve our form object, we have to know about the original version we are using.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">RegistrationForm&lt;/span>
+&lt;span class="kp">include&lt;/span> &lt;span class="no">ActiveModel&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Model&lt;/span>
+&lt;span class="kp">include&lt;/span> &lt;span class="no">ActiveModel&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Validations&lt;/span>
+&lt;span class="kp">attr_accessor&lt;/span> &lt;span class="ss">:email&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:password&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:password_confirmation&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{})&lt;/span>
+&lt;span class="vi">@user&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">user&lt;/span>
+&lt;span class="k">super&lt;/span> &lt;span class="n">params&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">attributes&lt;/span>
+&lt;span class="p">{&lt;/span>
+&lt;span class="ss">email&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="vi">@email&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ss">password&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="vi">@password&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">save&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">unless&lt;/span> &lt;span class="n">valid?&lt;/span>
+&lt;span class="vi">@user&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">assign_attributes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">attributes&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="vi">@user&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>This is a common form object you can find in the network, it gives us model-like behavior which can use it in the controller without too many changes.&lt;/p>
+&lt;p>But in the view, our form helper has to set method and URL at any time.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="o">&amp;lt;%=&lt;/span> &lt;span class="n">form_for&lt;/span> &lt;span class="vi">@form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">method&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:post&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">url&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">users_path&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="o">|&lt;/span> &lt;span class="s">%&amp;gt;
+&lt;/span>&lt;span class="s">&amp;lt;% # ... %&amp;gt;&lt;/span>
+&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="sx">% end &lt;/span> &lt;span class="o">%&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="the-form-helper">The Form Helper&lt;/h2>
+&lt;p>To improve the form object, I starting review the source code of form helper.&lt;/p>
+&lt;p>In the &lt;a href="https://github.com/rails/rails/blob/bdc581616b760d1e2be3795c6f0f3ab4b1e125a5/actionview/lib/action_view/helpers/form_helper.rb#L440">action_view/helpers/form_helper.rb#L440&lt;/a>, the ActiveView will try to &lt;code>apply_form_for_options!&lt;/code> if we give a object for it.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">apply_form_for_options!&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>In the &lt;a href="https://github.com/rails/rails/blob/bdc581616b760d1e2be3795c6f0f3ab4b1e125a5/actionview/lib/action_view/helpers/form_helper.rb#L457-L474">&lt;code>apply_form_for_options!&lt;/code>&lt;/a> method, we can find it set the &lt;code>method&lt;/code> and &lt;code>url&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">action&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">method&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">respond_to?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:persisted?&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">persisted?&lt;/span> &lt;span class="p">?&lt;/span> &lt;span class="o">[&lt;/span>&lt;span class="ss">:edit&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:patch&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="o">[&lt;/span>&lt;span class="ss">:new&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:post&lt;/span>&lt;span class="o">]&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">options&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="ss">:url&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="o">||=&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">key?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:format&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">polymorphic_path&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">format&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">delete&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:format&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="k">else&lt;/span>
+&lt;span class="n">polymorphic_path&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{})&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>That means if our form object can provide the same interface to the form helper, it will correctly configure the form&amp;rsquo;s method and URL without extra work.&lt;/p>
+&lt;h2 id="the-persisted">The persisted?&lt;/h2>
+&lt;p>When the form helper decides to use &lt;code>POST&lt;/code> to create a new object or use &lt;code>PUT&lt;/code> to update an existing object. It depends on the model&amp;rsquo;s &lt;code>persisted?&lt;/code> method.&lt;/p>
+&lt;p>That means we can add &lt;code>persisted?&lt;/code> method to our form object to make form helper can detect it.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">BaseForm&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{})&lt;/span>
+&lt;span class="vi">@record&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">record&lt;/span>
+&lt;span class="k">super&lt;/span> &lt;span class="n">params&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">persisted?&lt;/span>
+&lt;span class="vi">@record&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="vi">@record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">persisted?&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>But there has another better way to implement it, we can use &lt;a href="https://api.rubyonrails.org/classes/Module.html#method-i-delegate">&lt;code>delegate&lt;/code>&lt;/a> which provided by ActiveSupport.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">BaseForm&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">delegate&lt;/span> &lt;span class="ss">:persisted?&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">to&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:@record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">allow_nil&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{})&lt;/span>
+&lt;span class="vi">@record&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">record&lt;/span>
+&lt;span class="k">super&lt;/span> &lt;span class="n">params&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="the-to_param-and-model_name">The to_param and model_name&lt;/h2>
+&lt;p>The URL is generated by &lt;a href="https://api.rubyonrails.org/classes/ActionDispatch/Routing/PolymorphicRoutes.html#method-i-polymorphic_path">&lt;code>polymorphic_path&lt;/code>&lt;/a> and it uses &lt;code>model_name&lt;/code> and &lt;code>to_param&lt;/code> to generate the path.&lt;/p>
+&lt;p>We can try it in the Rails console:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&amp;gt; app.polymorphic_path&lt;span class="o">(&lt;/span>User.new&lt;span class="o">)&lt;/span>
+&lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s2">&amp;#34;/users&amp;#34;&lt;/span>
+&amp;gt; app.polymorphic_path&lt;span class="o">(&lt;/span>User.last&lt;span class="o">)&lt;/span>
+&lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s2">&amp;#34;/users/1234&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>And when we add delegate &lt;code>model_name&lt;/code> and &lt;code>to_param&lt;/code> to our form object, we can get the same result.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">delegate&lt;/span> &lt;span class="ss">:persisted?&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:model_name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:to_param&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">to&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:@record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">allow_nil&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>And check it again:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&amp;gt; app.polymorphic_path&lt;span class="o">(&lt;/span>RegistrationForm.new&lt;span class="o">(&lt;/span>User.new&lt;span class="o">))&lt;/span>
+&lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s2">&amp;#34;/users&amp;#34;&lt;/span>
+&amp;gt; app.polymorphic_path&lt;span class="o">(&lt;/span>RegistrationForm.new&lt;span class="o">(&lt;/span>User.last&lt;span class="o">))&lt;/span>
+&lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s2">&amp;#34;/users/1234&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>For now, we have the same interface as the model.&lt;/p>
+&lt;h2 id="load-attributes">Load Attributes&lt;/h2>
+&lt;p>Since we can let form helper work correctly but we still cannot load the data when we edit an existing model.&lt;/p>
+&lt;p>To resolve it, we can adjust our initialize method to retrieve the necessary fields.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">RegistrationForm&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">BaseForm&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{})&lt;/span>
+&lt;span class="n">attributes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">slice&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:email&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:password&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">merge&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">params&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">super&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Another way is to use Attribute API to support it, but we have to exactly define each attribute in our form object.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">BaseForm&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="kp">include&lt;/span> &lt;span class="no">ActiveModel&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Attributes&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">record&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{})&lt;/span>
+&lt;span class="vi">@record&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">record&lt;/span>
+&lt;span class="n">attributes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">record&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">attributes&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">slice&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">*.&lt;/span>&lt;span class="n">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">attribute_names&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">super&lt;/span> &lt;span class="n">attributes&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">merge&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">params&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># app/forms/registration_form.rb&lt;/span>
+&lt;span class="k">class&lt;/span> &lt;span class="nc">RegistrationForm&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">BaseForm&lt;/span>
+&lt;span class="n">attribute&lt;/span> &lt;span class="ss">:email&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:string&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>But we have to take care the &lt;code>params&lt;/code> hash, the model return attributes is &lt;code>{&amp;quot;name&amp;quot; =&amp;gt; &amp;quot;Joy&amp;quot;}&lt;/code> but we use &lt;code>{name: &amp;quot;Joy&amp;quot;}&lt;/code> we will get the hash mixed string and symbol keys &lt;code>{&amp;quot;name&amp;quot; =&amp;gt; &amp;quot;Joy&amp;quot;, name: &amp;quot;Joy&amp;quot;}&lt;/code> and didn&amp;rsquo;t set the attribute to our form object.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="future-improve">Future Improve&lt;/h2>
+&lt;p>In the current version, we have to pass the model instance to the form object. Maybe we can add some DSL to auto-create it.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># Option 1&lt;/span>
+&lt;span class="k">class&lt;/span> &lt;span class="nc">RegistrationForm&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">BaseForm&lt;/span>
+&lt;span class="n">model_class&lt;/span> &lt;span class="s1">&amp;#39;User&amp;#39;&lt;/span>
+&lt;span class="n">attribute&lt;/span> &lt;span class="ss">:name&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># Option 2&lt;/span>
+&lt;span class="k">class&lt;/span> &lt;span class="nc">RegistrationForm&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">BaseForm&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="no">User&lt;/span>&lt;span class="o">]&lt;/span>
+&lt;span class="n">attribute&lt;/span> &lt;span class="ss">:name&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>But we also need to consider this way may not a good idea in some complex system.&lt;/p>
+&lt;p>For example, we had load the &lt;code>User&lt;/code> from a controller or other object. But we cannot pass it to the form object. That means our form object usually loads the object when we access it.
+If we have nested form it will cause the N+1 query in this case.&lt;/p>
+&lt;p>This is another topic when we use the form object or service object to refactor our code. We may reduce the duplicate code but cause our system to slow down or new hidden bug we didn&amp;rsquo;t know about it.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>I didn&amp;rsquo;t have many experiences to use the form object. But I think it is a common case when we build an application.
+This version form object still has a lot of limitation and I didn&amp;rsquo;t consider all possible use cases.&lt;/p>
+&lt;p>I will try to improve it in my future works and keep it as a simple object if possible. I believe we didn&amp;rsquo;t always need to build a complex behavior and add a gem to resolve some simple things.&lt;/p></content:encoded></item><item><title>Review the Rails' Autoloading and Reloading</title><link>https://blog.frost.tw/en/posts/2020/04/28/Review-the-Rails-Autoloading-and-Reloading/</link><category>Ruby</category><category>Rails</category><category>Autoloading</category><pubDate>Tue, 28 Apr 2020 00:31:53 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/04/28/Review-the-Rails-Autoloading-and-Reloading/</guid><description>&lt;p>A few years ago, I have a post talking about &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a>. In recent days, my colleague has some problems with Autoloading and Reloading.&lt;/p>
 &lt;p>Therefore I decided to review the Autoloading mechanism in Rails 5 and 6.&lt;/p></description><content:encoded>&lt;p>A few years ago, I have a post talking about &lt;a href="https://blog.frost.tw/posts/2017/03/06/The-Rails-auto-reload-trap/">Autoloading&lt;/a>. In recent days, my colleague has some problems with Autoloading and Reloading.&lt;/p>
 &lt;p>Therefore I decided to review the Autoloading mechanism in Rails 5 and 6.&lt;/p>
 &lt;h2 id="why-autoloading">Why Autoloading?&lt;/h2>

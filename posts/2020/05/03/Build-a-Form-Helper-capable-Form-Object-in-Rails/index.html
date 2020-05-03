@@ -1,0 +1,209 @@
+<!doctype html><html lang=zh-tw><head><title>做一個 Rails Form Helper 相容的 Form Object - 弦而時習之</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="當我們的 Rails 專案邊複雜的時候，Form Object 算是一個常見的方法。不過網路上的教學似乎大多都沒有能夠相容 Rails 的 Form Helper 的版本。
+所以我就開始思考，有沒有辦法法在比較少的修改下去支援 Form Helper 呢？"><meta name=created content="2020-05-03T00:00:00+0000"><meta name=modified content="2020-05-03T16:29:36+0800"><meta name=author content="蒼時弦也"><meta property="og:site_name" content="弦而時習之"><meta property="og:title" content="做一個 Rails Form Helper 相容的 Form Object"><meta property="og:url" content="https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/"><meta property="og:type" content="article"><meta property="og:image" content="https://blog.frost.tw/images/post/image/2020-05-03-build-a-form-helper-capable-form-object-in-rails/thumbnail.jpg"><meta name=theme-color content="#EFEFEF"><link href=https://blog.frost.tw/icon-512.png rel=icon><link rel=canonical href=https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/><link rel=alternate hreflang=en href=https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/><script type=application/ld+json>[{"@context":"https://schema.org","@type":"WebPage","headline":"做一個 Rails Form Helper 相容的 Form Object","datePublished":"2020-05-03T16:29:36+08:00","dateModified":"2020-05-03T16:29:36+08:00","url":"https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/","description":"當我們的 Rails 專案邊複雜的時候，Form Object 算是一個常見的方法。不過網路上的教學似乎大多都沒有能夠相容 Rails 的 Form Helper 的版本。\n所以我就開始思考，有沒有辦法法在比較少的修改下去支援 Form Helper 呢？\n","keywords":["Rails","Ruby","Ruby on Rails","心得"],"image":"https://blog.frost.tw/images/post/image/2020-05-03-build-a-form-helper-capable-form-object-in-rails/thumbnail.jpg","author":{"@type":"Person","name":"蒼時弦也"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.frost.tw/"},"publisher":{"@type":"Organization","name":"弦而時習之","url":"https://blog.frost.tw/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://blog.frost.tw/","name":"弦而時習之","image":"http://blog.frost.tw/icon-512.png"}},{"@type":"ListItem","position":2,"item":{"@id":"https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/","name":"做一個 Rails Form Helper 相容的 Form Object","image":"https://blog.frost.tw/images/post/image/2020-05-03-build-a-form-helper-capable-form-object-in-rails/thumbnail.jpg"}}]}]</script><script async src=/js/turbolinks.min.js></script></head><body><div id=fb-root data-turbolinks-permanent></div><h1 id=sitename><a href=/ class="hide-text logo--icon align-center">弦而時習之</a></h1><aside id=slogan class="slogan align-center text-center"><h2 class=slogan__title>Aotokitsuruya</h2><p class=slogan__description>The Web is attracting me, so I start learning PHP, HTML, CSS and JavaScript. When I know about Ruby, I fall in love with it. Now, I working with my friend to design games using C++ and still learning web about Golang, Ruby and JavaScript. In the other side, I also be a designer, the reason why the web is attracted me.</p></aside><div id=wrapper><article class="post article" role=article><header class=article__header><time datetime=2020-05-03T16:29:36+0800 class=article__time--header>Feb.03</time><h1 class=article__title>做一個 Rails Form Helper 相容的 Form Object</h1></header><div class=article__entry><nav class=translation><a class=translation__link href=https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/>English</a></nav><aside class=article__toc><header class=article__toc-title><h3>大綱</h3></header><nav class=article__toc-list role=list><nav id=TableOfContents><ul><li><a href=#common-form-object-implementation>常見的 Form Object 實作</a></li><li><a href=#the-form-helper>關於 Form Helper</a></li><li><a href=#the-persisted>persisted? 方法</a></li><li><a href=#the-to_param-and-model_name>model_name 和 to_param</a></li><li><a href=#load-attributes>讀取屬性</a></li><li><a href=#future-improve>後續改進</a></li><li><a href=#conclusion>總結</a></li></ul></nav></nav><hr></aside><p>當我們的 Rails 專案邊複雜的時候，Form Object 算是一個常見的方法。不過網路上的教學似乎大多都沒有能夠相容 Rails 的 Form Helper 的版本。</p><p>所以我就開始思考，有沒有辦法法在比較少的修改下去支援 Form Helper 呢？</p><h2 id=common-form-object-implementation>常見的 Form Object 實作</h2><p>為了要改善我們的 Form Object，我們至少要先知道目前在使用的原始版本。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>RegistrationForm</span>
+  <span class=kp>include</span> <span class=no>ActiveModel</span><span class=o>::</span><span class=no>Model</span>
+  <span class=kp>include</span> <span class=no>ActiveModel</span><span class=o>::</span><span class=no>Validations</span>
+
+  <span class=kp>attr_accessor</span> <span class=ss>:email</span><span class=p>,</span> <span class=ss>:password</span><span class=p>,</span> <span class=ss>:password_confirmation</span>
+
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>user</span><span class=p>,</span> <span class=n>params</span> <span class=o>=</span> <span class=p>{})</span>
+    <span class=vi>@user</span> <span class=o>=</span> <span class=n>user</span>
+    <span class=k>super</span> <span class=n>params</span>
+  <span class=k>end</span>
+
+  <span class=c1># ...</span>
+
+  <span class=k>def</span> <span class=nf>attributes</span>
+    <span class=p>{</span>
+      <span class=ss>email</span><span class=p>:</span> <span class=vi>@email</span><span class=p>,</span>
+      <span class=ss>password</span><span class=p>:</span> <span class=vi>@password</span>
+    <span class=p>}</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nf>save</span>
+    <span class=k>return</span> <span class=k>unless</span> <span class=n>valid?</span>
+
+    <span class=vi>@user</span><span class=o>.</span><span class=n>assign_attributes</span><span class=p>(</span><span class=n>attributes</span><span class=p>)</span>
+    <span class=vi>@user</span><span class=o>.</span><span class=n>save</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>這是一個網路上很常見的 Form Object，基本上它提供了類似 Model 行為讓我們可以不用在 Controller 上有太多的修改。</p><p>不過在 View 裡面的時候，我們的 Form Helper 就會變成一直需要設定 Method 和 URL 了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=o>&lt;%=</span> <span class=n>form_for</span> <span class=vi>@form</span><span class=p>,</span> <span class=nb>method</span><span class=p>:</span> <span class=ss>:post</span><span class=p>,</span> <span class=ss>url</span><span class=p>:</span> <span class=n>users_path</span> <span class=k>do</span> <span class=o>|</span><span class=n>f</span><span class=o>|</span> <span class=s>%&gt;
+</span><span class=s>&lt;% # ... %&gt;</span>
+<span class=o>&lt;</span><span class=sx>% end </span> <span class=o>%&gt;</span>
+</code></pre></td></tr></table></div></div><h2 id=the-form-helper>關於 Form Helper</h2><p>為了改善 Form Object 我開始去看 Form Helper 的原始碼。</p><p>在 <a href=https://github.com/rails/rails/blob/bdc581616b760d1e2be3795c6f0f3ab4b1e125a5/actionview/lib/action_view/helpers/form_helper.rb#L440>action_view/helpers/form_helper.rb#L440</a> 裡面，ActionView 會嘗試在我們傳入物件的時候用 <code>apply_form_for_options!</code> 來處理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>apply_form_for_options!</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=n>object</span><span class=p>,</span> <span class=n>options</span><span class=p>)</span>
+</code></pre></td></tr></table></div></div><p>而在 <a href=https://github.com/rails/rails/blob/bdc581616b760d1e2be3795c6f0f3ab4b1e125a5/actionview/lib/action_view/helpers/form_helper.rb#L457-L474><code>apply_form_for_options!</code></a> 方法中，我們可以發現他會設定 <code>method</code> 和 <code>url</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>action</span><span class=p>,</span> <span class=nb>method</span> <span class=o>=</span> <span class=n>object</span><span class=o>.</span><span class=n>respond_to?</span><span class=p>(</span><span class=ss>:persisted?</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=n>object</span><span class=o>.</span><span class=n>persisted?</span> <span class=p>?</span> <span class=o>[</span><span class=ss>:edit</span><span class=p>,</span> <span class=ss>:patch</span><span class=o>]</span> <span class=p>:</span> <span class=o>[</span><span class=ss>:new</span><span class=p>,</span> <span class=ss>:post</span><span class=o>]</span>
+<span class=c1># ...</span>
+<span class=n>options</span><span class=o>[</span><span class=ss>:url</span><span class=o>]</span> <span class=o>||=</span> <span class=k>if</span> <span class=n>options</span><span class=o>.</span><span class=n>key?</span><span class=p>(</span><span class=ss>:format</span><span class=p>)</span>
+  <span class=n>polymorphic_path</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=nb>format</span><span class=p>:</span> <span class=n>options</span><span class=o>.</span><span class=n>delete</span><span class=p>(</span><span class=ss>:format</span><span class=p>))</span>
+<span class=k>else</span>
+  <span class=n>polymorphic_path</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=p>{})</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>這表示如果我們的 Form Object 可以提供相同的介面給 Form Helper 的話，基本上我們就不用做什麼事情就能正確的設定 Method 和 URL 參數。</p><h2 id=the-persisted>persisted? 方法</h2><p>當 Form Helper 決定用 <code>POST</code> 去產生新物件，或者用 <code>PUT</code> 去更新一個現有物件時，他取決於 Model 的 <code>persisted?</code> 方法。</p><p>這表示當我們加入 <code>persisted?</code> 方法到我們的 Form Object 之後，就能夠被偵測到。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>BaseForm</span>
+  <span class=c1># ...</span>
+
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=n>params</span> <span class=o>=</span> <span class=p>{})</span>
+    <span class=vi>@record</span> <span class=o>=</span> <span class=n>record</span>
+    <span class=k>super</span> <span class=n>params</span>
+  <span class=k>end</span>
+
+  <span class=k>def</span> <span class=nf>persisted?</span>
+    <span class=vi>@record</span> <span class=o>&amp;&amp;</span> <span class=vi>@record</span><span class=o>.</span><span class=n>persisted?</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>不過我們還可以再改善這個寫法，利用 ActiveSupport 提供的 <a href=https://api.rubyonrails.org/classes/Module.html#method-i-delegate><code>delegate</code></a> 來實作。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>BaseForm</span>
+  <span class=c1># ...</span>
+
+  <span class=n>delegate</span> <span class=ss>:persisted?</span><span class=p>,</span> <span class=ss>to</span><span class=p>:</span> <span class=ss>:@record</span><span class=p>,</span> <span class=ss>allow_nil</span><span class=p>:</span> <span class=kp>true</span>
+
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=n>params</span> <span class=o>=</span> <span class=p>{})</span>
+    <span class=vi>@record</span> <span class=o>=</span> <span class=n>record</span>
+    <span class=k>super</span> <span class=n>params</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><h2 id=the-to_param-and-model_name>model_name 和 to_param</h2><p>URL 是透過 <a href=https://api.rubyonrails.org/classes/ActionDispatch/Routing/PolymorphicRoutes.html#method-i-polymorphic_path><code>polymorphic_path</code></a> 生成的，他會使用 <code>model_name</code> 和 <code>to_param</code> 來產生路徑。</p><p>所以我們可以像這樣在 Rails Console 嘗試：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>&gt; app.polymorphic_path<span class=o>(</span>User.new<span class=o>)</span>
+<span class=o>=</span>&gt; <span class=s2>&#34;/users&#34;</span>
+&gt; app.polymorphic_path<span class=o>(</span>User.last<span class=o>)</span>
+<span class=o>=</span>&gt; <span class=s2>&#34;/users/1234&#34;</span>
+</code></pre></td></tr></table></div></div><p>當我們加入 <code>model_name</code> 和 <code>to_param</code> 的 Delegate 到 Form Object 之後，我們就可以取得一樣的結果。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=n>delegate</span> <span class=ss>:persisted?</span><span class=p>,</span> <span class=ss>:model_name</span><span class=p>,</span> <span class=ss>:to_param</span><span class=p>,</span> <span class=ss>to</span><span class=p>:</span> <span class=ss>:@record</span><span class=p>,</span> <span class=ss>allow_nil</span><span class=p>:</span> <span class=kp>true</span>
+</code></pre></td></tr></table></div></div><p>再次確認效果：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>&gt; app.polymorphic_path<span class=o>(</span>RegistrationForm.new<span class=o>(</span>User.new<span class=o>))</span>
+<span class=o>=</span>&gt; <span class=s2>&#34;/users&#34;</span>
+&gt; app.polymorphic_path<span class=o>(</span>RegistrationForm.new<span class=o>(</span>User.last<span class=o>))</span>
+<span class=o>=</span>&gt; <span class=s2>&#34;/users/1234&#34;</span>
+</code></pre></td></tr></table></div></div><p>現在我們就有跟 Model 相同的介面可以使用。</p><h2 id=load-attributes>讀取屬性</h2><p>當我們可以讓 Form Helper 正確運作後，我們還是沒有辦法讓資料自動在編輯的情況下被自動載入。</p><p>為了解決這個問題，我們可以調整我們的 <code>initialize</code> 方法來讀取必要的欄位。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>RegistrationForm</span> <span class=o>&lt;</span> <span class=no>BaseForm</span>
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=n>params</span> <span class=o>=</span> <span class=p>{})</span>
+    <span class=n>attributes</span> <span class=o>=</span> <span class=n>record</span><span class=o>.</span><span class=n>slice</span><span class=p>(</span><span class=ss>:email</span><span class=p>,</span> <span class=ss>:password</span><span class=p>)</span><span class=o>.</span><span class=n>merge</span><span class=p>(</span><span class=n>params</span><span class=p>)</span>
+    <span class=k>super</span> <span class=n>record</span><span class=p>,</span> <span class=n>params</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>另一種方法是透過 Attribute API 來支援這個功能，但是我們必須明確的在 Form Object 指定每個屬性。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=k>class</span> <span class=nc>BaseForm</span>
+  <span class=c1># ...</span>
+  <span class=kp>include</span> <span class=no>ActiveModel</span><span class=o>::</span><span class=no>Attributes</span>
+
+  <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span><span class=n>record</span><span class=p>,</span> <span class=n>params</span> <span class=o>=</span> <span class=p>{})</span>
+    <span class=vi>@record</span> <span class=o>=</span> <span class=n>record</span>
+    <span class=n>attributes</span> <span class=o>=</span> <span class=n>record</span><span class=o>.</span><span class=n>attributes</span><span class=o>.</span><span class=n>slice</span><span class=p>(</span><span class=o>*.</span><span class=n>self</span><span class=o>.</span><span class=n>class</span><span class=o>.</span><span class=n>attribute_names</span><span class=p>)</span>
+    <span class=k>super</span> <span class=n>attributes</span><span class=o>.</span><span class=n>merge</span><span class=p>(</span><span class=n>params</span><span class=p>)</span>
+  <span class=k>end</span>
+<span class=k>end</span>
+
+<span class=c1># app/forms/registration_form.rb</span>
+<span class=k>class</span> <span class=nc>RegistrationForm</span> <span class=o>&lt;</span> <span class=no>BaseForm</span>
+  <span class=n>attribute</span> <span class=ss>:email</span><span class=p>,</span> <span class=ss>:string</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><blockquote><p>不過我們必須注意 <code>params</code> 的使用，Model 回傳的屬性會是 <code>{"name" => "Joy"}</code> 但是我們用 <code>{name: "Joy"}</code> 的話，我們最後會得到混合字串和 Symbol 的 <code>{"name" => "Joy", name: "Joy"}</code> 而且可能會讓我們在設定 Form Object 屬性時發生點問題。</p></blockquote><h2 id=future-improve>後續改進</h2><p>在目前的版本，我們必須將 Model 實體傳入到 Form Object 裡面，也許我們可以加入一些 DSL 去自動產生。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-ruby data-lang=ruby><span class=c1># Option 1</span>
+<span class=k>class</span> <span class=nc>RegistrationForm</span> <span class=o>&lt;</span> <span class=no>BaseForm</span>
+  <span class=n>model_class</span> <span class=s1>&#39;User&#39;</span>
+
+  <span class=n>attribute</span> <span class=ss>:name</span>
+<span class=k>end</span>
+
+<span class=c1># Option 2</span>
+<span class=k>class</span> <span class=nc>RegistrationForm</span> <span class=o>&lt;</span> <span class=no>BaseForm</span><span class=o>[</span><span class=no>User</span><span class=o>]</span>
+  <span class=n>attribute</span> <span class=ss>:name</span>
+<span class=k>end</span>
+</code></pre></td></tr></table></div></div><p>不過這樣的做法在比較複雜的系統是是需要考量的，不一定會是個好做法。</p><p>舉例來說，我們已經在 Controller 或者其他物件讀取 <code>User</code> 。但是我們無法將它傳給 Form Object 這表示我們的 Form Object 會永遠的在我們取用時讀取一次。
+假設我們這是一個 Nested Form 的話，在這個情況還會導致 N+1 問題。</p><p>這是另外一個主題需要去討論，當我們使用 Form Object 或者其他 Service Object 來重構的時候，我們可能減少了重複的程式碼卻造成我們的系統出現沒有被注意到的隱藏問題，或者讓整體變慢。</p><h2 id=conclusion>總結</h2><p>實際上我並沒有太說使用 Form Object 的經驗，不過我認為這應該是一個很常見的使用情境。
+這個版本的 Form Object 還有很多限制，而且我也沒有完善考慮到所有的情況。</p><p>不過我打算繼續在之後的工作中改進，並且嘗試保持單純。我認為並不是所有的情況都需要提供複雜的行為或者透過 Gem 來解決一些應該要很單純的情境。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie&display=swap" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg rel=noreferrer alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe title=LikeCoin scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Rails/>Rails</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Ruby/>Ruby on Rails</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li></ul></footer><aside class=related><header class=related__header><h3 class=related__title>相關文章</h3></header><ul><li class=related__item><a class=related__link href=/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/>重複利用的 Ansible Role 難題</a></li><li class=related__item><a class=related__link href=/posts/2020/02/20/Write-a-suitable-RSpec-test/>撰寫一個合適的 RSpec 測試</a></li><li class=related__item><a class=related__link href=/posts/2019/11/18/Ruby-World-Conference-2019-Experience/>Ruby World Conference 2019 見聞</a></li><li class=related__item><a class=related__link href=/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/>關於 Rails 中的 Form Object / Presenter 這些物件該怎麼用（一）</a></li><li class=related__item><a class=related__link href=/posts/2014/03/24/capistrano-to-vagrant-automated-deployment-experience/>Capistrano to Vagrant 自動部署心得</a></li></ul></aside></div></article><div class=subscribe><div id=mc_embed_signup><form action="https://frost.us4.list-manage.com/subscribe/post?u=dd3d68032c0510041f1302539&id=d2a668a8aa" method=post id=mc-embedded-subscribe-form name=mc-embedded-subscribe-form class=validate target=_blank novalidate><div id=mc_embed_signup_scroll><h1 class=subscribe__title>電子報</h2><div class=mc-field-group><input type=email name=EMAIL class="required email subscribe__input" id=mce-EMAIL placeholder=Email></div><div id=mce-responses class=clear><div class=response id=mce-error-response style=display:none></div><div class=response id=mce-success-response style=display:none></div></div><div style=position:absolute;left:-5000px aria-hidden=true><input type=text name=b_dd3d68032c0510041f1302539_d2a668a8aa tabindex=-1></div><div class=clear><input type=submit value=訂閱 name=subscribe id=mc-embedded-subscribe class="button subscribe__button"></div></div></form></div></div><div class=adv><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-2844969736316510 data-ad-slot=5530952976 data-ad-format=auto></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><section id=comment class=comment-box><h1 class=comment-box__title>留言</h1><div id=disqus_thread></div></div></section></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank rel=noreferrer>蒼時弦也</a>. All right reversed.</div></footer><link rel=stylesheet href=/css/styles.css><script src=/js/app.min.6e03bcf752b31ab875459fbdd360c766632ead24687ffe499c4cf1f86e9fe489.js></script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
+js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true
+js.defer=true
+fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script><div class=loading></div></body></html>
