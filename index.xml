@@ -1,4 +1,59 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 03 May 2020 16:29:36 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>做一個 Rails Form Helper 相容的 Form Object</title><link>https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</link><category>Rails</category><category>Ruby</category><category>Ruby on Rails</category><category>心得</category><pubDate>Sun, 03 May 2020 16:29:36 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</guid><description>&lt;p>當我們的 Rails 專案邊複雜的時候，Form Object 算是一個常見的方法。不過網路上的教學似乎大多都沒有能夠相容 Rails 的 Form Helper 的版本。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Mon, 11 May 2020 00:19:35 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: 追蹤和技術債</title><link>https://blog.frost.tw/posts/2020/05/11/TGONext-Tracing-and-Technical-Debt/</link><category>心得</category><category>TGONext</category><category>架構</category><pubDate>Mon, 11 May 2020 00:19:35 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/05/11/TGONext-Tracing-and-Technical-Debt/</guid><description>&lt;p>在 TGONext 期間我們基本上有 4 ~ 5 次的聚會，而這次算是表定上的最後一次聚會。在可能是最後一次的聚會，我們先討論了幾個原本沒有要討論的主題。&lt;/p>
+&lt;p>這次聚會中，我們會討論關於日誌追蹤跟如何處理技術債。&lt;/p></description><content:encoded>&lt;p>在 TGONext 期間我們基本上有 4 ~ 5 次的聚會，而這次算是表定上的最後一次聚會。在可能是最後一次的聚會，我們先討論了幾個原本沒有要討論的主題。&lt;/p>
+&lt;p>這次聚會中，我們會討論關於日誌追蹤跟如何處理技術債。&lt;/p>
+&lt;h2 id="log-tracing">日誌追蹤&lt;/h2>
+&lt;p>會討論這個是因為我們之中有人在工作中對於日誌蒐集這件事情有一些疑問。&lt;/p>
+&lt;h3 id="collection">蒐集&lt;/h3>
+&lt;p>在大多數情況下會選擇直接將日誌放到本機端的硬碟，不過當我們的服務成長後這反而變得很難從日誌中進行除錯。&lt;/p>
+&lt;p>在我的公司，基本上我們因為客戶基本上只有單一伺服器所以會把紀錄放在本機上。或者我們會讓我們的客戶將紀錄上傳到一些第三方的 SaaS 服務來節省建置日治伺服器的時間。實際上我們也已經有非常方便的工具可以選擇，像是 AWS 的 CloudWatch 或者 &lt;a href="https://www.papertrail.com/">Papertrail&lt;/a> 都可很容易的整合到 Rails 上。&lt;/p>
+&lt;h3 id="open-tracing">Open Tracing&lt;/h3>
+&lt;p>當整個服務的數量成長之後，單純的日誌也不再足以去追蹤整個系統，而且我們會需要更多資訊去了解我們的系統。&lt;/p>
+&lt;p>Open Tracing 是一個標準定義了該如何追蹤我們的系統. 我們可以選用 &lt;a href="https://www.jaegertracing.io/">Jagger&lt;/a> 或者 &lt;a href="https://zipkin.io/">Zipkin&lt;/a> 這類支援 Open Tracing API 的工具。&lt;/p>
+&lt;blockquote>
+&lt;p>選用 Open Tracing 可能會是個不錯的選擇，大多數商業解決方案都已經支援 Open Tracing API 也因此我們可以輕易的在他們之間切換。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="application-performance-monitor">Application Performance Monitor&lt;/h3>
+&lt;p>我們可以視為這是 Open Tracing 的一部分，他提供我們追蹤 Function Call 或者 API Call 的花費時間。在我的經驗中，一些商業解決方案像是 &lt;a href="https://www.datadoghq.com/">Datadog&lt;/a>, &lt;a href="https://newrelic.com/">NewRelic&lt;/a>、&lt;a href="https://scoutapm.com/">ScoutAPM&lt;/a> 和其他服務，都提供我們更多詳細的資訊來幫助我們可以追蹤效能上的問題。&lt;/p>
+&lt;p>不過開源的專案像是 &lt;a href="https://www.elastic.co/apm">ElasticAPM&lt;/a> 就有比較多限制以及追蹤的資訊相對的簡單。&lt;/p>
+&lt;blockquote>
+&lt;p>在商業解決方案大多支援記憶體的追蹤而且對記憶體問題的處理非常有幫助，不過像是 ElasticAPM 就還在計畫中而沒有支援。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="time">時間&lt;/h3>
+&lt;p>在我們分享經驗跟工具後，我們的導師點出了一個追蹤工具的關鍵點。&lt;/p>
+&lt;p>當我們使用這些工具追蹤服務時，他大多是跟時間相關的。為了避免網路延遲，這些工具大多會選擇使用本地的時間當作時間戳記然後發送到追蹤伺服器上。&lt;/p>
+&lt;p>這表示如果我們有兩台機器的時間是不同步的，我們就會得到一個錯誤的時間線從而導致我們在儀表板上看到的錯的資訊。&lt;/p>
+&lt;p>舉例來說，我們有三個 API 呼叫（A =&amp;gt; B =&amp;gt; C）在這個追蹤內，其中一個 API 伺服器（B）有錯誤的本地時間。我們可能會發現 B 在時間線上早於 A，但是這跟實際上的順序是不一致的，這就可能造成我們無法準確的追蹤問題。&lt;/p>
+&lt;h3 id="dashboard">儀表板&lt;/h3>
+&lt;p>另外一個重要的點則是儀表板，我們想要在短時間內找到問題通常仰賴一個設計優良的儀表板去幫助開發者追蹤問題。&lt;/p>
+&lt;p>這也是為什麼商業解決方案相對開源專案還成熟很多，而在自己搭建的方案中會選擇 ElasticSearch 來作為解決方案。&lt;/p>
+&lt;p>建構一個強大的儀表板是不容易的，何況追蹤大多不是在產品開發中最優先的事項。&lt;/p>
+&lt;p>這也是為什麼大多會偏向使用 SaaS 或者現有的開源方案。&lt;/p>
+&lt;h2 id="technical-debt">技術債&lt;/h2>
+&lt;p>這部分我們分享了我們在決定重構或者安排解決技術債的經驗。&lt;/p>
+&lt;p>我想我們大多同意這沒有一個正確的解答，不過我們還是有一些方向可以遵循。&lt;/p>
+&lt;h3 id="the-test">測試&lt;/h3>
+&lt;p>為了解決技術債，我們大多會去重構我們的程式碼。而重構重程式碼就會需要透過測試來保證不會破壞任何東西。&lt;/p>
+&lt;p>在我自己的經驗裡「規格」是很重要的。如果我們沒有正確的規格，測試也只會專注在錯誤的目標從而撰寫出一些沒有幫助的測試。&lt;/p>
+&lt;h3 id="the-known-and-unknown-debt">已知跟未知的技術債&lt;/h3>
+&lt;p>在工作中，我們通常不會有足夠的時間去撰寫一些理想的程式碼。這表示即使我們不想產生技術債，我們還是因為時間的限制被迫留下技術債。&lt;/p>
+&lt;p>在這個情況，我們通常會加入 &lt;code>TODO&lt;/code> 作為註解表示我們需要去重構他，在另一方面，我們也可能撰寫了一些不恰當的程式而沒有自覺。&lt;/p>
+&lt;p>為了解決技術債，我們大多同意去「主動」的消除他們，至於未知的部分也只能等待他被發現的時候再去處理。&lt;/p>
+&lt;p>不過「追蹤」其實能夠幫助我們更快找到隱藏的問題，這剛好和我們前面討論的部分互相呼應。&lt;/p>
+&lt;blockquote>
+&lt;p>程式語言的版本太舊是另外一種情況會造成技術債。當程式語言被改善或者升級後，可能會放棄掉一些語法，而這可能會導致我們無法繼續使用舊的程式碼在新版本的程式語言中繼續使用。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="the-communicate">溝通&lt;/h3>
+&lt;p>在最後，我們的導師基於他的經驗給了我們一些總結。&lt;/p>
+&lt;p>造成技術在的原因通常是因為行銷或者產品團隊的需求，不過這些需求能幫助公司產生更多價值。&lt;/p>
+&lt;p>如果我們希望有時間去處理技術債就需要跟他們解釋其中的優缺點。&lt;/p>
+&lt;p>不過開發團隊的要求大多被拒絕，因為他們大多很難理解重構的重要性。&lt;/p>
+&lt;p>為了解決這個問題，我們需要將資訊轉換成相同的單位讓其他團隊能夠比較從而理解。&lt;/p>
+&lt;p>舉例來說，我們可以解釋重構將能夠改善 10% 未來在宣傳工能上的開發時間，這能夠讓行銷團隊更快的去推廣他們的新產品。不過這會需要付出 50% 的時間在這一次的開發上一併重構這個功能。&lt;/p>
+&lt;p>如果行銷團隊認為這個價值高於繼續維持現在的方法去加入新的宣傳功能，那們我們就會得到他們的支持來進行重構。&lt;/p>
+&lt;h2 id="conclusion">總結&lt;/h2>
+&lt;p>實際上這次聚會比其他聚會還短了一些，不過在這幾次的聚會中我們大致上將我們希望討論的主題都討論了一遍。&lt;/p>
+&lt;p>在這些聚會中，我認為我學到了兩個重要的事情。第一個是要嘗試去找到我們正在評估的架構中的關鍵或者目標，這再讓我們選擇適合的解決方案跟避免他的缺點影響我們系統佔了很重要的角色。&lt;/p>
+&lt;p>另一個就是溝通技巧，實際上在我的工作中我是很重視的。不過我仍只有在跟工程師有嘗試做好，對於客戶或者非工程師的夥伴還是沒有辦法做得很好。在大多數情況下，我是希望 PM 能幫我做好這件事情，不過這個技能在我需要向非工程師解釋技術問題時就變得很重要。&lt;/p></content:encoded></item><item><title>做一個 Rails Form Helper 相容的 Form Object</title><link>https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</link><category>Rails</category><category>Ruby</category><category>Ruby on Rails</category><category>心得</category><pubDate>Sun, 03 May 2020 16:29:36 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</guid><description>&lt;p>當我們的 Rails 專案邊複雜的時候，Form Object 算是一個常見的方法。不過網路上的教學似乎大多都沒有能夠相容 Rails 的 Form Helper 的版本。&lt;/p>
 &lt;p>所以我就開始思考，有沒有辦法法在比較少的修改下去支援 Form Helper 呢？&lt;/p></description><content:encoded>&lt;p>當我們的 Rails 專案邊複雜的時候，Form Object 算是一個常見的方法。不過網路上的教學似乎大多都沒有能夠相容 Rails 的 Form Helper 的版本。&lt;/p>
 &lt;p>所以我就開始思考，有沒有辦法法在比較少的修改下去支援 Form Helper 呢？&lt;/p>
 &lt;h2 id="common-form-object-implementation">常見的 Form Object 實作&lt;/h2>
@@ -1669,121 +1724,4 @@ only:
 &lt;/code>&lt;/pre>&lt;p>如此一來在開發團隊確定一項功能可以 Merge 回 master 之後就能夠自動製作出對應版本的映像檔，用於之後部署的時候自動更新。&lt;/p>
 &lt;h2 id="總結">總結&lt;/h2>
 &lt;p>實際上這個方案整體來說是相當不完善的，不過除了從網路上的資料學習參考這些應用方式之外也還需要客戶有適合的情境才能夠這樣使用。不過工作這三年也算是勉強把各種比較常被討論的部屬方式都練過一遍，雖然不知道下一次有時間讓我改進 Ansible 以及這個部署流程的時間跟機會是什麼時候，不過還是不得不感嘆現在整個網站、軟體開發的領域真的是越來越複雜跟專業，有時候必須對每一種領域的技能都有所概念，才能夠幫助客戶解決各種情境上的問題。&lt;/p>
-&lt;p>這也是我會選擇在剛畢業後就到接案類型公司的原因之一，相比在一間公司只使用一種方式解決問題，能夠根據情況跟需求選擇不同的技術並在不影響客戶的狀況下嘗試跟改進並逐漸完整一個開發體系，算是很難得的經驗。&lt;/p></content:encoded></item><item><title>如何透過 Service Account 來取得 Google API 的 OAuth2 Token</title><link>https://blog.frost.tw/posts/2019/12/29/How-to-use-Service-Account-to-exchange-Google-OAuth2-API-token/</link><category>JWT</category><category>OAuth2</category><category>Service Account</category><category>Ruby</category><category>API</category><category>Google</category><pubDate>Sun, 29 Dec 2019 20:43:04 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2019/12/29/How-to-use-Service-Account-to-exchange-Google-OAuth2-API-token/</guid><description>&lt;p>前陣子在嘗試一些比較少見的 Google API 時發現，在 Google 提供的 Ruby Gem 裡面並不支援這個 API 的實作，這表示需要自己去想辦法解決如何去呼叫這個 API 的問題。&lt;/p>
-&lt;p>不過呼叫 API 需要 Access Token 才能夠使用，以往我們都是依靠第三方套件或者 Google 官方提供的 Gem 直接呼叫，似乎很少去直接實作客戶端。另一方面我們對 OAuth2 的認識大多是做 SSO（Single Sign On）而非這種伺服器對伺服器的呼叫。&lt;/p>
-&lt;p>以 Google 這種規模的公司，如果是直接使用一般 OAuth2 的伺服器對伺服器的作法似乎也不太適合，而 Google 提供的解決方案就是 Service Account 了！&lt;/p></description><content:encoded>&lt;p>前陣子在嘗試一些比較少見的 Google API 時發現，在 Google 提供的 Ruby Gem 裡面並不支援這個 API 的實作，這表示需要自己去想辦法解決如何去呼叫這個 API 的問題。&lt;/p>
-&lt;p>不過呼叫 API 需要 Access Token 才能夠使用，以往我們都是依靠第三方套件或者 Google 官方提供的 Gem 直接呼叫，似乎很少去直接實作客戶端。另一方面我們對 OAuth2 的認識大多是做 SSO（Single Sign On）而非這種伺服器對伺服器的呼叫。&lt;/p>
-&lt;p>以 Google 這種規模的公司，如果是直接使用一般 OAuth2 的伺服器對伺服器的作法似乎也不太適合，而 Google 提供的解決方案就是 Service Account 了！&lt;/p>
-&lt;h2 id="jwt">JWT&lt;/h2>
-&lt;p>自從前端成為一個專門的專業並且逐漸完善、複雜，這中間出現了一個叫做 JWT（JSON Web Token）的應用，現在很多網站應該也都採用 JWT 來作為 API 的 Token。畢竟使用 JSON 記錄使用者的基本資訊，就能夠透過驗證 JWT 的可靠來確認是否為信任的認證伺服器發出，再根據 JSON 上的資訊就可以免去一次查詢使用者跟權限的操作，對比較複雜或者比較大的系統來說就能節省下不少時間。&lt;/p>
-&lt;p>在 Google API 的 Servie Account 認證流程就是透過 JWT 來完成的，不過事情並沒有我們想像中那麼簡單生成一個 JWT 就可以直接呼叫。&lt;/p>
-&lt;h2 id="grant-code">Grant Code&lt;/h2>
-&lt;p>回到正題，如果我們去看 Google 的&lt;a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">文件&lt;/a>會發現我們前面提到的 JWT 其實是用來產生 Grant Code 的作用，而不是直接用來產生 Access Token 的（文件後面有說有例外，不過一般來說都是需要再跑一次流程）&lt;/p>
-&lt;p>也就是說，我們在整個流程中是這樣的步驟：&lt;/p>
-&lt;ol>
-&lt;li>使用 Service Account 生成 JWT (Grant Code)&lt;/li>
-&lt;li>在伺服端走 OAuth2 流程用 Grant Code 換取 Access Token&lt;/li>
-&lt;li>透過 Access Token 呼叫 Google API&lt;/li>
-&lt;/ol>
-&lt;p>至於生成的 JWT 中基本上只需要指定 Issuer 和 Scope 並且用正確的 Private Key 做簽章，就能夠順利通過 OAuth2 驗證獲取 Access Token。&lt;/p>
-&lt;h2 id="實作">實作&lt;/h2>
-&lt;p>前面兩段的敘述感覺有點複雜，不過我們直接實際實作一次就非常容易理解，可能還比我們平常使用的 OAuth2 流程容易不少。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;bundler/inline&amp;#39;&lt;/span>
-&lt;span class="n">gemfile&lt;/span> &lt;span class="k">do&lt;/span>
-&lt;span class="n">source&lt;/span> &lt;span class="s1">&amp;#39;https://rubygems.org&amp;#39;&lt;/span>
-&lt;span class="n">gem&lt;/span> &lt;span class="s1">&amp;#39;jwt&amp;#39;&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;json&amp;#39;&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;openssl&amp;#39;&lt;/span>
-&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;net/http&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>這次我們直接使用單個 Ruby 檔案來實作，整個流程非常簡單而且不複雜唯一需要的就是 JWT 的套件。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">service_account&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">File&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;./service_account.json&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
-&lt;span class="n">privkey&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">OpenSSL&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">PKey&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">RSA&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">service_account&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;private_key&amp;#39;&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;span class="ss">iss&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">service_account&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;client_email&amp;#39;&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">scope&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;https://www.googleapis.com/auth/wallet_object.issuer&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">aud&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;https://oauth2.googleapis.com/token&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">exp&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="no">Time&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_i&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">60&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">iat&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="no">Time&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_i&lt;/span>
-&lt;span class="p">}&lt;/span>
-&lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">JWT&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encode&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">privkey&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;RS256&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>接下來我們把 Service Account 的內容讀取進來產生 JWT，一般我們會選擇 JSON 格式來抓取。之前可能會有點疑惑就是為什麼還會提供 p12 的檔案格式，從這個步驟我們大概就可以猜出來原因。&lt;/p>
-&lt;p>在這個 JWT 裡面，我們需要 Service Account 裡面的 Client Email 和 Private Key 兩個資訊，剛好對應的就是我們在 Google API 上面開設的 Service Account 的 Email 以及 p12 這個檔案，安全性上在 Google 的處理中也是用非對稱加密的方式來做，因此我們會拿到一個 Private Key 用來產生這些 Token。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">uri&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">URI&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;https://oauth2.googleapis.com/token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">req&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Net&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">HTTP&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">Post&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">uri&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">req&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;Content-Type&amp;#39;&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;application/x-www-form-urlencoded&amp;#39;&lt;/span>
-&lt;span class="n">req&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">body&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">URI&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encode_www_form&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;span class="ss">grant_type&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;urn:ietf:params:oauth:grant-type:jwt-bearer&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;span class="ss">assertion&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">token&lt;/span>
-&lt;span class="p">)&lt;/span>
-&lt;span class="n">res&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Net&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="no">HTTP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">start&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">uri&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">host&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">uri&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">port&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">use_ssl&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">http&lt;/span>&lt;span class="o">|&lt;/span>
-&lt;span class="n">http&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span> &lt;span class="n">req&lt;/span>
-&lt;span class="k">end&lt;/span>
-&lt;span class="n">access_token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">res&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">body&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;access_token&amp;#39;&lt;/span>&lt;span class="o">]&lt;/span>
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>最後就是對 Google 的 OAuth2 API 發出一個請求來換取 Access Token 的請求，接下來我們就能利用這個 Access Token 去存取我們希望存取的資源。&lt;/p>
-&lt;blockquote>
-&lt;p>雖然沒有測試過，但是在 Service Account 開設時沒有授權的權限，即使 Scope 有指定也是拿不到對應的授權的。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="firebase">Firebase&lt;/h2>
-&lt;p>看到這個用法，我另外一個聯想到的就是 Firebase 的 &lt;a href="https://firebase.google.com/docs/auth/admin/create-custom-tokens#create_custom_tokens_using_a_third-party_jwt_library">Custom Token&lt;/a> 機制，我們一樣會先跟 Firebase 請求一個 Service Account 用來生成這個 Token。&lt;/p>
-&lt;p>產生的 JWT 的設置幾乎跟前面提到的方式差不多，只是內容改為針對 Firebase 做出了一些調整。&lt;/p>
-&lt;h2 id="總結">總結&lt;/h2>
-&lt;p>其實整體來說並不複雜，不過會想寫這篇文章是因為之前雖然看過 Firebase 的使用方式卻沒有多想。這次透過 Google API 串接了解到在 JWT 和 OAuth2 的搭配應用上還能有這樣的變化，算是非常直得學習的一個方式。&lt;/p>
-&lt;p>相較於我們直接將 JWT 作為 Access Token 的使用方式，這種方式在某種層面上來說提供了我們在一些額外應用場景的新選擇，就我自己目前能想到的就有像是 API 服務、IoT 裝置等等，不過前陣子有稍微查了一下是否有其他專案有這樣的應用方式，資料似乎還不多。&lt;/p>
-&lt;p>不過至少未來設計服務的時候可以多一種方式來提供 API 串接的選項，畢竟以 Service Account 方式的管理似乎是比原本對每個客戶端都開設 Application 還簡單了一些（或者內部隱含的還是做了 Application 的註冊）&lt;/p></content:encoded></item></channel></rss>
+&lt;p>這也是我會選擇在剛畢業後就到接案類型公司的原因之一，相比在一間公司只使用一種方式解決問題，能夠根據情況跟需求選擇不同的技術並在不影響客戶的狀況下嘗試跟改進並逐漸完整一個開發體系，算是很難得的經驗。&lt;/p></content:encoded></item></channel></rss>
