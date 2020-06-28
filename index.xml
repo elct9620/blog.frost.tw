@@ -1,4 +1,274 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Mon, 11 May 2020 00:19:35 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TGONext: 追蹤和技術債</title><link>https://blog.frost.tw/posts/2020/05/11/TGONext-Tracing-and-Technical-Debt/</link><category>心得</category><category>TGONext</category><category>架構</category><pubDate>Mon, 11 May 2020 00:19:35 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/05/11/TGONext-Tracing-and-Technical-Debt/</guid><description>&lt;p>在 TGONext 期間我們基本上有 4 ~ 5 次的聚會，而這次算是表定上的最後一次聚會。在可能是最後一次的聚會，我們先討論了幾個原本沒有要討論的主題。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Mon, 29 Jun 2020 00:43:26 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>GitLab 是如何讓 SSH Server 和 Git 並存而不影響安全性</title><link>https://blog.frost.tw/posts/2020/06/20/How-to-secure-SSH-Server-when-GitLab-add-git-user/</link><category>Git</category><category>GitLab</category><category>Ruby</category><pubDate>Mon, 29 Jun 2020 00:43:26 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/06/20/How-to-secure-SSH-Server-when-GitLab-add-git-user/</guid><description>&lt;p>這次第四屆的 &lt;a href="https://astro.5xruby.tw/">Astro Camp&lt;/a> 有學員嘗試做了 GitHub 的架構，也就是能夠在遠端建立 Git 專案並且能夠在本機上傳檔案。&lt;/p>
+&lt;p>不過在和當助教的同事跟學員聊到 &lt;code>git&lt;/code> 使用者可以登入伺服器進行任意操作的安全性問題時，在前陣子的一些測試發現實際上我自己的假設（特製的 SSH Server）是有問題的，而這個解決方法實際上也比我們想像的還容易。&lt;/p></description><content:encoded>&lt;p>這次第四屆的 &lt;a href="https://astro.5xruby.tw/">Astro Camp&lt;/a> 有學員嘗試做了 GitHub 的架構，也就是能夠在遠端建立 Git 專案並且能夠在本機上傳檔案。&lt;/p>
+&lt;p>不過在和當助教的同事跟學員聊到 &lt;code>git&lt;/code> 使用者可以登入伺服器進行任意操作的安全性問題時，在前陣子的一些測試發現實際上我自己的假設（特製的 SSH Server）是有問題的，而這個解決方法實際上也比我們想像的還容易。&lt;/p>
+&lt;h2 id="possible-solution">可能的解法&lt;/h2>
+&lt;p>因為我以前曾經讀過 GitLab 的部分原始碼，所以大概有個印象猜測是使用一個獨立的 SSH Server 來處理這件事情，透過限制可以執行的動作來達到安全的效果。不過這個假設在最近我登入 &lt;a href="https://unlight.app">Open Unlight&lt;/a> 的 GitLab 伺服器時，發現實際上還是基於 OpenSSH 的。&lt;/p>
+&lt;p>同事也有提出一些不同的假設，像是將 &lt;code>git&lt;/code> 設定為 &lt;code>/usr/sbin/nologin&lt;/code> 之類的，不過這些方法都造成了無法正常使用 Git 相關的操作。&lt;/p>
+&lt;blockquote>
+&lt;p>在寫這篇文章的時候已經在&lt;a href="https://juejin.im/post/5cf686b85188253cec305fa7">掘金&lt;/a>的文章有分析過，不過裡面提到的東西已經從 Ruby 替換成 Golang 實作，但是並不影響我們繼續進行研究跟討論。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="related-reasoning">相關的推理&lt;/h2>
+&lt;p>既然發現了 SSH Server 是共用的，那麼肯定在使用者登入的時候有做過一些處理。&lt;/p>
+&lt;p>大多數情況我們會先去查詢 &lt;code>/etc/passwd&lt;/code> 來看使用者預設的 Shell 使什麼，而 &lt;code>git&lt;/code> 的使用者是 &lt;code>/usr/bin/bash&lt;/code> 也就表示是可以正常登入的，實際上如果被設定為特殊的 Shell 或者 &lt;code>/usr/sbin/noling&lt;/code> 的話，也會造成我們無法使用 &lt;code>git&lt;/code> 使用者來進行一些操作，而像是備份之類的操作還是會需要透過 &lt;code>git&lt;/code> 使用者。&lt;/p>
+&lt;p>既然不是對使用者的 Bash 進行處理，難道是登入的時候會有什麼特殊處理嗎？依照可能性跟相關的機制，我去檢查了 &lt;code>~/.ssh/authorized_keys&lt;/code> 這個檔案，然後發現了一些線索。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="c1"># ...&lt;/span>
+&lt;span class="nv">command&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/opt/gitlab/embedded/service/gitlab-shell key-10&amp;#34;&lt;/span>,no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty ssh-rsa &lt;span class="o">[&lt;/span>SSH-KEY&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>看到這邊就再次對自己對於 Linux 或者 SA (System Admin) 的熟練不足，原來在 &lt;code>authorized_keys&lt;/code> 這個檔案是可以指定執行的指令以及能夠使用的特性，透過這樣的方式原本的 &lt;code>/usr/bin/bash&lt;/code> 就會被替換成 GitLab 特製的 &lt;code>gitlab-shell&lt;/code> 這個檔案，並且加以限制 &lt;code>no-&lt;/code> 系列的選項讓透過這把 Key 登入的使用者不能進行各種操作，來防止預期外的操作（像是將某個內部 Port 導向到本機）&lt;/p>
+&lt;blockquote>
+&lt;p>這邊簡單補充一下，Port Forwarding 我們通常會拿來模擬像是 Ngrok 的功能，不過反過來說我們也可以讓原本隱藏在伺服器不對外的資料庫建立起連線，讓我們能夠在自己的電腦連上，那麼就會有額外的風險出現。&lt;/p>
+&lt;/blockquote>
+&lt;p>看到這邊基本上已經知道安全性的問題如何解決，不過該如何用 Ruby 來實現這個機制呢？&lt;/p>
+&lt;h2 id="experiment">實驗&lt;/h2>
+&lt;p>這次我是使用我家裡用來測試的伺服器（Proxmox VE）來搭建虛擬環境，大家可以利用 Digital Ocean 或者 Virtual Box 等工具來實驗這件事情。&lt;/p>
+&lt;p>為了模擬這件事情，我們需要先有一個 Ruby 跟 Git 的環境，再啟動虛擬機之後請先安裝。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="c1"># RHEL&lt;/span>
+yum install git ruby -y
+&lt;span class="c1"># Ubuntu&lt;/span>
+apt install git ruby -y
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>因為是實驗用的，基本上我們不太需要去管 &lt;code>git&lt;/code> 和 &lt;code>ruby&lt;/code> 的版本。&lt;/p>
+&lt;blockquote>
+&lt;p>目前安裝到的 Ruby 大概會是 2.5 基本上是夠新的。&lt;/p>
+&lt;/blockquote>
+&lt;p>首先我們先產生 &lt;code>git&lt;/code> 使用者，以及他的家目錄（Home Directory）&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">useradd -m -d /opt/git git
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下來我們就仿造 GitLab 的方式把我們自己的 SSH Key 加入到 &lt;code>/opt/git/.ssh/authorized_keys&lt;/code> 裡面，另外別忘記將檔案設定成正確的權限（600）&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">sudo su - git
+mkdir -p ~/.ssh
+chmod &lt;span class="m">700&lt;/span> ~/.ssh
+vim ~/.ssh/authorized_keys
+&lt;span class="c1"># 插入 command=&amp;#34;/opt/git/bin/shell aotoki&amp;#34;,no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty [YOUR_PUBLIC_KEY]&lt;/span>
+chmod &lt;span class="m">600&lt;/span> ~/.ssh/authorized_keys
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>這邊我們做了幾個調整，第一個是將指令的位置設定為 &lt;code>/opt/git/bin/shell&lt;/code> 來使用等一下我們會自己撰寫的 Ruby 腳本，而 &lt;code>key-10&lt;/code> 這個則替代成使用者可以存取的目錄，在 GitLab 的設計是會透過 API 去查詢資料庫對應的 SSH Key 來取得使用者，並以此作為基準判斷是否能執行某個動作（Ex. &lt;code>git pull&lt;/code>）&lt;/p>
+&lt;h3 id="shell-script">Shell 腳本&lt;/h3>
+&lt;p>首先先產生 &lt;code>/opt/git/bin/shell&lt;/code> 這個檔案，並且賦予可以執行的權限。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">mkdir -p ~/bin
+touch ~/bin/shell
+chmod +x ~/bin/shell
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接著編輯 &lt;code>/opt/git/bin/shell&lt;/code> 讓他印出 &lt;code>Hello World!&lt;/code> 的訊息&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="ch">#!/usr/bin/env ruby&lt;/span>
+&lt;span class="nb">puts&lt;/span> &lt;span class="s2">&amp;#34;Hello World!&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我們可以用 &lt;code>ssh -T&lt;/code> 指令來實驗，如果我們對 GitHub 或者 GitLab 下這個指令的話，也會得到一串歡迎訊息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">ssh -T git@&lt;span class="o">[&lt;/span>YOUR_SERVER&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>到這邊為止我們就順利獲取到了自訂的訊息，下一步就是解析怎麼執行 Git 相關的操作，這部分因為參考文章已經有了，所以我們直接利用已知的線索來進行後續的操作。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="cp">#!/usr/bin/env ruby
+&lt;/span>&lt;span class="cp">&lt;/span>
+puts ENV.fetch&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;SSH_ORIGINAL_COMMAND&amp;#39;&lt;/span>, &lt;span class="s1">&amp;#39;noop&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>稍微修改我們的 &lt;code>shell&lt;/code> 執行檔後，就可以知道現在 SSH 客戶端想執行的指令是什麼，像是我們用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">ssh -T git@&lt;span class="o">[&lt;/span>YOUR_SERVER&lt;span class="o">]&lt;/span> cat /etc/passwd
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>就會得到 &lt;code>cat /etc/passwd&lt;/code> 這個指令，這也表示在沒有使用自定義的 Shell 之前，我們可以很簡單地將伺服器的一些重要資訊呈現出來。&lt;/p>
+&lt;h3 id="git-command-implementation">Git 指令實作&lt;/h3>
+&lt;p>如果直接使用 &lt;code>git clone git@[YOUR_SERVER]:dummy/repo&lt;/code> 的話，會發現出現錯誤訊息，這是因為 &lt;code>git&lt;/code> 在這個階段會透過我們輸出的資訊來抓取資料，如果不是預期的格式就會發生問題。&lt;/p>
+&lt;p>因此我們只需要稍微調整一下程式，將每次執行 &lt;code>git&lt;/code> 指令的資訊寫入到 Log 檔裡面即可。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="ch">#!/usr/bin/env ruby&lt;/span>
+&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;json&amp;#39;&lt;/span>
+&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;logger&amp;#39;&lt;/span>
+&lt;span class="n">logger&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">Logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/opt/git/shell.log&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">ENV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_h&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_json&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>這樣我們就可以確認到 &lt;code>git clone&lt;/code> 實際上會嘗試執行怎樣的指令，反推回來後會發現使用的是 &lt;code>git-upload-pack&lt;/code> 這個指令（前面提到的文章已經有驗證過）&lt;/p>
+&lt;p>那麼我們就先在 &lt;code>/opt/git/repos/dummy/repo&lt;/code> 產生一個 Bare Repo 來供我們測試。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">mkdir -p ~/repos/dummy/repo
+&lt;span class="nb">cd&lt;/span> ~/repos/dummy/repo
+git init --bare
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下來在原本的 &lt;code>/opt/git/bin/shell&lt;/code> 增加一些處理針對 &lt;code>git-upload-pack&lt;/code> 來修正指令並且透過 &lt;code>exec&lt;/code> 直接執行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">command&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">args&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">ENV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;SSH_ORIGINAL_COMMAND&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;nohup&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39; &amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="n">command&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="s1">&amp;#39;git-upload-pack&amp;#39;&lt;/span>
+&lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="no">Dir&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pwd&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/repos/&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">][&lt;/span>&lt;span class="sr">/&amp;#39;(.+)&amp;#39;/&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;span class="nb">exec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;git-upload-pack &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上面的程式碼做了幾項處理：&lt;/p>
+&lt;ol>
+&lt;li>將指令拆分出來，後面是執行的參數&lt;/li>
+&lt;li>利用正規表達式把參數的 &lt;code>'&lt;/code> 去除&lt;/li>
+&lt;li>因為參數是路徑，改成絕對路徑設定（否則會找不到）&lt;/li>
+&lt;li>用 &lt;code>exec&lt;/code> 方法執行&lt;/li>
+&lt;/ol>
+&lt;p>這次我們再次嘗試 &lt;code>git clone&lt;/code> 指令就能夠正常抓到這個空的專案，繼續使用同樣的方式測試跟檢驗把對應的指令實作出來。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="n">command&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">args&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">ENV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;SSH_ORIGINAL_COMMAND&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;nohup&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39; &amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="no">Dir&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pwd&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/repos/&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="sr">/&amp;#39;(.+)&amp;#39;/&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="n">command&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="s1">&amp;#39;git-upload-pack&amp;#39;&lt;/span>
+&lt;span class="nb">exec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;git-upload-pack &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">when&lt;/span> &lt;span class="s1">&amp;#39;git-receive-pack&amp;#39;&lt;/span>
+&lt;span class="nb">exec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;git-receive-pack &lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">else&lt;/span>
+&lt;span class="nb">exit&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>基本上我們只會使用到 &lt;code>git-upload-pack&lt;/code> 和 &lt;code>git-receive-pack&lt;/code> 兩個指令，而且參數都是 &lt;code>path&lt;/code> 因此稍微改寫了程式碼成為這個樣子，最基本的 Git Push/Pull 操作就能正常運作。&lt;/p>
+&lt;blockquote>
+&lt;p>在 Ruby 裡面我們可以選用像是 &lt;code>system&lt;/code> 或者 &lt;code>exec&lt;/code> 等方法來執行系統指令，不過 &lt;code>exec&lt;/code> 的特性是會代替現在的正在執行的程序，也就是說我們是在確認可以執行指令後直接轉交給 Git 指令處理，是最容易實作的方式。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="permission-check">權限檢查&lt;/h3>
+&lt;p>在前面的規劃中，我們希望可以針對該 SSH Key 進行權限檢查，像是參數是 &lt;code>aotoki&lt;/code> 的狀況下應該只能存取 &lt;code>aotoki/&lt;/code> 以下的 Repo 而不應該下載到 &lt;code>dummy/&lt;/code> 的專案，因此我們可以再針對前面的程式碼做簡單的修改，利用 Ruby 的 &lt;code>start_with?&lt;/code> 方法做簡易的檢查。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">command&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">args&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="no">ENV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;SSH_ORIGINAL_COMMAND&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;nohup&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39; &amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="nb">exit&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="k">unless&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">start_with?&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&amp;#39;&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="no">ARGV&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 因為還沒去除雙引號要補上&lt;/span>
+&lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="no">Dir&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pwd&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">/repos/&lt;/span>&lt;span class="si">#{&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="sr">/&amp;#39;(.+)&amp;#39;/&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我們在原本修正路徑的前一行，先針對傳入的 &lt;code>dummy/repo&lt;/code> 這個參數做檢查，如果是 &lt;code>aotoki/&lt;/code> 開頭的，表示跟這把 SSH Key 的所有者一致，那麼就會繼續執行。否則我們直接回傳 &lt;code>1&lt;/code> 的狀態碼結束程式，同時表示在存取的過程中發生了錯誤。&lt;/p>
+&lt;p>接下來製作一個跟 SSH Key 配套的 Repo 出來，比較看看是否是只能下載 &lt;code>aotoki/&lt;/code> 而無法下載 &lt;code>dummy/&lt;/code> 了呢？&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">git clone git@&lt;span class="o">[&lt;/span>YOUR_SERVER&lt;span class="o">]&lt;/span>:dummy/repo
+&lt;span class="c1"># fatal: Could not read from remote repository.&lt;/span>
+git clone git@&lt;span class="o">[&lt;/span>YOUR_SERVER&lt;span class="o">]&lt;/span>:aotoki/repo
+&lt;span class="c1"># warning: You appear to have cloned an empty repository.&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="conclusion">總結&lt;/h2>
+&lt;p>雖然這個知識在大多數情況下可能沒有太多的幫助，不過透過這樣的探討也能讓我們看到在 Linux 上還有許多我們不熟悉的地方。作為網站工程師在前後端可能是很熟練的，不過實際上我們對於 Linux 和系統管理實際上還是受限的，除了增加知識的範圍之外，透過這樣在同個領域不同專業的交流，說不定能設計出更多不一樣的設計。&lt;/p>
+&lt;p>同理來看，容器技術實際上也是需要同時了解 Linux 和軟體開發才能夠得以實現，很多時候我們並不是單純的使用單一的技術在解決問題，而是基於對不同專業的理解來架構我們所期望的軟體系統。&lt;/p></content:encoded></item><item><title>TGONext: 追蹤和技術債</title><link>https://blog.frost.tw/posts/2020/05/11/TGONext-Tracing-and-Technical-Debt/</link><category>心得</category><category>TGONext</category><category>架構</category><pubDate>Mon, 11 May 2020 00:19:35 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/05/11/TGONext-Tracing-and-Technical-Debt/</guid><description>&lt;p>在 TGONext 期間我們基本上有 4 ~ 5 次的聚會，而這次算是表定上的最後一次聚會。在可能是最後一次的聚會，我們先討論了幾個原本沒有要討論的主題。&lt;/p>
 &lt;p>這次聚會中，我們會討論關於日誌追蹤跟如何處理技術債。&lt;/p></description><content:encoded>&lt;p>在 TGONext 期間我們基本上有 4 ~ 5 次的聚會，而這次算是表定上的最後一次聚會。在可能是最後一次的聚會，我們先討論了幾個原本沒有要討論的主題。&lt;/p>
 &lt;p>這次聚會中，我們會討論關於日誌追蹤跟如何處理技術債。&lt;/p>
 &lt;h2 id="log-tracing">日誌追蹤&lt;/h2>
@@ -1488,240 +1758,4 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;li>回傳的數值是否是可以預期的（像是只會有數字、擁有同樣介面的物件）&lt;/li>
 &lt;/ul>
 &lt;p>其實這些東西如果有讀過一些像是 SOLID 這種物件導向的原則會覺得這些東西還蠻簡單的，不過實際上實作的時候還是很難拿捏要怎麼寫才不會過度設計並寫出適當的測試。&lt;/p>
-&lt;p>總之，希望這篇文章能給大家在寫測試上有一些靈感。&lt;/p></content:encoded></item><item><title>淺談在 Google Cloud Platform 讓 Ruby on Rails 實現簡單的 Immutable Infrastructure 部署</title><link>https://blog.frost.tw/posts/2020/01/07/An-overview-of-deploy-Ruby-on-Rails-to-Google-Cloud-Platform-uses-simple-immutable-infrastructure/</link><category>Ruby</category><category>Ruby on Rails</category><category>GCP</category><category>DevOps</category><category>Ansible</category><category>Packer</category><pubDate>Tue, 07 Jan 2020 19:18:46 +0000</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/01/07/An-overview-of-deploy-Ruby-on-Rails-to-Google-Cloud-Platform-uses-simple-immutable-infrastructure/</guid><description>&lt;p>去年雙十一活動的時候有一個算是比較急的專案是要做活動網站，當時評估了一下之後決定來嘗試透過 CI 自動生成 GCE 的自訂映像檔然後搭配 Auto Scale 來做部署。&lt;/p>
-&lt;p>會選擇這樣的方式主要是因為 Rails 或者大多數開發框架的部署工具預設大多是不適合 Auto Scale 的，像是 Capistrano 大多數是手動填入伺服器位置（之前也有實作過透過 GCP API 自動填入）比較適合雲端服務的作法其實就是是製作成一個映像檔來處理，也因此像是 Docker Image 這類型容器化技術在這方面是相對容易做的。&lt;/p>
-&lt;p>不過考量到容器化本身也還有一些調整問題才適合使用，再加上雲端服務的選擇是使用 GCP 來提供服務，並不像 AWS ECS 有專門針對容器的服務（可能是我不知道）而是提供 K8S 的方案，對一個短期活動來說在整個專案成員都沒有經驗的前提下學習成本還是偏高的。&lt;/p>
-&lt;p>因此相對適合的做法是用之前我準備好的 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 腳本，搭配 &lt;a href="https://www.packer.io/">Packer&lt;/a> 這套工具直接在 GCP 上面生成一個自訂的映像檔然後直接更新 Instance Group 的設定讓他以新版本 Scale 起來，就能做到基本上網站不斷掉的更新（Health Check 和 Scale 規則需要調整好）&lt;/p>
-&lt;p>我們大概花了約一天多的時間快速搭起來，這次的開發時間約兩週中間是透過放額外的人力去支援搭建這個部署流程。&lt;/p></description><content:encoded>&lt;p>去年雙十一活動的時候有一個算是比較急的專案是要做活動網站，當時評估了一下之後決定來嘗試透過 CI 自動生成 GCE 的自訂映像檔然後搭配 Auto Scale 來做部署。&lt;/p>
-&lt;p>會選擇這樣的方式主要是因為 Rails 或者大多數開發框架的部署工具預設大多是不適合 Auto Scale 的，像是 Capistrano 大多數是手動填入伺服器位置（之前也有實作過透過 GCP API 自動填入）比較適合雲端服務的作法其實就是是製作成一個映像檔來處理，也因此像是 Docker Image 這類型容器化技術在這方面是相對容易做的。&lt;/p>
-&lt;p>不過考量到容器化本身也還有一些調整問題才適合使用，再加上雲端服務的選擇是使用 GCP 來提供服務，並不像 AWS ECS 有專門針對容器的服務（可能是我不知道）而是提供 K8S 的方案，對一個短期活動來說在整個專案成員都沒有經驗的前提下學習成本還是偏高的。&lt;/p>
-&lt;p>因此相對適合的做法是用之前我準備好的 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 腳本，搭配 &lt;a href="https://www.packer.io/">Packer&lt;/a> 這套工具直接在 GCP 上面生成一個自訂的映像檔然後直接更新 Instance Group 的設定讓他以新版本 Scale 起來，就能做到基本上網站不斷掉的更新（Health Check 和 Scale 規則需要調整好）&lt;/p>
-&lt;p>我們大概花了約一天多的時間快速搭起來，這次的開發時間約兩週中間是透過放額外的人力去支援搭建這個部署流程。&lt;/p>
-&lt;h2 id="準備工作">準備工作&lt;/h2>
-&lt;p>目前在&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>使用的 Ansible 腳本還沒有公開的版本，不過因為還在內部優化跟改善因此這邊就簡單介紹一下目前我們使用的方式。&lt;/p>
-&lt;blockquote>
-&lt;p>後來有使用過 Ansible AWX (&lt;a href="https://www.ansible.com/products/tower">Tower&lt;/a>) 來嘗試部署，其實現階段的設計是不太好的。&lt;/p>
-&lt;/blockquote>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">├── &lt;span class="o">[&lt;/span>1.0K&lt;span class="o">]&lt;/span> README.md
-├── &lt;span class="o">[&lt;/span>1.6K&lt;span class="o">]&lt;/span> deploy
-├── &lt;span class="o">[&lt;/span> 420&lt;span class="o">]&lt;/span> deploy.pub
-├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> group_vars
-│   └── &lt;span class="o">[&lt;/span>1.2K&lt;span class="o">]&lt;/span> all.yml
-├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> inventories
-│   └── &lt;span class="o">[&lt;/span> 309&lt;span class="o">]&lt;/span> &lt;span class="nb">local&lt;/span>
-├── &lt;span class="o">[&lt;/span> 480&lt;span class="o">]&lt;/span> roles
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> 5xruby_user
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> application
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> compile_env
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> deploy_user
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> init
-│   ├── &lt;span class="o">[&lt;/span> 128&lt;span class="o">]&lt;/span> logrotate
-│   ├── &lt;span class="o">[&lt;/span> 160&lt;span class="o">]&lt;/span> nginx_with_passenger
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> node
-│   ├── &lt;span class="o">[&lt;/span> 160&lt;span class="o">]&lt;/span> postgresql_server
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> ruby
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> ssh
-│   ├── &lt;span class="o">[&lt;/span> 96&lt;span class="o">]&lt;/span> sudo
-│   └── &lt;span class="o">[&lt;/span> 128&lt;span class="o">]&lt;/span> yum_install_commons
-└── &lt;span class="o">[&lt;/span> 467&lt;span class="o">]&lt;/span> setup.yml
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>上面是我設計的公版架構，如果是採用 Ansible 部署的專案會 Fork 這份出去近一步修改為適合專案需求的設定。&lt;/p>
-&lt;blockquote>
-&lt;p>實際上應該設計成類似 Ansible Galaxy 上面以 Role 為單位的腳本，不同專案是以組合 Role 配套出所需的功能來設計是比較恰當的。&lt;/p>
-&lt;/blockquote>
-&lt;p>以這次的專案來說 GCP 上面已經有提供 CloudSQL 服務，因此我們會將 PostgreSQL Server 替換為 CloudSQL Agent 來提供整個專案的需求。&lt;/p>
-&lt;p>剩下的部分大多數是調整 &lt;code>group_vars/&lt;/code> 目錄下的設定來對應不同專案的需要。&lt;/p>
-&lt;h2 id="rails-的調整">Rails 的調整&lt;/h2>
-&lt;p>因為是 Immutable（不可變）的部署設計，所以會遇到一個問題就是靜態檔案需要做 Assets Precompile 處理。這一直都是在 Rails 上面部署的一個坑，因為我們大多數還是使用 Capistrano 幫客戶部署所以其實不太會踩到坑，另外就是如果是採用 CDN 的方式也會因為透過本機預先處理也不會遇到問題。&lt;/p>
-&lt;p>但是在我們的方案中，建置映像檔的過程中是不需要連上資料庫就能處理。不過事實上 Ruby on Rails 在做 Assets Precompile 是會要連上資料庫的（同時 &lt;code>config/initializers&lt;/code> 的設定也會被吃進去）也就表示如果我們在設計 Ruby on Rails 專案的時候沒有仔細考慮像是 Redis 或者其他第三方服務的連接處理，就會讓 CI 甚至現在要處理的 CD 遇到很大的瓶頸。&lt;/p>
-&lt;p>因為時間有限，所以跟同事討論後我們決定用一個稍微偷吃步的做法，利用 &lt;a href="https://github.com/nulldb/nulldb">nulldb&lt;/a> 這個套件製作出一個假的資料庫讓 Rails 以為有連上。&lt;/p>
-&lt;h2 id="packer-的設定">Packer 的設定&lt;/h2>
-&lt;p>前面我們在 Ansible 的腳本中其實會事先處理好幾件事情：&lt;/p>
-&lt;ol>
-&lt;li>安裝五倍的 Deploy Key&lt;/li>
-&lt;li>安裝五倍的 SSH CA（透過 &lt;a href="https://www.vaultproject.io/">Vault&lt;/a> 這套服務）&lt;/li>
-&lt;li>所有 Ruby on Rails 所需的環境&lt;/li>
-&lt;li>額外的 Assets Precompile 處理&lt;/li>
-&lt;li>所有正式環境需要的變數（大多會透過 Ansible 的 Vault 功能加密）&lt;/li>
-&lt;/ol>
-&lt;p>而 Packer 則可以幫助我們在遠端（Ex. GCP / AWS）上面執行我們的 Ansible 腳本，然後將安裝完的環境製作成自訂的映像檔，然後就能夠被 Instance Group 之類的使用作為開啟新機器的基礎。&lt;/p>
-&lt;blockquote>
-&lt;p>Packer 是一套自動化建置映像檔的工具，功能大致上就是可以在不同的 Provider 上面執行我們所設定的 Provision 腳本，然後再透過 Provider 提供的 API 來產生映像檔。最早的時候我是拿來產生 Vargant 的映像檔，在 DevOps 方面 HashiCrop 旗下的工具可以說是相當完整又搭配的不錯。&lt;/p>
-&lt;/blockquote>
-&lt;pre>&lt;code>{
-&amp;quot;variables&amp;quot;: {
-&amp;quot;deploy_key_path&amp;quot;: &amp;quot;{{pwd}}/keys/deploy&amp;quot;,
-&amp;quot;master_key_path&amp;quot;: &amp;quot;{{pwd}}/master.key&amp;quot;,
-&amp;quot;revision&amp;quot;: &amp;quot;UNKNOWN&amp;quot;
-},
-&amp;quot;builders&amp;quot;: [
-{
-&amp;quot;type&amp;quot;: &amp;quot;googlecompute&amp;quot;,
-&amp;quot;project_id&amp;quot;: &amp;quot;EVENT-5X-CUSTOMER&amp;quot;,
-&amp;quot;source_image_family&amp;quot;: &amp;quot;EVENT-IMAGE&amp;quot;,
-&amp;quot;ssh_username&amp;quot;: &amp;quot;packer&amp;quot;,
-&amp;quot;zone&amp;quot;: &amp;quot;asia-east1-b&amp;quot;,
-&amp;quot;image_name&amp;quot;: &amp;quot;EVENT-{{timestamp}}&amp;quot;,
-&amp;quot;image_family&amp;quot;: &amp;quot;EVENT-IMAGE&amp;quot;,
-&amp;quot;image_description&amp;quot;: &amp;quot;Build with commit #{{user `revision`}}&amp;quot;,
-&amp;quot;account_file&amp;quot;: &amp;quot;credentials.json&amp;quot;,
-&amp;quot;tags&amp;quot;: [&amp;quot;http-server&amp;quot;],
-&amp;quot;preemptible&amp;quot;: true,
-&amp;quot;scopes&amp;quot;: [
-&amp;quot;https://www.googleapis.com/auth/sqlservice.admin&amp;quot;,
-&amp;quot;https://www.googleapis.com/auth/devstorage.full_control&amp;quot;
-]
-}
-],
-&amp;quot;provisioners&amp;quot;: [
-{
-&amp;quot;type&amp;quot;: &amp;quot;ansible&amp;quot;,
-&amp;quot;playbook_file&amp;quot;: &amp;quot;./playbook/setup.yml&amp;quot;,
-&amp;quot;user&amp;quot;: &amp;quot;packer&amp;quot;,
-&amp;quot;extra_arguments&amp;quot;: [
-&amp;quot;--vault-id&amp;quot;, &amp;quot;vault-password&amp;quot;,
-&amp;quot;--extra-vars&amp;quot;, &amp;quot;deploy_key_path={{user `deploy_key_path`}}&amp;quot;,
-&amp;quot;--extra-vars&amp;quot;, &amp;quot;master_key_path={{user `master_key_path`}}&amp;quot;
-]
-}
-]
-}
-&lt;/code>&lt;/pre>&lt;p>使用 Packer 基本上不難，有幾個技巧要記得掌握好就可以了。&lt;/p>
-&lt;ol>
-&lt;li>&lt;code>variables&lt;/code> 區塊，因為打包的配置跟需求肯定會有差異，還有一些密碼之類的所以先設定成變數就能動態調整&lt;/li>
-&lt;li>&lt;code>builders&lt;/code> 區塊，這部分照官方的文件設定即可上面的可以當作參考（Web Server 大多試用）&lt;/li>
-&lt;li>&lt;code>provisioners&lt;/code> 區塊，其實可以跟 Shell Script 那些混用，不過使用 Ansible 算是相對容易設定環境的做法（只需要有檔案）&lt;/li>
-&lt;/ol>
-&lt;p>不過上面看似簡單，其實還有另外一個坑隱藏在裡面。&lt;/p>
-&lt;p>&lt;strong>Google Cloud 的 Service Account 開不出對的權限&lt;/strong>&lt;/p>
-&lt;p>因為這類頻率不高的操作我猜大家都會透過 Web UI 處理，但是要讓 Packer 有正確的權限做事情需要透過下指令的方式才能找到（也許有加上去了，不過去年十月底的時候是還沒有的）&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">gcloud projects add-iam-policy-binding EVENT-5X-CUSTOMER --role roles/iam.serviceAccountActor --member serviceAccount:packer@EVENT-5X-CUSTOMER.iam.gserviceaccount.com
-&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>如此一來我們的 Packer 就能夠正確的從我們的 CI 伺服器（Ex. GitLab CI）對 GCP 下達指令產生映像檔，這個過程依照機器的規格跟要安裝的東西可能會花上十到十五分鐘不等的時間（至少三分鐘是在等 GCP 開機器）因此整個流程跑（測試、部署）也大概會花上半小時，以速度來說很難說是一個不錯的速度（跟 Capistrano 手動下指令相比）&lt;/p>
-&lt;p>但是如果這個流程是全自動的，其實還是能接受的，工程師只要負責上傳程式碼跟 Merge 回 Master Branch（Production 用的分支）整個效率還是會比各種操作完畢後再用 Capistrano 部署還來的能夠有效迭代版本，不過真的想要能更加快速的更新和使用容器技術的 Docker 相比確實是慢上不少。&lt;/p>
-&lt;p>這就如同五倍大多數的客戶都還是使用 Capistrano 部署一樣，我們應該評估客戶的需求跟開發迭代的情況來選擇一個適合的做法，很明顯地使用 Capistrano 雖然不怎麼自動化但是卻非常簡單容易使用。&lt;/p>
-&lt;blockquote>
-&lt;p>如果大家有仔細看 Packer 設定的話會發現 Source Image 和生成的 Image 群組是相同的，這是因為我們在打包的時候可以沿用裡面原有的環境來生成就可以大大縮短 Ansible 重複編譯的時間。最初的版本是使用 CentOS 生成，之後再重複使用前一次的版本來做修改。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="ci-設定">CI 設定&lt;/h2>
-&lt;p>這次客戶是將原始碼保存在五倍的 GitLab 伺服器上，因此使用的是 GitLab CI 來進行這些處理。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="c"># ...&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="k">before_script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- echo&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;$DEPLOY_KEY ===PREVENT KEY INVALID===&amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">&amp;gt; keys/deploy # NOTE&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>Ensure&lt;span class="w"> &lt;/span>Deploy&lt;span class="w"> &lt;/span>Key&lt;span class="w"> &lt;/span>has&lt;span class="w"> &lt;/span>newline&lt;span class="w"> &lt;/span>in&lt;span class="w"> &lt;/span>last&lt;span class="w"> &lt;/span>line&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- echo&lt;span class="w"> &lt;/span>$SERVICE_ACCOUNT_JSON&lt;span class="w"> &lt;/span>&amp;gt;&lt;span class="w"> &lt;/span>credentials.json&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- echo&lt;span class="w"> &lt;/span>$VAULT_ID&lt;span class="w"> &lt;/span>&amp;gt;&lt;span class="w"> &lt;/span>vault-password&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- echo&lt;span class="w"> &lt;/span>$MASTER_KEY&lt;span class="w"> &lt;/span>&amp;gt;&lt;span class="w"> &lt;/span>master.key&lt;span class="w">
-&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="c"># ...&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="k">build&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">stage&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>build&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- packer&lt;span class="w"> &lt;/span>build&lt;span class="w"> &lt;/span>-var&lt;span class="w"> &lt;/span>revision=$REVISION&lt;span class="w"> &lt;/span>main.json&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">only&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- master&lt;span class="w">
-&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="k">deploy&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">stage&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>deploy&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>google/cloud-sdk&lt;span class="p">:&lt;/span>alpine&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">before_script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- echo&lt;span class="w"> &lt;/span>$ROLLING_SERVICE_ACCOUNT&lt;span class="w"> &lt;/span>&amp;gt;&lt;span class="w"> &lt;/span>account.json&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">script&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- gcloud&lt;span class="w"> &lt;/span>auth&lt;span class="w"> &lt;/span>activate-service-account&lt;span class="w"> &lt;/span>--key-file&lt;span class="w"> &lt;/span>account.json&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- gcloud&lt;span class="w"> &lt;/span>compute&lt;span class="w"> &lt;/span>instance-groups&lt;span class="w"> &lt;/span>managed&lt;span class="w"> &lt;/span>rolling-action&lt;span class="w"> &lt;/span>replace&lt;span class="w"> &lt;/span>$INSTANCE_GROUP_NAME&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>--max-surge=$MAX_SURGE&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>--max-unavailable=$MAX_UNAVAILABLE&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>--project=$GCP_PROJECT&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>--region=$GCP_REGION&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">when&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>manual&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">only&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- master&lt;span class="w">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>因為我們需要在執行 Ansible 時同時帶入一些檔案（現在回想起來，可能放到 Vault 加密比較方便一點）所以會先將相關的檔案生成出來。&lt;/p>
-&lt;p>接下來就是利用 &lt;code>packer build&lt;/code> 的 &lt;code>-var&lt;/code> 選項將一些需要填入的設定值放進去（這邊會以 Commit SHA 當作參考，方便我們分辨使用的版本）&lt;/p>
-&lt;p>最後 &lt;code>deploy&lt;/code> 選項考量到更新的機制最後是採用手動的方式，不過這邊就是利用 &lt;code>gcloud&lt;/code> 指令對 Instance Group 做一次重新的 Scale 將所有 Instance 都替換成新版的映像檔。&lt;/p>
-&lt;blockquote>
-&lt;p>不過 gcloud 的指令能用的選項和 Web UI 上的有差異，而且稍微跟字面上意思有點出入所以試了幾次才成功。&lt;/p>
-&lt;/blockquote>
-&lt;p>另外，在 Rails 專案的 CI 設定我們可以利用 GitLab 的 Trigger 功能去觸發 Packer 做事情（如果是企業版就有內建上下游功能）&lt;/p>
-&lt;pre>&lt;code>deploy:
-stage: deploy
-script:
-- curl -X POST
--F token=$PACKER_TRIGGER_TOKEN
--F ref=master
--F variables[REVISION]=$CI_COMMIT_SHORT_SHA
-https://git.5xruby.tw/api/v4/projects/309/trigger/pipeline
-only:
-- master
-&lt;/code>&lt;/pre>&lt;p>如此一來在開發團隊確定一項功能可以 Merge 回 master 之後就能夠自動製作出對應版本的映像檔，用於之後部署的時候自動更新。&lt;/p>
-&lt;h2 id="總結">總結&lt;/h2>
-&lt;p>實際上這個方案整體來說是相當不完善的，不過除了從網路上的資料學習參考這些應用方式之外也還需要客戶有適合的情境才能夠這樣使用。不過工作這三年也算是勉強把各種比較常被討論的部屬方式都練過一遍，雖然不知道下一次有時間讓我改進 Ansible 以及這個部署流程的時間跟機會是什麼時候，不過還是不得不感嘆現在整個網站、軟體開發的領域真的是越來越複雜跟專業，有時候必須對每一種領域的技能都有所概念，才能夠幫助客戶解決各種情境上的問題。&lt;/p>
-&lt;p>這也是我會選擇在剛畢業後就到接案類型公司的原因之一，相比在一間公司只使用一種方式解決問題，能夠根據情況跟需求選擇不同的技術並在不影響客戶的狀況下嘗試跟改進並逐漸完整一個開發體系，算是很難得的經驗。&lt;/p></content:encoded></item></channel></rss>
+&lt;p>總之，希望這篇文章能給大家在寫測試上有一些靈感。&lt;/p></content:encoded></item></channel></rss>

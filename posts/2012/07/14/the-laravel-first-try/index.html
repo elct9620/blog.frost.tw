@@ -35,7 +35,7 @@
    <span class=s1>&#39;default&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;sqlite&#39;</span><span class=p>,</span>
    <span class=c1>//略
 </span><span class=c1></span><span class=cp>?&gt;</span>
-</code></pre></td></tr></table></div></div><p>第 45 行左右，大概就是這樣喔～</p><p>如果你想用 Rewrite 的話，就把 application/config/applicatoin.PHP 裡面的 &lsquo;index&rsquo; => &lsquo;index.PHP&rsquo;, 改成 &lsquo;index&rsquo; => &lsquo;', 就可以了（至於 .htaccess 檔則是一開始就幫你弄好，超貼心～）</p><h2 id=路由>路由</h2><hr><p>接下來修改一下 applicatoin/routers.PHP 的設定</p><p>一開始大概 35 行會看到這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table></div></div><p>第 45 行左右，大概就是這樣喔～</p><p>如果你想用 Rewrite 的話，就把 application/config/applicatoin.PHP 裡面的 &lsquo;index&rsquo; => &lsquo;index.PHP&rsquo;, 改成 &lsquo;index&rsquo; => &lsquo;&rsquo;, 就可以了（至於 .htaccess 檔則是一開始就幫你弄好，超貼心～）</p><h2 id=路由>路由</h2><hr><p>接下來修改一下 applicatoin/routers.PHP 的設定</p><p>一開始大概 35 行會看到這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
