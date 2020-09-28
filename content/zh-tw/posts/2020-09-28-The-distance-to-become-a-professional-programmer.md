@@ -4,8 +4,8 @@ publishDate: 2020-09-28T11:22:49+08:00
 date: 2020-09-28T11:22:49+08:00
 tags: ["心得", "工程師"]
 toc: true
-thumbnail:
-credit:
+thumbnail: https://blog.frost.tw/images/2020-09-29-the-distance-to-become-a-professional-programmer/thumbnail.jpg
+credit: 攝影師：fauxels，連結：Pexels
 ---
 
 不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。
