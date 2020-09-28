@@ -53,8 +53,8 @@
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>This meetup is shorter than previous meetups, but include other meetups, we almost covered all topics we want to discuss at the first.&lt;/p>
 &lt;p>In these meetups, I think I learned two important things. The first one is trying to find the key point or the core target of the architecture we are evaluating. This is important for us to pick a solution best to match our service and avoid the cons brakes it.&lt;/p>
-&lt;p>Another one is communication skill, this is a skill I attach importance to my work. But I only do it well with the programmers, but for my customer or non-programmer partners, I didn&amp;rsquo;t work well for them. In most cases, I usually hope the project manager can do it for me. But it still important when I need to explain some technical considerations to them.&lt;/p></content:encoded></item><item><title>Build a Form Helper capable Form Object in Rails</title><link>https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</link><category>Rails</category><category>Ruby</category><category>Ruby on Rails</category><category>Experience</category><pubDate>Sun, 03 May 2020 16:29:36 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</guid><description>&lt;p>The Form Object is a common pattern in Rails when our form becomes complex. But the tutorial in network&amp;rsquo;s example usually incapable of Rails&amp;rsquo; form helper.&lt;/p>
-&lt;p>And I start thinking about is it possible to support form helpers without too many changes?&lt;/p></description><content:encoded>&lt;p>The Form Object is a common pattern in Rails when our form becomes complex. But the tutorial in network&amp;rsquo;s example usually incapable of Rails&amp;rsquo; form helper.&lt;/p>
+&lt;p>Another one is communication skill, this is a skill I attach importance to my work. But I only do it well with the programmers, but for my customer or non-programmer partners, I didn&amp;rsquo;t work well for them. In most cases, I usually hope the project manager can do it for me. But it still important when I need to explain some technical considerations to them.&lt;/p></content:encoded></item><item><title>Build a Form Helper capable Form Object in Rails</title><link>https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</link><category>Rails</category><category>Ruby</category><category>Ruby on Rails</category><category>Experience</category><pubDate>Sun, 03 May 2020 16:29:36 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/en/posts/2020/05/03/Build-a-Form-Helper-capable-Form-Object-in-Rails/</guid><description>&lt;p>The Form Object is a common pattern in Rails when our form becomes complex. But the tutorial in network&amp;rsquo;s example usually incapable of Rails' form helper.&lt;/p>
+&lt;p>And I start thinking about is it possible to support form helpers without too many changes?&lt;/p></description><content:encoded>&lt;p>The Form Object is a common pattern in Rails when our form becomes complex. But the tutorial in network&amp;rsquo;s example usually incapable of Rails' form helper.&lt;/p>
 &lt;p>And I start thinking about is it possible to support form helpers without too many changes?&lt;/p>
 &lt;h2 id="common-form-object-implementation">Common Form Object Implementation&lt;/h2>
 &lt;p>To improve our form object, we have to know about the original version we are using.&lt;/p>
@@ -418,7 +418,7 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;blockquote>
 &lt;p>This is mean it is not required to use &lt;code>_controller&lt;/code> as postfix in your &lt;code> app/controller&lt;/code> folder, but it will cause other hard to recognize the file usage.&lt;/p>
 &lt;/blockquote>
-&lt;p>The Zeitwerk uses Ruby&amp;rsquo;s &lt;code>autoload&lt;/code> to load classes when we configure the autoload paths, it will scan all files and add them to the related classes&amp;rsquo; autoload list.&lt;/p>
+&lt;p>The Zeitwerk uses Ruby&amp;rsquo;s &lt;code>autoload&lt;/code> to load classes when we configure the autoload paths, it will scan all files and add them to the related classes' autoload list.&lt;/p>
 &lt;blockquote>
 &lt;p>In my memory, the older version Rails has its autoloading implementation via override some Kernel methods and rescue NameError to find the actual file path to load it.&lt;/p>
 &lt;/blockquote>
@@ -471,7 +471,7 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>The &lt;code>require&lt;/code> can prevent we load the same file twice but the &lt;code>load&lt;/code> didn&amp;rsquo;t check for it. The Zeitwerk also overrides the &lt;a href="https://github.com/fxn/zeitwerk/blob/master/lib/zeitwerk/kernel.rb#L24">&lt;code>#require&lt;/code>&lt;/a> method to provide a similar feature which managed by Zeitwerk loader.&lt;/p>
-&lt;p>Depends on the above example, we can have an outline of the Rails&amp;rsquo; autoloading and reloading mechanism to help us use them more reasonably.&lt;/p>
+&lt;p>Depends on the above example, we can have an outline of the Rails' autoloading and reloading mechanism to help us use them more reasonably.&lt;/p>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>In the end, I have on more thing I want to talk about. The &lt;code>lib/&lt;/code> is managed by Rails, too. But it can be used after Rails is booted, this is the reason we cannot use them in the &lt;code>config/application.rb&lt;/code> before boot.&lt;/p>
 &lt;blockquote>
@@ -536,7 +536,7 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;p>And next, our mentor let us share when we will change it from one type to another one. Our mentor says, there are many companies is sharing their stories, but that is not for our case.&lt;/p>
 &lt;p>Same as our every meetup, we start discussing the cons for each choice. For example, the scale-out seems a good idea but when we have over 300 or more machines is it easy to manage it? How long we had to spend on the upgrade?&lt;/p>
 &lt;p>We may want to merge them and reduce the total instance we manage. Our mentor also let us to check for the famous company which uses microservices to have how many microservices and is there has an up limit or not.&lt;/p>
-&lt;p>We also discuss the above options&amp;rsquo; prop and cons. I will pick some interesting parts to share for you.&lt;/p>
+&lt;p>We also discuss the above options' prop and cons. I will pick some interesting parts to share for you.&lt;/p>
 &lt;blockquote>
 &lt;p>In the real world, we usually not only use one of them and we usually combine it to use. I feel it is similar to the toy bricks to let us combine or split them to fit our business.&lt;/p>
 &lt;/blockquote>
@@ -632,7 +632,7 @@ For example, a cache server is added between the web server and database server.
 &lt;p>The distributed system is a data consistency problem too.&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="the-databases-evolution">The database&amp;rsquo;s evolution&lt;/h2>
-&lt;p>In a system, the database is directly related to the data consistency topics. Our mentor let us compare the RDBMS, NoSQL, and NewSQLs&amp;rsquo; different.&lt;/p>
+&lt;p>In a system, the database is directly related to the data consistency topics. Our mentor let us compare the RDBMS, NoSQL, and NewSQLs' different.&lt;/p>
 &lt;h3 id="rdbms">RDBMS&lt;/h3>
 &lt;p>Before the RDBMS there has an Object-Oriented Database, but we didn&amp;rsquo;t discuss it even the PostgreSQL has the trait of it.&lt;/p>
 &lt;blockquote>
@@ -705,10 +705,10 @@ For example, a cache server is added between the web server and database server.
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-ruby&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-ruby&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>Before we run the playbook, we can use &lt;code>ansible-galaxy install -r roles/requirements.yml&lt;/code> to automatically install these roles. And it also works well with &lt;a href="https://github.com/ansible/awx">Ansible AWX&lt;/a> (a.k.a Ansible Tower)&lt;/p>
@@ -738,10 +738,10 @@ For example, a cache server is added between the web server and database server.
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
 &lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-passenger&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-passenger&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>And add Nginx module options to &lt;code>group_vars/all.yml&lt;/code> as a default config to apply to all web hosts.&lt;/p>
@@ -750,7 +750,7 @@ For example, a cache server is added between the web server and database server.
 &lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="k">nginx_extra_modules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;passenger&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">nginx_extra_modules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;passenger&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>After resolving the Nginx module problem, another problem is coming.&lt;/p>
@@ -765,11 +765,11 @@ For example, a cache server is added between the web server and database server.
 &lt;/span>&lt;span class="lnt">5
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="k">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-ruby&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-node&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-passenger&lt;span class="w">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-ruby&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-node&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-passenger&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>When I use my playbook to run &lt;code>rails&lt;/code> role, it starts the task from the &lt;code>nginx&lt;/code> role.&lt;/p>

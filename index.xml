@@ -1,4 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Mon, 03 Aug 2020 01:31:31 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>COSCUP 2020 速記</title><link>https://blog.frost.tw/posts/2020/08/03/COSCUP-2020-Note/</link><category>COSCUP</category><category>心得</category><pubDate>Mon, 03 Aug 2020 01:31:31 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/08/03/COSCUP-2020-Note/</guid><description>&lt;p>距離上一篇文章已經好幾個月了，手邊還有一些有趣的東西想寫不過實在太忙。每年參加完研討會都會寫一篇心得來記錄一下，不過我後面幾個月可能還要準備日本的 RubyKaigi（線上版）、鐵人賽跟在等投稿結果的 JSDC、MOPCON 等，應該是暫時沒辦法跟大家分享這幾個月找到的有趣技術。&lt;/p></description><content:encoded>&lt;p>距離上一篇文章已經好幾個月了，手邊還有一些有趣的東西想寫不過實在太忙。每年參加完研討會都會寫一篇心得來記錄一下，不過我後面幾個月可能還要準備日本的 RubyKaigi（線上版）、鐵人賽跟在等投稿結果的 JSDC、MOPCON 等，應該是暫時沒辦法跟大家分享這幾個月找到的有趣技術。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Mon, 28 Sep 2020 11:22:49 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>作為工程師，我們與專業的距離</title><link>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</link><category>心得</category><category>工程師</category><pubDate>Mon, 28 Sep 2020 11:22:49 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</guid><description>&lt;p>不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。&lt;/p>
+&lt;p>這也一直讓我在思考，作為一個「專業」的工程師應該要滿足什麼條件？&lt;/p></description><content:encoded>&lt;p>不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。&lt;/p>
+&lt;p>這也一直讓我在思考，作為一個「專業」的工程師應該要滿足什麼條件？&lt;/p>
+&lt;h2 id="年資">年資&lt;/h2>
+&lt;p>我想年資應該是一個非常容易判斷的方式，畢竟大多數的職缺都會說希望有幾年經歷。不過年資真的適合作為一個評斷的標準嗎？&lt;/p>
+&lt;p>如果從我開始寫程式來計算，至少有十五年的時間。不過實際上我工作的時間也只有四年左右，而扣掉工作的這幾年過去這十年的「累積」真的是有在持續成長的嗎？&lt;/p>
+&lt;p>事實上，在剛接觸的時候我至少有五年的時間耗費在摸索這個領域，雖然是因為在那個時間點大多只能靠自己看書跟查資料（當時也不容易找到資料）來學習，所以效果一直都非常有限，直到朋友推薦我去參加研討會（Conference）之後才讓我接觸到原本在學習 PHP 上不一樣的觀念，第一次瞭解到什麼是框架等等概念同時也認識了很多能夠做技術交流的朋友，也因此才在短時間內快速的進步。&lt;/p>
+&lt;p>這也是大部分的技術社群都會推薦參加社群活動的原因，即使是單純的吸收資訊也遠比自己研究的快很多，雖然很多時候不一定是當下自己能吸收或者需要的。&lt;/p>
+&lt;p>簡單來說，使用一個技術的時間跟能力並不一定相等，從培訓班的出現向我們證明了如果有適合的老師跟教材，要在短時間入門是非常容易的。&lt;/p>
+&lt;h2 id="經驗">經驗&lt;/h2>
+&lt;p>既然年資不影響能力，時間拉長之後就不會進步了嗎？我想這也是否定的，我們需要討論的是「經驗」也就是在同樣的時間裡面，我們累積多少「經驗」的問題。&lt;/p>
+&lt;p>舉例來說，我接觸程式語言的前五年左右，我不斷的重複在練習 CRUD 和一些常見的網站系統（大多是書上教的）除此之外就是把 HTML/CSS 的應用不斷的加強，當時 JavaScript 並沒有像現在如此興盛，因此就只有在做簡單的效果會使用。&lt;/p>
+&lt;p>實際上我前五年練習的東西，如果在培訓班的角度來看只需要幾個月密集的練習就有一部分的人能做到「熟練」的水平，這也是年資對「能力」的影響不一定成比例的關係，我們如果一直止步在同樣的技術跟知識上，總會達到一個極限。&lt;/p>
+&lt;p>跟其他人的交流以及挑戰和嘗試新的技術就變成一個很適合累積經驗的地方，從另一個角度來看新創公司因為需要靠自己做的事情相對的多，所以也就能夠讓人快速的累積大量的經驗。&lt;/p>
+&lt;h2 id="知識">知識&lt;/h2>
+&lt;p>然而累積經驗雖然豐富了，但很多時候卻無法用一個能「說服」其他人的方式描述這個經驗。這也是我認為我現階段「卡住」的地方，雖然我透過在接案公司經手各種專案以及自己的練習、黑客松等情境，在不同領域跟情境下累積了非常多的經驗，也因此能夠處理非常廣泛類型的專案開發，但是卻很難將這些東西教給其他人以及「說服」其他人使用。&lt;/p>
+&lt;p>我認為這是一個「廣度」跟「深度」的問題，現在我們有非常多的網路資源以及文章可以參考，很多時候我們都是基於某個文章的說明來解決工作或者自己專案上的問題，但是很少深入去探討問題的原因、解決方案能解決的原理以及這個做法帶來的影響。&lt;/p>
+&lt;p>這樣的狀況就造成了對客戶無法用合理的數據或者分析來解釋我們如何處理這些需求，而對於帶領團隊上則無法給予適合的指示或者建議只能盲目的嘗試，也就造成了在需求跟開發上的時間成本。&lt;/p>
+&lt;blockquote>
+&lt;p>雖然需求的決定還有很多因素，但是如果我們能更專業的說明問題是否就能更快說服客戶使用我們推薦的作法呢？&lt;/p>
+&lt;/blockquote>
+&lt;p>回過頭來看，作為非資訊相關科系畢業的人就會發現自己缺少的那一塊還是回歸到了學校是否學好這些東西，不然像是 CS50 這類課程、演算法、資料結構等等資工系學生都學過的知識，就不會在社群裡面被大力的推薦跟討論。&lt;/p>
+&lt;p>不過這樣看來，資工系的學生作為工程師不是應該大部分的人做得更好，業界還是有一半左右的工程師是非本科系的原因是什麼？也許就是經驗上的差距吧，即使考試題目過關了但並不是每個人都樂於去挑戰不同的專案開發。&lt;/p>
+&lt;p>至少，在我這十幾年的經驗裡面「知識」跟「經驗」實際上是缺一不可的，只不過我們在「學校」跟「公司」大多偏重某一部份，能夠注意到兩者的平衡並且「加以整合」的人可能比我們想像中的要少，畢竟工作不一定會遇到需要這些知識的情況，或者單純的跟著其他人學習卻不知道該如何和自己的經驗進行連結。&lt;/p>
+&lt;h2 id="視野">視野&lt;/h2>
+&lt;p>前面討論了這麼多，我們足夠專業了嗎？&lt;/p>
+&lt;p>也許作為一個「資深」工程師可能足夠了，要再繼續提升的話還缺少了什麼？我想是「視野」這個部分，一間公司的目標是以「賺錢」為目的，而我們卻只能看到自己眼前的錢（薪水）這樣是足夠的嗎？&lt;/p>
+&lt;p>我想很多人跟我一樣有察覺到一些跡象，雖然我在過去的工作中也逐漸地開始考慮「客戶的理由」這個問題，不過直到最近在 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 結束後拿到來自導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 贈與的書——&lt;a href="https://www.books.com.tw/products/CN11645111">知行&lt;/a>以及結合過去跟前輩們學習的知識才對這樣的狀況有了一個比較能明確區分和認識。&lt;/p>
+&lt;p>書中將待在公司體制的工程師區分為兩種發展方向，分別是架構師（技術管理）跟技術專家（技術特化）兩種體系，如果是選擇管理體系的話就會要面對到處理人的問題，不論是對上司還是下屬都需要處理，但不管是哪一種體系的工程師，我們最後還是要面對的是「公司怎麼賺錢」的問題，也就回歸到了我們「看到多少」&lt;/p>
+&lt;p>也因此除了技術的問題之外，我們還需要將商業和人的問題也一起考慮到解決方案裡面，即使我們可以用完美的技術把問題解決但是趕不上時程呢？在經驗中處理某個情況用某個方法總是有用，但實際上我們的客戶卻是例外的狀況呢？&lt;/p>
+&lt;p>要能夠區分清楚這些問題，就沒辦法再以單純的「開發者」去看這件事情，同理可證即使是「開源專案」也要考慮到社群的發展、長期的經營等等問題。&lt;/p>
+&lt;blockquote>
+&lt;p>我想我現在除了「知識」之外，就是要拓展「視野」的開闊度，因為他已經不是單純用技術好壞就能處理的問題，而是要能夠了解到手邊握有的技術能怎樣解決問題。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="路">路&lt;/h2>
+&lt;p>結合上面的過程，在我看來就是一條一條的路。&lt;/p>
+&lt;p>當你開始想前進的時候，可以跟著前人的經驗選擇一條安穩的路前進，如果想走得更遠就需要知識的累積來讓自己對這條路更加熟悉。不過不管怎樣，這都會是別人的路，如果想要走出自己的路就需要有自己的視野、看法，才能夠前進。&lt;/p>
+&lt;p>但是要開拓自己的路，就需要有足夠的經驗跟知識才能應對未知的危機。&lt;/p>
+&lt;p>如果想要獨當一面的話，大概就是要有自己的視野去選擇自己的方向並且能讓別人能跟著你的腳步前進吧！&lt;/p>
+&lt;p>對我來說，這是我目前所知道的「專業」的表現。&lt;/p>
+&lt;h2 id="後記">後記&lt;/h2>
+&lt;p>這幾年除了速成工程師之外也開始出現網紅工程師等等各種不同的工程師類型，這大概是有一些人默默累積開拓出了這些可能性讓這些情況變得可行。不過與之相對的，大概就是這幾年聽說或看過的神奇現象也更加的嚴重，像是在社群網站上會看到只要業主開價太低就先攻擊而沒有仔細分析過需求和自己的能力是否適合說這些話、剛從培訓班上完課剛好遇到一些公司找不到人接手專案就能被當作資深工程師被招募進去卻以為自己能力非常好等等，也因為這樣讓我開始思考這個問題。&lt;/p>
+&lt;p>在運氣好或者整體環境使然所獲得的職位、名聲是而沒有思考過自身的能力是足夠、在這個領域還有多少需要學習，是否就是所謂的「心態」的膨脹或者「視野」太狹小了呢？&lt;/p>
+&lt;p>不過，最主要的還是想要提醒自己，現在有的能力跟自己「想象中」的能力還有差距多少。&lt;/p>
+&lt;blockquote>
+&lt;p>心態的問題似乎不太適合在這篇文章討論，不過有一個有趣的部分是我花了很多年才找到「戰勝自己」的認知，雖然到現在都還是很難去避免跟其他人比較，只不過比較的對象已經逐漸能變成去觀察自己「進步了多少」&lt;/p>
+&lt;/blockquote></content:encoded></item><item><title>COSCUP 2020 速記</title><link>https://blog.frost.tw/posts/2020/08/03/COSCUP-2020-Note/</link><category>COSCUP</category><category>心得</category><pubDate>Mon, 03 Aug 2020 01:31:31 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/08/03/COSCUP-2020-Note/</guid><description>&lt;p>距離上一篇文章已經好幾個月了，手邊還有一些有趣的東西想寫不過實在太忙。每年參加完研討會都會寫一篇心得來記錄一下，不過我後面幾個月可能還要準備日本的 RubyKaigi（線上版）、鐵人賽跟在等投稿結果的 JSDC、MOPCON 等，應該是暫時沒辦法跟大家分享這幾個月找到的有趣技術。&lt;/p></description><content:encoded>&lt;p>距離上一篇文章已經好幾個月了，手邊還有一些有趣的東西想寫不過實在太忙。每年參加完研討會都會寫一篇心得來記錄一下，不過我後面幾個月可能還要準備日本的 RubyKaigi（線上版）、鐵人賽跟在等投稿結果的 JSDC、MOPCON 等，應該是暫時沒辦法跟大家分享這幾個月找到的有趣技術。&lt;/p>
 &lt;h2 id="前夜祭">前夜祭&lt;/h2>
 &lt;p>這幾年越來越多研討會開始舉辦前夜祭，作為講者和會眾之間的交流算是不錯的時間，畢竟在議程的規劃改變跟複雜化的狀況下，有時候反而沒什麼機會交流。&lt;/p>
 &lt;p>今年基本上也是跟以前跑社群的朋友打招呼後就差不多結束了，跟以往不一樣的是結束後我馬上到中山附近的臨時辦公室開始跑 &lt;a href="https://unlight.app">Open Unlight&lt;/a> 的遊戲更新，因為下週（8/8）我們要舉辦一個營運一週年的&lt;a href="https://anniversary.unlight.events/">活動&lt;/a>所以需要先更新遊戲伺服器來設定好相關的資料，也因此一直忙到半夜我們才啟程回家休息。&lt;/p>
@@ -1228,10 +1274,10 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-ruby&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-ruby&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>在我們執行 Playbook 之前，我們可以利用 &lt;code>ansible-galaxy install -r roles/requirements.yml&lt;/code> 來自動安裝對應的 Role，而且這能夠在 &lt;a href="https://github.com/ansible/awx">Ansible AWX&lt;/a>（或者 Ansible Tower）上面正常運作。&lt;/p>
@@ -1261,10 +1307,10 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
 &lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-passenger&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-passenger&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>並且覆蓋 Nginx 的變數，增加 Nginx 模組的設定作為預設值在 &lt;code>group_vars/all.yml&lt;/code> 裡面套用到所有的 Web 節點上。&lt;/p>
@@ -1273,7 +1319,7 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="k">nginx_extra_modules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;passenger&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">nginx_extra_modules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;passenger&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>不過另外一個問題又緊接著解決了 Nginx 模組的問題出現。&lt;/p>
@@ -1288,11 +1334,11 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;/span>&lt;span class="lnt">5
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="k">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-nginx&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-ruby&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-node&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="k">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>https&lt;span class="p">:&lt;/span>//github.com/5xruby/ansible-passenger&lt;span class="w">
+&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-ruby&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-node&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-passenger&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>此時我執行我的 Playbook 去運行 Rails Role 的話，會從 Nginx Role 開始執行。&lt;/p>
@@ -1331,86 +1377,4 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;li>如果資料庫要升級，是否需要部署新的伺服器？&lt;/li>
 &lt;li>如果是用於製作 Cloud Image (像是 AMI）又該如何清理多餘的檔案？&lt;/li>
 &lt;/ul>
-&lt;p>DevOps 看起來似乎只要把工程師跟維運人員放在一起就可以做到，不過我認為要讓兩者能夠協作還是不容易的。&lt;/p></content:encoded></item><item><title>TGONext: 規劃高併發服務</title><link>https://blog.frost.tw/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</link><category>心得</category><category>TGONext</category><category>架構</category><pubDate>Sun, 23 Feb 2020 15:54:37 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/23/TGONext-The-plan-for-high-concurrency/</guid><description>&lt;p>昨天是 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 的第一次聚會，在這個活動中我們會向台灣的一些高階主管學習。在開場結束後我們的導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 讓我們投票選出幾個想在這半年的時間內討論的題目。基本上我們預定討論四個主題，而「高併發」是我們的第一個主題。&lt;/p></description><content:encoded>&lt;p>昨天是 &lt;a href="https://next.tgonetworks.org/">TGONext&lt;/a> 的第一次聚會，在這個活動中我們會向台灣的一些高階主管學習。在開場結束後我們的導師 &lt;a href="https://blog.gcos.me/">Ant&lt;/a> 讓我們投票選出幾個想在這半年的時間內討論的題目。基本上我們預定討論四個主題，而「高併發」是我們的第一個主題。&lt;/p>
-&lt;h2 id="what-is-high-concurrency">什麼是高併發&lt;/h2>
-&lt;p>再開始的時候，我們的導師問了我們這個問題。&lt;/p>
-&lt;blockquote>
-&lt;p>要怎麼定義高併發？&lt;/p>
-&lt;/blockquote>
-&lt;p>基本上大家都是知道高併發簡單來說就是有大量使用者在使用我們服務的情況，不過要怎麼明確定義反而是從沒有仔細思考過的。&lt;/p>
-&lt;p>不過定義上其實相對的單純，但是透過導師的引導我們開始思考更多東西。&lt;/p>
-&lt;blockquote>
-&lt;p>在短時間內能處理的請求就是併發，而這個短時間通常是以秒為單位。&lt;/p>
-&lt;/blockquote>
-&lt;p>基於這樣的定義，實際上最重要的事情就是&lt;/p>
-&lt;blockquote>
-&lt;p>我們需要確保我們的服務可以處理足夠的請求數否則就就沒有意義&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="how-to-measure-the-concurrency">如何評估併發數&lt;/h2>
-&lt;p>為了確保能處理大兩請求或者配合行銷團隊給我們的目標，我們需要正確的去測量我們的系統所能承受的併發數量，因此我們的導師請我們列出一些曾經用過或者聽過的工具。&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://httpd.apache.org/docs/2.4/programs/ab.html">ab&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/wg/wrk">wrk&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://github.com/giltene/wrk2">wrk2&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://jmeter.apache.org/">JMeter&lt;/a>&lt;/li>
-&lt;li>SaaS (提供類似功能的雲端服務)&lt;/li>
-&lt;/ul>
-&lt;p>因為這些工具其實還蠻常見的，我自己反而沒有在第一時間把他跟測量工具聯想起來。&lt;/p>
-&lt;p>然後導師馬上問我們一個問題：「這些工具的結果是否會有差異？」&lt;/p>
-&lt;p>我們基本上都沒有考慮過這個小細節，但是這卻對我們最後測量出來的結果很重要。&lt;/p>
-&lt;p>舉例來說，像是 &lt;code>ab&lt;/code> 會在發出請求之前把所有的 Thread 產生好，再一次性的發送出去。這很容易造成我們取得比較差的成績，而且很可能不符合真實的使用情況。&lt;/p>
-&lt;blockquote>
-&lt;p>在測量併發能力的時候，我們需要注意是否符合真實世界的使用情況。&lt;/p>
-&lt;/blockquote>
-&lt;p>除此之外，還有一些東西需要在測試的時候小心處理。&lt;/p>
-&lt;h3 id="the-test-machines-limit">硬體上的限制&lt;/h3>
-&lt;p>假設我們想要模擬高併發請求在某一台機器上，但實際上為了達到這個併發量要產生的 Thread 數量已經超過機器的上限。那麼我們只會得到錯誤的結果，這時候我們可能就需要使用支援在多台機器上運作的工具，或者製作一些能控制工具的腳本來同時觸發某個測量工具在多台機器上面執行。&lt;/p>
-&lt;h3 id="the-network-environment">網路環境&lt;/h3>
-&lt;p>如果我們在 LAN 發出請求去測試，實際上發出去的請求跟壓力都會遠大於實際的情況。因此我們至少要將測試的機器部署在其他區域（Zone）並且考慮實際使用者所在的位置。&lt;/p>
-&lt;blockquote>
-&lt;p>另外一個被提到的地方是，我們在測試的是「能力」而不是「壓力」因此目的並不是為了要對伺服器施加壓力這兩種測試實際上是不太一樣的。&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="the-toolss-calculator-method">工具的計算方式&lt;/h3>
-&lt;p>在前面我們其實已經大致上討論過，但是導師還是特別將 &lt;code>wrk2&lt;/code> 提出來討論。因為有些工具並不是計算從請求發起到收到回應的這個時間差，這表示有些時候並不會完全符合真實的情況。&lt;/p>
-&lt;p>另外，導師告訴我們 &lt;code>wrk2&lt;/code> 使用 &lt;a href="https://medium.com/@siddontang/the-coordinated-omission-problem-in-the-benchmark-tools-5d9abef79279">Coordinated Omission&lt;/a> 這個演算法，是相對接近真實世界的計算方式。&lt;/p>
-&lt;h3 id="the-perfect-result">過度美好的結果&lt;/h3>
-&lt;p>假設我們得到非常漂亮的結果，我們就需要去注意測試的方法跟工具。因為這表示我們可能在一些地方是我們沒有預期到的，因而提供了不同的結果給我們。&lt;/p>
-&lt;h2 id="from-mau-to-qps">從 MAU 換算成 QPS&lt;/h2>
-&lt;p>在現實世界中，QPS（每秒查詢次數）通常不是由開發團隊來決定的，他大多是仰賴於行銷團隊的目標或者老闆的計畫。&lt;/p>
-&lt;p>這也表示我們通常只會得到 MAU（每月活躍用戶數）而不是一個明確的 QPS 數值。&lt;/p>
-&lt;p>舉例來說，如果行銷團隊告訴我們下個月他們計畫讓每月活躍用戶成長到 100 萬人，至少要多少的 QPS 才能夠滿足行銷團隊的需求呢？&lt;/p>
-&lt;p>經過短暫的討論跟推測，我們注意到了一些跟 Request 有關的線索。&lt;/p>
-&lt;ul>
-&lt;li>使用者並不會隨時在線上&lt;/li>
-&lt;li>一個使用者的操作後面會有多個請求產生&lt;/li>
-&lt;li>大部分的使用者會集中在特定的時間操作（Ex. 活動）&lt;/li>
-&lt;/ul>
-&lt;p>假設我們使用 80-20 法則來推斷有 80% 的使用者只會在 20% 的時間使用我們的服務。&lt;/p>
-&lt;p>然後我們要定義每秒鐘使用者最大會產生的請求數，在這部分導師告訴我們從經驗上來看選擇「最常見的操作」並計算這個操作會產生的請求數會是一個比較合適的選擇。&lt;/p>
-&lt;p>到此為止我們就獲得了有限的情報足以從 MAU 來計算 QPS 應有的數值。&lt;/p>
-&lt;ul>
-&lt;li>MAU: 100 百萬&lt;/li>
-&lt;li>每秒使用者請求數: 每個動作 3 個 API Request&lt;/li>
-&lt;li>活躍時間: 約集中在每天的 20% 時間內&lt;/li>
-&lt;/ul>
-&lt;p>所以我們就可以像這樣計算：&lt;/p>
-&lt;blockquote>
-&lt;p>(1 million * 3 API Request) / (30 * 0.2 * 86400) * 0.8 ~= 4.6 QPS&lt;/p>
-&lt;/blockquote>
-&lt;p>轉換成公式的話類似這樣：&lt;/p>
-&lt;blockquote>
-&lt;p>(每月活躍人數 * 請求數) / (一個月 * 20% 的時間 * 1 天 (以秒為單位)) * 80% 的使用者 ~= QPS&lt;/p>
-&lt;/blockquote>
-&lt;p>最後的結果遠低於我們預期的數字，但是他確實是基於數據而且有說服力的。&lt;/p>
-&lt;p>因此，要達到目標我們設計的架構至少要允許每秒大於 4.6 的 QPS 才能夠滿足行銷團隊的需求。&lt;/p>
-&lt;blockquote>
-&lt;p>不過導師也提醒我們這個比例會因為不同情況而改變，但是我們可以透過網路上公開的報告來評估自己所在的產業或服務適合採取怎樣的比例配置。
-2020/03/21 補充：根據導師的&lt;a href="https://blog.gcos.me/post/2020-03-11_how-software-architecture-meet-business-require-mau-sla-by-rps-slo/">文章&lt;/a>這邊的 QPS 應該是 RPS （每秒請求數量）比較準確，單個請求可能會產生多個查詢。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="onclusion">結論&lt;/h2>
-&lt;p>這是我們第一部分的討論，雖然只花了一個半小時左右但是情報量其實已經非常的多。&lt;/p>
-&lt;p>後面剩下的時間我們開始討論 SLI/SLO/SLA 和可用性造成的 QPS 下降，但是因為只剩下比較短的時間所以我們應該會在線上或者下次的聚會繼續討論，基本上我也會在討論完後稍微整理記錄下來。&lt;/p>
-&lt;p>在這約兩小時跟導師和其他成員的討論後，我依舊認為在 TGONext 這個活動最重要的是跟導師學習他們在面對問題時的觀點。&lt;/p>
-&lt;p>在這個高併發的討論中，我們從定義「高併發」到專注在技術上的「QPS」來檢視我們需要的目標，最後再將我們的經驗連結其他部門讓合作得以達成。&lt;/p>
-&lt;p>這幾年不時會有「頭銜不重要」的說法出現，不過當你跟 TGONext 裡面的這些 CTO 或者其他高階人才學習後，你會發現我們跟他們的差別在於我們常常關注在錯誤的問題上，而且並不清楚該用什麼方法正確的處理。&lt;/p>
-&lt;p>也因此我是很感謝 &lt;a href="https://tgonetworks.org/">TGONextworks&lt;/a> 提供這樣的機會給我們一個類似路標一樣的方向去學習更高階的技巧，而非因為自己在公司有個不錯的頭銜而自我滿足。&lt;/p></content:encoded></item></channel></rss>
+&lt;p>DevOps 看起來似乎只要把工程師跟維運人員放在一起就可以做到，不過我認為要讓兩者能夠協作還是不容易的。&lt;/p></content:encoded></item></channel></rss>

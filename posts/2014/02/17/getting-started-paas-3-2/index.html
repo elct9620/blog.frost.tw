@@ -18,17 +18,17 @@
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=nv>wordpress_md5</span><span class=o>=</span><span class=k>$(</span>curl -s https://tw.wordpress.org/wordpress-<span class=si>${</span><span class=nv>install_version</span><span class=si>}</span>-zh_TW.tar.gz.md5<span class=k>)</span>
 </code></pre></td></tr></table></div></div><p>看起來沒有其他需要修正，存檔收工！</p><p>接下來要把這個修改 Commit 並且上傳到 OpenShift 上面。</p><blockquote><p>git commit -am &ldquo;Update# change build script to zh_TW version&rdquo;</p></blockquote><p>commit 類似 git 存檔的動作（認可這些修改） 而 -a 表示全部的檔案， -m 則是直接附加編輯訊息。
 （這部分就請大家自行研究其中的奧秘摟～）</p><p>接下來，我們要幫 <code>wp-config.PHP</code> 設定為中文語系。</p><p>打開檔案 <code>.openshift/config/wp-config.PHP</code> 然後找到下面這行</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>define(&#39;WPLANG&#39;, &#39;&#39;);
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nx>define</span><span class=p>(</span><span class=s1>&#39;WPLANG&#39;</span><span class=p>,</span> <span class=s1>&#39;&#39;</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>改為</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>define(&#39;WPLANG&#39;, &#39;zh_TW&#39;);
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nx>define</span><span class=p>(</span><span class=s1>&#39;WPLANG&#39;</span><span class=p>,</span> <span class=s1>&#39;zh_TW&#39;</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>然後一樣做一下 Commit 的動作儲存這次修改。</p><blockquote><p>git commit -am &ldquo;Update# set wp-config.PHP WPLANG to zh_TW&rdquo;</p></blockquote><p>不過，剛剛的 <code>.openshift/action_hooks/build</code> 裡面似乎寫著這這樣的訊息：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh>#
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=c1>#</span>
 <span class=c1># If WordPress is already installed in the current gear, there</span>
 <span class=c1># is nothing to build :-)</span>
-#
+<span class=c1>#</span>
 </code></pre></td></tr></table></div></div><p>也就是說，我們現在上傳是沒有意義的。</p><p>不過，我們可以透過修正 Shell Script 的運作來達成「自動更新」的功能。
 （關於這部分的運作，相對的複雜，會在進階篇內討論 OpenShift 的運作機制）</p><p>我們再次打開 <code>.openshift/action_hooks/build</code> 這個檔案。</p><p>找到</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=o>[</span> -d <span class=s2>&#34;</span><span class=si>${</span><span class=nv>current_version_dir</span><span class=si>}</span><span class=s2>&#34;</span> <span class=o>]</span> <span class=o>&amp;&amp;</span> <span class=nb>exit</span> <span class=m>0</span>
@@ -45,7 +45,7 @@
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-sh data-lang=sh><span class=c1># Copy the OpenShift wp-config.PHP file</span>
-#
+<span class=c1>#</span>
 cp -f <span class=si>${</span><span class=nv>OPENSHIFT_REPO_DIR</span><span class=si>}</span>.openshift/config/wp-config.PHP <span class=si>${</span><span class=nv>install_dir</span><span class=si>}</span>/wp-config.PHP
 </code></pre></td></tr></table></div></div><p>大家應該可以猜到這是把 WordPress 設定檔複製的動作，我們在下面做一個修正（讓插件和佈景可以順利更新）
 加入下面三行 Shell Script 更新。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1

@@ -10,7 +10,7 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * Conifg
 </span><span class=sd> * 
@@ -32,7 +32,7 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * Conifg
 </span><span class=sd> * 
@@ -67,7 +67,7 @@
 </span><span class=lnt>19
 </span><span class=lnt>20
 </span><span class=lnt>21
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * Conifg
 </span><span class=sd> * 
@@ -108,7 +108,7 @@
 </span><span class=lnt>16
 </span><span class=lnt>17
 </span><span class=lnt>18
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * 30Min Guest Book
 </span><span class=sd> * 
@@ -125,8 +125,8 @@
 <span class=c1>//載入設定檔
 </span><span class=c1></span><span class=k>require_once</span><span class=p>(</span><span class=s1>&#39;app/config.inc.PHP&#39;</span><span class=p>);</span>
 
-<span class=cp>?&gt;</span>
-</code></pre></td></tr></table></div></div><p>接下來，我們要初始化 Slim Framework 讓他可以運行，接著加入以下的程式碼</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+<span class=cp>?&gt;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>接下來，我們要初始化 Slim Framework 讓他可以運行，接著加入以下的程式碼</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -134,14 +134,14 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>//初始化 Slim Framework
-$app = new Slim(
-	array(
-		//&#39;http.version&#39; =&gt; &#39;1.0&#39;, //在PHPFog或不支援 HTTP 1.1 的伺服器上使用這個設定
-		&#39;templates.path&#39; =&gt; &#39;views&#39;, //設定 View 資料夾（視圖層）
-		&#39;debug&#39; =&gt; DEBUG, //從設定檔讀取是否啟用除錯
-	)
-);
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=c1>//初始化 Slim Framework
+</span><span class=c1></span><span class=nv>$app</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Slim</span><span class=p>(</span>
+	<span class=k>array</span><span class=p>(</span>
+		<span class=c1>//&#39;http.version&#39; =&gt; &#39;1.0&#39;, //在PHPFog或不支援 HTTP 1.1 的伺服器上使用這個設定
+</span><span class=c1></span>		<span class=s1>&#39;templates.path&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;views&#39;</span><span class=p>,</span> <span class=c1>//設定 View 資料夾（視圖層）
+</span><span class=c1></span>		<span class=s1>&#39;debug&#39;</span> <span class=o>=&gt;</span> <span class=nx>DEBUG</span><span class=p>,</span> <span class=c1>//從設定檔讀取是否啟用除錯
+</span><span class=c1></span>	<span class=p>)</span>
+<span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>這樣，我們就可以用 $app 來做相關 Slim Framework 的操作了！</p><blockquote><p>上面這段程式碼，是取得物件的實例並且存在名叫 app 的變數內。
 $app 是一個變數，請想像他是一個萬用箱子，可以放入任何東西，但是一次只能有一種東西。
 Slim 是一個物件，但是他還未產生實例之前就跟設計圖一樣，裡面紀錄很多關於他的能力。
@@ -154,24 +154,24 @@ $app = new Slim(); 這就是我們用 new 產生一個新的物件，叫做 $app
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>//連接資料庫（MongoDB）
-if(DB_USER <span class=err>&amp;&amp;</span> DB_PASS){
-	ActiveMongo::connect(DB_NAME, DB_HOST, DB_USER, DB_PASS); //從設定檔讀取資料庫資訊
-}else{
-	ActiveMongo::connect(DB_NAME, DB_HOST); //因為ActiveMongo沒有動態設定使用者名稱/密碼的功能，所以另外檢查
-}
-</code></pre></td></tr></table></div></div><p>為什麼要用 if(DB_USER & DB_PASS){} 呢？這是因為 Active Mongo 如果不需要帳號密碼時，還是設定進去，會發生錯誤，所以只好這樣設計。（也許我們可以在設定檔將 '&rsquo; 改為 NULL）</p><p>然後，要定義對應的位址，這樣 Framework 才知道什麼時候該顯示什麼！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=c1>//連接資料庫（MongoDB）
+</span><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=nx>DB_USER</span> <span class=o>&amp;&amp;</span> <span class=nx>DB_PASS</span><span class=p>){</span>
+	<span class=nx>ActiveMongo</span><span class=o>::</span><span class=na>connect</span><span class=p>(</span><span class=nx>DB_NAME</span><span class=p>,</span> <span class=nx>DB_HOST</span><span class=p>,</span> <span class=nx>DB_USER</span><span class=p>,</span> <span class=nx>DB_PASS</span><span class=p>);</span> <span class=c1>//從設定檔讀取資料庫資訊
+</span><span class=c1></span><span class=p>}</span><span class=k>else</span><span class=p>{</span>
+	<span class=nx>ActiveMongo</span><span class=o>::</span><span class=na>connect</span><span class=p>(</span><span class=nx>DB_NAME</span><span class=p>,</span> <span class=nx>DB_HOST</span><span class=p>);</span> <span class=c1>//因為ActiveMongo沒有動態設定使用者名稱/密碼的功能，所以另外檢查
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>為什麼要用 if(DB_USER & DB_PASS){} 呢？這是因為 Active Mongo 如果不需要帳號密碼時，還是設定進去，會發生錯誤，所以只好這樣設計。（也許我們可以在設定檔將 '' 改為 NULL）</p><p>然後，要定義對應的位址，這樣 Framework 才知道什麼時候該顯示什麼！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>$app-&gt;get(&#39;/&#39;, function() use ($app){
-	$app-&gt;render(&#39;home.PHP&#39;);
-});
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nv>$app</span><span class=o>-&gt;</span><span class=na>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$app</span><span class=p>){</span>
+	<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>render</span><span class=p>(</span><span class=s1>&#39;home.PHP&#39;</span><span class=p>);</span>
+<span class=p>});</span>
 
-$app-&gt;run(); //啟動 Slim Framework
-
+<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>run</span><span class=p>();</span> <span class=c1>//啟動 Slim Framework
+</span><span class=c1></span>
 </code></pre></td></tr></table></div></div><blockquote><p>$app->get(); 的 get 就是所謂的方法，就像牙膏可以有「擠」這個動作一樣。</p></blockquote><blockquote><p>function() use ($app) 是 PHP 5.3 之後的功能，要這樣使用請注意自己的 PHP 版本是 5.3 之後，這個功能關係 namespace 暫時不討論</p></blockquote><p>到此為止，我們已經對 index.PHP 做好簡單的設定，現在我們要建立剛剛 render 進來的 home.PHP 好讓留言板能顯示出畫面。</p><h3 id=第一個樣板>第一個樣板</h3><p>首先，我們先建立一個空白的網頁，大致建立其基礎。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3

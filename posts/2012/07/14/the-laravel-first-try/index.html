@@ -18,7 +18,7 @@
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
   <span class=c1>//略
 </span><span class=c1></span>  <span class=cm>/*
 </span><span class=cm>   |--------------------------------------------------------------------------
@@ -34,8 +34,8 @@
 
    <span class=s1>&#39;default&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;sqlite&#39;</span><span class=p>,</span>
    <span class=c1>//略
-</span><span class=c1></span><span class=cp>?&gt;</span>
-</code></pre></td></tr></table></div></div><p>第 45 行左右，大概就是這樣喔～</p><p>如果你想用 Rewrite 的話，就把 application/config/applicatoin.PHP 裡面的 &lsquo;index&rsquo; => &lsquo;index.PHP&rsquo;, 改成 &lsquo;index&rsquo; => &lsquo;&rsquo;, 就可以了（至於 .htaccess 檔則是一開始就幫你弄好，超貼心～）</p><h2 id=路由>路由</h2><hr><p>接下來修改一下 applicatoin/routers.PHP 的設定</p><p>一開始大概 35 行會看到這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=c1></span><span class=cp>?&gt;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>第 45 行左右，大概就是這樣喔～</p><p>如果你想用 Rewrite 的話，就把 application/config/applicatoin.PHP 裡面的 &lsquo;index&rsquo; => &lsquo;index.PHP&rsquo;, 改成 &lsquo;index&rsquo; => &lsquo;&rsquo;, 就可以了（至於 .htaccess 檔則是一開始就幫你弄好，超貼心～）</p><h2 id=路由>路由</h2><hr><p>接下來修改一下 applicatoin/routers.PHP 的設定</p><p>一開始大概 35 行會看到這樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -45,7 +45,7 @@
 </span><span class=lnt> 8
 </span><span class=lnt> 9
 </span><span class=lnt>10
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=c1>//略
 </span><span class=c1></span>
 <span class=nx>Route</span><span class=o>::</span><span class=na>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span>
@@ -54,22 +54,22 @@
 <span class=p>});</span>
 
 <span class=c1>//略
-</span><span class=c1></span><span class=cp>?&gt;</span>
-</code></pre></td></tr></table></div></div><p>然後我們只要有一個簡單的留言功能，所以直接丟給 Controller 就可以了～</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=c1></span><span class=cp>?&gt;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>然後我們只要有一個簡單的留言功能，所以直接丟給 Controller 就可以了～</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=c1>//略
 </span><span class=c1></span>
 <span class=nx>Route</span><span class=o>::</span><span class=na>controller</span><span class=p>(</span><span class=s1>&#39;home&#39;</span><span class=p>);</span>
 
 <span class=c1>//略
-</span><span class=c1></span><span class=cp>?&gt;</span>
-</code></pre></td></tr></table></div></div><h2 id=model>Model</h2><hr><p>我們會用到 Migrate 這個超方便的功能，不過要先用個指令～</p><blockquote><p>PHP artisan migrate:install</p></blockquote><p>這樣 Laravel 才會有 Migrate 紀錄的資料表，也才有辦法知道下次運行 Migrate 時是否要更動資料表</p><p>接著創建一個 Migrate 來新增我們留言資料</p><blockquote><p>PHP artisan migrate:make create_comments_table</p></blockquote><p>之後編輯 application/migrations/日期戳記_create_comments_table.PHP 來撰寫資料表的結構。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=c1></span><span class=cp>?&gt;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><h2 id=model>Model</h2><hr><p>我們會用到 Migrate 這個超方便的功能，不過要先用個指令～</p><blockquote><p>PHP artisan migrate:install</p></blockquote><p>這樣 Laravel 才會有 Migrate 紀錄的資料表，也才有辦法知道下次運行 Migrate 時是否要更動資料表</p><p>接著創建一個 Migrate 來新增我們留言資料</p><blockquote><p>PHP artisan migrate:make create_comments_table</p></blockquote><p>之後編輯 application/migrations/日期戳記_create_comments_table.PHP 來撰寫資料表的結構。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -99,7 +99,7 @@
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span><span class=lnt>30
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 
 <span class=k>class</span> <span class=nc>Create_Comments_Table</span> <span class=p>{</span>
 
@@ -139,7 +139,7 @@
 </span><span class=lnt>8
 </span><span class=lnt>9
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>
-<span class=cp>&lt;?PHP</span>
+<span class=o>&lt;?</span><span class=nx>PHP</span>
 
   <span class=k>class</span> <span class=nc>Comment</span> <span class=k>extends</span> <span class=nx>Eloquent</span>
   <span class=p>{</span>
@@ -188,7 +188,7 @@
 </span><span class=lnt>39
 </span><span class=lnt>40
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>
-<span class=cp>&lt;?PHP</span>
+<span class=o>&lt;?</span><span class=nx>PHP</span>
 
 <span class=k>class</span> <span class=nc>Home_Controller</span> <span class=k>extends</span> <span class=nx>Base_Controller</span> <span class=p>{</span>
 

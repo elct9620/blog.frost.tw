@@ -44,7 +44,7 @@
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Ruby data-lang=Ruby>
 <span class=no>There</span> <span class=n>is</span> <span class=n>items</span> <span class=n>list</span><span class=o>.</span>
 
-</code></pre></td></tr></table></div></div><p>這樣一來就會有一個帶有 data-remote="true&rdquo; 屬性的連結產生。
+</code></pre></td></tr></table></div></div><p>這樣一來就會有一個帶有 data-remote=&ldquo;true&rdquo; 屬性的連結產生。
 （這方面還挺方便的，只要多加個 options 就轉職為 Ajax 了！）</p><p>接著打開 <a href=https://ajax-test.dev/>https://ajax-test.dev/</a> 點了一下連結，啥都沒發生。
 於是打開 Chrome 的開發人員工具（Command + Alt + I）一探究竟。</p><p>確實，有 Ajax 請求，但是傳回的是 HTML 頁面，好像不太對。回想了一下 Code School 課程裡面有要增加 *.js.erb 之類的檔案，先去修改一下 Controller 讓他可以傳回 js 格式的檔案。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2

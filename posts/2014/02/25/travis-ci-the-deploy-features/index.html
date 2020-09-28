@@ -3,21 +3,21 @@
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w> </span>xxx<span class=w>
-</span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Heroku</span><span class=w>
+</span><span class=w>  </span><span class=nt>api_key</span><span class=p>:</span><span class=w> </span><span class=l>xxx</span><span class=w>
+</span><span class=w>  </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>my-auto-deploy-app</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>或者安裝 Travis CI 的 <a href=https://Github.com/travis-ci/travis>Command Line Tools</a> 使用 <code>travis setup Heroku</code> 來自動生成。
 不過這需要先有 <code>.travis.yml</code> 檔案存在，如果沒有的話可先使用 <code>travis init</code> 來進行初始化。</p><p>不過，如果直接將 API Key 以明碼儲存在 Public 的 Repository 上其實有點不妥，因此可以使用 <code>travis encrypt</code> 先行加密。</p><blockquote><p>travis encrypt travis encrypt $(Heroku auth:token)</p></blockquote><p>我們就會得到一串加密的字串（大概是用 Travis CI 上面的 Public Key 加密的，因此不用擔心會被解開，擁有 Private Key 的只有 Travis CI 本身。）</p><p>之後修改 <code>.travis.yml</code> 即可。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
-</span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
-</span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Heroku</span><span class=w>
+</span><span class=w>  </span><span class=nt>api_key</span><span class=p>:</span><span class=w>
+</span><span class=w>  	</span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>encrypted-api-key</span><span class=w>
+</span><span class=w>  </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>my-auto-deploy-app</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>上面基本上就是最為基本的使用，不過要注意的是，假設測試的版本有多個（Ex. PHP 5.4, PHP 5.5）那麼這個動作也會被執行兩次（預設情況）</p><p>後面就來談談<a href=https://docs.travis-ci.com/user/deployment/Heroku/>官方文件</a>上所敘述的其他運用方式吧！
 （這個 Deploy 功能也支援像是 OpenShift, AWS 等，可以依照情況使用。）</p><h3 id=不同-branch-deploy-到不同-heroku-app>不同 Branch Deploy 到不同 Heroku APP</h3><p>這個情況像是有 Production 之外，也許還會有 Staging 供內部測試時，就很方便。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -26,13 +26,13 @@
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
-</span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
-</span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> 
-</span><span class=w>  	</span><span class=k>production</span><span class=p>:</span><span class=w> </span>production-app<span class=w>
-</span><span class=w>    </span><span class=k>staging</span><span class=p>:</span><span class=w> </span>staging-app<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Heroku</span><span class=w>
+</span><span class=w>  </span><span class=nt>api_key</span><span class=p>:</span><span class=w>
+</span><span class=w>  	</span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>encrypted-api-key</span><span class=w>
+</span><span class=w>  </span><span class=nt>app</span><span class=p>:</span><span class=w> 
+</span><span class=w>  	</span><span class=nt>production</span><span class=p>:</span><span class=w> </span><span class=l>production-app</span><span class=w>
+</span><span class=w>    </span><span class=nt>staging</span><span class=p>:</span><span class=w> </span><span class=l>staging-app</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>其實概念挺簡單好懂的，就是 <code>branch: app</code> 的格式。
 （也支援 Deploy 到不同 Heroku 帳號，用法一樣只是改為寫在 <code>api_key</code> 項目下。）</p><h3 id=僅有部分-branch-需要-deploy>僅有部分 Branch 需要 Deploy</h3><p>一般來說我們的 Development 不會需要 Deploy 出去，但是每次跑 CI 的時候都會用 Development 去 Deploy 非常不方便，因此可以使用 <code>on</code> 來做設定。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -40,12 +40,12 @@
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
-</span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
-</span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
-</span><span class=w>  </span><span class=k>on</span><span class=p>:</span><span class=w> </span>production<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Heroku</span><span class=w>
+</span><span class=w>  </span><span class=nt>api_key</span><span class=p>:</span><span class=w>
+</span><span class=w>  	</span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>encrypted-api-key</span><span class=w>
+</span><span class=w>  </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>my-auto-deploy-app</span><span class=w>
+</span><span class=w>  </span><span class=nt>on</span><span class=p>:</span><span class=w> </span><span class=l>production</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>使用 <code>travis setup Heroku</code> 的話，會發現預設是 <code>on</code> 一個 <code>repo</code> 不過文件上似乎沒有詳細敘述，不過這個選項是支援多選的。</p><h3 id=deploy-後運行某些-command>Deploy 後運行某些 Command</h3><p>像是 Rails / Laravel 這類 Framework 在產生 Migration 一段時間後進入 Deploy 程序，就很容易忘記下 <code>migrate</code> 這個指令，我自己就碰過因為忘記下而讓網站死掉的情況⋯⋯</p><p>Travis CI 也很貼心地提供這個功能（甚至還有 <code>after_deploy</code> 可以做後續處理）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -54,12 +54,12 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>deploy</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>provider</span><span class=p>:</span><span class=w> </span>Heroku<span class=w>
-</span><span class=w>  </span><span class=k>api_key</span><span class=p>:</span><span class=w>
-</span><span class=w>  	</span><span class=k>secure</span><span class=p>:</span><span class=w> </span>encrypted-api-key<span class=w>
-</span><span class=w>  </span><span class=k>app</span><span class=p>:</span><span class=w> </span>my-auto-deploy-app<span class=w>
-</span><span class=w> 	</span><span class=k>run</span><span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Heroku</span><span class=w>
+</span><span class=w>  </span><span class=nt>api_key</span><span class=p>:</span><span class=w>
+</span><span class=w>  	</span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>encrypted-api-key</span><span class=w>
+</span><span class=w>  </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>my-auto-deploy-app</span><span class=w>
+</span><span class=w> 	</span><span class=nt>run</span><span class=p>:</span><span class=w>
 </span><span class=w>  	</span>- <span class=s2>&#34;rake db:migrate&#34;</span><span class=w>
 </span><span class=w>    </span>- <span class=s2>&#34;rake assets:precompile&#34;</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>如果只需要 <code>rake db:migrate</code> 直接寫在 <code>run</code> 後面就可以了。</p><p>整體來說很好理解，不過這個功能卻解決了網站在 Deploy 上的問題。

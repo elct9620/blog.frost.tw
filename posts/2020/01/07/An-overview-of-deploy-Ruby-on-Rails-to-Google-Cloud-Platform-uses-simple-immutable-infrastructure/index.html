@@ -114,35 +114,35 @@
 </span><span class=lnt>29
 </span><span class=lnt>30
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># ...</span><span class=w>
-</span><span class=w></span><span class=k>before_script</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;$DEPLOY_KEY ===PREVENT KEY INVALID===&#34;</span><span class=w> </span><span class=k>&gt; keys/deploy # NOTE</span><span class=p>:</span><span class=w> </span>Ensure<span class=w> </span>Deploy<span class=w> </span>Key<span class=w> </span>has<span class=w> </span>newline<span class=w> </span>in<span class=w> </span>last<span class=w> </span>line<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span>$SERVICE_ACCOUNT_JSON<span class=w> </span>&gt;<span class=w> </span>credentials.json<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span>$VAULT_ID<span class=w> </span>&gt;<span class=w> </span>vault-password<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span>$MASTER_KEY<span class=w> </span>&gt;<span class=w> </span>master.key<span class=w>
+</span><span class=w></span><span class=nt>before_script</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;$DEPLOY_KEY ===PREVENT KEY INVALID===&#34; &gt; keys/deploy # NOTE: Ensure Deploy Key has newline in last line</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo $SERVICE_ACCOUNT_JSON &gt; credentials.json</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo $VAULT_ID &gt; vault-password</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo $MASTER_KEY &gt; master.key</span><span class=w>
 </span><span class=w>
 </span><span class=w></span><span class=c># ...</span><span class=w>
-</span><span class=w></span><span class=k>build</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>stage</span><span class=p>:</span><span class=w> </span>build<span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- packer<span class=w> </span>build<span class=w> </span>-var<span class=w> </span>revision=$REVISION<span class=w> </span>main.json<span class=w>
-</span><span class=w>  </span><span class=k>only</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- master<span class=w>
+</span><span class=w></span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>stage</span><span class=p>:</span><span class=w> </span><span class=l>build</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>packer build -var revision=$REVISION main.json</span><span class=w>
+</span><span class=w>  </span><span class=nt>only</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>master</span><span class=w>
 </span><span class=w>
-</span><span class=w></span><span class=k>deploy</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>stage</span><span class=p>:</span><span class=w> </span>deploy<span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>google/cloud-sdk<span class=p>:</span>alpine<span class=w>
-</span><span class=w>  </span><span class=k>before_script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- echo<span class=w> </span>$ROLLING_SERVICE_ACCOUNT<span class=w> </span>&gt;<span class=w> </span>account.json<span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- gcloud<span class=w> </span>auth<span class=w> </span>activate-service-account<span class=w> </span>--key-file<span class=w> </span>account.json<span class=w>
-</span><span class=w>    </span>- gcloud<span class=w> </span>compute<span class=w> </span>instance-groups<span class=w> </span>managed<span class=w> </span>rolling-action<span class=w> </span>replace<span class=w> </span>$INSTANCE_GROUP_NAME<span class=w>
-</span><span class=w>      </span>--max-surge=$MAX_SURGE<span class=w>
-</span><span class=w>      </span>--max-unavailable=$MAX_UNAVAILABLE<span class=w>
-</span><span class=w>      </span>--project=$GCP_PROJECT<span class=w>
-</span><span class=w>      </span>--region=$GCP_REGION<span class=w>
-</span><span class=w>  </span><span class=k>when</span><span class=p>:</span><span class=w> </span>manual<span class=w>
-</span><span class=w>  </span><span class=k>only</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- master<span class=w>
+</span><span class=w></span><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>stage</span><span class=p>:</span><span class=w> </span><span class=l>deploy</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>google/cloud-sdk:alpine</span><span class=w>
+</span><span class=w>  </span><span class=nt>before_script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>echo $ROLLING_SERVICE_ACCOUNT &gt; account.json</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>gcloud auth activate-service-account --key-file account.json</span><span class=w>
+</span><span class=w>    </span>- <span class=l>gcloud compute instance-groups managed rolling-action replace $INSTANCE_GROUP_NAME</span><span class=w>
+</span><span class=w>      </span>--<span class=l>max-surge=$MAX_SURGE</span><span class=w>
+</span><span class=w>      </span>--<span class=l>max-unavailable=$MAX_UNAVAILABLE</span><span class=w>
+</span><span class=w>      </span>--<span class=l>project=$GCP_PROJECT</span><span class=w>
+</span><span class=w>      </span>--<span class=l>region=$GCP_REGION</span><span class=w>
+</span><span class=w>  </span><span class=nt>when</span><span class=p>:</span><span class=w> </span><span class=l>manual</span><span class=w>
+</span><span class=w>  </span><span class=nt>only</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>master</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>因為我們需要在執行 Ansible 時同時帶入一些檔案（現在回想起來，可能放到 Vault 加密比較方便一點）所以會先將相關的檔案生成出來。</p><p>接下來就是利用 <code>packer build</code> 的 <code>-var</code> 選項將一些需要填入的設定值放進去（這邊會以 Commit SHA 當作參考，方便我們分辨使用的版本）</p><p>最後 <code>deploy</code> 選項考量到更新的機制最後是採用手動的方式，不過這邊就是利用 <code>gcloud</code> 指令對 Instance Group 做一次重新的 Scale 將所有 Instance 都替換成新版的映像檔。</p><blockquote><p>不過 gcloud 的指令能用的選項和 Web UI 上的有差異，而且稍微跟字面上意思有點出入所以試了幾次才成功。</p></blockquote><p>另外，在 Rails 專案的 CI 設定我們可以利用 GitLab 的 Trigger 功能去觸發 Packer 做事情（如果是企業版就有內建上下游功能）</p><pre><code>deploy:
   stage: deploy
   script:

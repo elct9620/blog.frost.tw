@@ -30,7 +30,7 @@
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span><span class=lnt>30
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * 3Day Fourum
 </span><span class=sd> * 
@@ -59,8 +59,8 @@
 <span class=cm>/* 載入起動器 */</span>
 <span class=k>require_once</span><span class=p>(</span><span class=s1>&#39;bootstrap.PHP&#39;</span><span class=p>);</span>
 
-<span class=cp>?&gt;</span>
-</code></pre></td></tr></table></div></div><p>這次的 index.PHP 我們只針對設定檔、函式庫載入，並且呼叫 bootstrap.PHP 這個檔案初始畫整個網站。</p><p>接下來，我們來看看 bootstrap.PHP 檔案</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+<span class=cp>?&gt;</span><span class=err>
+</span></code></pre></td></tr></table></div></div><p>這次的 index.PHP 我們只針對設定檔、函式庫載入，並且呼叫 bootstrap.PHP 這個檔案初始畫整個網站。</p><p>接下來，我們來看看 bootstrap.PHP 檔案</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -113,7 +113,7 @@
 </span><span class=lnt>51
 </span><span class=lnt>52
 </span><span class=lnt>53
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * Bootstrap
 </span><span class=sd> * 
@@ -143,7 +143,7 @@
 
 <span class=cm>/* 載入基本資訊 */</span>
 <span class=nv>$basePath</span> <span class=o>=</span> <span class=nx>str_replace</span><span class=p>(</span><span class=s1>&#39;/index.PHP&#39;</span><span class=p>,</span> <span class=s1>&#39;&#39;</span><span class=p>,</span> <span class=nv>$app</span><span class=o>-&gt;</span><span class=na>request</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>getRootUri</span><span class=p>())</span> <span class=o>.</span> <span class=s1>&#39;/&#39;</span><span class=p>;</span>
-<span class=nv>$baseURL</span> <span class=o>=</span> <span class=s2>&#34;https://</span><span class=si>{</span>$_SERVER[&#39;HTTP_HOST&#39;]<span class=si>}</span><span class=s2>/</span><span class=si>{</span>$basePath<span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+<span class=nv>$baseURL</span> <span class=o>=</span> <span class=s2>&#34;https://</span><span class=si>{</span><span class=nv>$_SERVER</span><span class=p>[</span><span class=s1>&#39;HTTP_HOST&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2>/</span><span class=si>{</span><span class=nv>$basePath</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
 
 <span class=nv>$app</span><span class=o>-&gt;</span><span class=na>view</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>setData</span><span class=p>(</span><span class=s1>&#39;basePath&#39;</span><span class=p>,</span> <span class=nv>$basePath</span><span class=p>);</span>
 <span class=nv>$app</span><span class=o>-&gt;</span><span class=na>view</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>setData</span><span class=p>(</span><span class=s1>&#39;baseURL&#39;</span><span class=p>,</span> <span class=nv>$baseURL</span><span class=p>);</span>
@@ -222,7 +222,7 @@
 </span><span class=lnt>53
 </span><span class=lnt>54
 </span><span class=lnt>55
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * User Model
 </span><span class=sd> * 
@@ -403,7 +403,7 @@
 </span><span class=lnt>124
 </span><span class=lnt>125
 </span><span class=lnt>126
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * Fourums
 </span><span class=sd> * 

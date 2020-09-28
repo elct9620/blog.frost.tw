@@ -105,7 +105,7 @@
 </span><span class=se></span>    <span class=nb>cd</span> <span class=nv>$APACHE_DIR</span> <span class=o>&amp;&amp;</span> <span class=se>\
 </span><span class=se></span>    ./configure --prefix<span class=o>=</span><span class=nv>$APACHE_ROOT</span> --with-pcre<span class=o>=</span><span class=nv>$PCRE_ROOT</span> --enable-rewrite <span class=o>&amp;&amp;</span> <span class=se>\
 </span><span class=se></span>    make <span class=o>&amp;&amp;</span> make install<span class=err>
-</span></code></pre></td></tr></table></div></div><p>這邊很重要的訣竅就是 Compile 的時候可以分開為單獨的 <code>RUN</code> 因為 Docker 在 Build 的時候會把一個指令當成一個 <code>layer</code> 也就是說，中間如果失敗（寫 Script 總是會失誤）就不用整個重新 Compile 過，而是只需要重新跑部分的指令而已。</p><blockquote><p>這會節省非常多時間，我自己的 Macbook Pro Retina 15&rdquo; 就要花上十幾分鐘完整編譯。
+</span></code></pre></td></tr></table></div></div><p>這邊很重要的訣竅就是 Compile 的時候可以分開為單獨的 <code>RUN</code> 因為 Docker 在 Build 的時候會把一個指令當成一個 <code>layer</code> 也就是說，中間如果失敗（寫 Script 總是會失誤）就不用整個重新 Compile 過，而是只需要重新跑部分的指令而已。</p><blockquote><p>這會節省非常多時間，我自己的 Macbook Pro Retina 15" 就要花上十幾分鐘完整編譯。
 這邊最重要的是自行編譯的檔案都要放到 <code>/app</code> 目錄，因為包成 Slug 的時候是不會壓縮這個目錄以外的檔案。</p></blockquote><p>至於設定檔的部分，我則是這樣設定的（利用 <code>sed</code> 去置換預設的設定檔）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3

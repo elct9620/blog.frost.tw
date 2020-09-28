@@ -28,20 +28,20 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml>- <span class=k>name</span><span class=p>:</span><span class=w> </span>KPI<span class=w> </span>Report<span class=w>
-</span><span class=w>  </span><span class=k>columns</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>user_id<span class=w>
-</span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>User<span class=w> </span>ID<span class=w>
-</span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>integer<span class=w>
-</span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>signup_at<span class=w>
-</span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>Signup<span class=w> </span>At<span class=w>
-</span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>datetime<span class=w>
-</span><span class=w>      </span><span class=k>datetime</span><span class=p>:</span><span class=w> </span><span class=p>:</span>customize<span class=w>
-</span><span class=w>      </span><span class=k>excel_format</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;[$-409]yyyy-MM-dd;@&#39;</span><span class=w>
-</span><span class=w>    </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>last_active_at<span class=w>
-</span><span class=w>      </span><span class=k>display</span><span class=p>:</span><span class=w> </span>Last<span class=w> </span>Active<span class=w> </span>At<span class=w>
-</span><span class=w>      </span><span class=k>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span>datetime<span class=w>
-</span><span class=w>      </span><span class=k>datetime</span><span class=p>:</span><span class=w> </span><span class=p>:</span>split<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>KPI Report</span><span class=w>
+</span><span class=w>  </span><span class=nt>columns</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>user_id</span><span class=w>
+</span><span class=w>      </span><span class=nt>display</span><span class=p>:</span><span class=w> </span><span class=l>User ID</span><span class=w>
+</span><span class=w>      </span><span class=nt>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span><span class=l>integer</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>signup_at</span><span class=w>
+</span><span class=w>      </span><span class=nt>display</span><span class=p>:</span><span class=w> </span><span class=l>Signup At</span><span class=w>
+</span><span class=w>      </span><span class=nt>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span><span class=l>datetime</span><span class=w>
+</span><span class=w>      </span><span class=nt>datetime</span><span class=p>:</span><span class=w> </span><span class=p>:</span><span class=l>customize</span><span class=w>
+</span><span class=w>      </span><span class=nt>excel_format</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;[$-409]yyyy-MM-dd;@&#39;</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>last_active_at</span><span class=w>
+</span><span class=w>      </span><span class=nt>display</span><span class=p>:</span><span class=w> </span><span class=l>Last Active At</span><span class=w>
+</span><span class=w>      </span><span class=nt>format</span><span class=p>:</span><span class=w> </span><span class=p>:</span><span class=l>datetime</span><span class=w>
+</span><span class=w>      </span><span class=nt>datetime</span><span class=p>:</span><span class=w> </span><span class=p>:</span><span class=l>split</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>以上面這個 YAML 設定檔為例子，客戶可能會希望顯示 <code>yyyy-MM-dd</code> 或者 <code>yyyy-MM-dd</code> + <code>HH:mm</code> 之類的格式，所以在判斷 Excel 要提供怎樣的欄位的時候，就變得相對的複雜。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3

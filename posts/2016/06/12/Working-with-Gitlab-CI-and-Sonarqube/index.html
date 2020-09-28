@@ -65,70 +65,70 @@
 </span><span class=lnt>62
 </span><span class=lnt>63
 </span><span class=lnt>64
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>postgresql</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>restart</span><span class=p>:</span><span class=w> </span>always<span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>sameersbn/postgresql<span class=p>:</span><span class=m>9.4-18</span><span class=w>
-</span><span class=w>  </span><span class=k>environment</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- DB_USER=gitlab<span class=w>
-</span><span class=w>    </span>- DB_PASS=<span class=p>[</span>hidden<span class=p>]</span><span class=w>
-</span><span class=w>    </span>- DB_NAME=gitlabhq_production<span class=w>
-</span><span class=w>    </span>- DB_EXTENSION=pg_trgm<span class=w>
-</span><span class=w>  </span><span class=k>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- /srv/gitlab/postgresql<span class=p>:</span>/var/lib/postgresql<span class=w>
-</span><span class=w></span><span class=k>gitlab</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>restart</span><span class=p>:</span><span class=w> </span>always<span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>sameersbn/gitlab<span class=p>:</span><span class=m>8.6.4</span><span class=w>
-</span><span class=w>  </span><span class=k>links</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- redis<span class=p>:</span>redisio<span class=w>
-</span><span class=w>    </span>- postgresql<span class=p>:</span>postgresql<span class=w>
-</span><span class=w>  </span><span class=k>ports</span><span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>postgresql</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>sameersbn/postgresql:9.4-18</span><span class=w>
+</span><span class=w>  </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_USER=gitlab</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_PASS=[hidden]</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_NAME=gitlabhq_production</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_EXTENSION=pg_trgm</span><span class=w>
+</span><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>/srv/gitlab/postgresql:/var/lib/postgresql</span><span class=w>
+</span><span class=w></span><span class=nt>gitlab</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>sameersbn/gitlab:8.6.4</span><span class=w>
+</span><span class=w>  </span><span class=nt>links</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>redis:redisio</span><span class=w>
+</span><span class=w>    </span>- <span class=l>postgresql:postgresql</span><span class=w>
+</span><span class=w>  </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span>- <span class=s2>&#34;10080:80&#34;</span><span class=w>
 </span><span class=w>    </span>- <span class=s2>&#34;10022:22&#34;</span><span class=w>
-</span><span class=w>  </span><span class=k>environment</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- DEBUG=<span class=kc>false</span><span class=w>
-</span><span class=w>    </span>- TZ=Asia/Taipei<span class=w>
-</span><span class=w>    </span>- GITLAB_TIMEZONE=Taipei<span class=w>
+</span><span class=w>  </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DEBUG=false</span><span class=w>
+</span><span class=w>    </span>- <span class=l>TZ=Asia/Taipei</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_TIMEZONE=Taipei</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- GITLAB_SECRETS_DB_KEY_BASE=<span class=p>[</span>hidden<span class=p>]</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_SECRETS_DB_KEY_BASE=[hidden]</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- GITLAB_HOST=localhost<span class=w>
-</span><span class=w>    </span>- GITLAB_PORT=<span class=m>10080</span><span class=w>
-</span><span class=w>    </span>- GITLAB_SSH_PORT=<span class=m>10022</span><span class=w>
-</span><span class=w>    </span>- GITLAB_RELATIVE_URL_ROOT=<span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_HOST=localhost</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_PORT=10080</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_SSH_PORT=10022</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_RELATIVE_URL_ROOT=</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- GITLAB_NOTIFY_ON_BROKEN_BUILDS=<span class=kc>true</span><span class=w>
-</span><span class=w>    </span>- GITLAB_NOTIFY_PUSHER=<span class=kc>false</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_NOTIFY_ON_BROKEN_BUILDS=true</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_NOTIFY_PUSHER=false</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- GITLAB_EMAIL=notifications@moho.com.tw<span class=w>
-</span><span class=w>    </span>- GITLAB_EMAIL_REPLY_TO=noreply@moho.com.tw<span class=w>
-</span><span class=w>    </span>- GITLAB_INCOMING_EMAIL_ADDRESS=gitlab@moho.com.tw<span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_EMAIL=notifications@moho.com.tw</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_EMAIL_REPLY_TO=noreply@moho.com.tw</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_INCOMING_EMAIL_ADDRESS=gitlab@moho.com.tw</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- GITLAB_BACKUP_SCHEDULE=daily<span class=w>
-</span><span class=w>    </span>- GITLAB_BACKUP_TIME=<span class=m>01</span><span class=p>:</span><span class=m>00</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_BACKUP_SCHEDULE=daily</span><span class=w>
+</span><span class=w>    </span>- <span class=l>GITLAB_BACKUP_TIME=01:00</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- SMTP_ENABLED=<span class=kc>true</span><span class=w>
-</span><span class=w>    </span>- SMTP_DOMAIN=moho.com.tw<span class=w>
-</span><span class=w>    </span>- SMTP_HOST=<span class=m>192.168.100.230</span><span class=w>
-</span><span class=w>    </span>- SMTP_PORT=<span class=m>587</span><span class=w>
-</span><span class=w>    </span>- SMTP_USER=gitlab<span class=w>
-</span><span class=w>    </span>- SMTP_PASS=<span class=p>[</span>hidden<span class=p>]</span><span class=w>
-</span><span class=w>    </span>- SMTP_STARTTLS=<span class=kc>true</span><span class=w>
-</span><span class=w>    </span>- SMTP_AUTHENTICATION=login<span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_ENABLED=true</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_DOMAIN=moho.com.tw</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_HOST=192.168.100.230</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_PORT=587</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_USER=gitlab</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_PASS=[hidden]</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_STARTTLS=true</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SMTP_AUTHENTICATION=login</span><span class=w>
 </span><span class=w>
-</span><span class=w>    </span>- IMAP_ENABLED=<span class=kc>true</span><span class=w>
-</span><span class=w>    </span>- IMAP_HOST=<span class=m>192.168.100.230</span><span class=w>
-</span><span class=w>    </span>- IMAP_PORT=<span class=m>993</span><span class=w>
-</span><span class=w>    </span>- IMAP_USER=gitlab<span class=w>
-</span><span class=w>    </span>- IMAP_PASS=<span class=p>[</span>hidden<span class=p>]</span><span class=w>
-</span><span class=w>    </span>- IMAP_SSL=<span class=kc>true</span><span class=w>
-</span><span class=w>    </span>- IMAP_STARTTLS=<span class=kc>false</span><span class=w>
-</span><span class=w>  </span><span class=k>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- /srv/gitlab/gitlab<span class=p>:</span>/home/git/data<span class=w>
-</span><span class=w></span><span class=k>redis</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>restart</span><span class=p>:</span><span class=w> </span>always<span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>sameersbn/redis<span class=p>:</span>latest<span class=w>
-</span><span class=w>  </span><span class=k>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- /srv/gitlab/redis<span class=p>:</span>/var/lib/redis<span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_ENABLED=true</span><span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_HOST=192.168.100.230</span><span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_PORT=993</span><span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_USER=gitlab</span><span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_PASS=[hidden]</span><span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_SSL=true</span><span class=w>
+</span><span class=w>    </span>- <span class=l>IMAP_STARTTLS=false</span><span class=w>
+</span><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>/srv/gitlab/gitlab:/home/git/data</span><span class=w>
+</span><span class=w></span><span class=nt>redis</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>sameersbn/redis:latest</span><span class=w>
+</span><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>/srv/gitlab/redis:/var/lib/redis</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>基本上沒什麼特別，就是照 Docker Image 的範例修改環境變數跟設定而已。</p><blockquote><p>用 Rancher 的好處是之後升級可以用 Upgrade 修改 Image 的版本 Tag 就能夠升級了～</p></blockquote><p>SonarQube 的部分也一樣</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -151,28 +151,28 @@
 </span><span class=lnt>20
 </span><span class=lnt>21
 </span><span class=lnt>22
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>postgresql</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>restart</span><span class=p>:</span><span class=w> </span>always<span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>sameersbn/postgresql<span class=p>:</span><span class=m>9.4-18</span><span class=w>
-</span><span class=w>  </span><span class=k>environment</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- DB_USER=sonar<span class=w>
-</span><span class=w>    </span>- DB_PASS=<span class=p>[</span>hidden<span class=p>]</span><span class=w>
-</span><span class=w>    </span>- DB_NAME=sonar<span class=w>
-</span><span class=w>    </span>- DB_EXTENSION=pg_trgm<span class=w>
-</span><span class=w>  </span><span class=k>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- /srv/sonarqube/postgresql<span class=p>:</span>/var/lib/postgresql<span class=w>
-</span><span class=w></span><span class=k>sonarqube</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>restart</span><span class=p>:</span><span class=w> </span>always<span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>sonarqube<span class=w>
-</span><span class=w>  </span><span class=k>links</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- postgresql<span class=p>:</span>postgresql<span class=w>
-</span><span class=w>  </span><span class=k>ports</span><span class=p>:</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>postgresql</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>sameersbn/postgresql:9.4-18</span><span class=w>
+</span><span class=w>  </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_USER=sonar</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_PASS=[hidden]</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_NAME=sonar</span><span class=w>
+</span><span class=w>    </span>- <span class=l>DB_EXTENSION=pg_trgm</span><span class=w>
+</span><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>/srv/sonarqube/postgresql:/var/lib/postgresql</span><span class=w>
+</span><span class=w></span><span class=nt>sonarqube</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>sonarqube</span><span class=w>
+</span><span class=w>  </span><span class=nt>links</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>postgresql:postgresql</span><span class=w>
+</span><span class=w>  </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span>- <span class=s2>&#34;10081:9000&#34;</span><span class=w>
-</span><span class=w>  </span><span class=k>environment</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- SONARQUBE_JDBC_URL=jdbc<span class=p>:</span>postgresql<span class=p>:</span>//postgresql<span class=p>:</span><span class=m>5432</span>/sonar<span class=w>
-</span><span class=w>    </span>- SONARQUBE_JDBC_PASSWORD=<span class=p>[</span>hidden<span class=p>]</span><span class=w>
-</span><span class=w>  </span><span class=k>volumes</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- /srv/sonarqube/extensions<span class=p>:</span>/opt/sonarqube/extensions<span class=w>
+</span><span class=w>  </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SONARQUBE_JDBC_URL=jdbc:postgresql://postgresql:5432/sonar</span><span class=w>
+</span><span class=w>    </span>- <span class=l>SONARQUBE_JDBC_PASSWORD=[hidden]</span><span class=w>
+</span><span class=w>  </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>/srv/sonarqube/extensions:/opt/sonarqube/extensions</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>這樣一來就能跑起來了，至於像是 Nginx 的反向代理我就不另外敘述摟～～</p><h3 id=gitlab-ci-入門>GitLab CI 入門</h3><p>安裝部分就參考官方的<a href=https://gitlab.com/gitlab-org/gitlab-ci-multi-runner>文件</a>來安裝，基本上不難。
 之後就是把它 Register 到 GitLab 上面，有趣的是他可以登記到多個 GitLab 而不限一個，我自己是開一個 Container 去跑，然後給權限讓他能在 Host 上面開新的 Container (Runner) 這樣。</p><p>那麼，先來講幾個關鍵的點吧 XD</p><h4 id=nat-問題>NAT 問題</h4><p>因為路由器設定的問題，所以在 Runner 去 Clone 專案的時候會有些障礙。</p><p>假設我的 GitLab Host 是 <code>gitlab.xxx.com.tw</code> 那麼網路設定大概是這樣。</p><p>LAN &mdash;-> NAT &mdash;&ndash;> WAN</p><p>不過 LAN 裡面又有不同的機器，而老爸公司用的是固定 IP （五組）所以我就透過 IP 去分要導去哪台。</p><p>59.x.x.49 &mdash;> NAS
 59.x.x.50 &mdash;> Server</p><p>這是透過 Public IP 設定的，但是在 Server 裡面會變成</p><p>LAN IP &mdash;-> NAT &mdash;&ndash;> Server</p><p>結果 NAT 就不覺得 Server 裡面是走 59.x.x.50 進來的（崩潰）</p><p>所以只好對 GitLab Runner 動手腳 XD</p><blockquote><p>GitLab CI 的 Runner 有一個全域的設定檔，我們給他改造一下</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -223,27 +223,27 @@
 </span><span class=lnt>20
 </span><span class=lnt>21
 </span><span class=lnt>22
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>before_script</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- export<span class=w> </span>GRADLE_USER_HOME=`pwd`/.gradle<span class=w>
-</span><span class=w>  </span>- mkdir<span class=w> </span>-p<span class=w> </span>$GRADLE_USER_HOME<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.daemon=true&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.parallel=true&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.configureondemand=true&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>before_script</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>export GRADLE_USER_HOME=`pwd`/.gradle</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mkdir -p $GRADLE_USER_HOME</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.daemon=true&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.parallel=true&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.configureondemand=true&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
 </span><span class=w>
-</span><span class=w></span><span class=k>cache</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>paths</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- .gradle/caches<span class=w>
-</span><span class=w>    </span>- .gradle/wrapper<span class=w>
+</span><span class=w></span><span class=nt>cache</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>paths</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>.gradle/caches</span><span class=w>
+</span><span class=w>    </span>- <span class=l>.gradle/wrapper</span><span class=w>
 </span><span class=w>
-</span><span class=w></span><span class=k>junit</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>elct9620/gitlab-android-junit<span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- ./gradlew<span class=w> </span>test<span class=w>
+</span><span class=w></span><span class=nt>junit</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>elct9620/gitlab-android-junit</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>./gradlew test</span><span class=w>
 </span><span class=w>
-</span><span class=w></span><span class=k>sonar</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>elct9620/gitlab-sonar-scanner<span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
+</span><span class=w></span><span class=nt>sonar</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>elct9620/gitlab-sonar-scanner</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span>- <span class=s2>&#34;/bin/true&#34;</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>先看一下我目前用的 GitLab CI 設定檔。</p><p>基本上分為兩種</p><ul><li>Job</li><li>Config</li></ul><p>如果是關鍵字，就會被分類成 Config 像是 <code>cache</code> <code>before_script</code> 這種，如果寫在 Job 外面就是 Global 的，寫在裡面就只對某個 Job 生效。</p><blockquote><p>因為這是 Java 專案，所以我讓所有的 Task 都支援 Gradle 的設定（SonarQube 怎麼上 Cache 還沒找到⋯⋯）</p></blockquote><p>至於該怎麼寫，大致上就是這樣的格式：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -251,10 +251,10 @@
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=w>
-</span><span class=w></span><span class=k>job</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>config</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- xxx<span class=w>
-</span><span class=w>    </span>- xxx<span class=w>
+</span><span class=w></span><span class=nt>job</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>config</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>xxx</span><span class=w>
+</span><span class=w>    </span>- <span class=l>xxx</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>例如我要用 ruby-2.3 然後跑 rspec 並且快取 <code>cache</code> 目錄</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -262,13 +262,13 @@
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>rspec</span><span class=p>:</span><span class=w> </span><span class=c># 新增 RSpec 任務</span><span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>ruby<span class=p>:</span><span class=m>2.3</span><span class=w> </span><span class=c># 設定 Docker Image 沒有則用預設值</span><span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- bundle<span class=w> </span>exec<span class=w> </span>rspec<span class=w> </span><span class=c># 執行指令</span><span class=w>
-</span><span class=w>  </span><span class=k>cache</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span><span class=k>paths</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- cache<span class=w> </span><span class=c># 快取目錄</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>rspec</span><span class=p>:</span><span class=w> </span><span class=c># 新增 RSpec 任務</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>ruby:2.3 # 設定 Docker Image 沒有則用預設值</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>bundle exec rspec # 執行指令</span><span class=w>
+</span><span class=w>  </span><span class=nt>cache</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>paths</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>cache # 快取目錄</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>這邊基本上不難，但是要注意幾點</p><ul><li>Working Directory 是在 GitLab 設定的目錄</li><li>Script 跟 Entrypoint 不相容，他是真實一段 Shell Script 注入你的 Script</li><li>Cache 只在 Working Directory 中可以運作</li></ul><blockquote><p>關於 Cache 官方的 Issue 上面有人說如果是 <code>/root</code> 的形式，可以運作。但是 <code>/root/gradle</code> 就不行。</p></blockquote><hr><p>其他部分看文件就好了，最基本的使用其實就這樣 XD
 然後放到專案的根目錄下就會自動被 GitLab 偵測然後自動運行。</p><blockquote><p>關於 Pipline 等等就等之後有機會再跟大家分享拉 XD</p></blockquote><h3 id=sonarqube>SonarQube</h3><p>前面已經裝好了，其實不需要再多做設定。
 這邊簡單分享一下自製 Docker Image 的心得這樣。</p><p>因為只是單純的需要 Docker 環境，所以只要使用官方的 <code>java:8-jre-alpine</code> 版本就可以了！</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -368,9 +368,9 @@
 </code></pre></td></tr></table></div></div><p>因為會需要給版本，但是照我的習慣會忘記是哪個版本，不如就自動用 Tag / Branch Name 來當版本 XD</p><blockquote><p>但是似乎會被蓋掉拉，所以有實用性有待商榷（但是這是必填項目）</p></blockquote><p>剩下的 <code>OPTS</code> 則是跟 GitLab 整合的部分，目前還沒有成功。</p><blockquote><p>正常運作的話會自動到 GitLab 當次 Commit 留言說有 Bad Semll 之類的 XD</p></blockquote><p>最後是 Token 了，因為不可能直接把 Token 寫在 <code>.gitlab-ci.yml</code> 當環境變數放進去，所以我是在 GitLab 的專案設定中寫進去。</p><p>也許你會想說這樣做：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>sonar</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- -Dsonar.logn=${SONAR_TOKEN}<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>sonar</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- -<span class=l>Dsonar.logn=${SONAR_TOKEN}</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>但是前面有提到，因為是 GitLab 自己的 Shell Script 所以不太可能這樣做。
 所以就只好給個 Shell Script 來自己處理這個問題摟～ XD</p><blockquote><p>寫這篇文章時想到我好像可以設定 $PATH 然後直接跑 <code>sonar-scanner -Dsonar.login</code> 就好了！？</p></blockquote><p>最後，在專案目錄設定一下 Sonar 的設定檔，扣掉 Token 不適合放到 VCS 之外，其他都可以安心寫在裡面。</p><pre><code class=language-properties data-lang=properties>sonar.host.url=https://sonarqube.xxx.com.tw
 # must be unique in a given SonarQube instance
@@ -473,23 +473,23 @@ sonar.sources=app/src
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>before_script</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- export<span class=w> </span>GRADLE_USER_HOME=`pwd`/.gradle<span class=w>
-</span><span class=w>  </span>- mkdir<span class=w> </span>-p<span class=w> </span>$GRADLE_USER_HOME<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.daemon=true&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.parallel=true&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
-</span><span class=w>  </span>- echo<span class=w> </span><span class=s2>&#34;org.gradle.configureondemand=true&#34;</span><span class=w> </span>&gt;&gt;<span class=w> </span>$GRADLE_USER_HOME/gradle.properties<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>before_script</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>export GRADLE_USER_HOME=`pwd`/.gradle</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mkdir -p $GRADLE_USER_HOME</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.daemon=true&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.parallel=true&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo &#34;org.gradle.configureondemand=true&#34; &gt;&gt; $GRADLE_USER_HOME/gradle.properties</span><span class=w>
 </span><span class=w>
-</span><span class=w></span><span class=k>cache</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>paths</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- .gradle/caches<span class=w>
-</span><span class=w>    </span>- .gradle/wrapper<span class=w>
+</span><span class=w></span><span class=nt>cache</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>paths</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>.gradle/caches</span><span class=w>
+</span><span class=w>    </span>- <span class=l>.gradle/wrapper</span><span class=w>
 </span><span class=w>
-</span><span class=w></span><span class=k>junit</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=k>image</span><span class=p>:</span><span class=w> </span>elct9620/gitlab-android-junit<span class=w>
-</span><span class=w>  </span><span class=k>script</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- ./gradlew<span class=w> </span>test<span class=w>
+</span><span class=w></span><span class=nt>junit</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>elct9620/gitlab-android-junit</span><span class=w>
+</span><span class=w>  </span><span class=nt>script</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>./gradlew test</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>這邊比較特別的是我將 Gradle 的目錄改到目前 GitLab 運行的目錄。
 前面有提到因為 Cache 只對當前目錄（專案目錄）有效果，所以必須這樣設定才能正確的快取到。</p><p>不過原本做的設定也會一併消失，所以要在寫入一次設定。</p><blockquote><p>Image 會叫 <code>gitlab-android-junit</code> 是因為我沒想到 Gradle 會裝好 JUnit 的關係，之後應該是會改名拉 XD</p></blockquote><hr><p>開始寫文章的時候離準備收假只剩下一個多小時，可能不是很詳細，請大家見諒。</p><footer class=article__footer><div class=text-center><div class=fb-share-button data-href="<%- page.permalink %>" data-layout=button_count></div></div><div class="text-center mt-1"><style>.bmc-button img{width:27px!important;margin-bottom:1px!important;box-shadow:none!important;border:none!important;vertical-align:middle!important}.bmc-button{line-height:36px!important;height:37px!important;text-decoration:none!important;display:inline-flex!important;color:#fff!important;background-color:#000!important;border-radius:3px!important;border:1px solid transparent!important;padding:1px 9px!important;font-size:22px!important;letter-spacing:.6px!important;box-shadow:0 1px 2px rgba(190,190,190,.5)!important;-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;margin:0 auto!important;font-family:cookie,cursive!important;-webkit-box-sizing:border-box!important;box-sizing:border-box!important;-o-transition:.3s all linear!important;-webkit-transition:.3s all linear!important;-moz-transition:.3s all linear!important;-ms-transition:.3s all linear!important;transition:.3s all linear!important}.bmc-button:hover,.bmc-button:active,.bmc-button:focus{-webkit-box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;text-decoration:none!important;box-shadow:0 1px 2px 2px rgba(190,190,190,.5)!important;opacity:.85!important;color:#fff!important}</style><link href="https://fonts.googleapis.com/css?family=Cookie&display=swap" rel=stylesheet><a class=bmc-button target=_blank href=https://www.buymeacoffee.com/aotoki><img src=https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/BMC-btn-logo.svg rel=noreferrer alt="Buy me a Coffee"><span style=margin-left:5px>Buy me a Coffee</span></a></div><iframe title=LikeCoin scrolling=no frameborder=0 style="display:block;margin:0 auto;height:212px" src="https://button.like.co/in/embed/elct9620/button?referrer=<%- page.permalink %>"></iframe><ul class=article__tag-list><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/GitLab/>GitLab</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/%E5%BF%83%E5%BE%97/>心得</a></li><li class=article__tag-list-item><a class=article__tag-list-link href=https://blog.frost.tw/tags/Android/>Android</a></li></ul></footer><aside class=related><header class=related__header><h3 class=related__title>相關文章</h3></header><ul><li class=related__item><a class=related__link href=/posts/2013/11/03/vagrant-integrated-gitlab-with-capistrano-create-staging-environment-automatically-deployed/>用 Vagrant 整合 GitLab 與 Capistrano 做 Staging 環境自動部署</a></li><li class=related__item><a class=related__link href=/posts/2016/04/12/the-book-i-read-from-my-military-service/>從入伍後讀的一些書</a></li><li class=related__item><a class=related__link href=/posts/2016/01/31/how-deis-architecture-design-part-1/>Deis 架構分析（一）</a></li><li class=related__item><a class=related__link href=/posts/2016/01/30/the-plan-after-tpgs-2016/>在 TpGS 2016 展出後的計劃</a></li><li class=related__item><a class=related__link href=/posts/2014/05/18/2014-yodex-experience/>2014 新一代設計展心得</a></li></ul></aside></div></article><div class=subscribe><div id=mc_embed_signup><form action="https://frost.us4.list-manage.com/subscribe/post?u=dd3d68032c0510041f1302539&id=d2a668a8aa" method=post id=mc-embedded-subscribe-form name=mc-embedded-subscribe-form class=validate target=_blank novalidate><div id=mc_embed_signup_scroll><h1 class=subscribe__title>電子報</h2><div class=mc-field-group><input type=email name=EMAIL class="required email subscribe__input" id=mce-EMAIL placeholder=Email></div><div id=mce-responses class=clear><div class=response id=mce-error-response style=display:none></div><div class=response id=mce-success-response style=display:none></div></div><div style=position:absolute;left:-5000px aria-hidden=true><input type=text name=b_dd3d68032c0510041f1302539_d2a668a8aa tabindex=-1></div><div class=clear><input type=submit value=訂閱 name=subscribe id=mc-embedded-subscribe class="button subscribe__button"></div></div></form></div></div><div class=adv><script async src=//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script><ins class=adsbygoogle style=display:block data-ad-client=ca-pub-2844969736316510 data-ad-slot=5530952976 data-ad-format=auto></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div><section id=comment class=comment-box><h1 class=comment-box__title>留言</h1><div id=disqus_thread></div></div></section></div><footer id=footer><div id=copyright>&copy;2020 <a href="https://plus.google.com/117236344655673213049?rel=author" target=_blank rel=noreferrer>蒼時弦也</a>. All right reversed.</div></footer><link rel=stylesheet href=/css/styles.css><script src=/js/app.min.6e03bcf752b31ab875459fbdd360c766632ead24687ffe499c4cf1f86e9fe489.js></script><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5TQLRN" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5TQLRN');</script><script>window.fbAsyncInit=function(){FB.init({appId:'178355449110',xfbml:true,version:'v2.12'});FB.AppEvents.logPageView();};(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
 js=d.createElement(s);js.id=id;js.src="https://connect.facebook.net/zh_TW/sdk.js";js.async=true

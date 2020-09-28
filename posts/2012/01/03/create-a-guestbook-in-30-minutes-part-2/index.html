@@ -13,7 +13,7 @@
 </span><span class=lnt>13
 </span><span class=lnt>14
 </span><span class=lnt>15
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=sd>/**
 </span><span class=sd> * Comment Model
 </span><span class=sd> * 
@@ -32,8 +32,8 @@
 在 Active Mongo 建立一個Model只要繼承 ActiveMongo 這個物件，接著將欄位設定上去即可。
 因為目前留言板只需要紀錄 暱稱（Nickname） 以及 留言內容（Content） 和 時間（Timestamp） 即可，而且還不需要其他多餘的功能，因此保持這個狀態就完成 Model 了！</p><h3 id=讀取留言簡易>讀取留言（簡易）</h3><hr><p>我們回到 index.PHP 檔案，在連接資料庫的語法下方（上一篇文章提到的 ActiveMongo::connect() 區段下方），加入讀取 Model 的程式。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>//載入 Model
-require_once(ABSPATH . &#39;models/Comment.PHP&#39;);
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=c1>//載入 Model
+</span><span class=c1></span><span class=k>require_once</span><span class=p>(</span><span class=nx>ABSPATH</span> <span class=o>.</span> <span class=s1>&#39;models/Comment.PHP&#39;</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>位置會在第一個 $app->get(); 之前，因為我們必須先把 Model 引入，不然是無法使用這個 Model 的。</p><p>接著，我們編輯上一篇文章 $app->get(); 的部份，大致上改成這樣。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -46,18 +46,18 @@ require_once(ABSPATH . &#39;models/Comment.PHP&#39;);
 </span><span class=lnt>10
 </span><span class=lnt>11
 </span><span class=lnt>12
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>$app-&gt;get(&#39;/&#39;, function() use ($app){
-	$comments = new Comment(); //產生模型實例
-	$totalComments = $comments-&gt;count(); //取得留言總數
-	$comments-&gt;reset(); //清除指標，避免影響結果
-
-	$app-&gt;render(&#39;home.PHP&#39;, 
-		array(
-			&#39;comments&#39; =&gt; $comments,
-			&#39;totalComments&#39; =&gt; $totalComments,
-		)
-	);
-});
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nv>$app</span><span class=o>-&gt;</span><span class=na>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$app</span><span class=p>){</span>
+	<span class=nv>$comments</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Comment</span><span class=p>();</span> <span class=c1>//產生模型實例
+</span><span class=c1></span>	<span class=nv>$totalComments</span> <span class=o>=</span> <span class=nv>$comments</span><span class=o>-&gt;</span><span class=na>count</span><span class=p>();</span> <span class=c1>//取得留言總數
+</span><span class=c1></span>	<span class=nv>$comments</span><span class=o>-&gt;</span><span class=na>reset</span><span class=p>();</span> <span class=c1>//清除指標，避免影響結果
+</span><span class=c1></span>
+	<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>render</span><span class=p>(</span><span class=s1>&#39;home.PHP&#39;</span><span class=p>,</span> 
+		<span class=k>array</span><span class=p>(</span>
+			<span class=s1>&#39;comments&#39;</span> <span class=o>=&gt;</span> <span class=nv>$comments</span><span class=p>,</span>
+			<span class=s1>&#39;totalComments&#39;</span> <span class=o>=&gt;</span> <span class=nv>$totalComments</span><span class=p>,</span>
+		<span class=p>)</span>
+	<span class=p>);</span>
+<span class=p>});</span>
 </code></pre></td></tr></table></div></div><p>剛剛，我們新增了一個 Comment 物件，因為 Active Mongo 會自動幫我們處理好一開始的查詢，所以我們只要直接讀取 $comments 就可以得知所有的留言了！
 為了要讓我們的佈景檔（home.PHP）得知 $comments 這筆資料，我們使用 Slim Framework 的 render 方法的第二個參數，將 $comments 以 comments 這個識別名稱傳給 home.PHP 讓他可以使用。</p><p>現在，編輯 views/home.PHP 加入迴圈（Loop）將留言顯示出來（當然，目前還沒有任何留言，不會顯示任何東西）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -165,7 +165,7 @@ require_once(ABSPATH . &#39;models/Comment.PHP&#39;);
 	<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
 <span class=p>&lt;/</span><span class=nt>body</span><span class=p>&gt;</span>
 <span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
-</code></pre></td></tr></table></div></div><p>因為有了初步的畫面顯示，所以就直接將 Bootstrap 的 CSS 用 Link 的方式直接導入（官方網站上的快速引用）這樣一來，原本單調的畫面也稍微變得豐富一點，目前可以看到畫面上顯示著之前設定的 Guest Book 標題以及 [Notice] System has 0 comments. 的字樣。</p><h3 id=新增留言>新增留言</h3><hr><p>既然輸出留言完成了，但是無法留言還是沒有辦法讓留言板發揮作用，所以打開 index.PHP 檔案，繼續編輯。</p><p>我們將位置移動到 $app->get('/&rsquo;, function() use ($app){}); 區塊的下方，加入新的區塊。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table></div></div><p>因為有了初步的畫面顯示，所以就直接將 Bootstrap 的 CSS 用 Link 的方式直接導入（官方網站上的快速引用）這樣一來，原本單調的畫面也稍微變得豐富一點，目前可以看到畫面上顯示著之前設定的 Guest Book 標題以及 [Notice] System has 0 comments. 的字樣。</p><h3 id=新增留言>新增留言</h3><hr><p>既然輸出留言完成了，但是無法留言還是沒有辦法讓留言板發揮作用，所以打開 index.PHP 檔案，繼續編輯。</p><p>我們將位置移動到 $app->get('/', function() use ($app){}); 區塊的下方，加入新的區塊。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -178,33 +178,33 @@ require_once(ABSPATH . &#39;models/Comment.PHP&#39;);
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>
-$app-&gt;post(&#39;/new&#39;, function() use ($app){
-	//Save Comment
-	$comment = new Comment;
-	$comment-&gt;nickname = $app-&gt;request()-&gt;post(&#39;nickname&#39;);
-	$comment-&gt;content = $app-&gt;request()-&gt;post(&#39;content&#39;);
-	$comment-&gt;timestamp = time();
-	$comment-&gt;save();
+<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>post</span><span class=p>(</span><span class=s1>&#39;/new&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$app</span><span class=p>){</span>
+	<span class=c1>//Save Comment
+</span><span class=c1></span>	<span class=nv>$comment</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Comment</span><span class=p>;</span>
+	<span class=nv>$comment</span><span class=o>-&gt;</span><span class=na>nickname</span> <span class=o>=</span> <span class=nv>$app</span><span class=o>-&gt;</span><span class=na>request</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>post</span><span class=p>(</span><span class=s1>&#39;nickname&#39;</span><span class=p>);</span>
+	<span class=nv>$comment</span><span class=o>-&gt;</span><span class=na>content</span> <span class=o>=</span> <span class=nv>$app</span><span class=o>-&gt;</span><span class=na>request</span><span class=p>()</span><span class=o>-&gt;</span><span class=na>post</span><span class=p>(</span><span class=s1>&#39;content&#39;</span><span class=p>);</span>
+	<span class=nv>$comment</span><span class=o>-&gt;</span><span class=na>timestamp</span> <span class=o>=</span> <span class=nx>time</span><span class=p>();</span>
+	<span class=nv>$comment</span><span class=o>-&gt;</span><span class=na>save</span><span class=p>();</span>
 	
-	$app-&gt;redirect($app-&gt;urlFor(&#39;home&#39;));
-});
+	<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>redirect</span><span class=p>(</span><span class=nv>$app</span><span class=o>-&gt;</span><span class=na>urlFor</span><span class=p>(</span><span class=s1>&#39;home&#39;</span><span class=p>));</span>
+<span class=p>});</span>
 
 </code></pre></td></tr></table></div></div><p>咦，怎麼跟之前讀取的有點像，但是這次？
 沒錯，起始的動作還是一樣建立一個 Model 接著，我們設定 $comment->nickname 為 $app->requrest()->post(&lsquo;nickname&rsquo;); 來讀取暱稱。
 不過，大家一定有疑問，是怎麼讀取呢？ $app->requrest(); 會負責處理有關 HTTP 請求得部份，而留言都會以 POST 方式傳輸資料，所以就要以 $app->requrest()->post(&lsquo;資料名稱&rsquo;); 來接收。
 那麼為什麼 timestamp 不用接收呢？那是因為時間總不能由使用者自己決定，所以由我們產生（time() 會給出一組秒數，是從 1970 年 1 月 1 日到今天的秒數。）</p><p>不過還是會有人對於 $app->post() 和 $app->get() 的差異有所疑惑吧！對，這個差異就在於 $app->post() 只接受 POST 傳輸資料，所以直接打開 https://網址/new 是會出現找不到頁面的喔！（這也是 Slim Framework的特性，在之後的文章會簡單介紹。）</p><p>好，現在已經完成儲存留言的機制了！但是打開網頁卻出現了錯誤？</p><p>其實是 $app->redirect() （轉跳網頁）裡面的數值 $app->urlFor() 有問題！
-使用 urlFor 這個方法前，得先將目標命名才行，所以我們回到 $app->get('/&rsquo;, function() use ($app) {}) 區段 稍微修改結尾部份。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+使用 urlFor 這個方法前，得先將目標命名才行，所以我們回到 $app->get('/', function() use ($app) {}) 區段 稍微修改結尾部份。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>$app-&gt;get(&#39;/&#39;, function() use ($app){
-	//略
-})-&gt;name(&#39;home&#39;);
-</code></pre></td></tr></table></div></div><p>這樣一來，就可以正常使用摟！而使用 urlFor 的理由就是確保網址格式不會發生問題（像是把留言板放在 https://網址/gb/ 下，如果網址設定為 / 那就會跑去 https://網址/ 而非 https://網址/gb 摟！）</p><p>那麼，我們也該幫 $app->post('/new&rsquo;, function() use ($app){}); 設定一下，以備不實之需。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nv>$app</span><span class=o>-&gt;</span><span class=na>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$app</span><span class=p>){</span>
+	<span class=c1>//略
+</span><span class=c1></span><span class=p>})</span><span class=o>-&gt;</span><span class=na>name</span><span class=p>(</span><span class=s1>&#39;home&#39;</span><span class=p>);</span>
+</code></pre></td></tr></table></div></div><p>這樣一來，就可以正常使用摟！而使用 urlFor 的理由就是確保網址格式不會發生問題（像是把留言板放在 https://網址/gb/ 下，如果網址設定為 / 那就會跑去 https://網址/ 而非 https://網址/gb 摟！）</p><p>那麼，我們也該幫 $app->post('/new', function() use ($app){}); 設定一下，以備不實之需。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>$app-&gt;post(&#39;/new&#39;, function() use ($app){
-	//略
-})-&gt;name(&#39;new&#39;);
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nv>$app</span><span class=o>-&gt;</span><span class=na>post</span><span class=p>(</span><span class=s1>&#39;/new&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$app</span><span class=p>){</span>
+	<span class=c1>//略
+</span><span class=c1></span><span class=p>})</span><span class=o>-&gt;</span><span class=na>name</span><span class=p>(</span><span class=s1>&#39;new&#39;</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>那麼，最後就是加入表單了！</p><p>打開之前的 home.PHP 加入表單部份</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -266,17 +266,17 @@ $app-&gt;post(&#39;/new&#39;, function() use ($app){
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP>$app-&gt;get(&#39;/&#39;, function() use ($app){
-	//略	
-	$app-&gt;render(&#39;home.PHP&#39;,
-		$app-&gt;render(&#39;home.PHP&#39;, 
-		array(
-			&#39;comments&#39; =&gt; $comments,
-			&#39;totalComments&#39; =&gt; $totalComments,
-			&#39;app&#39; =&gt; $app,
-		)
-	);
-})-&gt;name(&#39;home&#39;);
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nv>$app</span><span class=o>-&gt;</span><span class=na>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=k>function</span><span class=p>()</span> <span class=k>use</span> <span class=p>(</span><span class=nv>$app</span><span class=p>){</span>
+	<span class=c1>//略	
+</span><span class=c1></span>	<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>render</span><span class=p>(</span><span class=s1>&#39;home.PHP&#39;</span><span class=p>,</span>
+		<span class=nv>$app</span><span class=o>-&gt;</span><span class=na>render</span><span class=p>(</span><span class=s1>&#39;home.PHP&#39;</span><span class=p>,</span> 
+		<span class=k>array</span><span class=p>(</span>
+			<span class=s1>&#39;comments&#39;</span> <span class=o>=&gt;</span> <span class=nv>$comments</span><span class=p>,</span>
+			<span class=s1>&#39;totalComments&#39;</span> <span class=o>=&gt;</span> <span class=nv>$totalComments</span><span class=p>,</span>
+			<span class=s1>&#39;app&#39;</span> <span class=o>=&gt;</span> <span class=nv>$app</span><span class=p>,</span>
+		<span class=p>)</span>
+	<span class=p>);</span>
+<span class=p>})</span><span class=o>-&gt;</span><span class=na>name</span><span class=p>(</span><span class=s1>&#39;home&#39;</span><span class=p>);</span>
 </code></pre></td></tr></table></div></div><p>呼！這次終於成功運行了！</p><h3 id=小結>小結</h3><hr><p>好，這次教學就到這邊告一段落！（其實是寫到累了，想偷懶）
 如果善用工具如 Aptana, Dreamweaver 會更快的完成喔！</p><p>如果對於範例的完整原始碼有興趣，可以到 Github 上面看看。
 (V1.0版有加上分頁功能和簡易的檢查機制，而V1.0.1版則是修正了程式碼的Bug各位所看到的都是V1.0.1的程式碼)</p><ul><li>Source Code : <a href=https://github.com/elct9620/30minGuestBook>https://Github.com/elct9620/30minGuestBook</a></li><li>Demo : <a href=https://the-30min-gb.herokuapp.com/>https://the-30min-gb.Herokuapp.com/</a> - 之後教學更新範例網站也會更新，可能不會和目前的一樣。</li></ul><p>分頁完成後大致上會長這樣：

@@ -115,7 +115,7 @@ cd zephir</p></blockquote><p>因為 Mac 中沒有 /opt/local/lib 這個目錄，
 </span><span class=lnt>103
 </span><span class=lnt>104
 </span><span class=lnt>105
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 
 <span class=k>namespace</span> <span class=nx>MyRouter</span><span class=p>;</span>
 
@@ -197,7 +197,7 @@ cd zephir</p></blockquote><p>因為 Mac 中沒有 /opt/local/lib 這個目錄，
         <span class=k>echo</span> <span class=s2>&#34;404 Not Found&#34;</span><span class=p>;</span>
       <span class=p>}</span>
     <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
-      <span class=k>echo</span> <span class=s2>&#34;Error </span><span class=si>{</span>$code<span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
+      <span class=k>echo</span> <span class=s2>&#34;Error </span><span class=si>{</span><span class=nv>$code</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>;</span>
     <span class=p>}</span>
   <span class=p>}</span>
 
@@ -228,7 +228,7 @@ cd zephir</p></blockquote><p>因為 Mac 中沒有 /opt/local/lib 這個目錄，
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 
 <span class=k>require</span><span class=p>(</span><span class=s2>&#34;Router.PHP&#34;</span><span class=p>);</span>
 <span class=c1>// require some class for dispath
@@ -382,7 +382,7 @@ PHPbrew ext enable myrouter
 sudo apachectl graceful</p></blockquote><p>PHPBrew 提供很方便的 command 來啓用 extension 基本上就是到 PHP.ini 加上 <code>extension=myrouter.so</code> 就能使用了！</p><p>最後，我們重新修改 <code>index.PHP</code> 來改用 Extension</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 <span class=nv>$router</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>MyRouter\Router</span><span class=p>();</span>
 <span class=nv>$router</span><span class=o>-&gt;</span><span class=na>dispatch</span><span class=p>();</span>
 </code></pre></td></tr></table></div></div><p>重新打開後，如果正常運作就是成功了！</p><p>註：上文都沒有產生任何 Router 可以讀取到的 Class 大家可以自己嘗試加入，以下為範例程式碼</p><p>https://localhost/app/home</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -400,7 +400,7 @@ sudo apachectl graceful</p></blockquote><p>PHPBrew 提供很方便的 command �
 </span><span class=lnt>13
 </span><span class=lnt>14
 </span><span class=lnt>15
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=cp>&lt;?PHP</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=o>&lt;?</span><span class=nx>PHP</span>
 
 <span class=k>class</span> <span class=nc>App</span> <span class=p>{</span>
 	<span class=k>public</span> <span class=k>function</span> <span class=nf>index</span><span class=p>()</span> <span class=p>{</span>

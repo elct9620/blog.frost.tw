@@ -23,32 +23,32 @@ When our customers grow it is hard to use the fork feature to maintenance our cu
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-ruby<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
-</span><span class=w></span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-nginx<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-ruby</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span><span class=w></span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-nginx</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>Before we run the playbook, we can use <code>ansible-galaxy install -r roles/requirements.yml</code> to automatically install these roles. And it also works well with <a href=https://github.com/ansible/awx>Ansible AWX</a> (a.k.a Ansible Tower)</p><p>That sounds good, but when I start work on it I got some problems.</p><h2 id=nginx-modules>Nginx Modules</h2><p>For <a href=https://rubyonrails.org/>Rails</a> project, we have more than one choice of the webserver.</p><p>If we use <a href=https://puma.io/>Puma</a> we only require to configure Nginx as a reverse proxy.</p><p>But if we decide to use <a href=https://www.phusionpassenger.com/>Passenger</a> we have to compile it as an Nginx module.</p><p>It means if I want to support Puma and Passenger together, my Nginx role should include the Passenger tasks.</p><p>My first version is to use the <a href=https://docs.ansible.com/ansible/latest/modules/include_tasks_module.html><code>include_tasks</code></a> to add an extra module config when enabled Passenger.</p><p>But if we want to add more Nginx modules in the future? Our Nginx role will grow and becomes another huge playbook.</p><h2 id=manual-dependencies>Manual Dependencies</h2><p>After many tries, I find an acceptable implement to resolve the problem.</p><ol><li>Create a Fact <code>nginx_module_options</code> as empty array</li><li>Loop <code>nginx_extar_modules</code> to <code>import_role</code> to execute module related tasks</li><li>After the module&rsquo;s source code downloaded, append configure options to <code>nginx_module_options</code></li></ol><p>In our playbook, we can configure dependencies like below:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=w>
-</span><span class=w></span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-nginx<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
-</span><span class=w></span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-passenger<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span><span class=w></span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-nginx</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span><span class=w></span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-passenger</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>And add Nginx module options to <code>group_vars/all.yml</code> as a default config to apply to all web hosts.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>nginx_extra_modules</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s1>&#39;passenger&#39;</span><span class=p>]</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>nginx_extra_modules</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s1>&#39;passenger&#39;</span><span class=p>]</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>After resolving the Nginx module problem, another problem is coming.</p><h2 id=the-role-dependencies>The Role Dependencies</h2><p>When I prepare the Nginx, Ruby, Node.js, and others required for deploy Rails. I configure the Rails role&rsquo;s dependencies.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>dependencies</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-nginx<span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-ruby<span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-node<span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-passenger<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>dependencies</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-nginx</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-ruby</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-node</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-passenger</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>When I use my playbook to run <code>rails</code> role, it starts the task from the <code>nginx</code> role.</p><p>It seems no problem for us, but we have to configure the <code>nginx.conf</code> and set the <code>root</code> to our application&rsquo;s public directory.</p><p>If the <code>nginx</code> role is run before the <code>rails</code> role, we will get the Nginx start failed error.</p><blockquote><p>The first version Nginx will create the root directory with customized owner and group, but it has some problems in this case. The deploy user is created by the <code>rails</code> role and it will unable to find the owner user which is not created yet.</p></blockquote><p>But after clarifying the problem, it is a human design mistake.</p><p>&ldquo;The Nginx is the dependencies of Rails?&rdquo;</p><p>If we use the Puma, we can replace Nginx to any reverse proxy server. So we didn&rsquo;t dependent on the Nginx.</p><h2 id=final-produce>Final Produce</h2><p>After about two days of hard work, I have a new playbook almost zero-config to deploy a server for Rails.</p><pre><code>├── install.yml
 ├── group_vars
 │  └── all.yml

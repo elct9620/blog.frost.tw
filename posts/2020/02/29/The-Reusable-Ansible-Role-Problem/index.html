@@ -24,32 +24,32 @@
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-ruby<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
-</span><span class=w></span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-nginx<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-ruby</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span><span class=w></span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-nginx</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>在我們執行 Playbook 之前，我們可以利用 <code>ansible-galaxy install -r roles/requirements.yml</code> 來自動安裝對應的 Role，而且這能夠在 <a href=https://github.com/ansible/awx>Ansible AWX</a>（或者 Ansible Tower）上面正常運作。</p><p>看起來挺不錯的，不過實際上我遇到了一些問題。</p><h2 id=nginx-modules>Nginx 模組</h2><p>以 <a href=https://rubyonrails.org/>Rails</a> 專案來說，我們有很多種網頁伺服器的選擇。</p><p>如果我們選擇使用 <a href=https://puma.io/>Puma</a> 的話，其實只需要將 Nginx 安裝並且設定為反向代理伺服器（Reverse Proxy）即可。</p><p>但是我們決定使用 <a href=https://www.phusionpassenger.com/>Passenger</a> 就必須將它編譯成一個 Nginx 模組。</p><p>這表示假設我們希望能夠同時支援 Puma 和 Passenger 的話，新製作的 Nginx Role 需要包含關於 Passenger 的任務。</p><p>我的第一個版本是利用 <a href=https://docs.ansible.com/ansible/latest/modules/include_tasks_module.html><code>include_tasks</code></a> 在 Passenger 被啟用的時候去增加額外的模組到 Nginx 上。</p><p>但是假設我們未來要增加更多的 Nginx 模組，我們的 Nginx Role 會越變越大最後就跟現在的 Playbook 狀況一樣。</p><h2 id=manual-dependencies>手動管理相依</h2><p>在經過幾次嘗試之後，我找到一個還可以接受的方法來處理這個問題。</p><ol><li>產生一個內容為空陣列的 Fact 變數 <code>nginx_module_options</code></li><li>遍歷 <code>nginx_extar_modules</code> 陣列然後 <code>import_role</code> 去執行相關的 Role</li><li>再額外模組的原始碼下載後，將額外的編譯參數插入到 <code>nginx_module_options</code> 這個 Fact 變數中</li></ol><p>因此，在我們的 Playbook 裡面我們會像這樣設定相依：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=w>
-</span><span class=w></span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-nginx<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
-</span><span class=w></span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-passenger<span class=w>
-</span><span class=w>  </span><span class=k>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span><span class=w></span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-nginx</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
+</span><span class=w></span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-passenger</span><span class=w>
+</span><span class=w>  </span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>0.1.0</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>並且覆蓋 Nginx 的變數，增加 Nginx 模組的設定作為預設值在 <code>group_vars/all.yml</code> 裡面套用到所有的 Web 節點上。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>nginx_extra_modules</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s1>&#39;passenger&#39;</span><span class=p>]</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>nginx_extra_modules</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s1>&#39;passenger&#39;</span><span class=p>]</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>不過另外一個問題又緊接著解決了 Nginx 模組的問題出現。</p><h2 id=the-role-dependencies>Role 的相依性</h2><p>當我準備好 Nginx, Ruby, Node.js 跟其他部署 Rails 必要的 Role 後，我開始設定 Rails Role 的相依設定。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=k>dependencies</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-nginx<span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-ruby<span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-node<span class=w>
-</span><span class=w>  </span>- <span class=k>src</span><span class=p>:</span><span class=w> </span>https<span class=p>:</span>//github.com/5xruby/ansible-passenger<span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=nt>dependencies</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-nginx</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-ruby</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-node</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>src</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/5xruby/ansible-passenger</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>此時我執行我的 Playbook 去運行 Rails Role 的話，會從 Nginx Role 開始執行。</p><p>這看起來沒什麼問題，不過我們會需要設定 <code>nginx.conf</code> 並且將 <code>root</code> 設定到 Rails 專案的 <code>public</code> 目錄。</p><p>如果 Nginx Role 在 Rails Role 之前執行，我們就會碰到 Nginx 啟動失敗的錯誤。</p><blockquote><p>我的第一個版本會透過 Nginx 來產生 <code>root</code> 的目錄，並且設定好所有者跟使用者群組，但是這是有問題的。如果 <code>deploy</code> 這個使用者是透過 Rails Role 來產生的話，就會發生因為還沒有產生好使用者而無法設定目錄擁有者的情況。</p></blockquote><p>不過在釐清問題之後，這算是一個人為的設計失誤。</p><p>「Nginx 真的是 Rails 的相依嗎？」</p><p>如果我們使用 Puma 的話，我們可以把 Nginx 替換成任何反向代理伺服器，實際上我們並不需要依賴於 Nginx。</p><h2 id=final-produce>最終成果</h2><p>經過大概兩天的時間，最後終於完成了一個幾乎不太需要設定就能夠部署 Rails 伺服器的設計。</p><pre><code>├── install.yml
 ├── group_vars
 │  └── all.yml
