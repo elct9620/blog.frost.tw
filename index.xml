@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 10 Jan 2021 03:24:59 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>針對遺留代碼加入單元測試的藝術課程心得</title><link>https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/</link><category>測試</category><category>RSpec</category><category>Ruby</category><category>心得</category><pubDate>Sun, 10 Jan 2021 03:24:59 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/</guid><description>&lt;p>大概在 2019 年底就有考慮要來報名，結果一直拖到 2020 才下定決心。寫測試這件事情雖然很早就知道，不過一直到出社會開始工作後才逐漸的接觸，而且最開始的時候其實寫了很多糟糕的測試，直到這幾年逐漸摸索才有一個比較有系統的測試撰寫方式。&lt;/p>
 &lt;p>但是透過自學比較大的問題就是知識很多時候是沒有系統的，大多是碎片的形式同時我自己也不太擅長將這些東西歸納整理，也就會出現一些盲點。也因此這次參加課程主要有兩個目的，一個是看看是否適合作為公司內部訓練的選項建議老闆，另一方面就是我自己學東西的習慣，反覆的練習基礎來達到熟練一個技能。&lt;/p></description><content:encoded>&lt;p>大概在 2019 年底就有考慮要來報名，結果一直拖到 2020 才下定決心。寫測試這件事情雖然很早就知道，不過一直到出社會開始工作後才逐漸的接觸，而且最開始的時候其實寫了很多糟糕的測試，直到這幾年逐漸摸索才有一個比較有系統的測試撰寫方式。&lt;/p>
 &lt;p>但是透過自學比較大的問題就是知識很多時候是沒有系統的，大多是碎片的形式同時我自己也不太擅長將這些東西歸納整理，也就會出現一些盲點。也因此這次參加課程主要有兩個目的，一個是看看是否適合作為公司內部訓練的選項建議老闆，另一方面就是我自己學東西的習慣，反覆的練習基礎來達到熟練一個技能。&lt;/p>
-&lt;h2 id="課程節奏內容">課程節奏、內容&lt;/h2>
+&lt;h2 id="content">課程節奏、內容&lt;/h2>
 &lt;p>大概開始一小時左右我就確定節奏很適合當作公司內部訓練的選項，&lt;a href="https://www.facebook.com/91agile">91 哥&lt;/a>作為專業講師一直都很讓我佩服，幾年前在 PHPConf 聽到的分享就讓我一直很有印象，直到現在也還在工作使用裡面的一些概念。&lt;/p>
 &lt;p>原本是想整理一份 Ruby 版本的課程心得來完善課程中 Ruby 範例的，不過既然決定寫一篇文章跟大家分享，後面就會以我自己的經驗跟學到的概念跟大家分享，想要知道課程內容的話就請大家趕快去報名吧！&lt;/p>
-&lt;h2 id="ruby-的測試">Ruby 的測試&lt;/h2>
+&lt;h2 id="test-in-ruby">Ruby 的測試&lt;/h2>
 &lt;p>在 Ruby 中最主流的會是使用 &lt;a href="https://rspec.info/">RSpec&lt;/a> 來進行測試，這是一套 BDD（Behaviour Driven Development）框架， &lt;a href="https://rubyonrails.org/">Ruby on Rails&lt;/a> 則是使用 &lt;a href="https://github.com/seattlerb/minitest">MiniTest&lt;/a> 來進行測試，除此之外也會使用 &lt;a href="https://cucumber.io/">Cucumber&lt;/a> 來撰寫測試。&lt;/p>
 &lt;blockquote>
 &lt;p>Ruby on Rails 專案預設會使用 MiniTest 但是大多數的人都會使用 RSpec 來寫測試，因此常常會看到新手把 &lt;code>test&lt;/code> 和 &lt;code>spec&lt;/code> 目錄放在專案中，這是兩種測試框架習慣使用的目錄不同的關係，正確的做法應該是在 &lt;code>rails new&lt;/code> 就指定使用 RSpec 作為測試框架。&lt;/p>
@@ -13,17 +13,17 @@
 &lt;blockquote>
 &lt;p>實際上寫測試最困難的地方是根據「正確的規格」去撰寫，我們更多的時候是經過一層又一層的傳話拿到一些「有問題的規格」也因此跟客戶確認清楚是很重要的環節。&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="更好的-rspec-測試">更好的 RSpec 測試&lt;/h2>
+&lt;h2 id="better-specs">更好的 RSpec 測試&lt;/h2>
 &lt;p>在這幾年應徵&lt;a href="https://5xruby.com">五倍紅寶石&lt;/a>的時候，我們會給出一份還算簡單的 Ruby on Rails 專案來確認面試者是否具備最基本的獨立開發功能的實力，裡面有一個環節就是使用 RSpec 撰寫 Feature Test（功能測試）這個環節會用來觀察面試者對撰寫測試的理解程度，另一方面也是因為 Feature Test 大多只要能達到針對某個畫面檢測就可以，相對於單元測試來說容易很多。&lt;/p>
 &lt;p>不過到目前為止都還沒有看到過寫的特別好的情況，也因此大部分面試者在加入五倍的第一個專案通常都會卡住一到兩週在 Code Review 上面，這個階段我會不斷的從測試和重構兩個階段讓新同事習慣一些技巧，像是在撰寫的時候就要同時思考該怎麼測試，而測試該怎麼寫才會更乾淨。&lt;/p>
 &lt;p>跟學程式語言最困難的地方在「了解語言特性」一樣，學習測試框架也需要知道框架的功能和性質，像是 RSpec 一直都有一份叫做 &lt;a href="https://www.betterspecs.org/">Better Specs&lt;/a> 的文件，裡面就提到了非常多 RSpec 撰寫時應該善用的技巧，不過這份文件最近翻新了一次，原本的中文翻譯也一起消失了。&lt;/p>
-&lt;h2 id="從-lint-學習-rspec-測試">從 Lint 學習 RSpec 測試&lt;/h2>
+&lt;h2 id="learn-rspec-from-lint">從 Lint 學習 RSpec 測試&lt;/h2>
 &lt;p>2020 年大概是 Ruby 社群有很多大變動的年份吧，除了 Ruby 3 終於推出開始跟上其他語言的效能上改進之外，經常被用來檢查 Coding Style（程式碼風格）的工具 &lt;a href="https://github.com/rubocop-hq/rubocop">Rubocop&lt;/a> 也迎來了大改版正式邁入 1.0 而在這個大版本前的幾個版本也開始將 RSpec、Rails、ThreadSafety 等等跟 Ruby 核心比較不相關的檢查獨立出來，如果你的專案想使用 RSpec 的話也請把 Rubocop RSpec 加入到 Rubocop 的檢查中，這樣至少能知道 Ruby 社群的偏好。&lt;/p>
 &lt;p>不過使用 Rubocop 其實也有蠻多爭議，像是 GitHub 和 Shopify 都有自己客製化的 Rubocop 風格設定，而且和預設的差異非常大，詳細的理由大多可以在他們說明 Coding Style 的部落格或者 Repoistory 上面找到。&lt;/p>
 &lt;blockquote>
 &lt;p>Rubocop RSpec 給了很多限制，像是 Example Group（&lt;code>describe&lt;/code> 和 &lt;code>context&lt;/code>）不能巢狀超過三層、每一個 Example Group 裡面至少要有一個 Example 等等&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="測試意圖">測試意圖&lt;/h2>
+&lt;h2 id="intent-of-test">測試意圖&lt;/h2>
 &lt;p>課程中我印象中比較深刻的幾個關鍵，這個是其中一個。雖然想示範糟糕的 RSpec 寫法，但是這邊更接近我目前使用的測試撰寫方式要如何改進會更好，因此下面是一段我原本會這樣寫的測試。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -154,7 +154,7 @@
 &lt;blockquote>
 &lt;p>不過在我自己的經驗中 Ruby 社群似乎不太常使用這樣的技巧，而想要使用像是 &lt;code>Given&lt;/code> 和 &lt;code>When&lt;/code> 的語法其實也有人做了 &lt;a href="https://github.com/jimweirich/rspec-given">RSpec Given&lt;/a> 套件，但在我的記憶中並沒有太多人使用，而這樣的應用方式反而是在寫 Cucumber 時因為語言性質會被應用。&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="優雅的-rspec-測試">優雅的 RSpec 測試&lt;/h2>
+&lt;h2 id="graceful-rspec-tests">優雅的 RSpec 測試&lt;/h2>
 &lt;p>在這次的課程中因為提到了不少之前寫測試沒有特別注意的細節，也因此我在空檔花了一些時間去看 RSpec 文件提供了哪些機制來輔助，以我個人偏好來說我會優先採取 One-liner Syntax（單行測試）的方式，除了寫的程式碼相對少之外，使用恰當在 RSpec 預設的「輸出選項」也能適當的呈現出非常容易理解的測試文件。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -252,7 +252,7 @@ Finished in 0.02296 seconds (files took 0.27232 seconds to load)
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如此一來我們就能在有用到 RedeemCode 相關邏輯的地方加上 &lt;code>:redeem_module&lt;/code> 的標記，讓對應的輔助方法可以被載入進來使用。&lt;/p>
-&lt;h2 id="對方法呼叫的檢驗">對方法呼叫的檢驗&lt;/h2>
+&lt;h2 id="verify-method-call">對方法呼叫的檢驗&lt;/h2>
 &lt;p>之前在嘗試處理一些問題時有看過 &lt;code>spy&lt;/code> 這個使用方式，但是一直不清楚該如何使用以及跟 Mock / Stub 的關係，在課程中經過練習和說明後就稍微有概念，而這部分確實也是我目前沒有使用在測試中的技巧。&lt;/p>
 &lt;p>假設 RedeemService 在成功兌換後會發送一封通知信，但我們只關注通知的訊息是否正確而不在意怎麼發出去，就可以用這個技巧來處理。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -335,7 +335,7 @@ Finished in 0.02296 seconds (files took 0.27232 seconds to load)
 &lt;blockquote>
 &lt;p>在這邊 &lt;code>describe '#perform'&lt;/code> 似乎就變得突兀，是否能有其他改進的方式就可能會需要進行探討&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="小結">小結&lt;/h2>
+&lt;h2 id="conclusion">小結&lt;/h2>
 &lt;p>不知不覺就寫到半夜，其實還有不少東西沒辦法寫到。但是這次的課程雖然在框架應用上大多我已經知道，或者了解的更詳細。不過更重要的是課程中還帶出了很多觀念上的問題讓我對於測試能再更近一步的方法有了一些方向，不過同時也蠻感概這個領域我們知道的也許比想像中的少。&lt;/p>
 &lt;p>即使在一些知名的開源專案中，也不一定能看到像這樣完整的測試撰寫跟明確的表達意圖。不過同樣的要完成到這樣的測試花費的心力跟資源也是非常值得評估的，因此在課程結束前也在跟大家討論何時該寫測試的問題，以及怎樣判斷哪些測試該先寫跟對覆蓋率的迷思。&lt;/p>
 &lt;p>整體上來說這門課對我自己的意義更多在心法上的改進，在技巧上現有的方法已經相當不錯只是缺少了對應的心法讓他更近一步。&lt;/p></content:encoded></item><item><title>作為工程師，我們與專業的距離</title><link>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</link><category>心得</category><category>工程師</category><pubDate>Mon, 28 Sep 2020 11:22:49 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</guid><description>&lt;p>不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。&lt;/p>
