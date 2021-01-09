@@ -14,13 +14,13 @@ credit: Pexels
 
 <!--more-->
 
-## 課程節奏、內容
+## 課程節奏、內容{#content}
 
 大概開始一小時左右我就確定節奏很適合當作公司內部訓練的選項，[91 哥](https://www.facebook.com/91agile)作為專業講師一直都很讓我佩服，幾年前在 PHPConf 聽到的分享就讓我一直很有印象，直到現在也還在工作使用裡面的一些概念。
 
 原本是想整理一份 Ruby 版本的課程心得來完善課程中 Ruby 範例的，不過既然決定寫一篇文章跟大家分享，後面就會以我自己的經驗跟學到的概念跟大家分享，想要知道課程內容的話就請大家趕快去報名吧！
 
-## Ruby 的測試
+## Ruby 的測試{#test-in-ruby}
 
 在 Ruby 中最主流的會是使用 [RSpec](https://rspec.info/) 來進行測試，這是一套 BDD（Behaviour Driven Development）框架， [Ruby on Rails](https://rubyonrails.org/) 則是使用 [MiniTest](https://github.com/seattlerb/minitest) 來進行測試，除此之外也會使用 [Cucumber](https://cucumber.io/) 來撰寫測試。
 
@@ -30,7 +30,7 @@ credit: Pexels
 
 > 實際上寫測試最困難的地方是根據「正確的規格」去撰寫，我們更多的時候是經過一層又一層的傳話拿到一些「有問題的規格」也因此跟客戶確認清楚是很重要的環節。
 
-## 更好的 RSpec 測試
+## 更好的 RSpec 測試{#better-specs}
 
 在這幾年應徵[五倍紅寶石](https://5xruby.com)的時候，我們會給出一份還算簡單的 Ruby on Rails 專案來確認面試者是否具備最基本的獨立開發功能的實力，裡面有一個環節就是使用 RSpec 撰寫 Feature Test（功能測試）這個環節會用來觀察面試者對撰寫測試的理解程度，另一方面也是因為 Feature Test 大多只要能達到針對某個畫面檢測就可以，相對於單元測試來說容易很多。
 
@@ -38,7 +38,7 @@ credit: Pexels
 
 跟學程式語言最困難的地方在「了解語言特性」一樣，學習測試框架也需要知道框架的功能和性質，像是 RSpec 一直都有一份叫做 [Better Specs](https://www.betterspecs.org/) 的文件，裡面就提到了非常多 RSpec 撰寫時應該善用的技巧，不過這份文件最近翻新了一次，原本的中文翻譯也一起消失了。
 
-## 從 Lint 學習 RSpec 測試
+## 從 Lint 學習 RSpec 測試{#learn-rspec-from-lint}
 
 2020 年大概是 Ruby 社群有很多大變動的年份吧，除了 Ruby 3 終於推出開始跟上其他語言的效能上改進之外，經常被用來檢查 Coding Style（程式碼風格）的工具 [Rubocop](https://github.com/rubocop-hq/rubocop) 也迎來了大改版正式邁入 1.0 而在這個大版本前的幾個版本也開始將 RSpec、Rails、ThreadSafety 等等跟 Ruby 核心比較不相關的檢查獨立出來，如果你的專案想使用 RSpec 的話也請把 Rubocop RSpec 加入到 Rubocop 的檢查中，這樣至少能知道 Ruby 社群的偏好。
 
@@ -46,7 +46,7 @@ credit: Pexels
 
 > Rubocop RSpec 給了很多限制，像是 Example Group（`describe` 和 `context`）不能巢狀超過三層、每一個 Example Group 裡面至少要有一個 Example 等等
 
-## 測試意圖
+## 測試意圖{#intent-of-test}
 
 課程中我印象中比較深刻的幾個關鍵，這個是其中一個。雖然想示範糟糕的 RSpec 寫法，但是這邊更接近我目前使用的測試撰寫方式要如何改進會更好，因此下面是一段我原本會這樣寫的測試。
 
@@ -129,7 +129,7 @@ end
 
 > 不過在我自己的經驗中 Ruby 社群似乎不太常使用這樣的技巧，而想要使用像是 `Given` 和 `When` 的語法其實也有人做了 [RSpec Given](https://github.com/jimweirich/rspec-given) 套件，但在我的記憶中並沒有太多人使用，而這樣的應用方式反而是在寫 Cucumber 時因為語言性質會被應用。
 
-## 優雅的 RSpec 測試
+## 優雅的 RSpec 測試{#graceful-rspec-tests}
 
 在這次的課程中因為提到了不少之前寫測試沒有特別注意的細節，也因此我在空檔花了一些時間去看 RSpec 文件提供了哪些機制來輔助，以我個人偏好來說我會優先採取 One-liner Syntax（單行測試）的方式，除了寫的程式碼相對少之外，使用恰當在 RSpec 預設的「輸出選項」也能適當的呈現出非常容易理解的測試文件。
 
@@ -201,7 +201,7 @@ end
 
 如此一來我們就能在有用到 RedeemCode 相關邏輯的地方加上 `:redeem_module` 的標記，讓對應的輔助方法可以被載入進來使用。
 
-## 對方法呼叫的檢驗
+## 對方法呼叫的檢驗{#verify-method-call}
 
 之前在嘗試處理一些問題時有看過 `spy` 這個使用方式，但是一直不清楚該如何使用以及跟 Mock / Stub 的關係，在課程中經過練習和說明後就稍微有概念，而這部分確實也是我目前沒有使用在測試中的技巧。
 
@@ -254,7 +254,7 @@ end
 
 > 在這邊 `describe '#perform'` 似乎就變得突兀，是否能有其他改進的方式就可能會需要進行探討
 
-## 小結
+## 小結{#conclusion}
 
 不知不覺就寫到半夜，其實還有不少東西沒辦法寫到。但是這次的課程雖然在框架應用上大多我已經知道，或者了解的更詳細。不過更重要的是課程中還帶出了很多觀念上的問題讓我對於測試能再更近一步的方法有了一些方向，不過同時也蠻感概這個領域我們知道的也許比想像中的少。
 
