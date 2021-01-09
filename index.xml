@@ -1,4 +1,344 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Mon, 28 Sep 2020 11:22:49 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>作為工程師，我們與專業的距離</title><link>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</link><category>心得</category><category>工程師</category><pubDate>Mon, 28 Sep 2020 11:22:49 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</guid><description>&lt;p>不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 10 Jan 2021 03:24:59 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>針對遺留代碼加入單元測試的藝術課程心得</title><link>https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/</link><category>測試</category><category>RSpec</category><category>Ruby</category><category>心得</category><pubDate>Sun, 10 Jan 2021 03:24:59 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/</guid><description>&lt;p>大概在 2019 年底就有考慮要來報名，結果一直拖到 2020 才下定決心。寫測試這件事情雖然很早就知道，不過一直到出社會開始工作後才逐漸的接觸，而且最開始的時候其實寫了很多糟糕的測試，直到這幾年逐漸摸索才有一個比較有系統的測試撰寫方式。&lt;/p>
+&lt;p>但是透過自學比較大的問題就是知識很多時候是沒有系統的，大多是碎片的形式同時我自己也不太擅長將這些東西歸納整理，也就會出現一些盲點。也因此這次參加課程主要有兩個目的，一個是看看是否適合作為公司內部訓練的選項建議老闆，另一方面就是我自己學東西的習慣，反覆的練習基礎來達到熟練一個技能。&lt;/p></description><content:encoded>&lt;p>大概在 2019 年底就有考慮要來報名，結果一直拖到 2020 才下定決心。寫測試這件事情雖然很早就知道，不過一直到出社會開始工作後才逐漸的接觸，而且最開始的時候其實寫了很多糟糕的測試，直到這幾年逐漸摸索才有一個比較有系統的測試撰寫方式。&lt;/p>
+&lt;p>但是透過自學比較大的問題就是知識很多時候是沒有系統的，大多是碎片的形式同時我自己也不太擅長將這些東西歸納整理，也就會出現一些盲點。也因此這次參加課程主要有兩個目的，一個是看看是否適合作為公司內部訓練的選項建議老闆，另一方面就是我自己學東西的習慣，反覆的練習基礎來達到熟練一個技能。&lt;/p>
+&lt;h2 id="課程節奏內容">課程節奏、內容&lt;/h2>
+&lt;p>大概開始一小時左右我就確定節奏很適合當作公司內部訓練的選項，&lt;a href="https://www.facebook.com/91agile">91 哥&lt;/a>作為專業講師一直都很讓我佩服，幾年前在 PHPConf 聽到的分享就讓我一直很有印象，直到現在也還在工作使用裡面的一些概念。&lt;/p>
+&lt;p>原本是想整理一份 Ruby 版本的課程心得來完善課程中 Ruby 範例的，不過既然決定寫一篇文章跟大家分享，後面就會以我自己的經驗跟學到的概念跟大家分享，想要知道課程內容的話就請大家趕快去報名吧！&lt;/p>
+&lt;h2 id="ruby-的測試">Ruby 的測試&lt;/h2>
+&lt;p>在 Ruby 中最主流的會是使用 &lt;a href="https://rspec.info/">RSpec&lt;/a> 來進行測試，這是一套 BDD（Behaviour Driven Development）框架， &lt;a href="https://rubyonrails.org/">Ruby on Rails&lt;/a> 則是使用 &lt;a href="https://github.com/seattlerb/minitest">MiniTest&lt;/a> 來進行測試，除此之外也會使用 &lt;a href="https://cucumber.io/">Cucumber&lt;/a> 來撰寫測試。&lt;/p>
+&lt;blockquote>
+&lt;p>Ruby on Rails 專案預設會使用 MiniTest 但是大多數的人都會使用 RSpec 來寫測試，因此常常會看到新手把 &lt;code>test&lt;/code> 和 &lt;code>spec&lt;/code> 目錄放在專案中，這是兩種測試框架習慣使用的目錄不同的關係，正確的做法應該是在 &lt;code>rails new&lt;/code> 就指定使用 RSpec 作為測試框架。&lt;/p>
+&lt;/blockquote>
+&lt;p>我自己是沒有在使用 MiniTest 不過倒是對 Cucumber 很有興趣，跟 RSpec 需要由工程師撰寫程式碼不同，使用 Cucumber 會先由工程師設計出一些文法規則，而 PO（Product Owner）或者 PM（Project Manager）就能夠透過描述的方式將規格自行填入，進而減少工程師去確認規格的時間，不過前幾年有看過一些團隊在推行，但似乎沒有看到一些好的成效。&lt;/p>
+&lt;blockquote>
+&lt;p>實際上寫測試最困難的地方是根據「正確的規格」去撰寫，我們更多的時候是經過一層又一層的傳話拿到一些「有問題的規格」也因此跟客戶確認清楚是很重要的環節。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="更好的-rspec-測試">更好的 RSpec 測試&lt;/h2>
+&lt;p>在這幾年應徵&lt;a href="https://5xruby.com">五倍紅寶石&lt;/a>的時候，我們會給出一份還算簡單的 Ruby on Rails 專案來確認面試者是否具備最基本的獨立開發功能的實力，裡面有一個環節就是使用 RSpec 撰寫 Feature Test（功能測試）這個環節會用來觀察面試者對撰寫測試的理解程度，另一方面也是因為 Feature Test 大多只要能達到針對某個畫面檢測就可以，相對於單元測試來說容易很多。&lt;/p>
+&lt;p>不過到目前為止都還沒有看到過寫的特別好的情況，也因此大部分面試者在加入五倍的第一個專案通常都會卡住一到兩週在 Code Review 上面，這個階段我會不斷的從測試和重構兩個階段讓新同事習慣一些技巧，像是在撰寫的時候就要同時思考該怎麼測試，而測試該怎麼寫才會更乾淨。&lt;/p>
+&lt;p>跟學程式語言最困難的地方在「了解語言特性」一樣，學習測試框架也需要知道框架的功能和性質，像是 RSpec 一直都有一份叫做 &lt;a href="https://www.betterspecs.org/">Better Specs&lt;/a> 的文件，裡面就提到了非常多 RSpec 撰寫時應該善用的技巧，不過這份文件最近翻新了一次，原本的中文翻譯也一起消失了。&lt;/p>
+&lt;h2 id="從-lint-學習-rspec-測試">從 Lint 學習 RSpec 測試&lt;/h2>
+&lt;p>2020 年大概是 Ruby 社群有很多大變動的年份吧，除了 Ruby 3 終於推出開始跟上其他語言的效能上改進之外，經常被用來檢查 Coding Style（程式碼風格）的工具 &lt;a href="https://github.com/rubocop-hq/rubocop">Rubocop&lt;/a> 也迎來了大改版正式邁入 1.0 而在這個大版本前的幾個版本也開始將 RSpec、Rails、ThreadSafety 等等跟 Ruby 核心比較不相關的檢查獨立出來，如果你的專案想使用 RSpec 的話也請把 Rubocop RSpec 加入到 Rubocop 的檢查中，這樣至少能知道 Ruby 社群的偏好。&lt;/p>
+&lt;p>不過使用 Rubocop 其實也有蠻多爭議，像是 GitHub 和 Shopify 都有自己客製化的 Rubocop 風格設定，而且和預設的差異非常大，詳細的理由大多可以在他們說明 Coding Style 的部落格或者 Repoistory 上面找到。&lt;/p>
+&lt;blockquote>
+&lt;p>Rubocop RSpec 給了很多限制，像是 Example Group（&lt;code>describe&lt;/code> 和 &lt;code>context&lt;/code>）不能巢狀超過三層、每一個 Example Group 裡面至少要有一個 Example 等等&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="測試意圖">測試意圖&lt;/h2>
+&lt;p>課程中我印象中比較深刻的幾個關鍵，這個是其中一個。雖然想示範糟糕的 RSpec 寫法，但是這邊更接近我目前使用的測試撰寫方式要如何改進會更好，因此下面是一段我原本會這樣寫的測試。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;spec_helper&amp;#39;&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">RedeemService&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="c1"># Rubocop RSpec 建議對「物件實例」造假，因此建議用 `instance_double` 代替 `double`&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:redeem_code&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">instance_double&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">RedeemCode&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># Rubocop RSpec 建議用 `described_class` 來表示測試物件，重構名稱時就不用修改 `RSpec.describe` 之後的程式碼&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:service&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">described_class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># RSpec 慣例用 `#method` 表示 Instance Method 用 `.method` 表示 Static Method&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s1">&amp;#39;#available?&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="c1"># RSpec 特性，利用 `subject` 建立 One line test case&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">service&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">available?&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># Rubocop RSpec 要求 `context` 以 `when` 開頭&lt;/span>
+&lt;span class="n">context&lt;/span> &lt;span class="s1">&amp;#39;when redeem code valid&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="c1"># RSpec 內建支援 Stub / Mock 機制，這邊對 RedeemCode 物件做 Stub 處理&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">allow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">receive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:valid?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">and_return&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># `is_expected` 等同 `expect(subject)` 使用單行測試案例時會用 `is_expected` 去表示&lt;/span>
+&lt;span class="c1"># RSpec 中會自動將 `be_` 呼叫，像是 `truthy` 就會呼叫該物件的 `truthy` 方法，如果有指定 Matcher 時則以 Matcher 為主&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">be_truthy&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="n">context&lt;/span> &lt;span class="s1">&amp;#39;when reedeem code invalid&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">allow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">receive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:valid?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">and_return&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kp">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">be_falsy&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上面的範例實際上沒辦法完整表示所有的技巧，不過在「意圖」這塊是還能夠改善的，在課程中了解到上面的測試描述的只是「程式上的定義」也因此我們可以繼續改進&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;spec_helper&amp;#39;&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">RedeemService&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="c1"># 這邊也可以用 self.given_redeem_code 來定義，但是因為 Rubocop RSpec 建議一個 Group 只有一個 before / after 因此就採取這種方式&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">given_redeem_code&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">valid&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">allow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">receive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:valid?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">and_return&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">valid&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:redeem_code&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">instance_double&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">RedeemCode&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:service&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">described_class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">service&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s1">&amp;#39;#available?&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">context&lt;/span> &lt;span class="s1">&amp;#39;when redeem code valid&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">given_redeem_code&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">valid&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">be_available&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="n">context&lt;/span> &lt;span class="s1">&amp;#39;when reedeem code invalid&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">given_redeem_code&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">valid&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">not_to&lt;/span> &lt;span class="n">be_available&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>一時之間想不到更好的範例，在課程中提供的範例涵蓋的範圍太廣，不過不方便拿來當例子因此就只能用這個來做簡單的分析跟解釋。&lt;/p>
+&lt;blockquote>
+&lt;p>在寫這篇文章的時候又發現一些可以改進的地方，像是可以直接用 &lt;code>be_available&lt;/code> 而不用定義 &lt;code>subject&lt;/code> 而這更接近所謂測試的「意圖」&lt;/p>
+&lt;/blockquote>
+&lt;p>在 RSpec 裡面支援使用 Helper Method （輔助方法）來幫助我們撰寫一些輔助測試的行為，像是在 RSpec Rails 就提供了像是 &lt;code>get&lt;/code> 這類可以模擬 HTTP 請求的輔助方法。&lt;/p>
+&lt;p>我們定義了 &lt;code>given_redeem_code(valid: true)&lt;/code> 這個方法，用來代替原本的 &lt;code>allow(redeem_code).to receive(:valid?).and_return(true)&lt;/code> 讓測試可以更明確的表示「給出正確的兌換碼」這個情境，另外要注意的是這個方法一定要定義在測試群組裡面，才不會在其他測試被載入到而互相影響。&lt;/p>
+&lt;blockquote>
+&lt;p>不過在我自己的經驗中 Ruby 社群似乎不太常使用這樣的技巧，而想要使用像是 &lt;code>Given&lt;/code> 和 &lt;code>When&lt;/code> 的語法其實也有人做了 &lt;a href="https://github.com/jimweirich/rspec-given">RSpec Given&lt;/a> 套件，但在我的記憶中並沒有太多人使用，而這樣的應用方式反而是在寫 Cucumber 時因為語言性質會被應用。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="優雅的-rspec-測試">優雅的 RSpec 測試&lt;/h2>
+&lt;p>在這次的課程中因為提到了不少之前寫測試沒有特別注意的細節，也因此我在空檔花了一些時間去看 RSpec 文件提供了哪些機制來輔助，以我個人偏好來說我會優先採取 One-liner Syntax（單行測試）的方式，除了寫的程式碼相對少之外，使用恰當在 RSpec 預設的「輸出選項」也能適當的呈現出非常容易理解的測試文件。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">rspec --format doc
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我們就可以獲取這樣的結果&lt;/p>
+&lt;pre>&lt;code>RedeemService
+when code valid
+is expected to be available
+when code invalid
+is expected not to be available
+Finished in 0.02296 seconds (files took 0.27232 seconds to load)
+2 examples, 0 failures
+&lt;/code>&lt;/pre>&lt;p>這其實也是 Ruby 語言在 DSL（Domain Specific Language）的強項，我們在測試寫的東西幾乎是 100% 接近文件的輸出，這也是為什麼 Rubocop RSpec 會要求測試群組的巢狀層級數量跟要使用 &lt;code>when&lt;/code> 作為 &lt;code>context&lt;/code> 描述起始，這樣就能在輸出上達到一制性也更容易閱讀。&lt;/p>
+&lt;blockquote>
+&lt;p>另外一個值得探討的地方是，還需要寫 &lt;code>describe '#available?'&lt;/code> 來建立一個測試群組嗎，而以 Context 為基礎的話，下面再切割的群組又會是怎樣的。這也是我在不同專案上看到不同的習慣，目前我自己還是以「方法」區分為主。&lt;/p>
+&lt;/blockquote>
+&lt;p>而上面的程式碼我們還能在做改進，前面我們使用的 Helper Method 叫做 Arbitrary Helper Method 也就是「任意定義」的意思，假設 RedeemCode 經常會被設定，我們就可以利用 Ruby 的 Module 特性將這些設定統一到一個模組中管理。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># spec/support/helpers/redeem_test_helper.rb&lt;/span>
+&lt;span class="k">module&lt;/span> &lt;span class="nn">RedeemTestHelper&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">given_redeem_code_with_state&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">valid&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">allow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">receive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:valid?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">and_return&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">valid&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">given_redeem_code_with_rewards&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rewards&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">allow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">receive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:rewards&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">and_return&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rewards&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># 我個人偏好直接在 Helper Module 加入設定，我們通常會習慣在 spec_helper.rb 直接導引用所有 `support/` 目錄下的檔案&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">configure&lt;/span> &lt;span class="k">do&lt;/span> &lt;span class="o">|&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">|&lt;/span>
+&lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">include&lt;/span> &lt;span class="no">RedeemTestHelper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:redeem_module&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下來我們在測試裡面就可以像這樣使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;spec_helper&amp;#39;&lt;/span>
+&lt;span class="c1"># RSpec 的 Metadata 功能可以標記 Tag 之類的，常見的會是 `type: :controller` 這種&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">RedeemService&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:redeem_module&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s1">&amp;#39;#available?&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">context&lt;/span> &lt;span class="s1">&amp;#39;when redeem code valid&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">given_redeem_code_with_state&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">valid&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">be_available&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如此一來我們就能在有用到 RedeemCode 相關邏輯的地方加上 &lt;code>:redeem_module&lt;/code> 的標記，讓對應的輔助方法可以被載入進來使用。&lt;/p>
+&lt;h2 id="對方法呼叫的檢驗">對方法呼叫的檢驗&lt;/h2>
+&lt;p>之前在嘗試處理一些問題時有看過 &lt;code>spy&lt;/code> 這個使用方式，但是一直不清楚該如何使用以及跟 Mock / Stub 的關係，在課程中經過練習和說明後就稍微有概念，而這部分確實也是我目前沒有使用在測試中的技巧。&lt;/p>
+&lt;p>假設 RedeemService 在成功兌換後會發送一封通知信，但我們只關注通知的訊息是否正確而不在意怎麼發出去，就可以用這個技巧來處理。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="c1"># frozen_string_literal: true&lt;/span>
+&lt;span class="nb">require&lt;/span> &lt;span class="s1">&amp;#39;spec_helper&amp;#39;&lt;/span>
+&lt;span class="no">RSpec&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">describe&lt;/span> &lt;span class="no">RedeemService&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ss">:redeem_module&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="c1"># TODO: 移動到 Helper Module&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">player_notification_should_notify_with&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">expect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">notification&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">have_received&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:notify&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">with&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kp">include&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># 我個人偏好在做 Mock 處理時直接指定對應的物件，出現錯誤訊息比較好確認當下假定會使用的物件是什麼&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:notification&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">spy&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="no">PlayerNotification&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:service&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">described_class&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redeem_code&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">notification&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="n">context&lt;/span> &lt;span class="s1">&amp;#39;when redeem code valid&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">given_redeem_code_with_state&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">valid&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kp">true&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">is_expected&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to&lt;/span> &lt;span class="n">be_available&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">describe&lt;/span> &lt;span class="s1">&amp;#39;#perform&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">subject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:when_redeem&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">service&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">perform&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="n">before&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">given_redeem_code_with_rewards&lt;/span> &lt;span class="o">[&lt;/span>
+&lt;span class="no">RewardItem&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Sowrd&amp;#39;&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="no">RewardItem&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">new&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Bow&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="o">]&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="n">it&lt;/span> &lt;span class="s1">&amp;#39;is expected to send notify&amp;#39;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="n">when_redeem&lt;/span>
+&lt;span class="n">player_notification_should_notify_with&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;2 rewards&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>這樣我們就可以確認我們會呼叫某種屬於 Notification 類型的物件上的 &lt;code>#notify&lt;/code> 方法並且訊息含有 &lt;code>2 rewards&lt;/code> 的字串，這邊就沒辦法單純的用單行去呈現，並且最好將 &lt;code>it&lt;/code> 的描述用 &lt;code>is expected to&lt;/code> 來撰寫，這樣在 RSpec 輸出的文件中會更容易閱讀，雖然 Rubocop RSpec 沒有強制這個規格，不過用 &lt;code>is expected to&lt;/code> 會相對整齊多，在我的印象中也有一些流派是建議這樣使用的。&lt;/p>
+&lt;blockquote>
+&lt;p>在這邊 &lt;code>describe '#perform'&lt;/code> 似乎就變得突兀，是否能有其他改進的方式就可能會需要進行探討&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="小結">小結&lt;/h2>
+&lt;p>不知不覺就寫到半夜，其實還有不少東西沒辦法寫到。但是這次的課程雖然在框架應用上大多我已經知道，或者了解的更詳細。不過更重要的是課程中還帶出了很多觀念上的問題讓我對於測試能再更近一步的方法有了一些方向，不過同時也蠻感概這個領域我們知道的也許比想像中的少。&lt;/p>
+&lt;p>即使在一些知名的開源專案中，也不一定能看到像這樣完整的測試撰寫跟明確的表達意圖。不過同樣的要完成到這樣的測試花費的心力跟資源也是非常值得評估的，因此在課程結束前也在跟大家討論何時該寫測試的問題，以及怎樣判斷哪些測試該先寫跟對覆蓋率的迷思。&lt;/p>
+&lt;p>整體上來說這門課對我自己的意義更多在心法上的改進，在技巧上現有的方法已經相當不錯只是缺少了對應的心法讓他更近一步。&lt;/p></content:encoded></item><item><title>作為工程師，我們與專業的距離</title><link>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</link><category>心得</category><category>工程師</category><pubDate>Mon, 28 Sep 2020 11:22:49 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/09/28/The-distance-to-become-a-professional-programmer/</guid><description>&lt;p>不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。&lt;/p>
 &lt;p>這也一直讓我在思考，作為一個「專業」的工程師應該要滿足什麼條件？&lt;/p></description><content:encoded>&lt;p>不知不覺工作已經四年左右了，如果是從開始接觸程式語言計算的話似乎快要二十年。這幾年也開始擔任公司負責面試的主管，也看到越來越多工程師培訓班的出現以及更多的人挑戰轉職工程師。在這樣的狀況下，每次跟同事交流，我總是覺得我們不夠專業。&lt;/p>
 &lt;p>這也一直讓我在思考，作為一個「專業」的工程師應該要滿足什麼條件？&lt;/p>
 &lt;h2 id="年資">年資&lt;/h2>
@@ -1077,12 +1417,12 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;/span>&lt;span class="lnt">7
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-elixir" data-lang="elixir">&lt;span class="n">defmodule&lt;/span> &lt;span class="nc">Server.Connection&lt;/span> &lt;span class="n">do&lt;/span>
+&lt;pre class="chroma">&lt;code class="language-elixir" data-lang="elixir">&lt;span class="kd">defmodule&lt;/span> &lt;span class="nc">Server.Connection&lt;/span> &lt;span class="k">do&lt;/span>
 &lt;span class="c1"># ...&lt;/span>
-&lt;span class="n">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;exit&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:gen_tcp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">close&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">socket&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;help&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">socket&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Server.Helper&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">print&lt;/span>
-&lt;span class="n">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">socket&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Server.Handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">process&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">end&lt;/span>
+&lt;span class="kd">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;exit&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="ss">:gen_tcp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">close&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">socket&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="kd">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;help&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">socket&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Server.Helper&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">print&lt;/span>
+&lt;span class="kd">def&lt;/span> &lt;span class="n">input&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">socket&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">socket&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Server.Handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">process&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如果是在我們熟悉的物件導向語言處理的話，就會變成類似像這樣的程式碼&lt;/p>
@@ -1192,10 +1532,10 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;/span>&lt;span class="lnt">6
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-elixir" data-lang="elixir">&lt;span class="n">defmodule&lt;/span> &lt;span class="nc">User&lt;/span> &lt;span class="n">do&lt;/span>
-&lt;span class="n">def&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Map&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:username&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;span class="n">def&lt;/span> &lt;span class="n">load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nc">HTTP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>
-&lt;span class="n">end&lt;/span>
+&lt;pre class="chroma">&lt;code class="language-elixir" data-lang="elixir">&lt;span class="kd">defmodule&lt;/span> &lt;span class="nc">User&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;span class="kd">def&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">Map&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ss">:username&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="kd">def&lt;/span> &lt;span class="n">load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="ss">do&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nc">HTTP&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse&lt;/span>
+&lt;span class="k">end&lt;/span>
 &lt;span class="p">{&lt;/span>&lt;span class="ss">:ok&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">username&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nc">User&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">|&amp;gt;&lt;/span> &lt;span class="nc">User&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">username&lt;/span>
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -1235,146 +1575,4 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;p>在課程中其實也有提到以 JavaScript 作為範例其實有點不適合，畢竟有一些特性跟功能以一個函數式語言來說還不太足夠。所以在上完這次的課程之後，原本寫起來覺得很卡的 Elixir 在正確理解一些正確的特性之後，就能很順利地使用。&lt;/p>
 &lt;p>也趁著還有印象的時候趕快用 Elixir 和 Ruby 搭配寫了一款 &lt;a href="https://github.com/elct9620/elixir-mud">MUD&lt;/a> 類型遊戲練習，如果對寫 JavaScript 無法寫得乾淨有困擾或者想多善用一些語言特性，是很推薦試試看這門課程的。&lt;/p>
 &lt;p>最後補上 MUD 遊戲製作中的畫面：&lt;/p>
-&lt;p>&lt;img src="https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/mud.gif" alt="MUD 有限狀態機">&lt;/p></content:encoded></item><item><title>重複利用的 Ansible Role 難題</title><link>https://blog.frost.tw/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</link><category>Ansible</category><category>DevOps</category><category>心得</category><category>Rails</category><category>Ruby on Rails</category><pubDate>Sat, 29 Feb 2020 17:59:46 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/02/29/The-Reusable-Ansible-Role-Problem/</guid><description>&lt;p>大概一年前左右，我開始製作一個 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 的 Playbook 來幫&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>的客戶安裝環境。&lt;/p>
-&lt;p>不過當我們的客戶增加之後，其實開始有點變的很難透過 Fork 的機制來管理不同客戶的 Playbook。&lt;/p>
-&lt;p>這表示我必須先更新主要的 Playbook 然後再同步到每一個客戶的版本上，也因此我決定去把這些通用的部分拆成單獨的 Role 專案。&lt;/p></description><content:encoded>&lt;p>大概一年前左右，我開始製作一個 &lt;a href="https://www.ansible.com/">Ansible&lt;/a> 的 Playbook 來幫&lt;a href="https://5xruby.tw">五倍紅寶石&lt;/a>的客戶安裝環境。&lt;/p>
-&lt;p>不過當我們的客戶增加之後，其實開始有點變的很難透過 Fork 的機制來管理不同客戶的 Playbook。&lt;/p>
-&lt;p>這表示我必須先更新主要的 Playbook 然後再同步到每一個客戶的版本上，也因此我決定去把這些通用的部分拆成單獨的 Role 專案。&lt;/p>
-&lt;h2 id="overview">概觀&lt;/h2>
-&lt;p>目前的 Playbook 大致上是這樣的：&lt;/p>
-&lt;pre>&lt;code>├── [1.0K] README.md
-├── [ 96] group_vars
-│   └── [1.2K] all.yml
-├── [ 96] inventories
-│   └── [ 309] local
-├── [ 480] roles
-│   ├── [ 96] 5xruby_user
-│   ├── [ 96] application
-│   ├── [ 96] compile_env
-│   ├── [ 96] deploy_user
-│   ├── [ 96] init
-│   ├── [ 128] logrotate
-│   ├── [ 160] nginx_with_passenger
-│   ├── [ 96] node
-│   ├── [ 160] postgresql_server
-│   ├── [ 96] ruby
-│   ├── [ 96] ssh
-│   ├── [ 96] sudo
-│   └── [ 128] yum_install_commons
-└── [ 467] setup.yml
-&lt;/code>&lt;/pre>&lt;p>當我們的客戶需要客製化他們的部署環境，我們會去 Fork 這份原始版本然後修改裡面的變數跟樣板。&lt;/p>
-&lt;p>不過在更新的時候就很容易遇到因為修改差異造成的衝突。&lt;/p>
-&lt;h2 id="target">目標&lt;/h2>
-&lt;p>在 Ansible Galaxy 裡面提供了相依管理的功能，這讓我們可以透過製作 &lt;code>roles/requirements.yml&lt;/code> 來像像下面這樣管理：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-ruby&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>在我們執行 Playbook 之前，我們可以利用 &lt;code>ansible-galaxy install -r roles/requirements.yml&lt;/code> 來自動安裝對應的 Role，而且這能夠在 &lt;a href="https://github.com/ansible/awx">Ansible AWX&lt;/a>（或者 Ansible Tower）上面正常運作。&lt;/p>
-&lt;p>看起來挺不錯的，不過實際上我遇到了一些問題。&lt;/p>
-&lt;h2 id="nginx-modules">Nginx 模組&lt;/h2>
-&lt;p>以 &lt;a href="https://rubyonrails.org/">Rails&lt;/a> 專案來說，我們有很多種網頁伺服器的選擇。&lt;/p>
-&lt;p>如果我們選擇使用 &lt;a href="https://puma.io/">Puma&lt;/a> 的話，其實只需要將 Nginx 安裝並且設定為反向代理伺服器（Reverse Proxy）即可。&lt;/p>
-&lt;p>但是我們決定使用 &lt;a href="https://www.phusionpassenger.com/">Passenger&lt;/a> 就必須將它編譯成一個 Nginx 模組。&lt;/p>
-&lt;p>這表示假設我們希望能夠同時支援 Puma 和 Passenger 的話，新製作的 Nginx Role 需要包含關於 Passenger 的任務。&lt;/p>
-&lt;p>我的第一個版本是利用 &lt;a href="https://docs.ansible.com/ansible/latest/modules/include_tasks_module.html">&lt;code>include_tasks&lt;/code>&lt;/a> 在 Passenger 被啟用的時候去增加額外的模組到 Nginx 上。&lt;/p>
-&lt;p>但是假設我們未來要增加更多的 Nginx 模組，我們的 Nginx Role 會越變越大最後就跟現在的 Playbook 狀況一樣。&lt;/p>
-&lt;h2 id="manual-dependencies">手動管理相依&lt;/h2>
-&lt;p>在經過幾次嘗試之後，我找到一個還可以接受的方法來處理這個問題。&lt;/p>
-&lt;ol>
-&lt;li>產生一個內容為空陣列的 Fact 變數 &lt;code>nginx_module_options&lt;/code>&lt;/li>
-&lt;li>遍歷 &lt;code>nginx_extar_modules&lt;/code> 陣列然後 &lt;code>import_role&lt;/code> 去執行相關的 Role&lt;/li>
-&lt;li>再額外模組的原始碼下載後，將額外的編譯參數插入到 &lt;code>nginx_module_options&lt;/code> 這個 Fact 變數中&lt;/li>
-&lt;/ol>
-&lt;p>因此，在我們的 Playbook 裡面我們會像這樣設定相依：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w">&lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-passenger&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">0.1.0&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>並且覆蓋 Nginx 的變數，增加 Nginx 模組的設定作為預設值在 &lt;code>group_vars/all.yml&lt;/code> 裡面套用到所有的 Web 節點上。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">nginx_extra_modules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;passenger&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>不過另外一個問題又緊接著解決了 Nginx 模組的問題出現。&lt;/p>
-&lt;h2 id="the-role-dependencies">Role 的相依性&lt;/h2>
-&lt;p>當我準備好 Nginx, Ruby, Node.js 跟其他部署 Rails 必要的 Role 後，我開始設定 Rails Role 的相依設定。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="nt">dependencies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-nginx&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-ruby&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-node&lt;/span>&lt;span class="w">
-&lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">src&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com/5xruby/ansible-passenger&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>此時我執行我的 Playbook 去運行 Rails Role 的話，會從 Nginx Role 開始執行。&lt;/p>
-&lt;p>這看起來沒什麼問題，不過我們會需要設定 &lt;code>nginx.conf&lt;/code> 並且將 &lt;code>root&lt;/code> 設定到 Rails 專案的 &lt;code>public&lt;/code> 目錄。&lt;/p>
-&lt;p>如果 Nginx Role 在 Rails Role 之前執行，我們就會碰到 Nginx 啟動失敗的錯誤。&lt;/p>
-&lt;blockquote>
-&lt;p>我的第一個版本會透過 Nginx 來產生 &lt;code>root&lt;/code> 的目錄，並且設定好所有者跟使用者群組，但是這是有問題的。如果 &lt;code>deploy&lt;/code> 這個使用者是透過 Rails Role 來產生的話，就會發生因為還沒有產生好使用者而無法設定目錄擁有者的情況。&lt;/p>
-&lt;/blockquote>
-&lt;p>不過在釐清問題之後，這算是一個人為的設計失誤。&lt;/p>
-&lt;p>「Nginx 真的是 Rails 的相依嗎？」&lt;/p>
-&lt;p>如果我們使用 Puma 的話，我們可以把 Nginx 替換成任何反向代理伺服器，實際上我們並不需要依賴於 Nginx。&lt;/p>
-&lt;h2 id="final-produce">最終成果&lt;/h2>
-&lt;p>經過大概兩天的時間，最後終於完成了一個幾乎不太需要設定就能夠部署 Rails 伺服器的設計。&lt;/p>
-&lt;pre>&lt;code>├── install.yml
-├── group_vars
-│ └── all.yml
-├── inventory
-├── playbooks
-│ └── install-nginx.yml
-│ └── install-postgres.yml
-│ └── install-rails.yml
-├── roles
-│ └── requirements.yml
-├── templates
-└ ─── nginx.conf.j2
-&lt;/code>&lt;/pre>&lt;p>基本上是非常簡單的，大多只需要使用 &lt;code>import_role: nginx&lt;/code> 這樣的語法去增加需要的 Role 即可。&lt;/p>
-&lt;p>如果我們需要更多的客製化，只需要覆蓋掉原本的變數（像是 &lt;code>nginx_config_template&lt;/code>）並且將自訂的樣板放到 &lt;code>templates/nginx.conf.j2&lt;/code> 裡面。&lt;/p>
-&lt;blockquote>
-&lt;p>在這邊我只放了預設的 Nginx 設定檔在 Nginx Role 裡面，如果要啟用 Passenger 的話需要自己放一個 &lt;code>nginx.conf&lt;/code> 來設定。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="conclusion">結論&lt;/h2>
-&lt;p>這算是一個很有趣的經驗來「解耦」一個部署腳本，作為一個工程師我們有很多規則可以去遵照來解耦程式碼。但是當你以一個維運的角度來看，要怎麼去製作一個可以重複利用跟管理的腳本呢？&lt;/p>
-&lt;p>不過這個還是一個起步，我現在正在思考假設未來要升級的話該怎麼做。&lt;/p>
-&lt;ul>
-&lt;li>如何清理舊版本？&lt;/li>
-&lt;li>如果資料庫要升級，是否需要部署新的伺服器？&lt;/li>
-&lt;li>如果是用於製作 Cloud Image (像是 AMI）又該如何清理多餘的檔案？&lt;/li>
-&lt;/ul>
-&lt;p>DevOps 看起來似乎只要把工程師跟維運人員放在一起就可以做到，不過我認為要讓兩者能夠協作還是不容易的。&lt;/p></content:encoded></item></channel></rss>
+&lt;p>&lt;img src="https://blog.frost.tw/images/2020-03-14-rethink-programming-by-functional/mud.gif" alt="MUD 有限狀態機">&lt;/p></content:encoded></item></channel></rss>
