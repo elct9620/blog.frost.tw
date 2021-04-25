@@ -1,4 +1,240 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 21 Feb 2021 22:07:21 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>TDD 與持續重構課程心得</title><link>https://blog.frost.tw/posts/2021/02/21/experience-of-tdd-continuous-refactoring/</link><category>TDD</category><category>重構</category><category>心得</category><pubDate>Sun, 21 Feb 2021 22:07:21 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2021/02/21/experience-of-tdd-continuous-refactoring/</guid><description>&lt;p>年初上完&lt;a href="https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/">針對遺留代碼加入單元測試的藝術&lt;/a>後，這週末又上了另一門相關的課程。在開始上課後發現很大的突破自己以往的觀念，同時也多出很多想法以及想嘗試的事情。&lt;/p></description><content:encoded>&lt;p>年初上完&lt;a href="https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/">針對遺留代碼加入單元測試的藝術&lt;/a>後，這週末又上了另一門相關的課程。在開始上課後發現很大的突破自己以往的觀念，同時也多出很多想法以及想嘗試的事情。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>弦而時習之</title><link>https://blog.frost.tw/</link><description>Recent content on 弦而時習之</description><generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>contact@frost.tw (蒼時弦也)</managingEditor><webMaster>contact@frost.tw (蒼時弦也)</webMaster><lastBuildDate>Sun, 25 Apr 2021 12:01:25 +0800</lastBuildDate><atom:link href="https://blog.frost.tw/index.xml" rel="self" type="application/rss+xml"/><item><title>淺談用 Ruby on Rails 開發遊戲</title><link>https://blog.frost.tw/posts/2021/04/25/the-overview-of-game-development-in-ruby-on-rails/</link><category>Ruby</category><category>Ruby on Rails</category><category>遊戲</category><category>心得</category><pubDate>Sun, 25 Apr 2021 12:01:25 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2021/04/25/the-overview-of-game-development-in-ruby-on-rails/</guid><description>&lt;p>最近剛好被人問到使用 Ruby on Rails 應該如何開發遊戲，因為是個很有趣的題目所以就利用週末的時間來簡單討論一下這個問題。雖然是以 Ruby on Rails 作為案例，不過這些經驗大致上是適用於所有程式語言的。&lt;/p></description><content:encoded>&lt;p>最近剛好被人問到使用 Ruby on Rails 應該如何開發遊戲，因為是個很有趣的題目所以就利用週末的時間來簡單討論一下這個問題。雖然是以 Ruby on Rails 作為案例，不過這些經驗大致上是適用於所有程式語言的。&lt;/p>
+&lt;h2 id="myth">迷思&lt;/h2>
+&lt;p>在開始之前我想先討論一個問題——我該用什麼語言去開發遊戲？&lt;/p>
+&lt;p>當我們思考這個問題的時候，有很高的機率會卡住而且一直沒辦法去做出想做的東西。這個道理適用任何情境，不論是遊戲開發、網站開發甚至料理等等，當我們給自己訂下了「框架」之後就很難離開這個框架，也因此讓原有的可能性消失。&lt;/p>
+&lt;p>所以我給的建議是「如果沒有 Ruby on Rails 的參考資料，就去看其他語言的！」&lt;/p>
+&lt;p>我們先不討論伺服器跟客戶端的差異，但是大多數語言像是 C/C++、Ruby、Python、C#、Golang 都存在用於開發遊戲的專案，語言、框架從一開始就不是問題，選擇使用某個語言或者框架不外乎是「適合」的問題。&lt;/p>
+&lt;p>這幾年我對程式技巧的理解是從「多做」到「多變」到「提煉」再更進一步的則是「適合」的使用，他剛好對應著初學者的多練習，熟悉之後要能夠帶入自己的想法變化，接著將多餘的動作去除，最後當我們理解了商業上的考量後，選擇最為適合的方式去實踐。&lt;/p>
+&lt;p>因此，我們討論用 Ruby on Rails 開發遊戲從一開始就沒有意義，我們應該討論的是「遊戲的程式該怎麼設計」&lt;/p>
+&lt;h2 id="the-card-game">卡牌遊戲&lt;/h2>
+&lt;p>會用 Ruby on Rails 當前提討論，通常不外乎是跟手遊、卡牌類型的遊戲有關，以大部分的情境來看這類手遊扣除掉連線的部分，基本上就是一個 API Server 的實現，使用開發 Web 的框架搭配 HTTP 協定來設計，確實會讓開發容易、快速很多。&lt;/p>
+&lt;p>因為被問到的問題也是跟卡牌遊戲相關的，因此後面的文章也會以此為基礎來討論。&lt;/p>
+&lt;h2 id="architecture">架構&lt;/h2>
+&lt;p>一個卡牌遊戲會需要怎樣的結構呢？如果我們單純以 Model-View-Controller 的角度去思考，就會落入被框架限制住的陷阱。我在 &lt;a href="https://2019.rubyworld-conf.org/en/program/#a-6-2">Ruby World Conference 2019 的演講&lt;/a>就是在討論用 Ruby on Rails 去開發一款 Chatbot 的遊戲中如何突破框架。&lt;/p>
+&lt;p>後續的例子我們就用「卡牌收集」跟「發動技能」兩個角度來看，在 Ruby on Rails 中我們應該如何去組織出對應的功能實現。&lt;/p>
+&lt;h2 id="game-data">遊戲資料&lt;/h2>
+&lt;p>在單機遊戲中，場景、怪物的設定值都是固定的，大多數的遊戲引擎會用 Prefab（預製物件）來規劃，不過現在我們要在手遊之中使用，我們可以將這些資訊放到一個檔案在伺服器啟動時讀取，也可以放到資料庫中儲存。&lt;/p>
+&lt;p>不過大多會選擇放到資料庫中儲存，是因為當資料量變得龐大時能以比較有效率的方式啟動伺服器以及查詢資料，同時也可以跟遊戲紀錄產生關聯。&lt;/p>
+&lt;blockquote>
+&lt;p>也因此我們會有 GameData（遊戲資料）跟 GameRecord（遊戲紀錄）兩種資料表同時存在於資料庫，同樣的概念在其他類型的服務也能被觀察到，像是 AWS 的 EC2 型號，很有可能會是有一個資料表儲存了該分配的 vCPU / RAM 等資訊，當我們呼叫時再依照設定值生成。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="object-oriented">物件導向&lt;/h2>
+&lt;p>既然使用 Ruby 來進行開發，我們要思考的就會是「物件導向」在遊戲中扮演的角色為何。此時設計模式（Design Pattern）就是個很好的案例可以被討論，不過當我們思考「該如何使用時」就會再次陷入被框架限制的問題，也因此我們應該是去驗證「當下的設計是否有設計模式幫助我們可以改進」&lt;/p>
+&lt;p>假設有一個模式是討伐魔物，我們需要依據玩家的「卡牌」生成專屬玩家的卡牌數值，以及玩家所需要對應的「魔物」並且讓雙方進行戰鬥，我們該如何進行呢？&lt;/p>
+&lt;p>以下是一段假想的範例&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">BattleActionController&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">ApplicationController&lt;/span>
+&lt;span class="n">before_action&lt;/span> &lt;span class="ss">:load_battle&lt;/span>
+&lt;span class="n">before_action&lt;/span> &lt;span class="ss">:load_monster&lt;/span>
+&lt;span class="n">before_action&lt;/span> &lt;span class="ss">:load_player&lt;/span>
+&lt;span class="c1"># 玩家行動&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">create&lt;/span>
+&lt;span class="vi">@battle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">perform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vi">@player&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">current_card&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="ss">:action&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="vi">@battle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">perform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vi">@monster&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="vi">@monster&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">random_action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在上述的程式中，我們雖然大多是以 ActiveRecord 提供的 API 進行操作，但實際上已經滿足了「工廠模式」的標準，我們以「資料庫的設定值」產生了「玩家和魔物的實體」這樣的概念，同時在這些物件上面定義了可以使用的「行為」&lt;/p>
+&lt;blockquote>
+&lt;p>從遊戲資料的角度來看，其實就跟 Prefab 會被生成實體的概念一樣，「工廠模式」其實就是對應這樣的情境，但我們不需要思考怎麼使用，而是依照邏輯不斷改進最後自然而然就會符合工廠模式。&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="service-object">服務物件&lt;/h2>
+&lt;p>如果對於 Ruby on Rails 有一定程度的了解，那麼勢必會學到使用像是 Service Object、&lt;a href="https://blog.frost.tw/posts/2019/05/28/How-to-use-Form-Object-and-others-for-Rails/">Form Object&lt;/a> 這類技巧用於解決專案中逐漸複雜的情境。&lt;/p>
+&lt;p>實際上我對於 Service Object 的看法是「所有無法或不足以獨立的物件類型」像是呼叫某個第三方服務，他只需要一個物件就可以處理，因此我們就會用 &lt;code>Payment::CaptureService&lt;/code> 之類的方式去定義，但是當某一種類型的行為多到一個程度的時候就應該考慮讓他成為獨立的類型，像是 Form Object 這樣單獨存在於 &lt;code>app/forms&lt;/code> 而不是 &lt;code>app/services&lt;/code>&lt;/p>
+&lt;p>同樣的道理也可以應用在遊戲的設計中，當我們的「卡牌動作」不是單純的攻擊、防禦，而是根據 GameData 的設定有不同的技能，而且難以「標準化」的時候，就應該單獨歸類出某一個體系的物件來彙整跟設計。&lt;/p>
+&lt;h3 id="single-table-inheritance">STI&lt;/h3>
+&lt;p>STI（單一資料表繼承）的技巧在很多 Ruby on Rails 的教學通常都會說「通常不推薦使用」不過在某些情況下卻是非常好用的，像是我們現在要討論的「技能系統」&lt;/p>
+&lt;p>首先，在資料庫建立像是這樣的 GameData (&lt;code>skills&lt;/code>)&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>id&lt;/th>
+&lt;th>name&lt;/th>
+&lt;th>level&lt;/th>
+&lt;th>type&lt;/th>
+&lt;th>element&lt;/th>
+&lt;th>power&lt;/th>
+&lt;th>parameter&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>攻擊&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>Siklls::Damage&lt;/td>
+&lt;td>void&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1000&lt;/td>
+&lt;td>火球術&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>Skills::Fireball&lt;/td>
+&lt;td>fire&lt;/td>
+&lt;td>5&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1001&lt;/td>
+&lt;td>火球術+&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>Skills::Fireball&lt;/td>
+&lt;td>fire&lt;/td>
+&lt;td>10&lt;/td>
+&lt;td>{ &amp;ldquo;burn&amp;rdquo;: 10 }&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2001&lt;/td>
+&lt;td>冰箭術&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>Skills::IceArrow&lt;/td>
+&lt;td>water&lt;/td>
+&lt;td>3&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2002&lt;/td>
+&lt;td>冰箭術+&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>Skills::IceArrow&lt;/td>
+&lt;td>water&lt;/td>
+&lt;td>11&lt;/td>
+&lt;td>{ &amp;ldquo;freeze&amp;rdquo;: 5 }&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>在 Ruby on Rails 中會自動依據 &lt;code>type&lt;/code> 欄位將 Model 轉換成對應的物件，因此我們就可以用 &lt;code>app/models/skills&lt;/code> 增加物件來擴充技能&lt;/p>
+&lt;p>原始物件的傷害是直接套用 &lt;code>power&lt;/code> 並且不會有減益效果&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">Skill&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">ApplicationRecord&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">damage&lt;/span>
+&lt;span class="n">power&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">debuff&lt;/span>
+&lt;span class="o">[]&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下來我們用「火球術」的技能體系來看&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">module&lt;/span> &lt;span class="nn">Skills&lt;/span>
+&lt;span class="k">class&lt;/span> &lt;span class="nc">Fireball&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">Skill&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">damage&lt;/span>
+&lt;span class="p">(&lt;/span>&lt;span class="no">Random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rand&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">70&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="mi">130&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">100&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">power&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">round&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">debuff&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">[&lt;/span>&lt;span class="ss">:burn&lt;/span>&lt;span class="o">]&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">burn?&lt;/span>
+&lt;span class="o">[]&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">burn?&lt;/span>
+&lt;span class="p">(&lt;/span>&lt;span class="n">parameter&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;burn&amp;#39;&lt;/span>&lt;span class="o">].&lt;/span>&lt;span class="n">to_i&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="no">Random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rand&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在這邊，我們對傷害實作進行調整，讓他會有正負 30% 的浮動，並且加入減益效果的判定讓他在設定的機率內對敵人產生「燒傷」的狀態。&lt;/p>
+&lt;p>放到戰鬥模組的實作，我們就可以像這樣處理&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">class&lt;/span> &lt;span class="nc">Battle&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="no">ApplicationRecord&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">def&lt;/span> &lt;span class="nf">perform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">character&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">skill&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">character&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">skills&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find_by&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">id&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">action&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">foe_of&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">character&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="n">apply_damage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">skill&lt;/span>&lt;span class="o">&amp;amp;.&lt;/span>&lt;span class="n">damage&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="o">.&lt;/span>&lt;span class="n">apply_buff&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">skill&lt;/span>&lt;span class="o">&amp;amp;.&lt;/span>&lt;span class="n">debuff&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="o">[]&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;span class="c1"># ...&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我們先從「卡牌」身上取出帶有的「技能」並且 &lt;code>action&lt;/code> 參數表示的是技能編號（Ex. &lt;code>1&lt;/code> 攻擊、&lt;code>1000&lt;/code> 火球術）取出對應的物件之後，直接呼叫 &lt;code>#damage&lt;/code> 方法來計算出該次行動應有的傷害。
+接著用 &lt;code>foe_of(character)&lt;/code> 取出這次行動者的「對手」並且將傷害套用到對方身上。&lt;/p>
+&lt;p>這個技巧被應用在 2021 年度的 &lt;a href="https://globalgamejam.org/2021/games/final-hope-0">Global Game Jam&lt;/a> 我用 Ruby on Rails 和 Vue / AFrame 開發的 AR 遊戲中，定義&lt;a href="https://github.com/elct9620/ar-bottle-royale/blob/main/app/models/weapon.rb">裝備&lt;/a>就是物品的一種，並且使用時會「裝備」這個道具。&lt;/p>
+&lt;h3 id="standalone-object">獨立物件&lt;/h3>
+&lt;p>跟 STI 的情境基本上是差不多的，差別在於我們會將這類物件獨立劃分出來，像是 &lt;code>app/skills&lt;/code> 的形式去處理，細節上跟 STI 基本上大同小異。優點是我們不會被 ActiveRecord 的限制阻擋住，缺點則是我們需要自己進行技能的查詢處理。&lt;/p>
+&lt;p>此時我們就可以善用 Ruby 這類語言的特性，做出類似 Reflect（反射）的效果&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre class="chroma">&lt;code class="language-ruby" data-lang="ruby">&lt;span class="k">def&lt;/span> &lt;span class="nf">skill_class&lt;/span>
+&lt;span class="no">Skills&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">const_get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">skill_name&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">end&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>利用 &lt;code>#const_get&lt;/code> 的機制從 &lt;code>Skills&lt;/code> 模組撈出像是 &lt;code>Fireball&lt;/code> 這類物件，並且自己產生實例和呼叫，從「技能」的角度來看就顯得非常繁複，但在其他情境可能會是乾淨簡潔的，這部分就需要由開發者自己判斷適合的使用情境。&lt;/p>
+&lt;h2 id="conclusion">總結&lt;/h2>
+&lt;p>文章寫得有點長，不過很多技術上的問題大多是「思考的限制」造成的。即使是我自己在開發不同專案時，也很容易用過去的經驗去思考。這雖然可以加速「製作」的過程，但也可能會「錯過」更優的解決方案，一段時間重構、製作類似的新專案反覆驗證，就能夠一次次在開發的技巧上改進。&lt;/p>
+&lt;p>透過 Ruby on Rails 開發遊戲的伺服器本身並不困難，困難的是我們要先突破我們是在使用框架本身的概念限制。另外就是跟客戶端的搭配使用，像是卡牌、怪物要在客戶端顯示使用「編號」來對應 Prefab 會是一個很好的方式，但是編號的設定就會變成一件很重要的事情，除了技術本身之外也涵蓋了像是企劃等等領域的知識需要一起考進去才能夠順利進行。&lt;/p></content:encoded></item><item><title>TDD 與持續重構課程心得</title><link>https://blog.frost.tw/posts/2021/02/21/experience-of-tdd-continuous-refactoring/</link><category>TDD</category><category>重構</category><category>心得</category><pubDate>Sun, 21 Feb 2021 22:07:21 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2021/02/21/experience-of-tdd-continuous-refactoring/</guid><description>&lt;p>年初上完&lt;a href="https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/">針對遺留代碼加入單元測試的藝術&lt;/a>後，這週末又上了另一門相關的課程。在開始上課後發現很大的突破自己以往的觀念，同時也多出很多想法以及想嘗試的事情。&lt;/p></description><content:encoded>&lt;p>年初上完&lt;a href="https://blog.frost.tw/posts/2021/01/10/experience-of-unit-testing-effectively-with-legacy-code/">針對遺留代碼加入單元測試的藝術&lt;/a>後，這週末又上了另一門相關的課程。在開始上課後發現很大的突破自己以往的觀念，同時也多出很多想法以及想嘗試的事情。&lt;/p>
 &lt;h2 id="content">課程節奏、內容&lt;/h2>
 &lt;p>跟上一篇文章一樣，先來介紹一下課程的內容跟節奏。內容的話其實跟大家想像的差異蠻大的，寫測試的時間本身不多反而是更著重在為何而寫測試這件事情上面。節奏來說其實非常緊湊，這陣子又有一點精神上的狀況所以上課起來更加吃力一些，兩天的課程基本上就是講解概念跟實戰的搭配，不要認為自己會跟不上就不去報名。除了會因為太熱門要排到明年之外，這門課光是課堂上的練習跟回到工作中練習使用，就會有很大的改善跟幫助。&lt;/p>
 &lt;p>就我自己的感想來看，以我自己在&lt;a href="https://5xruby.com">五倍紅寶石軟體開發&lt;/a>的經驗，其實已經有應用到一部分的概念但是非常的零碎，而在台灣目前很難有系統地學習這方面的知識，不論是想讓自己更近一步或者導入到工作中都是很不錯的。&lt;/p>
@@ -1270,105 +1506,4 @@ lib/my_gem/woo/zoo.rb -&amp;gt; MyGem::Woo::Zoo
 &lt;h2 id="conclusion">結論&lt;/h2>
 &lt;p>在這次的聚會中我認為學到了一些關於選擇方案的技巧，在過去我經常很難去回答別人像是為什麼要使用 PostgreSQL 或者 MySQL 或是為什麼要使用 Ruby 這類問題。&lt;/p>
 &lt;p>剛開始我認為這是因為我不夠專業的關係，不過我想原因可能是因為我並沒有去注意特性跟那些隱藏在功能後的細節。&lt;/p>
-&lt;p>其實這是很好的機會去練習在缺點中去尋找更多資訊，我現在也嘗試改變我的習慣跟流程去實踐這個做法。&lt;/p></content:encoded></item><item><title>TGONext: 從缺點選擇架構</title><link>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</link><category>架構</category><category>微服務</category><category>資料庫</category><category>心得</category><category>TGONext</category><pubDate>Sun, 15 Mar 2020 03:02:32 +0800</pubDate><author>contact@frost.tw (蒼時弦也)</author><guid>https://blog.frost.tw/posts/2020/03/15/TGONext-Choose-Architecture-by-Cons/</guid><description>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p></description><content:encoded>&lt;p>這次聚會我們先簡單的回顧一下上一次的討論，然後就切換到了下一個主題。基於前一次聚會高併發的討論，我們模擬一個簡單的架構然後開始演進。&lt;/p>
-&lt;h2 id="the-trap-inside-the-suggested-way">建議方法中的陷阱&lt;/h2>
-&lt;p>首先，我們有一個單體式的應用將 Web 伺服器跟資料庫都跑在同一台機器上。&lt;/p>
-&lt;pre>&lt;code>+-----------------------+
-|+---------------------+|
-|| ||
-|| Web Server ||
-|| ||
-|+---------------------+|
-|+---------------------+|
-|| ||
-|| Database ||
-|| ||
-|+---------------------+|
-+-----------------------+
-&lt;/code>&lt;/pre>&lt;p>當請求量增加之後，我們可能會先把 Web 伺服器和資料庫分離到獨立的機器中。&lt;/p>
-&lt;pre>&lt;code>+---------------------+ +---------------------+
-| | | |
-| Web Server &amp;lt;----------&amp;gt; Database |
-| | | |
-+---------------------+ +---------------------+
-&lt;/code>&lt;/pre>&lt;p>當我們再次感覺到變慢的時候，我們可能會增加「快取伺服器」到我們的架構中。
-像是增加一個快取伺服器到 Web 伺服器和資料庫之間。&lt;/p>
-&lt;pre>&lt;code>+---------------------+ +---------------------+ +---------------------+
-| | | | | |
-| Web Server &amp;lt;------&amp;gt; Cache Server &amp;lt;------&amp;gt; Database |
-| | | | | |
-+---------------------+ +---------------------+ +---------------------+
-&lt;/code>&lt;/pre>&lt;p>當我們的快取伺服器故障時，我們的服務會再重啟之後恢復正常嗎？&lt;/p>
-&lt;blockquote>
-&lt;p>實際上它可能不會在快取伺服器重啟後正常恢復，因為我們的快取伺服器遺失了所有資料同時 Web 伺服器依舊發出大量地請求到快取伺服器卻無法處理而轉送到資料庫上。&lt;/p>
-&lt;/blockquote>
-&lt;p>這就是所謂的「雪崩效應」，當一個服務發生故障時進而影響其他人變得不穩，最後造成整個服務停止。&lt;/p>
-&lt;p>我們的導師建議我們在我們的團隊成員了解快取伺服器的優缺點和整個框架或套件使用後會如何運作之前，不要輕易的去增加快取伺服器。&lt;/p>
-&lt;h2 id="will-microservice-rescue-us">微服務能解決這一切嗎？&lt;/h2>
-&lt;p>如果我們想要避免雪崩效應，你可能會聯想到這幾年很熱門的微服務（Microservice）&lt;/p>
-&lt;p>微服務是以「去中心化（Decentralize）」為目的設計的，這表示每個元件大多獨立運作而且很容易的重新部署。&lt;/p>
-&lt;p>但是這其實有點太過理想，我們的服務經常會有一些相依於其他服務的情況。像是 Web 伺服器就經常的依賴於資料庫。&lt;/p>
-&lt;p>這是另外一個關鍵我們需要在設計架構的時候去考慮的地方。&lt;/p>
-&lt;p>目前在微服務中最熱門的相依問題解決方式是製作一種叫做「邊車（Sidecar）」的服務來控制每個元件間的溝通，因為邊車通常會知道其他服務的存活情況以及是否可以被連接，因此能夠回報跟管理他目前所負責的服務。&lt;/p>
-&lt;p>我們的導師告訴我們架構大多是為了要解決某個問題才會被設計出來的。&lt;/p>
-&lt;p>另一方面，我們如果要在微服務中找到問題，我們必須知道在這連續的呼叫中是在哪個服務停止的。這也表示微服務的系統需要有一個強大的紀錄追蹤機制來追蹤系統中的每一個事件。&lt;/p>
-&lt;h2 id="which-is-paid-for-an-architecture-choice">選擇某種架構付出的代價&lt;/h2>
-&lt;p>在我們學習了一些最近熱門的關鍵字之後，我們開始討論是否適合使用微服務。&lt;/p>
-&lt;p>我們的導師告訴我們效能（Performance）涵蓋三個部分：&lt;/p>
-&lt;ul>
-&lt;li>吞吐量（Throughput）&lt;/li>
-&lt;li>延遲（Latency）&lt;/li>
-&lt;li>記憶體使用（Memory Footprint）&lt;/li>
-&lt;/ul>
-&lt;p>他們會互相影響，這表示如果我們選擇了其中一個作為目標其他的項目就會變成代價支付出去。&lt;/p>
-&lt;p>在微服務系統中會將封包導向目標的服務，這也表示延遲會比其他架構還高得多。但是他的去中心化特性讓我們很容易的增加更多的元件來處理不斷增加的流量。&lt;/p>
-&lt;p>微服務是透過延遲來交換更大的吞吐量，讓我們擁有處理大量請求的能力。&lt;/p>
-&lt;p>也因此，如果我們的服務非常要求低延遲的話，微服務對我們的產品可能就不是一個好主意。&lt;/p>
-&lt;h3 id="domain-driven-design">Domain-Driven Design&lt;/h3>
-&lt;p>DDD 是我們討論的主題之一，我們的導師讓我們思考為什麼微服務變得熱門的同時 DDD 也同樣開始變得熱門。&lt;/p>
-&lt;p>實際上我們可以發現他們相似的在意「領域（Domain）」，他們嘗試將讓每個服務都專注在某一個業務上。這和我們平常使用的 MVC 是非常不同的，不過這也說明了為什麼 DDD 的設計會更適合微服務的需要。&lt;/p>
-&lt;p>另一方面，如果我們想要在公司中使用微服務。他通常取決於公司的規模或者在跨部門之前的溝通有些問題時，微服務可可能會是得不錯的選擇讓每個部門維護自己的服務。&lt;/p>
-&lt;blockquote>
-&lt;p>不過我們也需要注意過度的設計在我們自己的部門中，因為我們很可能只需要一個單體式的應用在我們的部門或公司。另一方面微服務也有不少需求需要滿足，如果在一個部門中擁有過多的為服務可能會造成另外的問題。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="the-data-consistency">資料的一致性&lt;/h2>
-&lt;p>除了效能問題之外，資料在我們的架構中也是另一個重要的面向。每一個系統都會有他自己的狀態，而我們的服務則需要小心討論來決定使用強一致性或者最終一致性。&lt;/p>
-&lt;p>舉例來說，一個銀行系統必須是強一致性的。至少你不會預期銀行在你存入一些錢之後，顯示並沒有這筆紀錄。卻在幾小時完成一致性的檢查後，才顯示出來。&lt;/p>
-&lt;blockquote>
-&lt;p>分散式系統其實也是一種資料一制的探討。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="the-database-evolution">資料庫的演進&lt;/h2>
-&lt;p>在一個系統中，資料庫通常是最直接跟資料一致性有關聯的主題。因此我們的導師讓我們先比較 RDBMS（關連式資料庫）、NoSQL 和 NewSQL 的差異。&lt;/p>
-&lt;h3 id="rdbms">RDBMS&lt;/h3>
-&lt;p>在 RDBMS 之前還有一個叫做 Object-Orident Database （物件導向資料庫）的東西，雖然 PostgreSQL 有一部分的特性，但是我們並沒有繼續討論他。&lt;/p>
-&lt;blockquote>
-&lt;p>基本上這是我們討論演進的第一個階段，令一方面因為他算是非常常見因此我們並沒有在這個時候討論太多。&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="nosql">NoSQL&lt;/h3>
-&lt;p>在 NoSQL 的情況，我們透過將一致性作為代價來提高吞吐量。這也是為什麼 NoSQL 擁有很不錯的拓展性能讓我們非常簡單的去擴充。&lt;/p>
-&lt;p>不過 NoSQL 必須在應用層實作很多東西，因為 RDBMS 幫我們處理了不少事情，但是 NoSQL 並沒有。&lt;/p>
-&lt;blockquote>
-&lt;p>另外一個特性是 NoSQL 是伴隨 SSD 的特性出現的，因此透過改變儲存資料的方式讓我們獲得高速的 Key-Value 資料存取能力。&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="newsql">NewSQL&lt;/h3>
-&lt;p>NewSQL 比較類似於 NoSQL 的反思，人們開始使思考 NoSQL 作為一個資料庫還有所不足。實際上有很多東西不應該在應用層實現，而應該讓資料庫幫助我們來完成。&lt;/p>
-&lt;p>也因此開始開發 NewSQL 這種具備類似 RDBMS 的強一致性但是又有足夠的擴充能力的資料庫。&lt;/p>
-&lt;blockquote>
-&lt;p>目前 NewSQL 還沒有變的熱門，而且也沒有太多開放原始碼的解決方案。&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="the-choose-of-database">資料庫的選擇&lt;/h2>
-&lt;p>在前面的討論，我們的導師讓我們分享選用一個資料庫的觀點和理由。&lt;/p>
-&lt;p>這裡有很多情況讓我們決定要選擇哪個資料庫：&lt;/p>
-&lt;ul>
-&lt;li>資料庫的功能&lt;/li>
-&lt;li>使用的框架&lt;/li>
-&lt;li>團隊成員&lt;/li>
-&lt;li>客戶的偏好&lt;/li>
-&lt;/ul>
-&lt;p>實際上這沒有正確答案，就像前面在架構上的討論在不同的設計上會有不同的優缺點出現。&lt;/p>
-&lt;h2 id="conclusion">總結&lt;/h2>
-&lt;p>實際上這篇文章還是缺少了很多細節，不過太多東西我實在沒辦法一次性的記住。&lt;/p>
-&lt;p>實際上在第一次聚會結束後我是有點擔心討論會止於一些計算或了解一些知識而已。&lt;/p>
-&lt;p>不過這次聚會我們的導師讓我們學到了一些新的方法跟觀點能夠直接應用在工作上。&lt;/p>
-&lt;p>最重要的是我們要在決定之前「找出計畫的缺點」並且重新檢視他，優點確實能給我們好處，但當系統發生問題的時候缺點才是我們需要面對的。&lt;/p>
-&lt;p>也因此，我們需要去決定一個架構是對我們的產品傷害最小的，也就是大多數的缺點跟我們產品的需求是不會有太多衝突。&lt;/p></content:encoded></item></channel></rss>
+&lt;p>其實這是很好的機會去練習在缺點中去尋找更多資訊，我現在也嘗試改變我的習慣跟流程去實踐這個做法。&lt;/p></content:encoded></item></channel></rss>
